@@ -12,7 +12,7 @@ public class StartCard extends Card {
 
     @Override
     protected Corner getCorner(int index) {
-        if (this.isOnBackSide())
+        if (!this.isOnBackSide())
             return super.getCorner(index);
         return backCorners[index];
     }
