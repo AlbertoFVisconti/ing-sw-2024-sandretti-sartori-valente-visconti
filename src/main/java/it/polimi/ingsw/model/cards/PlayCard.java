@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.cards;
 
 import it.polimi.ingsw.model.cards.corners.Corner;
+import it.polimi.ingsw.model.cards.corners.CornerStatus;
 import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.cards.scoring.ScoringStrategy;
 
@@ -32,7 +33,7 @@ public class PlayCard extends Card {
         if(!this.isOnBackSide())
             return super.getCorner(index);
 
-        return null;
+        return CornerStatus.EMPTY;
     }
 
     public static PlayCard generateGoldCard() {
