@@ -1,16 +1,22 @@
 package it.polimi.ingsw.model.cards;
 
+import it.polimi.ingsw.model.ItemCollection;
 import it.polimi.ingsw.model.cards.corners.Corner;
 
-abstract class Card {
+public abstract class Card {
     private boolean isBack;
     private boolean isPlaced;
 
     private final Corner[] corners = null;
 
-    public void flip() throws Exception {}
+    public void flip() throws Exception {
+        if(isPlaced) throw new Exception("can't flip a placed card");
+        this.isBack = !this.isBack;
+    }
 
-    public void place() {}
+    public void place() {
+        this.isPlaced = true;
+    }
 
     public boolean isOnBackSide() {
         return isBack;
@@ -29,7 +35,15 @@ abstract class Card {
     final public Corner getBottomLeftCorner() {
         return this.getCorner(2);
     }
-    final public Corner getNottomRightCorner() {
+    final public Corner getBottomRightCorner() {
         return this.getCorner(3);
+    }
+
+    public ItemCollection collectItems() {
+        return new ItemCollection()
+                .add(getTopLeftCorner())
+                .add(getTopRightCorner())
+                .add(getBottomLeftCorner())
+                .add(getBottomRightCorner());
     }
 }

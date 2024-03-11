@@ -1,40 +1,27 @@
 package it.polimi.ingsw.model.cards;
 
+import it.polimi.ingsw.model.ItemCollection;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.cards.corners.CornerStatus;
 import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.cards.scoring.ScoringStrategy;
 
-import java.util.Collection;
-
 public class PlayCard extends Card {
-    // TODO: define actual type for constraint, player inventory, starting card's permanent resources and goals
-    final Collection<Resource> constraint = null;
+    final ItemCollection constraint = null;
 
     final ScoringStrategy scoringStrategy = null;
 
     final Resource type = null;
     private boolean isGold;
 
-    public Collection<Resource> getConstraint() {
-        return constraint;
+    public ItemCollection getConstraint() {
+        return new ItemCollection(constraint);
     }
 
     public ScoringStrategy getScoringStrategy() {
         return scoringStrategy;
     }
 
-    public Resource getType() {
-        return type;
-    }
-
-    @Override
-    protected Corner getCorner(int index) {
-        if(!this.isOnBackSide())
-            return super.getCorner(index);
-
-        return CornerStatus.EMPTY;
-    }
 
     public static PlayCard generateGoldCard() {
         PlayCard c = new PlayCard();
@@ -48,4 +35,24 @@ public class PlayCard extends Card {
         return c;
     }
     private PlayCard() {}
+
+    public Resource getType() {
+        return type;
+    }
+
+    @Override
+    protected Corner getCorner(int index) {
+        if(!this.isOnBackSide())
+            return super.getCorner(index);
+
+        return CornerStatus.EMPTY;
+    }
+
+    @Override
+    public ItemCollection collectItems() {
+        if(isOnBackSide()) {
+            return new ItemCollection().add(this.type);
+        }
+        return super.collectItems();
+    }
 }

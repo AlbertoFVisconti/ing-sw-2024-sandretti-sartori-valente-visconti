@@ -6,5 +6,8 @@ import java.util.List;
 public class Deck {
     private List<Card> remaining;
 
-    public void getCard() throws EmptyStackException {}
+    public Card getCard() throws EmptyStackException {
+        // TODO
+        return null;
+    }
 }
