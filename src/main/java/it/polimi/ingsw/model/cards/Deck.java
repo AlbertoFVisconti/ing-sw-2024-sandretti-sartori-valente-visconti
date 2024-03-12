@@ -8,8 +8,14 @@ public class Deck {
     private List<Card> remaining;
     private  Card[] visibleCard= new Card[3];
 
+
     private Card getRandomCard(){
-        return remaining.get((int) (Math.random()*remaining.size()));
+        int x;
+        Card temp=null;
+        x=(int) (Math.random()*remaining.size());
+        temp= remaining.get(x);
+        remaining.remove(x);
+        return temp;
     }
     public Card getCard(int i) throws Exception {
         if (remaining.isEmpty()) throw new EmptyStackException();
