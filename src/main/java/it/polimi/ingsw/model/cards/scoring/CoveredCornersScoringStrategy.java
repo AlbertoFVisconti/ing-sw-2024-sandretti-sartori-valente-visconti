@@ -17,7 +17,7 @@ public class CoveredCornersScoringStrategy implements ScoringStrategy {
         return defaultCoveredCornersScoringStrategy;
     }
 
-    public CoveredCornersScoringStrategy(int scorePerCoveredCornre) {
+    public CoveredCornersScoringStrategy(int scorePerCoveredCorner) {
         this.scorePerCoveredCorner = scorePerCoveredCorner;
     }
 
