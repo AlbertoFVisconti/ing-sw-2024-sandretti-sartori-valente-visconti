@@ -22,22 +22,27 @@ public class Game {
 
     private ScoreBoard scoreBoard;
 
-    public void addPlayer() {
-        if(isStarted) {} // throw exception
+    public Game(/*TODO*/) {
         // TODO
+    }
+
+    public void addPlayer(Player player) throws Exception {
+        if(isStarted) throw new Exception();
+
+        players.add(player);
     }
 
     public Player getTurn() {
         return players.get(currentTurn);
     }
 
-    public void nextTurn() {
-        if(!isStarted) {} // throw exception
+    public void nextTurn() throws Exception {
+        if(!isStarted) throw new Exception();
         currentTurn = (currentTurn+1)%players.size();
     }
 
-    public void setFinalRound() {
-        if(!isStarted) {} // throw exception
+    public void setFinalRound() throws Exception {
+        if(!isStarted) throw new Exception();
         this.isFinal = true;
     }
 
@@ -45,8 +50,8 @@ public class Game {
         return isFinal;
     }
 
-    public void shufflePlayers() {
-        if(isStarted) {} // throw exception
+    public void shufflePlayers() throws Exception {
+        if(isStarted) throw new Exception();
         // TODO
     }
 
@@ -54,8 +59,8 @@ public class Game {
         return this.commonGoals.clone();
     }
 
-    public void setCommonGoals(Goal commonGoal1, Goal commonGoal2) {
-        if(isStarted) {} // throw exception
+    public void setCommonGoals(Goal commonGoal1, Goal commonGoal2) throws Exception {
+        if(isStarted) throw new Exception();
         this.commonGoals = new Goal[2];
         this.commonGoals[0] = commonGoal1;
         this.commonGoals[1] = commonGoal2;

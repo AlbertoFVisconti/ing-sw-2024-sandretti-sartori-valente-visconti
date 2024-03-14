@@ -20,6 +20,10 @@ public class Player {
     private ItemCollection inventory;
 
 
+    public Player(/* TODO */) {
+        // TODO
+    }
+
     public void setPlayerCard(PlayCard card, int index) {}
     public void placeCard(int index, Point location) {}
 
@@ -32,8 +36,15 @@ public class Player {
     }
 
 
+    public Card getPlacedCard(Point point) {
+        return this.board.get(point);
+    }
     public HashMap<Point, Card> getBoard() {
-        // this allows to safely expose the hashmap without the need to clone and build it from scratch
+        /*
+         this allows to safely expose the hashmap without the need to clone and build it from scratch
+         this method should only be used when there's a necessity to compute a massive amount of queries (es. PatterGoal.evaluate)
+         or if other kind of queries are needed; otherwise rely on the getPlacedCard() method
+        */
         return (HashMap<Point, Card>) Collections.unmodifiableMap(board);
     }
 

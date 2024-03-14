@@ -1,16 +1,20 @@
 package it.polimi.ingsw.model.cards;
 
 import it.polimi.ingsw.model.ItemCollection;
-import it.polimi.ingsw.model.cards.corners.Item;
-import it.polimi.ingsw.model.cards.corners.CornerStatus;
+import it.polimi.ingsw.model.cards.corners.Corner;
 
 public class StartCard extends Card {
-    private final CornerStatus[] backCorners = null;
+    private final Corner[] backCorners = null;
 
     private final ItemCollection permanentResources = null;
 
+    protected StartCard(/*TODO*/) {
+        super(/*TODO*/);
+        // TODO
+    }
+
     @Override
-    protected Item getCorner(int index) {
+    protected Corner getCorner(int index) {
         if (this.isOnBackSide()) {
             return backCorners[index];
         }
@@ -25,6 +29,4 @@ public class StartCard extends Card {
         }
         return super.collectItems();
     }
-
-    protected StartCard() {}
 }

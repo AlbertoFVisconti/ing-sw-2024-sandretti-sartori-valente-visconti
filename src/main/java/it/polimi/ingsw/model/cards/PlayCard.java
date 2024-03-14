@@ -1,8 +1,7 @@
 package it.polimi.ingsw.model.cards;
 
 import it.polimi.ingsw.model.ItemCollection;
-import it.polimi.ingsw.model.cards.corners.Item;
-import it.polimi.ingsw.model.cards.corners.CornerStatus;
+import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.cards.scoring.ScoringStrategy;
 
@@ -23,24 +22,27 @@ public class PlayCard extends Card {
     }
 
 
-    protected PlayCard() {}
+    protected PlayCard(/*TODO*/) {
+        super(/*TODO*/);
+        // TODO
+    }
 
     public Resource getType() {
         return type;
     }
 
     @Override
-    protected Item getCorner(int index) {
+    protected Corner getCorner(int index) {
         if(!this.isOnBackSide())
             return super.getCorner(index);
 
-        return CornerStatus.EMPTY;
+        return Corner.EMPTY;
     }
 
     @Override
     public ItemCollection collectItems() {
         if(isOnBackSide()) {
-            return new ItemCollection().add(this.type);
+            return new ItemCollection().add(this.type.getCorner());
         }
         return super.collectItems();
     }
