@@ -68,8 +68,32 @@ public class ItemCollection {
     }
 
     public int divide(ItemCollection itemCollection) {
-        // TODO
-        return 0;
+        int worstRatio = -1,
+            amountInDivisor,
+            amountInDividend,
+            currentItemRatio;
+
+        for(Corner cornerType : content.keySet()) {
+            amountInDivisor = itemCollection.content.get(cornerType);
+
+            // if amountInDivisor == 0, this cornerType does not constraint the final result: any check is unnecessary
+            if(amountInDivisor != 0) {
+                // the divisor contains at least an item of this cornerType: I need to compute the ratio
+                amountInDividend = this.content.get(cornerType);
+                currentItemRatio = amountInDividend /amountInDivisor;
+
+                if( currentItemRatio < worstRatio || worstRatio == -1) {
+                    // currentItemRatio is the worst so far (could also mean that it's the first valid currentItemRatio)
+                    worstRatio = currentItemRatio;
+                }
+            }
+        }
+
+        // worst == -1 means that the condition amountInDivisor != 0 was always false: the divisor (itemCollection) is empty
+        if (worstRatio == -1) throw new ArithmeticException("cannot perform division with an empty ItemCollection as divisor");
+
+        // the worst ratio, if it exits, is the final result: the divisor (itemCollection) is contained worstRatio times in the dividend (this)
+        return worstRatio;
     }
 
     public int count(Corner corner) {
