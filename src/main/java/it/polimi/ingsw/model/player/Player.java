@@ -1,11 +1,11 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.ItemCollection;
+import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.goals.Goal;
 
-import javax.smartcardio.Card;
 import java.awt.*;
 import java.util.Collections;
 import java.util.HashMap;
