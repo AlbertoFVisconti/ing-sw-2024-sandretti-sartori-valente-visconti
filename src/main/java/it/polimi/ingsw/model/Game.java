@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.goals.GoalDeck;
 import it.polimi.ingsw.model.player.Player;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Game {
@@ -52,7 +53,7 @@ public class Game {
 
     public void shufflePlayers() throws Exception {
         if(isStarted) throw new Exception();
-        // TODO
+        Collections.shuffle(this.players);
     }
 
     public Goal[] getCommonGoals() {
