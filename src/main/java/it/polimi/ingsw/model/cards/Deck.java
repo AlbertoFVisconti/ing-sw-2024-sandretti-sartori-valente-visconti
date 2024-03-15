@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.cards;
 
 import java.security.InvalidParameterException;
-import java.util.EmptyStackException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -34,8 +33,8 @@ public class Deck {
         // redundant if i == 0
         visibleCard[i]=visibleCard[0];
 
-        // this line always flip the card on top of the deck (which is always with the back side up)
-        // this mean that: if i == 0 it will flip the selected card before returning it
+        // this line always flips the card on top of the deck (which is always with the back side up)
+        // this means that: if i == 0 it will flip the selected card before returning it
         // otherwise, it will flip the card so that every card but the first has the front side up
         if(visibleCard[i] != null) visibleCard[i].flip();
 

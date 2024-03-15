@@ -187,7 +187,7 @@ public class ItemCollectionTest {
     }
 
     @Test
-    void Count() {
+    void testCount() {
         ItemCollection c1 = new ItemCollection();
 
         c1.add(Corner.ANIMAL)
