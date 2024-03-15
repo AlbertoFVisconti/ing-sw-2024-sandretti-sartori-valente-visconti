@@ -26,15 +26,22 @@ public class Deck {
         return temp;
     }
     public Card getCard(int i)  {
-        if(i < 0 || i > 3) throw new InvalidParameterException("check the param of the getCard function");
+        if(i < 0 || i > 2) throw new InvalidParameterException("check the param of the getCard function");
         if(visibleCard[i] == null) throw new NoSuchElementException("parameter is in the approved range, but there's no card here");
 
         Card temp= visibleCard[i];
-        visibleCard[i]=visibleCard[0]; // redundant if i == 0: this line simply does nothing
 
-        // in any case a new card needs to be put in visibleCard[0] (top of the deck) and flipped
+        // redundant if i == 0
+        visibleCard[i]=visibleCard[0];
+
+        // this line always flip the card on top of the deck (which is always with the back side up)
+        // this mean that: if i == 0 it will flip the selected card before returning it
+        // otherwise, it will flip the card so that every card but the first has the front side up
+        if(visibleCard[i] != null) visibleCard[i].flip();
+
+        // in any case a new card needs to be put in visibleCard[0] (top of the deck) and flipped so that it shows the back (if not null)
         visibleCard[0]=getRandomCard();
-        visibleCard[0].flip();
+        if(visibleCard[0] != null) visibleCard[0].flip();
 
         return temp;
     }
