@@ -96,7 +96,7 @@ public class ItemCollection {
      * @return this ItemCollection after the operation
      */
     public ItemCollection add(Corner corner, int amount) {
-        if(this.count(corner) - amount < 0) throw new ArithmeticException("sub(Corner): itemCollection cannot have negative amounts");
+        if(this.count(corner) + amount < 0) throw new ArithmeticException("sub(Corner): itemCollection cannot have negative amounts");
         if(corner != null && corner != Corner.EMPTY) {
             this.content.put(corner, content.get(corner) + amount);
         }
@@ -111,7 +111,7 @@ public class ItemCollection {
      * @return this ItemCollection after the operation
      */
     public ItemCollection sub(ItemCollection itemCollection) {
-        if(!this.isSubSetOf(itemCollection)) throw new ArithmeticException("sub(ItemCollection): itemCollection cannot have negative amounts");
+        if(!itemCollection.isSubSetOf(this)) throw new ArithmeticException("sub(ItemCollection): itemCollection cannot have negative amounts");
         for(Corner cornerType : content.keySet()) {
             this.content.put(cornerType, content.get(cornerType)-itemCollection.content.get(cornerType));
         }
