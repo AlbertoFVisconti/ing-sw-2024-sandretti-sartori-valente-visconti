@@ -4,6 +4,18 @@ import it.polimi.ingsw.model.player.Player;
 
 import java.awt.*;
 
+/**
+ * The ScoringStrategy functional interface allows providing a function that evaluates a card placement.
+ * This function will return an integer value that represents the score the player obtained placing the card
+ */
 public interface ScoringStrategy {
+    /**
+     * Computes the score obtained by a player by placing a Card with the implemented scoring strategy
+     * in a specific location on their board.
+     *
+     * @param player Player who is placing the card
+     * @param placingLocation the location on the game board where the card is being placed.
+     * @return the score obtained by the player
+     */
     int evaluate(Player player, Point placingLocation);
 }
