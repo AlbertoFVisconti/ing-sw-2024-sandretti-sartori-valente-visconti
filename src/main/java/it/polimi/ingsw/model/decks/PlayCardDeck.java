@@ -1,6 +1,8 @@
-package it.polimi.ingsw.model.cards;
+package it.polimi.ingsw.model.decks;
 
 import it.polimi.ingsw.model.ItemCollection;
+import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.cards.scoring.CoveredCornersScoringStrategy;
@@ -14,21 +16,22 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class Deck {
-    private final List<Card> remaining;
-    private final Card[] visibleCard;
+public class PlayCardDeck extends Deck<PlayCard> {
+
+    private final PlayCard[] visibleCards;
 
 
-    public Deck(String cardFile) throws IOException {
-        this.remaining = loadFromFile(cardFile);
+    public PlayCardDeck(String cardFile) throws IOException {
+        super(cardFile);
 
-        visibleCard= new Card[]{
+        visibleCards = new PlayCard[]{
                 null,
-                this.getRandomCard(),
-                this.getRandomCard()
+                this.drawRandom(),
+                this.drawRandom()
         };
 
         /*
@@ -36,12 +39,12 @@ public class Deck {
         * the card that is left there should be the last one to be generated
         * although this actually matters only if the deck holds less than 3 cards
         */
-        visibleCard[0] = this.getRandomCard();
-        if(visibleCard[0] != null) visibleCard[0].flip();
+        visibleCards[0] = this.drawRandom();
+        if(visibleCards[0] != null) visibleCards[0].flip();
     }
 
-    private static List<Card> loadFromFile(String cardFile) throws IOException {
-        List<Card> cards = new ArrayList<>();
+    protected List<PlayCard> loadFromFile(String cardFile) throws IOException {
+        List<PlayCard> cards = new ArrayList<>();
 
         FileReader reader = new FileReader(cardFile);
         StringBuilder jsonString = new StringBuilder();
@@ -128,28 +131,46 @@ public class Deck {
         return cards;
     }
 
-    private Card getRandomCard(){
-        if(remaining.isEmpty()) return null;
+    /**
+     * This method allows to use the PlayCardDeck as it was a standard deck (without the visible cards basically)
+     * In order to do that, this method returns one of the visible card.
+     * If there's no visible card, that means that the deck is empty.
+     *
+     * @return the card on top of the deck
+     * @throws EmptyStackException if the deck contains no card
+     */
+    @Override
+    public PlayCard draw() {
+        List<Integer> availableCardsIndexes = new ArrayList<>();
 
-        int selectedCardIndex=(int) (Math.random()*remaining.size());
-        return remaining.remove(selectedCardIndex); // remove returns the removed element
+        for(int i = 0; i < visibleCards.length; i++) {
+            if(visibleCards[i] != null) availableCardsIndexes.add(i);
+        }
+
+        if(availableCardsIndexes.isEmpty()) throw new EmptyStackException();
+
+        int selectedIndex=(int) (Math.random()*availableCardsIndexes.size());
+        return draw(availableCardsIndexes.get(selectedIndex));
     }
-    public Card getCard(int i)  {
+
+    public PlayCard draw(int i)  {
         if(i < 0 || i > 2) throw new InvalidParameterException("check the param of the getCard function");
-        if(visibleCard[i] == null) throw new NoSuchElementException("parameter is in the approved range, but there's no card here");
+        if(visibleCards[i] == null) throw new NoSuchElementException("parameter is in the approved range, but there's no card here");
 
         // if not null, the card on top of the deck always needs to be flipped
-        if(visibleCard[0] != null) visibleCard[0].flip();
+        if(visibleCards[0] != null) visibleCards[0].flip();
 
-        Card pickedCard= visibleCard[i];
+        PlayCard pickedCard= visibleCards[i];
 
         // redundant if i == 0 otherwise replace the picked card with the card on top of the deck (already flipped)
-        visibleCard[i]=visibleCard[0];
+        visibleCards[i]=visibleCards[0];
 
         // get the next card to place on top of the deck upside down
-        visibleCard[0]=getRandomCard();
-        if(visibleCard[0] != null) visibleCard[0].flip();
+        visibleCards[0]= this.drawRandom();
+        if(visibleCards[0] != null) visibleCards[0].flip();
 
         return pickedCard;
     }
+
+
 }

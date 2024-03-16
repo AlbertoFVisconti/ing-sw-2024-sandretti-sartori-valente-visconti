@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.cards.Deck;
+import it.polimi.ingsw.model.decks.PlayCardDeck;
 import it.polimi.ingsw.model.goals.Goal;
-import it.polimi.ingsw.model.goals.GoalDeck;
+import it.polimi.ingsw.model.decks.GoalDeck;
 import it.polimi.ingsw.model.player.Player;
 
 import java.util.Collections;
@@ -17,8 +17,8 @@ public class Game {
 
     private Goal[] commonGoals;
 
-    private Deck goldCardsDeck;
-    private Deck resourceCardsDeck;
+    private PlayCardDeck goldCardsDeck;
+    private PlayCardDeck resourceCardsDeck;
     private GoalDeck goalsDeck;
 
     private ScoreBoard scoreBoard;
