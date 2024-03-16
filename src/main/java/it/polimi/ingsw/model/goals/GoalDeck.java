@@ -1,17 +1,22 @@
 package it.polimi.ingsw.model.goals;
 
+import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.List;
 
 public class GoalDeck {
-    private boolean isLocked;
-    private List<Goal> remaining;
+    private boolean isLocked=false;
+    private final List<Goal> remaining;
 
-    public GoalDeck(/*TODO*/) {
-        // TODO
+    public GoalDeck(String goalFile) {
+        this.remaining = loadFromFile(goalFile);
     }
 
-    // TODO: setup method(s)
+    private static List<Goal> loadFromFile(String goalFile) {
+        // TODO
+        return new ArrayList<>();
+    }
+
 
     public void lockDeck() {
         isLocked=true;

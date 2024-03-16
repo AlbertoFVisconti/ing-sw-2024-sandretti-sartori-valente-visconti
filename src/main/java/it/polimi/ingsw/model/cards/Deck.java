@@ -1,18 +1,37 @@
 package it.polimi.ingsw.model.cards;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 public class Deck {
-    private List<Card> remaining;
-    private Card[] visibleCard= new Card[3];
+    private final List<Card> remaining;
+    private final Card[] visibleCard;
 
-    public Deck(/*TODO*/) {
-        // TODO
+
+    public Deck(String cardFile) {
+        this.remaining = loadFromFile(cardFile);
+
+        visibleCard= new Card[]{
+                null,
+                this.getRandomCard(),
+                this.getRandomCard()
+        };
+
+        /*
+        * since all the visible cards are at some point on the top of the deck
+        * the card that is left there should be the last one to be generated
+        * although this actually matters only if the deck holds less than 3 cards
+        */
+        visibleCard[0] = this.getRandomCard();
+        if(visibleCard[0] != null) visibleCard[0].flip();
     }
 
-    // TODO: setup method(s)
+    private static List<Card> loadFromFile(String cardFile) {
+        // TODO
+        return new ArrayList<>();
+    }
 
     private Card getRandomCard(){
         if(remaining.isEmpty()) return null;
