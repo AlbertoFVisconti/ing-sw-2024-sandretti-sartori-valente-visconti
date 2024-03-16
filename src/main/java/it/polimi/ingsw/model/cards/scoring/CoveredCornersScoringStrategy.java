@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.player.Player;
 import java.awt.*;
 
 public class CoveredCornersScoringStrategy implements ScoringStrategy {
-    private int scorePerCoveredCorner;
+    private final int scorePerCoveredCorner;
 
     private static CoveredCornersScoringStrategy defaultCoveredCornersScoringStrategy=null;
 
@@ -23,7 +23,15 @@ public class CoveredCornersScoringStrategy implements ScoringStrategy {
 
     @Override
     public int evaluate(Player player, Point placingLocation) {
-        // TODO
-        return 0;
+        int     countNeighbour = 0,
+                x = placingLocation.x,
+                y = placingLocation.y;
+
+        if(player.getPlacedCard(new Point(x-1,y+1)) != null) countNeighbour++;
+        if(player.getPlacedCard(new Point(x+1,y+1)) != null) countNeighbour++;
+        if(player.getPlacedCard(new Point(x-1,y-1)) != null) countNeighbour++;
+        if(player.getPlacedCard(new Point(x+1,y-1)) != null) countNeighbour++;
+
+        return countNeighbour*scorePerCoveredCorner;
     }
 }
