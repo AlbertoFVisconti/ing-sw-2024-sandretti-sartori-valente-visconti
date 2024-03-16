@@ -1,0 +1,86 @@
+[
+  {
+    "tl_front_corner": "FUNGUS",
+    "tr_front_corner": "PLANT",
+    "bl_front_corner": "INSECT",
+    "br_front_corner": "ANIMAL",
+    "tl_back_corner": "EMPTY",
+    "tr_back_corner": "PLANT",
+    "bl_back_corner": "INSECT",
+    "br_back_corner": "EMPTY",
+    "permanent": [
+      "INSECT"
+    ]
+  },
+  {
+    "tl_front_corner": "PLANT",
+    "tr_front_corner": "ANIMAL",
+    "bl_front_corner": "FUNGUS",
+    "br_front_corner": "INSECT",
+    "tl_back_corner": "ANIMAL",
+    "tr_back_corner": "EMPTY",
+    "bl_back_corner": "EMPTY",
+    "br_back_corner": "FUNGUS",
+    "permanent": [
+      "FUNGUS"
+    ]
+  },
+  {
+    "tl_front_corner": "INSECT",
+    "tr_front_corner": "ANIMAL",
+    "bl_front_corner": "FUNGUS",
+    "br_front_corner": "PLANT",
+    "tl_back_corner": "EMPTY",
+    "tr_back_corner": "EMPTY",
+    "bl_back_corner": "EMPTY",
+    "br_back_corner": "EMPTY",
+    "permanent": [
+      "PLANT",
+      "FUNGUS"
+    ]
+  },
+  {
+    "tl_front_corner": "PLANT",
+    "tr_front_corner": "INSECT",
+    "bl_front_corner": "ANIMAL",
+    "br_front_corner": "FUNGUS",
+    "tl_back_corner": "EMPTY",
+    "tr_back_corner": "EMPTY",
+    "bl_back_corner": "EMPTY",
+    "br_back_corner": "EMPTY",
+    "permanent": [
+      "ANIMAL",
+      "INSECT"
+    ]
+  },
+  {
+    "tl_front_corner": "INSECT",
+    "tr_front_corner": "FUNGUS",
+    "bl_front_corner": "PLANT",
+    "br_front_corner": "ANIMAL",
+    "tl_back_corner": "EMPTY",
+    "tr_back_corner": "EMPTY",
+    "bl_back_corner": "HIDDEN",
+    "br_back_corner": "HIDDEN",
+    "permanent": [
+      "ANIMAL",
+      "INSECT",
+      "PLANT"
+    ]
+  },
+  {
+    "tl_front_corner": "FUNGUS",
+    "tr_front_corner": "ANIMAL",
+    "bl_front_corner": "PLANT",
+    "br_front_corner": "INSECT",
+    "tl_back_corner": "EMPTY",
+    "tr_back_corner": "EMPTY",
+    "bl_back_corner": "HIDDEN",
+    "br_back_corner": "HIDDEN",
+    "permanent": [
+      "PLANT",
+      "ANIMAL",
+      "FUNGUS"
+    ]
+  }
+]
