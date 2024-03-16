@@ -20,4 +20,9 @@ public class ItemCountScoringStrategy implements ScoringStrategy {
         this.itemToCount = itemType;
         this.scorePerItem = scorePerItem;
     }
+
+    @Override
+    public String toString() {
+        return this.scorePerItem + " points per " + itemToCount;
+    }
 }

@@ -28,6 +28,7 @@ public class PlayCard extends Card {
                        ItemCollection placementConstraint,
                        ScoringStrategy scoringStrategy) {
         super(topLeft, topRight, bottomLeft, bottomRight);
+        this.isGold = isGold;
 
         if(isGold) this.constraint = new ItemCollection(placementConstraint);
         else this.constraint = new ItemCollection();
@@ -54,5 +55,14 @@ public class PlayCard extends Card {
             return new ItemCollection().add(this.type.getCorner());
         }
         return super.collectItems();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "isGold = " + isGold + "\n" +
+                "type = " + type + "\n" +
+                "constraint = " + constraint.toString() + "\n" +
+                "scoringStrategy = " + scoringStrategy.toString();
     }
 }

@@ -6,10 +6,12 @@ import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.cards.scoring.FreeScoreScoringStrategy;
 import it.polimi.ingsw.model.cards.scoring.ScoringStrategy;
 
+import java.util.Arrays;
+
 public abstract class Card {
     private boolean isBack=false;
     private boolean isPlaced=false;
-    private int placementTurn;
+    private int placementTurn=-1;
 
     private final Corner[] corners;
 
@@ -86,5 +88,13 @@ public abstract class Card {
                 .add(getTopRightCorner())
                 .add(getBottomLeftCorner())
                 .add(getBottomRightCorner());
+    }
+
+    @Override
+    public String toString() {
+        return "isBack = " + isBack + "\n" +
+                "isPlaced = " + isPlaced + "\n" +
+                "placementTurn = " + placementTurn + "\n" +
+                "frontCorners = " + Arrays.toString(corners) + "\n";
     }
 }

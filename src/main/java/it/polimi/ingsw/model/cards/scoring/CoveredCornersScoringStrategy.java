@@ -34,4 +34,9 @@ public class CoveredCornersScoringStrategy implements ScoringStrategy {
 
         return countNeighbour*scorePerCoveredCorner;
     }
+
+    @Override
+    public String toString() {
+        return this.scorePerCoveredCorner + " points per covered corner";
+    }
 }

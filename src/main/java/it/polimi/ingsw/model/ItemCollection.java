@@ -218,4 +218,9 @@ public class ItemCollection {
         if (corner == Corner.EMPTY) throw new NoSuchElementException();
         return this.content.get(corner);
     }
+
+    @Override
+    public String toString() {
+        return content.toString();
+    }
 }
