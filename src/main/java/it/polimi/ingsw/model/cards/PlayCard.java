@@ -6,12 +6,12 @@ import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.cards.scoring.ScoringStrategy;
 
 public class PlayCard extends Card {
-    final ItemCollection constraint = null;
+    final ItemCollection constraint;
 
-    final ScoringStrategy scoringStrategy = null;
+    final ScoringStrategy scoringStrategy;
 
-    final Resource type = null;
-    private boolean isGold;
+    final Resource type;
+    protected boolean isGold;
 
     public ItemCollection getConstraint() {
         return new ItemCollection(constraint);
@@ -22,9 +22,18 @@ public class PlayCard extends Card {
     }
 
 
-    protected PlayCard(/*TODO*/) {
-        super(/*TODO*/);
-        // TODO
+    protected PlayCard(Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
+                       Resource resourceType,
+                       boolean isGold,
+                       ItemCollection placementConstraint,
+                       ScoringStrategy scoringStrategy) {
+        super(topLeft, topRight, bottomLeft, bottomRight);
+
+        if(isGold) this.constraint = new ItemCollection(placementConstraint);
+        else this.constraint = new ItemCollection();
+
+        this.scoringStrategy = scoringStrategy;
+        this.type = resourceType;
     }
 
     public Resource getType() {

@@ -4,13 +4,16 @@ import it.polimi.ingsw.model.ItemCollection;
 import it.polimi.ingsw.model.cards.corners.Corner;
 
 public class StartCard extends Card {
-    private final Corner[] backCorners = null;
+    private final Corner[] backCorners;
 
-    private final ItemCollection permanentResources = null;
+    private final ItemCollection permanentResources;
 
-    protected StartCard(/*TODO*/) {
-        super(/*TODO*/);
-        // TODO
+    protected StartCard(Corner frontTopLeft, Corner frontTopRight, Corner frontBottomLeft, Corner frontBottomRight,
+                        Corner backTopLeft, Corner backTopRight, Corner backBottomLeft, Corner backBottomRight,
+                        ItemCollection permanentResources) {
+        super(frontTopLeft, frontTopRight, frontBottomLeft, frontBottomRight);
+        this.backCorners = new Corner[]{backTopLeft, backTopRight, backBottomLeft, backBottomRight};
+        this.permanentResources = new ItemCollection(permanentResources);
     }
 
     @Override

@@ -2,17 +2,19 @@ package it.polimi.ingsw.model.cards;
 
 import it.polimi.ingsw.model.ItemCollection;
 import it.polimi.ingsw.model.cards.corners.Corner;
+import it.polimi.ingsw.model.cards.corners.Resource;
+import it.polimi.ingsw.model.cards.scoring.FreeScoreScoringStrategy;
+import it.polimi.ingsw.model.cards.scoring.ScoringStrategy;
 
 public abstract class Card {
-    private boolean isBack;
-    private boolean isPlaced;
-
+    private boolean isBack=false;
+    private boolean isPlaced=false;
     private int placementTurn;
 
-    private final Corner[] corners = null;
+    private final Corner[] corners;
 
-    protected Card(/*TODO*/) {
-        // TODO
+    protected Card(Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight) {
+        this.corners = new Corner[]{topLeft, topRight, bottomLeft, bottomRight};
     }
 
     public void flip()  {
@@ -51,16 +53,31 @@ public abstract class Card {
         return this.getCorner(3);
     }
 
-    public static StartCard generateStartCard(/*TODO*/) {
-        return new StartCard(/*TODO*/);
+    public static StartCard generateStartCard(Corner frontTopLeft, Corner frontTopRight, Corner frontBottomLeft, Corner frontBottomRight,
+                                              Corner backTopLeft, Corner backTopRight, Corner backBottomLeft, Corner backBottomRight,
+                                              ItemCollection permanentResources) {
+        return new StartCard(frontTopLeft, frontTopRight, frontBottomLeft, frontBottomRight,
+                backTopLeft, backTopRight, backBottomLeft, backBottomRight,
+                permanentResources);
     }
 
-    public static PlayCard generateGoldCard(/*TODO*/) {
-        return new PlayCard(/*TODO*/);
+    public static PlayCard generateGoldCard(Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
+                                            Resource resourceType,
+                                            ItemCollection placementConstraint,
+                                            ScoringStrategy scoringStrategy) {
+        return new PlayCard(topLeft, topRight, bottomLeft, bottomRight, resourceType,
+                true,
+                placementConstraint,
+                scoringStrategy);
     }
 
-    public static PlayCard generateResourceCard(/*TODO*/) {
-        return new PlayCard(/*TODO*/);
+    public static PlayCard generateResourceCard(Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
+                                                Resource resourceType,
+                                                int scoreUponPlacement) {
+        return new PlayCard(topLeft, topRight, bottomLeft, bottomRight, resourceType,
+                false,
+                null,
+                new FreeScoreScoringStrategy(scoreUponPlacement));
     }
 
     public ItemCollection collectItems() {
