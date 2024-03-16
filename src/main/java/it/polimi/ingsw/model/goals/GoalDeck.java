@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.goals;
 
+import java.util.EmptyStackException;
 import java.util.List;
 
 public class GoalDeck {
@@ -18,7 +19,9 @@ public class GoalDeck {
 
     public Goal getCard() {
         if(isLocked) throw new UnsupportedOperationException("cannot get Goal from deck when locked");
-        // TODO
-        return null;
+        if(remaining.isEmpty()) throw new EmptyStackException();
+
+        int drawnGoalIndex = (int) (Math.random()*remaining.size());
+        return remaining.remove(drawnGoalIndex);
     }
 }

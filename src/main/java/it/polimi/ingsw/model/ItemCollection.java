@@ -24,7 +24,7 @@ import java.util.NoSuchElementException;
  *            .add(Corner.ANIMAL)
  *            .add(Corner.FEATHER, 2);
  *
- *  // Askoing the ItemCollection how many PLANTs were stored (3)
+ *  // Asking the ItemCollection how many PLANTs were stored (3)
  *  int plantCount = collection.count(Corner.PLANT);
  *
  *  // Removing 2 PLANTs and 1 ANIMAL from the ItemCollection
