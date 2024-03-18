@@ -11,7 +11,6 @@ import java.awt.*;
 import java.security.InvalidParameterException;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Player {
     public final String nickName;
@@ -22,7 +21,7 @@ public class Player {
 
     private final HashMap<Point, Card> board;
     private final ItemCollection inventory;
-
+    private boolean Disconnected;
     /**
      * Constructs a new Player object.
      *
@@ -134,8 +133,8 @@ public class Player {
      *
      * @return an unmodifiable view of the board
      */
-    public Map<Point, Card> getBoard() {
-        return Collections.unmodifiableMap(board);
+    public HashMap<Point, Card> getBoard() {
+        return (HashMap<Point, Card>) Collections.unmodifiableMap(board);
     }
 
     /**
@@ -189,5 +188,14 @@ public class Player {
      */
     public void removeItem(Corner corner) {
         this.inventory.sub(corner);
+    }
+    /**
+     * with no param returns if a player is disconnected, with a bool set its value to it
+     * **/
+    private boolean disconnected(){
+        return this.Disconnected;
+    }
+    private void disconnected(boolean b){
+        this.Disconnected=b;
     }
 }

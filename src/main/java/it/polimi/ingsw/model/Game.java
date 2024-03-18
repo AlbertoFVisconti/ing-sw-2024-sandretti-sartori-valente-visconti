@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.decks.StartCardDeck;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.decks.GoalDeck;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.GameStatus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class Game {
     private final PlayCardDeck resourceCardsDeck;
     private final StartCardDeck startCardsDeck;
     private final GoalDeck goalsDeck;
-
+    private GameStatus currStatus;
     private ScoreBoard scoreBoard;
 
     /**
@@ -46,6 +47,7 @@ public class Game {
         this.startCardsDeck = new StartCardDeck(startCardFileName);
         this.goalsDeck = new GoalDeck(goalFileName);
         this.players = new ArrayList<>();
+        this.currStatus=GameStatus.LOBBY;
     }
 
     /**
@@ -158,4 +160,13 @@ public class Game {
         return this.isStarted;
     }
 
+    public List<Player> getPlayers(){
+        return Collections.unmodifiableList(players);
+    }
+    public GameStatus getCurrStatus(){
+        return currStatus;
+    }
+    public void setCurrStatus(GameStatus gameStatus){
+        currStatus=gameStatus;
+    }
 }
