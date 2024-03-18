@@ -124,7 +124,7 @@ public class Player {
     }
 
     /**
-     * Provides the HashMap representing the Player's board.
+     * Provides the Map representing the Player's board.
      * The Map is returned using {@code Collections.unmodifiableMap()} that allows
      * to safely expose the board without the need to clone and build it from scratch.
      * <p>
@@ -133,8 +133,8 @@ public class Player {
      *
      * @return an unmodifiable view of the board
      */
-    public HashMap<Point, Card> getBoard() {
-        return (HashMap<Point, Card>) Collections.unmodifiableMap(board);
+    public Map<Point, Card> getBoard() {
+        return Collections.unmodifiableMap(board);
     }
 
     /**
