@@ -32,4 +32,12 @@ public class ItemGoal implements Goal {
     public int evaluate(Player player) {
         return scorePerSet* player.getInventory().divide(this.items);
     }
+
+    @Override
+    public String toString() {
+        return "ItemGoal{" +
+                "scorePerSet=" + scorePerSet +
+                ", items=" + items +
+                '}';
+    }
 }

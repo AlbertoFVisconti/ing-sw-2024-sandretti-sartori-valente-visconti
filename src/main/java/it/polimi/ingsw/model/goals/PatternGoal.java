@@ -3,6 +3,8 @@ package it.polimi.ingsw.model.goals;
 import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.player.Player;
 
+import java.util.Arrays;
+
 /**
  * Represents a goal based on matching a specific pattern of resources on the player's board.
  * This goal computes the score based on how many times the pattern is found in the player's board
@@ -34,5 +36,11 @@ public class PatternGoal implements Goal {
         return 0;
     }
 
-
+    @Override
+    public String toString() {
+        return "PatternGoal{" +
+                "scorePerMatch=" + scorePerMatch +
+                ", pattern=" + Arrays.deepToString(pattern) +
+                '}';
+    }
 }
