@@ -27,15 +27,24 @@ public class Player {
      *
      * @param name String containing the player's nickname
      * @param playerColor Color value representing the unique color assigned to the player
-     * @param startingCard StartCard the players will start his board with
      */
-    public Player(String name, PlayerColor playerColor, StartCard startingCard) {
+    public Player(String name, PlayerColor playerColor) {
         nickName=name;
         color=playerColor;
-        startCard=startingCard;
+        startCard=null;
         board=new HashMap<>();
         playerCards=new PlayCard[3];
         inventory = new ItemCollection();
+    }
+
+    /**
+     * Sets player's starting cards. The player will get to choose which side
+     * to put place the card on.
+     *
+     * @param startCard the player's StartCard.
+     */
+    public void setStartCard(StartCard startCard) {
+        this.startCard = startCard;
     }
 
     /**

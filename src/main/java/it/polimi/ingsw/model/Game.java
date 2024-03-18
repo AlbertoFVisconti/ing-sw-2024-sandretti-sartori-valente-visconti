@@ -1,10 +1,13 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.decks.PlayCardDeck;
+import it.polimi.ingsw.model.decks.StartCardDeck;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.decks.GoalDeck;
 import it.polimi.ingsw.model.player.Player;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,19 +20,23 @@ public class Game {
 
     private Goal[] commonGoals;
 
-    private PlayCardDeck goldCardsDeck;
-    private PlayCardDeck resourceCardsDeck;
-    private GoalDeck goalsDeck;
+    private final PlayCardDeck goldCardsDeck;
+    private final PlayCardDeck resourceCardsDeck;
+    private final StartCardDeck startCardsDeck;
+    private final GoalDeck goalsDeck;
 
     private ScoreBoard scoreBoard;
 
-    public Game(/*TODO*/) {
-        // TODO
+    public Game(String goldCardFileName, String resourceCardFileName, String startCardFileName, String goalFileName) throws IOException {
+        this.goldCardsDeck = new PlayCardDeck(goldCardFileName);
+        this.resourceCardsDeck = new PlayCardDeck(resourceCardFileName);
+        this.startCardsDeck = new StartCardDeck(startCardFileName);
+        this.goalsDeck = new GoalDeck(goalFileName);
+        this.players = new ArrayList<>();
     }
 
     public void addPlayer(Player player) throws Exception {
         if(isStarted) throw new Exception();
-
         players.add(player);
     }
 
@@ -60,14 +67,34 @@ public class Game {
         return this.commonGoals.clone();
     }
 
-    public void setCommonGoals(Goal commonGoal1, Goal commonGoal2) throws Exception {
-        if(isStarted) throw new Exception();
+    private void setCommonGoals(Goal commonGoal1, Goal commonGoal2)  {
+        if(isStarted) throw new RuntimeException();
         this.commonGoals = new Goal[2];
         this.commonGoals[0] = commonGoal1;
         this.commonGoals[1] = commonGoal2;
     }
 
     public void startGame() {
+        if(isStarted) return;
+
+        this.setCommonGoals(
+                this.goalsDeck.draw(),
+                this.goalsDeck.draw()
+        );
+
+        for(Player player : this.players) {
+            player.setPrivateGoal(this.goalsDeck.draw());
+            player.setStartCard(this.startCardsDeck.draw());
+
+            player.setPlayerCard(this.resourceCardsDeck.draw(), 0);
+            player.setPlayerCard(this.resourceCardsDeck.draw(), 1);
+            player.setPlayerCard(this.goldCardsDeck.draw(), 2);
+        }
+
+        this.scoreBoard = new ScoreBoard(players);
+
+        this.currentTurn = 0;
+        this.isFinal = false;
         this.isStarted = true;
     }
 
