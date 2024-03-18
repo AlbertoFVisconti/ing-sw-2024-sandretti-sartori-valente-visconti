@@ -11,9 +11,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * The Game class represents a game session of the Codex Naturalis game
+ */
 public class Game {
     private int currentTurn;
-    private List<Player> players;
+    private final List<Player> players;
 
     private boolean isFinal;
     private boolean isStarted;
@@ -27,6 +30,16 @@ public class Game {
 
     private ScoreBoard scoreBoard;
 
+    /**
+     * Constructs a new Game object, initializing the game components.
+     * In particular, the Decks' content is loaded from the provided files.
+     *
+     * @param goldCardFileName name of the file that contains the gold cards' data
+     * @param resourceCardFileName name of the file that contains the resource cards' data
+     * @param startCardFileName name of the file that contains the start cards' data
+     * @param goalFileName name of the file that contains the goals' data
+     * @throws IOException if there's a problem reading one of the files
+     */
     public Game(String goldCardFileName, String resourceCardFileName, String startCardFileName, String goalFileName) throws IOException {
         this.goldCardsDeck = new PlayCardDeck(goldCardFileName);
         this.resourceCardsDeck = new PlayCardDeck(resourceCardFileName);
@@ -35,62 +48,100 @@ public class Game {
         this.players = new ArrayList<>();
     }
 
+    /**
+     * Adds a player to the game.
+     * A player can only be added if the game is not started yet.
+     *
+     * @param player Player to add to the game.
+     * @throws Exception if the game's already started.
+     */
     public void addPlayer(Player player) throws Exception {
         if(isStarted) throw new Exception();
         players.add(player);
     }
 
+    /**
+     * Retrieves the player who needs to play now.
+     *
+     * @return Player whose turn it currently is.
+     */
     public Player getTurn() {
         return players.get(currentTurn);
     }
 
+    /**
+     * Advances the game to the next turn
+     *
+     * @throws Exception if the game has not started yet.
+     */
     public void nextTurn() throws Exception {
         if(!isStarted) throw new Exception();
         currentTurn = (currentTurn+1)%players.size();
     }
 
+    /**
+     * Sets the game to the final round
+     *
+     * @throws Exception if the game has not started yet.
+     */
     public void setFinalRound() throws Exception {
         if(!isStarted) throw new Exception();
         this.isFinal = true;
     }
 
+    /**
+     * Checks if the game is in the final round.
+     *
+     * @return {@code true} if the current round is final, {@code false} otherwise.
+     */
     public boolean isFinalRound() {
         return isFinal;
     }
 
+    /**
+     * Shuffles the players' turn order.
+     *
+     * @throws Exception if the game has already started
+     */
     public void shufflePlayers() throws Exception {
         if(isStarted) throw new Exception();
         Collections.shuffle(this.players);
     }
 
+    /**
+     * Retrieves the common goals for the current game.
+     *
+     * @return An array containing the common goals for the game.
+     */
     public Goal[] getCommonGoals() {
         return this.commonGoals.clone();
     }
 
-    private void setCommonGoals(Goal commonGoal1, Goal commonGoal2)  {
-        if(isStarted) throw new RuntimeException();
-        this.commonGoals = new Goal[2];
-        this.commonGoals[0] = commonGoal1;
-        this.commonGoals[1] = commonGoal2;
-    }
-
+    /**
+     * Starts the game by drawing and distributing cards.
+     * Once this method is called, it becomes impossible to edit the game's info.
+     */
     public void startGame() {
         if(isStarted) return;
 
-        this.setCommonGoals(
+        // Draws the common goals
+        this.commonGoals = new Goal[]{
                 this.goalsDeck.draw(),
                 this.goalsDeck.draw()
-        );
+        };
 
         for(Player player : this.players) {
+            // draws the player's private goal and startcard
             player.setPrivateGoal(this.goalsDeck.draw());
             player.setStartCard(this.startCardsDeck.draw());
 
+            // draws the player 2 resource cards and 1 gold card
             player.setPlayerCard(this.resourceCardsDeck.draw(), 0);
             player.setPlayerCard(this.resourceCardsDeck.draw(), 1);
             player.setPlayerCard(this.goldCardsDeck.draw(), 2);
         }
 
+        // initialize the scoreboard with the current set of players
         this.scoreBoard = new ScoreBoard(players);
 
         this.currentTurn = 0;
@@ -98,6 +149,11 @@ public class Game {
         this.isStarted = true;
     }
 
+    /**
+     * Checks if the game has started.
+     *
+     * @return {@code true} if the game has started, {@code false} otherwise.
+     */
     public boolean isGameStarted() {
         return this.isStarted;
     }
