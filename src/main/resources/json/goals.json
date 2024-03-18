@@ -17,9 +17,7 @@
         "score": 2,
 
         "pattern": [
-            ["PLANT",   "",         ""],
-            ["",        "PLANT",    ""],
-            ["",        "",         "PLANT"]
+            ["PLANT", "PLANT", "PLANT"]
         ],
         "items": [
             {"item" : "", "amount": 0}
@@ -43,9 +41,7 @@
         "score": 2,
 
         "pattern": [
-            ["INSECT",  "",         ""],
-            ["",        "INSECT",   ""],
-            ["",        "",         "INSECT"]
+            ["INSECT",  "INSECT", "INSECT"]
         ],
         "items": [
             {"item" : "", "amount": 0}
@@ -56,9 +52,8 @@
         "score": 3,
 
         "pattern": [
-            ["FUNGUS",  "",         ""],
-            ["FUNGUS",  "",         ""],
-            ["",        "PLANT",    ""]
+            ["FUNGUS",  ""],
+            ["FUNGUS",  "PLANT"]
         ],
         "items": [
             {"item" : "", "amount": 0}
@@ -69,9 +64,9 @@
         "score": 3,
 
         "pattern": [
-            ["",        "PLANT",    ""],
-            ["",        "PLANT",    ""],
-            ["INSECT",  "",         ""]
+            ["",        "PLANT"],
+            ["",        "PLANT"],
+            ["INSECT",  ""]
         ],
         "items": [
             {"item" : "", "amount": 0}
@@ -82,9 +77,9 @@
         "score": 3,
 
         "pattern": [
-            ["",        "FUNGUS",   ""],
-            ["ANIMAL",  "",         ""],
-            ["ANIMAL",  "",         ""]
+            ["",        "FUNGUS"],
+            ["ANIMAL",  ""],
+            ["ANIMAL",  ""]
         ],
         "items": [
             {"item" : "", "amount": 0}
@@ -95,9 +90,9 @@
         "score": 3,
 
         "pattern": [
-            ["ANIMAL",  "",         ""],
-            ["",        "INSECT",   ""],
-            ["",        "INSECT",   ""]
+
+            ["ANIMAL", "INSECT"],
+            ["",       "INSECT"]
         ],
         "items": [
             {"item" : "", "amount": 0}

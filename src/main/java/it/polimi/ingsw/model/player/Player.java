@@ -11,6 +11,7 @@ import java.awt.*;
 import java.security.InvalidParameterException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Player {
     public final String nickName;
@@ -133,8 +134,8 @@ public class Player {
      *
      * @return an unmodifiable view of the board
      */
-    public HashMap<Point, Card> getBoard() {
-        return (HashMap<Point, Card>) Collections.unmodifiableMap(board);
+    public Map<Point, Card> getBoard() {
+        return Collections.unmodifiableMap(board);
     }
 
     /**
