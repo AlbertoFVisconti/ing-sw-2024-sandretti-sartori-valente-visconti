@@ -1,10 +1,13 @@
 package it.polimi.ingsw.model.decks;
 
+import it.polimi.ingsw.model.ItemCollection;
 import it.polimi.ingsw.model.cards.StartCard;
+import it.polimi.ingsw.model.cards.corners.Corner;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.EmptyStackException;
 import java.util.List;
 
 /**
@@ -32,21 +35,63 @@ public class StartCardDeck extends Deck<StartCard>{
      */
     @Override
     protected List<StartCard> loadFromFile(String fileName) throws IOException {
-        // TODO
-        return new ArrayList<>();
-    }
+        List<StartCard> cards = new ArrayList<>();
 
-    /**
-     * Draws a random StartCard from the deck and returns it.
-     * It also assures that the drawn card is actually valid before returning it.
-     *
-     * @return a random StartCard among the remaining ones
-     * @throws EmptyStackException if the deck is empty
-     */
-    public StartCard draw() {
-        StartCard c = this.drawRandom();
-        if(c == null) throw new EmptyStackException();
+        JSONArray cardsJson = buildJSONArrayFromFile(fileName);
 
-        return c;
+        for(int i = 0; i < cardsJson.length(); i++) {
+            JSONObject json = cardsJson.getJSONObject(i);
+
+            Corner  frontTopLeft = null,
+                    frontTopRight = null,
+                    frontBottomLeft = null,
+                    frontBottomRight = null,
+                    backTopLeft = null,
+                    backTopRight = null,
+                    backBottomLeft = null,
+                    backBottomRight = null;
+
+            String cornerString = json.getString("tl_front_corner");
+            if(!cornerString.equals("HIDDEN")) frontTopLeft = Corner.valueOf(cornerString);
+
+            cornerString = json.getString("tr_front_corner");
+            if(!cornerString.equals("HIDDEN")) frontTopRight = Corner.valueOf(cornerString);
+
+            cornerString = json.getString("bl_front_corner");
+            if(!cornerString.equals("HIDDEN")) frontBottomLeft = Corner.valueOf(cornerString);
+
+            cornerString = json.getString("br_front_corner");
+            if(!cornerString.equals("HIDDEN")) frontBottomRight = Corner.valueOf(cornerString);
+
+            cornerString = json.getString("tl_back_corner");
+            if(!cornerString.equals("HIDDEN")) backTopLeft = Corner.valueOf(cornerString);
+
+            cornerString = json.getString("tr_back_corner");
+            if(!cornerString.equals("HIDDEN")) backTopRight = Corner.valueOf(cornerString);
+
+            cornerString = json.getString("bl_back_corner");
+            if(!cornerString.equals("HIDDEN")) backBottomLeft = Corner.valueOf(cornerString);
+
+            cornerString = json.getString("br_back_corner");
+            if(!cornerString.equals("HIDDEN")) backBottomRight = Corner.valueOf(cornerString);
+
+            JSONArray permanentResourcesArray = json.getJSONArray("permanent");
+            ItemCollection permanentResources = new ItemCollection();
+
+            for(int j = 0; j < permanentResourcesArray.length(); j++) {
+                permanentResources.add(
+                        Corner.valueOf(permanentResourcesArray.get(j).toString())
+                );
+            }
+
+            cards.add(
+                    StartCard.generateStartCard(frontTopLeft,frontTopRight, frontBottomLeft, frontBottomRight,
+                            backTopLeft, backTopRight, backBottomLeft, backBottomRight,
+                            permanentResources
+                    )
+            );
+        }
+
+        return cards;
     }
 }

@@ -53,9 +53,6 @@ public class GoalDeck extends Deck<Goal>{
     @Override
     public Goal draw() {
         if(isLocked) throw new UnsupportedOperationException("cannot get Goal from deck when locked");
-        Goal g = this.drawRandom();
-        if(g == null) throw new EmptyStackException();
-
-        return g;
+        return super.draw();
     }
 }

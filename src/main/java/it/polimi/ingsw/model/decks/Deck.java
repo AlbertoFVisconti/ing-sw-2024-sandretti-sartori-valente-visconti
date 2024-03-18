@@ -1,6 +1,10 @@
 package it.polimi.ingsw.model.decks;
 
+import org.json.JSONArray;
+
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.EmptyStackException;
 import java.util.List;
 
 /**
@@ -34,6 +38,28 @@ abstract class Deck<T>{
     protected abstract List<T> loadFromFile(String fileName) throws IOException;
 
     /**
+     * Builds a JSONArray containing the provided json file's data.
+     * Helper method used internally in the process of loading the deck from a file.
+     *
+     * @param fileName the name of the file to use to build the JSONArray.
+     * @return the JSONArray containing the provided file's data.
+     * @throws IOException if there's a problem when trying to read the file.
+     */
+    protected static JSONArray buildJSONArrayFromFile(String fileName) throws IOException {
+        FileReader reader = new FileReader(fileName);
+        StringBuilder jsonString = new StringBuilder();
+
+        int c;
+        while((c = reader.read()) != -1) {
+            jsonString.append((char)c);
+        }
+        reader.close();
+
+        return new JSONArray(jsonString.toString());
+    }
+
+
+    /**
      * Takes a random element from the deck's content, removes it from the deck
      * and returns it. Intended for internal usage.
      *
@@ -52,6 +78,9 @@ abstract class Deck<T>{
      *
      * @return the drawn element
      */
-    public abstract T draw();
-
+    public T draw() {
+        T drawnElement = this.drawRandom();
+        if(drawnElement == null) throw new EmptyStackException();
+        return drawnElement;
+    }
 }

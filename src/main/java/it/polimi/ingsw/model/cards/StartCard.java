@@ -3,6 +3,8 @@ package it.polimi.ingsw.model.cards;
 import it.polimi.ingsw.model.ItemCollection;
 import it.polimi.ingsw.model.cards.corners.Corner;
 
+import java.util.Arrays;
+
 /**
  * Represents Starting cards.
  * This kind of cards is only used in the very beginning of the game.
@@ -74,5 +76,12 @@ public class StartCard extends Card {
             return new ItemCollection(permanentResources);
         }
         return super.collectItems();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "frontCorners = " + Arrays.toString(backCorners) + "\n" +
+                "permanentResources = " + permanentResources.toString();
     }
 }

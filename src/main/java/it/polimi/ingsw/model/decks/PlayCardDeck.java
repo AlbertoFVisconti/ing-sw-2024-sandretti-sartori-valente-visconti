@@ -12,7 +12,6 @@ import it.polimi.ingsw.model.cards.scoring.ScoringStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -60,23 +59,14 @@ public class PlayCardDeck extends Deck<PlayCard> {
      * Loads the PlayCards' data from a file and returns them
      * as a list of PlayCard objects
      *
-     * @param cardFile the name of the file containing the deck's data
+     * @param fileName the name of the file containing the deck's data
      * @return a list of PlayCards representing the deck's content
      * @throws IOException if there's a problem when trying to read the file
      */
-    protected List<PlayCard> loadFromFile(String cardFile) throws IOException {
+    protected List<PlayCard> loadFromFile(String fileName) throws IOException {
         List<PlayCard> cards = new ArrayList<>();
 
-        FileReader reader = new FileReader(cardFile);
-        StringBuilder jsonString = new StringBuilder();
-
-        int c;
-        while((c = reader.read()) != -1) {
-            jsonString.append((char) c);
-        }
-        reader.close();
-
-        JSONArray cardsJson = new JSONArray(jsonString.toString());
+        JSONArray cardsJson = buildJSONArrayFromFile(fileName);
 
         for (int i = 0; i < cardsJson.length(); i++) {
             JSONObject json = cardsJson.getJSONObject(i);
