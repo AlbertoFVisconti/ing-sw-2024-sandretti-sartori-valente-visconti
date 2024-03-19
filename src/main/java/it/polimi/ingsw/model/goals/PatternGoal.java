@@ -81,23 +81,72 @@ public class PatternGoal implements Goal {
             }
         }
 
-        matches.sort(
-                (GraphNode a, GraphNode b) ->{
-                    if(a.matchStartingCard.y == b.matchStartingCard.y) {
-                        return a.matchStartingCard.x - b.matchStartingCard.x;
-                    }
-                    return a.matchStartingCard.y - b.matchStartingCard.y;
-
-                }
-        );
-
-        for(int i = 0; i < matches.size(); i++) {
-            for (GraphNode n : matches.get(i).conflictingNodes) {
-                matches.remove(n);
+        int validMatches = 0;
+        for(GraphNode node : matches) {
+            if(node.conflictingNodes.isEmpty()) {
+                validMatches++;
+                matches.remove(node);
             }
         }
 
-        return matches.size() * scorePerMatch;
+        List<List<GraphNode>> groups = splitInConnectedGroups(matches);
+
+        for(List<GraphNode> group : groups) {
+            validMatches += (group.size() - minimumVertexSize(group, 0, new HashSet<>()));
+        }
+
+        return validMatches*scorePerMatch;
+    }
+
+    private static List<List<GraphNode>> splitInConnectedGroups(List<GraphNode> graph) {
+        Set<GraphNode> checked = new HashSet<>();
+
+        List<List<GraphNode>> ans = new ArrayList<>();
+
+        for(GraphNode node : graph) {
+            if(!checked.contains(node)) {
+                List<GraphNode> group = new ArrayList<>();
+                dfs(node, group);
+
+                checked.addAll(group);
+
+                ans.add(group);
+            }
+        }
+
+        return ans;
+    }
+
+    private static void dfs(GraphNode startingNode, List<GraphNode> group) {
+        group.add(startingNode);
+
+        for(GraphNode neighbour : startingNode.conflictingNodes) {
+            if(!group.contains(neighbour)) dfs(neighbour, group);
+        }
+    }
+
+    private static int minimumVertexSize(List<GraphNode> graph, int i, Set<GraphNode> removed) {
+        if (i >= graph.size()) return removed.size();
+        if (removed.contains(graph.get(i))) return minimumVertexSize(graph, i+1, removed);
+        //if(graph.get(i).conflictingNodes.isEmpty()) return minimumVertexSize(graph, i+1, removed);
+
+
+        removed.add(graph.get(i));
+        int a = minimumVertexSize(graph, i+1, removed);
+        removed.remove(graph.get(i));
+
+        Set<GraphNode> removedThisTime = new HashSet<>();
+        for(GraphNode neighbour : graph.get(i).conflictingNodes) {
+            if(!removed.contains(neighbour)) {
+                removedThisTime.add(neighbour);
+            }
+        }
+
+        removed.addAll(removedThisTime);
+        int b = minimumVertexSize(graph, i+1, removed);
+        removed.removeAll(removedThisTime);
+
+        return Math.min(a,b);
     }
 
     /**

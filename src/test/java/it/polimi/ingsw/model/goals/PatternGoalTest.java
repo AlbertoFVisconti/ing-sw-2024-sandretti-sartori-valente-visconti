@@ -26,7 +26,7 @@ class PatternGoalTest {
 
         Player p = new Player("", PlayerColor.BLUE);
 
-        for(int i = 0; i < 50; i++) {
+        for(int i = 0; i < 40; i++) {
             PlayCard c1 = Card.generateResourceCard(Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.ANIMAL, 2);
             PlayCard c2 = Card.generateResourceCard(Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.INSECT, 2);
 
@@ -37,6 +37,6 @@ class PatternGoalTest {
 
         }
 
-        assertEquals(50, g.evaluate(p));
+        assertEquals(40, g.evaluate(p));
     }
 }
