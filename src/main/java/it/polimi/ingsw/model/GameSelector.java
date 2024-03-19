@@ -30,6 +30,7 @@ public class GameSelector {
     public void CreateGame() throws IOException {
         Game g=new Game("test", "test", "test", "test"); //TODO sostituire con i valori effettivi
         AvailableGames.add(g);
+        Idtogame.add(g);
     }
 
     public void JoinGame(int Index){
