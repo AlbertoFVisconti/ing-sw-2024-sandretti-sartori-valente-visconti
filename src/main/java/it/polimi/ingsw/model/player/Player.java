@@ -38,6 +38,10 @@ public class Player {
         inventory = new ItemCollection();
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
     /**
      * Sets player's starting cards. The player will get to choose which side
      * to put place the card on.
