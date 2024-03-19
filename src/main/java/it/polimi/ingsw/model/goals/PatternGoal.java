@@ -10,6 +10,7 @@ import java.security.InvalidParameterException;
 import java.util.*;
 import java.util.List;
 
+
 /**
  * Represents a goal based on matching a specific pattern of resources on the player's board.
  * This goal computes the score based on how many times the pattern is found in the player's board
@@ -92,12 +93,22 @@ public class PatternGoal implements Goal {
         List<List<GraphNode>> groups = splitInConnectedGroups(matches);
 
         for(List<GraphNode> group : groups) {
-            validMatches += (group.size() - minimumVertexSize(group, 0, new HashSet<>()));
+            if(group.size() > 30) {
+                System.err.println("This will likely take a while");
+            }
+            minimumVertexSize(group, 0, new HashSet<>());
+            validMatches += (group.size() - bound);
         }
 
         return validMatches*scorePerMatch;
     }
 
+    /**
+     * Splits the graph list in groups of connected nodes.
+     *
+     * @param graph the List of node.
+     * @return a list of groups of node (list of list).
+     */
     private static List<List<GraphNode>> splitInConnectedGroups(List<GraphNode> graph) {
         Set<GraphNode> checked = new HashSet<>();
 
@@ -117,6 +128,12 @@ public class PatternGoal implements Goal {
         return ans;
     }
 
+    /**
+     * Performs the depth-first-search algorithm and fill the provided list with the reached nodes.
+     *
+     * @param startingNode the node to start the algorithm on.
+     * @param group the List to store the reached notes.
+     */
     private static void dfs(GraphNode startingNode, List<GraphNode> group) {
         group.add(startingNode);
 
@@ -125,14 +142,39 @@ public class PatternGoal implements Goal {
         }
     }
 
-    private static int minimumVertexSize(List<GraphNode> graph, int i, Set<GraphNode> removed) {
-        if (i >= graph.size()) return removed.size();
-        if (removed.contains(graph.get(i))) return minimumVertexSize(graph, i+1, removed);
-        //if(graph.get(i).conflictingNodes.isEmpty()) return minimumVertexSize(graph, i+1, removed);
+    private static int bound;
+
+    /**
+     * Compute the exact size of the Minimum Vertex Cover of the provided graph.
+     *
+     *
+     * @param graph the graph to use for the computation
+     * @param i the current checked node (when called, always 0)
+     * @param removed the set of already removed nodes
+     */
+    private static void minimumVertexSize(List<GraphNode> graph, int i, Set<GraphNode> removed) {
+        if(i == 0) bound = 2000000000;
+        if (i >= graph.size()) {
+            bound = Math.min(bound, removed.size());
+            return;
+        }
+
+        if(removed.size() >= bound) return;
+
+        if (removed.contains(graph.get(i)))  {
+            PatternGoal.minimumVertexSize(graph, i+1,removed);
+            return;
+        }
+
+
+        if(graph.get(i).conflictingNodes.isEmpty())  {
+            PatternGoal.minimumVertexSize(graph, i+1, removed);
+            return;
+        }
 
 
         removed.add(graph.get(i));
-        int a = minimumVertexSize(graph, i+1, removed);
+        minimumVertexSize(graph, i+1,removed);
         removed.remove(graph.get(i));
 
         Set<GraphNode> removedThisTime = new HashSet<>();
@@ -143,10 +185,8 @@ public class PatternGoal implements Goal {
         }
 
         removed.addAll(removedThisTime);
-        int b = minimumVertexSize(graph, i+1, removed);
+        minimumVertexSize(graph, i+1, removed);
         removed.removeAll(removedThisTime);
-
-        return Math.min(a,b);
     }
 
     /**
