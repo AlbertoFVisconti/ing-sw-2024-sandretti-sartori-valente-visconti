@@ -2,8 +2,7 @@ package it.polimi.ingsw.model.cards.scoring;
 
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.player.Player;
-
-import java.awt.*;
+import it.polimi.ingsw.utils.CardLocation;
 
 /**
  * A scoring strategy that awards score based on the number of a specific item present in the player's inventory.
@@ -36,7 +35,7 @@ public class ItemCountScoringStrategy implements ScoringStrategy {
      * @return the score obtained by the player upon placement.
      */
     @Override
-    public int evaluate(Player player, Point placingLocation) {
+    public int evaluate(Player player, CardLocation placingLocation) {
         return scorePerItem*player.getInventory().count(itemToCount);
     }
 

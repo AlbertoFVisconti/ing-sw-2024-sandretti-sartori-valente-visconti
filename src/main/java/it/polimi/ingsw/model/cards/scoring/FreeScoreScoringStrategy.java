@@ -1,8 +1,7 @@
 package it.polimi.ingsw.model.cards.scoring;
 
 import it.polimi.ingsw.model.player.Player;
-
-import java.awt.*;
+import it.polimi.ingsw.utils.CardLocation;
 
 /**
  * A scoring strategy that awards a fixed score to the player upon placing a card.
@@ -30,7 +29,7 @@ public class FreeScoreScoringStrategy implements ScoringStrategy {
      * @return the score obtained to the player upon placement.
      */
     @Override
-    public int evaluate(Player player, Point placingLocation) {
+    public int evaluate(Player player, CardLocation placingLocation) {
         return freeScore;
     }
 

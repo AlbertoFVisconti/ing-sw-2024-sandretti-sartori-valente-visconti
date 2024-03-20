@@ -6,8 +6,8 @@ import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.goals.Goal;
+import it.polimi.ingsw.utils.CardLocation;
 
-import java.awt.*;
 import java.security.InvalidParameterException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class Player {
     private final PlayCard[] playerCards;
     private Goal privateGoal;
 
-    private final HashMap<Point, Card> board;
+    private final HashMap<CardLocation, Card> board;
     private final ItemCollection inventory;
     private boolean Disconnected;
     /**
@@ -69,10 +69,10 @@ public class Player {
      * Allows to place a card from the hand of a player to his board, the position the card was is then set to null,
      *
      * @param index the index of the card you want to place (<=2)
-     * @param location the location(expressed as point) where the card needs to be placed
+     * @param location the CardLocation where the card needs to be placed
      * @throws InvalidParameterException if there already is a card in the selected location or index is too big
      */
-    public void placeCard(int index, Point location) throws InvalidParameterException{
+    public void placeCard(int index, CardLocation location) throws InvalidParameterException{
         if (this.getPlacedCard(location)!=null|| index>2) throw new InvalidParameterException();
         else {
             board.put(location,playerCards[index]);
@@ -93,7 +93,7 @@ public class Player {
         // before we put the card in the board, we make it immutable to prevent later changes
         startCard.place(0);
 
-        board.put(new Point(0,0),startCard);
+        board.put(new CardLocation(0,0),startCard);
         startCard=null;
     }
 
@@ -121,11 +121,11 @@ public class Player {
      * The reference returned is a reference to the actual stored object.
      * There's no problem since the card il placed, thus immutable (un-flippable).
      *
-     * @param point Point representing the location to get the card from
+     * @param cardLocation CardLocation representing the location to get the card from
      * @return a reference to the card in the desired location, {@code null} if there's no card
      */
-    public Card getPlacedCard(Point point) {
-        return this.board.get(point);
+    public Card getPlacedCard(CardLocation cardLocation) {
+        return this.board.get(cardLocation);
     }
 
     /**
@@ -138,7 +138,7 @@ public class Player {
      *
      * @return an unmodifiable view of the board
      */
-    public Map<Point, Card> getBoard() {
+    public Map<CardLocation, Card> getBoard() {
         return Collections.unmodifiableMap(board);
     }
 

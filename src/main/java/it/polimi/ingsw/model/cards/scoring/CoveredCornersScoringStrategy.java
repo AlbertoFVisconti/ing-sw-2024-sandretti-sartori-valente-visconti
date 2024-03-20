@@ -1,8 +1,7 @@
 package it.polimi.ingsw.model.cards.scoring;
 
 import it.polimi.ingsw.model.player.Player;
-
-import java.awt.*;
+import it.polimi.ingsw.utils.CardLocation;
 
 /**
  * A scoring strategy that awards points based on the number of corners covered by the card upon placement.
@@ -29,15 +28,13 @@ public class CoveredCornersScoringStrategy implements ScoringStrategy {
      * @return the score obtained by the player upon placement.
      */
     @Override
-    public int evaluate(Player player, Point placingLocation) {
-        int     countNeighbour = 0,
-                x = placingLocation.x,
-                y = placingLocation.y;
+    public int evaluate(Player player, CardLocation placingLocation) {
+        int countNeighbour = 0;
 
-        if(player.getPlacedCard(new Point(x-1,y+1)) != null) countNeighbour++;
-        if(player.getPlacedCard(new Point(x+1,y+1)) != null) countNeighbour++;
-        if(player.getPlacedCard(new Point(x-1,y-1)) != null) countNeighbour++;
-        if(player.getPlacedCard(new Point(x+1,y-1)) != null) countNeighbour++;
+        if(player.getPlacedCard(placingLocation.topLeftNeighbour()) != null) countNeighbour++;
+        if(player.getPlacedCard(placingLocation.topRightNeighbour()) != null) countNeighbour++;
+        if(player.getPlacedCard(placingLocation.bottomLeftNeighbour()) != null) countNeighbour++;
+        if(player.getPlacedCard(placingLocation.bottomRightNeighbour()) != null) countNeighbour++;
 
         return countNeighbour*scorePerCoveredCorner;
     }

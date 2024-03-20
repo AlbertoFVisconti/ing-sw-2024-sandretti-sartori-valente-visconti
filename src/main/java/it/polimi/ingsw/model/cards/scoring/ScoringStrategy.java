@@ -1,8 +1,7 @@
 package it.polimi.ingsw.model.cards.scoring;
 
 import it.polimi.ingsw.model.player.Player;
-
-import java.awt.*;
+import it.polimi.ingsw.utils.CardLocation;
 
 /**
  * The ScoringStrategy functional interface allows providing a function that evaluates a card placement.
@@ -17,5 +16,5 @@ public interface ScoringStrategy {
      * @param placingLocation the location on the game board where the card is being placed.
      * @return the score obtained by the player
      */
-    int evaluate(Player player, Point placingLocation);
+    int evaluate(Player player, CardLocation placingLocation);
 }

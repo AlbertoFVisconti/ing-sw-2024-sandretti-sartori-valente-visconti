@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.utils.CardLocation;
 
 import java.awt.*;
 import java.security.InvalidParameterException;
@@ -51,17 +52,17 @@ public class PatternGoal implements Goal {
      */
     @Override
     public int evaluate(Player player) {
-        Map<Point, Card> board = player.getBoard();
+        Map<CardLocation, Card> board = player.getBoard();
 
         List<GraphNode> matches = new ArrayList<>();
 
-        for(Point p : board.keySet()) {
+        for(CardLocation p : board.keySet()) {
             Card c = board.get(p);
 
             if(c instanceof PlayCard && ((PlayCard) c).getType().equals(pattern[pivot.y][pivot.x])) {
                 // the card at location p is compatible with the pattern's pivot, I check if there's a match
-                Point startingCandidateCell = new Point(subPoints(p, new Point(pivot.x, -2*pivot.y - pivot.x)));
-                if(isMatch(board, new Point(startingCandidateCell))) {
+                CardLocation startingCandidateCell = p.sub(pivot.x, -2*pivot.y - pivot.x);
+                if(isMatch(board, startingCandidateCell)) {
                     // there's a match, I add the Node to the list
                     matches.add(new GraphNode(startingCandidateCell));
                 }
@@ -191,11 +192,11 @@ public class PatternGoal implements Goal {
 
     /**
      * Support class that represents the matches' graph's node.
-     * Each node is identified by a starting Card's point (the card in the top-left of the pattern, that could be null)
+     * Each node is identified by a starting Card's Locatino (the card in the top-left of the pattern, that could be null)
      * and by the proximity list of connected (conflicting) nodes (matches)
      */
     private static class GraphNode {
-        private final Point matchStartingCard;
+        private final CardLocation matchStartingCard;
         private final List<GraphNode> conflictingNodes;
 
         /**
@@ -204,7 +205,7 @@ public class PatternGoal implements Goal {
          *
          * @param matchStartingCard the card.
          */
-        private GraphNode(Point matchStartingCard) {
+        private GraphNode(CardLocation matchStartingCard) {
             this.matchStartingCard = matchStartingCard;
             this.conflictingNodes = new ArrayList<>();
         }
@@ -224,12 +225,12 @@ public class PatternGoal implements Goal {
      * @param startingCandidateCell the top-left cell of the candidate match
      * @return {@code true} if the pattern is found, {@code false} otherwise
      */
-    private boolean isMatch(Map<Point, Card> board, Point startingCandidateCell) {
-
+    private boolean isMatch(Map<CardLocation, Card> board, CardLocation startingCandidateCell) {
         for(int i = 0; i < pattern.length; i++) {
             for(int j = 0; j < pattern[0].length; j++) {
                 if(pattern[i][j] != null) {
-                    Card c = board.get(addPoints(startingCandidateCell, new Point(j, -i * 2 - j)));
+                    Card c = board.get(startingCandidateCell.add(j, -i*2-j));
+
                     if(c == null) {
                         return false;
                     }
@@ -244,63 +245,39 @@ public class PatternGoal implements Goal {
     }
 
     /**
-     * Returns true if the matches represented by the provided points (starting cell of the match)
+     * Returns true if the matches represented by the provided CardLocations (starting cell of the match)
      * overlap.
      * <p>
      * Helper method to support the goal evaluation.
      *
-     * @param a the point representing the top-left cell of the first match.
-     * @param b the point representing the top-left cell of the second match.
+     * @param a the CardLocation representing the top-left cell of the first match.
+     * @param b the CardLacation representing the top-left cell of the second match.
      * @return {@code true} if the matches overlap, {@code false} otherwise.
      */
-    private boolean conflict(Point a, Point b) {
-        Point dist = subPoints(a,b);
-        if(dist.x >= this.pattern[0].length) return false;
+    private boolean conflict(CardLocation a, CardLocation b) {
+        CardLocation dist = a.sub(b);
+        if(Math.abs(dist.x) >= this.pattern[0].length) return false;
 
         // this can be improved, just a naive implementation to speed things up
-        Set<Point> points = new HashSet<>();
+        Set<CardLocation> locations = new HashSet<>();
 
         for(int i = 0; i < pattern.length; i++) {
             for(int j = 0; j < pattern[0].length; j++) {
-                points.add(addPoints(a, new Point(j, -i*2 - j)));
+                locations.add(a.add(j, -i*2-j));
             }
         }
 
         for(int i = 0; i < pattern.length; i++) {
             for(int j = 0; j < pattern[0].length; j++) {
-                if(points.contains(addPoints(b, new Point(j, -i*2 - j)))) {
-                    if(pattern[i][j] != null) return true;
+                if(locations.contains(b.add(j, -i*2-j))) {
+                    if(pattern[i][j] != null) {
+                        return true;
+                    }
                 }
             }
         }
 
         return false;
-    }
-
-    /**
-     * Adds to points and create a new Point object containing the sum.
-     * <p>
-     * Helper method to support the goal evaluation.
-     *
-     * @param a the first point.
-     * @param b the second point.
-     * @return a new Point object representing the sum of the two provided points.
-     */
-    private static Point addPoints(Point a, Point b) {
-        return new Point(a.x + b.x, a.y + b.y);
-    }
-
-    /**
-     * Performs subtraction between two points and create a new Point object containing the result.
-     * <p>
-     * Helper method to support the goal evaluation.
-     *
-     * @param a the point to subtract from.
-     * @param b the point to subtract.
-     * @return a new Point object representing the subtraction of the two provided points.
-     */
-    private static Point subPoints(Point a, Point b) {
-        return new Point(a.x - b.x, a.y - b.y);
     }
 
     @Override
