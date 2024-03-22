@@ -1,4 +1,5 @@
-package it.polimi.ingsw.model.decks;
+package it.polimi.ingsw.model.decks.loaders;
+
 
 import it.polimi.ingsw.model.ItemCollection;
 import it.polimi.ingsw.model.cards.StartCard;
@@ -11,38 +12,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  A deck of StartCards.
- *  It allows to load, store and distribute StartCards.
+ * The GoalDeckLoader class allows to create objects to load standard game's StartCards from files.
  */
-public class StartCardDeck extends Deck<StartCard>{
+public class StartCardDeckLoader extends DeckLoader<StartCard> {
     /**
-     * Constructs a StartCardDeck by loading its contents from a file.
+     * Build a new StartCardDeckLoader that operates on the file whose name is provided.
      *
-     * @param fileName the name of the file containing the deck's data
-     * @throws IOException if there's a problem when trying to read the file
+     * @param filename the name of the file which contains the deck's content
      */
-    public StartCardDeck(String fileName) throws IOException {
-        super(fileName);
+    public StartCardDeckLoader(String filename) {
+        super(filename);
     }
 
     /**
-     * Loads the StartCards' data from the file and returns them as a list
-     * of PlayCard objects.
+     * Loads the StartCard deck's contents from the provided file. This method must be implemented
+     * by subclasses to specify how the deck's content is loaded
      *
-     * @param fileName the name of the file containing the deck's data
-     * @return a list of StartCard objects representing the deck's content
+     * @return a list of StartCards representing the deck's content
      * @throws IOException if there's a problem when trying to read the file
      */
     @Override
-    protected List<StartCard> loadFromFile(String fileName) throws IOException {
+    public List<StartCard> load() throws IOException {
         List<StartCard> cards = new ArrayList<>();
 
-        JSONArray cardsJson = buildJSONArrayFromFile(fileName);
+        JSONArray cardsJson = buildJSONArrayFromFile(filename);
 
         for(int i = 0; i < cardsJson.length(); i++) {
             JSONObject json = cardsJson.getJSONObject(i);
 
-            Corner  frontTopLeft = null,
+            Corner frontTopLeft = null,
                     frontTopRight = null,
                     frontBottomLeft = null,
                     frontBottomRight = null,

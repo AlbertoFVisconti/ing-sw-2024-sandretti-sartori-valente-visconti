@@ -1,11 +1,12 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.cards.PlayCard;
+import it.polimi.ingsw.model.cards.StartCard;
+import it.polimi.ingsw.model.decks.Deck;
 import it.polimi.ingsw.model.decks.PlayCardDeck;
-import it.polimi.ingsw.model.decks.StartCardDeck;
+import it.polimi.ingsw.model.decks.loaders.DeckLoader;
 import it.polimi.ingsw.model.goals.Goal;
-import it.polimi.ingsw.model.decks.GoalDeck;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.GameStatus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,8 +27,8 @@ public class Game {
 
     private final PlayCardDeck goldCardsDeck;
     private final PlayCardDeck resourceCardsDeck;
-    private final StartCardDeck startCardsDeck;
-    private final GoalDeck goalsDeck;
+    private final Deck<StartCard> startCardsDeck;
+    private final Deck<Goal> goalsDeck;
     private GameStatus currStatus;
     private ScoreBoard scoreBoard;
 
@@ -35,17 +36,18 @@ public class Game {
      * Constructs a new Game object, initializing the game components.
      * In particular, the Decks' content is loaded from the provided files.
      *
-     * @param goldCardFileName name of the file that contains the gold cards' data
-     * @param resourceCardFileName name of the file that contains the resource cards' data
-     * @param startCardFileName name of the file that contains the start cards' data
-     * @param goalFileName name of the file that contains the goals' data
+     * @param goldCardDeckLoader DeckLoader that loads the game's Gold Cards
+     * @param resourceCardDeckLoader DeckLoader that loads the game's Resource Cards
+     * @param startCardDeckLoader DeckLoader that loads the game's Start Cards
+     * @param goalDeckLoader DeckLoader that loads the game's Goals
      * @throws IOException if there's a problem reading one of the files
      */
-    public Game(String goldCardFileName, String resourceCardFileName, String startCardFileName, String goalFileName) throws IOException {
-        this.goldCardsDeck = new PlayCardDeck(goldCardFileName);
-        this.resourceCardsDeck = new PlayCardDeck(resourceCardFileName);
-        this.startCardsDeck = new StartCardDeck(startCardFileName);
-        this.goalsDeck = new GoalDeck(goalFileName);
+    public Game(DeckLoader<PlayCard> goldCardDeckLoader, DeckLoader<PlayCard> resourceCardDeckLoader, DeckLoader<StartCard> startCardDeckLoader, DeckLoader<Goal> goalDeckLoader) throws IOException {
+        this.goldCardsDeck = new PlayCardDeck(goldCardDeckLoader);
+        this.resourceCardsDeck = new PlayCardDeck(resourceCardDeckLoader);
+        this.startCardsDeck = new Deck<>(startCardDeckLoader);
+        this.goalsDeck = new Deck<>(goalDeckLoader);
+
         this.players = new ArrayList<>();
         this.currStatus=GameStatus.LOBBY;
     }

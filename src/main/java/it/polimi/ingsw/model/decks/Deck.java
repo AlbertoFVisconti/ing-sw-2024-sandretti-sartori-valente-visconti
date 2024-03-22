@@ -1,63 +1,29 @@
 package it.polimi.ingsw.model.decks;
 
-import org.json.JSONArray;
+import it.polimi.ingsw.model.decks.loaders.DeckLoader;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.EmptyStackException;
 import java.util.List;
 
 /**
  * An abstract representation of the concept of deck of a specified type of element.
- * Expanding classes must provide methods to load the deck's content from a file
- * and to draw the content of the resulting deck
+ * It allows the user to draw random elements from the deck.
  *
  * @param <T> the type of elements contained by the deck
  */
-abstract class Deck<T>{
+public class Deck<T>{
     private final List<T> remaining;
 
     /**
-     * Constructs e sets up a new deck from a specified file.
+     * Constructs e sets up a new deck from a specified loader.
      *
-     * @param fileName the name of the file to load the deck content from
+     * @param deckLoader the DeckLoader that provides this deck's content
      * @throws IOException if there's a problem when trying to read the file
      */
-    public Deck(String fileName) throws IOException {
-        this.remaining = loadFromFile(fileName);
+    public Deck(DeckLoader<T> deckLoader) throws IOException {
+        this.remaining = deckLoader.getContent();
     }
-
-    /**
-     * Loads the deck's contents from a given file. This method must be implemented
-     * by subclasses to specify how the deck is loaded
-     *
-     * @param fileName the name of the file containing the deck's data
-     * @return a list of elements T representing the deck's content
-     * @throws IOException if there's a problem when trying to read the file
-     */
-    protected abstract List<T> loadFromFile(String fileName) throws IOException;
-
-    /**
-     * Builds a JSONArray containing the provided json file's data.
-     * Helper method used internally in the process of loading the deck from a file.
-     *
-     * @param fileName the name of the file to use to build the JSONArray.
-     * @return the JSONArray containing the provided file's data.
-     * @throws IOException if there's a problem when trying to read the file.
-     */
-    protected static JSONArray buildJSONArrayFromFile(String fileName) throws IOException {
-        FileReader reader = new FileReader(fileName);
-        StringBuilder jsonString = new StringBuilder();
-
-        int c;
-        while((c = reader.read()) != -1) {
-            jsonString.append((char)c);
-        }
-        reader.close();
-
-        return new JSONArray(jsonString.toString());
-    }
-
 
     /**
      * Takes a random element from the deck's content, removes it from the deck

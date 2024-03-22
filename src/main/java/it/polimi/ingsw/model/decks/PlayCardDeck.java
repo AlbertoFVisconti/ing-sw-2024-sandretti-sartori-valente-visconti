@@ -1,16 +1,7 @@
 package it.polimi.ingsw.model.decks;
 
-import it.polimi.ingsw.model.ItemCollection;
-import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
-import it.polimi.ingsw.model.cards.corners.Corner;
-import it.polimi.ingsw.model.cards.corners.Resource;
-import it.polimi.ingsw.model.cards.scoring.CoveredCornersScoringStrategy;
-import it.polimi.ingsw.model.cards.scoring.FreeScoreScoringStrategy;
-import it.polimi.ingsw.model.cards.scoring.ItemCountScoringStrategy;
-import it.polimi.ingsw.model.cards.scoring.ScoringStrategy;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import it.polimi.ingsw.model.decks.loaders.DeckLoader;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
@@ -34,11 +25,11 @@ public class PlayCardDeck extends Deck<PlayCard> {
      * It also draws the first three cards (if available) and sets them as
      * visible cars, one of those being the cards on top of the deck, thus upside down.
      *
-     * @param cardFile the name of the file containing the deck's data
+     * @param deckLoader the DeckLoader that provides this deck's content
      * @throws IOException if there's a problem when trying to read the file
      */
-    public PlayCardDeck(String cardFile) throws IOException {
-        super(cardFile);
+    public PlayCardDeck(DeckLoader<PlayCard> deckLoader) throws IOException {
+        super(deckLoader);
 
         visibleCards = new PlayCard[]{
                 null,
@@ -53,93 +44,6 @@ public class PlayCardDeck extends Deck<PlayCard> {
         */
         visibleCards[0] = this.drawRandom();
         if(visibleCards[0] != null) visibleCards[0].flip();
-    }
-
-    /**
-     * Loads the PlayCards' data from a file and returns them
-     * as a list of PlayCard objects
-     *
-     * @param fileName the name of the file containing the deck's data
-     * @return a list of PlayCards representing the deck's content
-     * @throws IOException if there's a problem when trying to read the file
-     */
-    protected List<PlayCard> loadFromFile(String fileName) throws IOException {
-        List<PlayCard> cards = new ArrayList<>();
-
-        JSONArray cardsJson = buildJSONArrayFromFile(fileName);
-
-        for (int i = 0; i < cardsJson.length(); i++) {
-            JSONObject json = cardsJson.getJSONObject(i);
-
-            boolean isGoldCard = json.getBoolean("is_gold");
-
-            Resource type = Resource.valueOf(json.getString("type"));
-
-            Corner  topLeft = null,
-                    topRight = null,
-                    bottomLeft = null,
-                    bottomRight = null;
-
-            String cornerString = json.getString("tl_corner");
-            if(!cornerString.equals("HIDDEN")) topLeft = Corner.valueOf(cornerString);
-
-            cornerString = json.getString("tr_corner");
-            if(!cornerString.equals("HIDDEN"))topRight = Corner.valueOf(cornerString);
-
-            cornerString = json.getString("bl_corner");
-            if(!cornerString.equals("HIDDEN"))bottomLeft = Corner.valueOf(cornerString);
-
-            cornerString = json.getString("br_corner");
-            if(!cornerString.equals("HIDDEN"))bottomRight = Corner.valueOf(cornerString);
-
-            if(isGoldCard) {
-                ScoringStrategy scoringStrategy = null;
-
-                switch(json.getString("scoring_strategy")) {
-                    case "item_count":
-                        try {
-                            scoringStrategy = new ItemCountScoringStrategy(
-                                    Corner.valueOf(json.getString("item_to_count")),
-                                    json.getInt("score_per_item")
-                            );
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                        break;
-                    case "free_score":
-                        scoringStrategy = new FreeScoreScoringStrategy(
-                                json.getInt("free_score")
-                        );
-                        break;
-                    case "corner_count":
-                        scoringStrategy = new CoveredCornersScoringStrategy(
-                                json.getInt("score_per_corner")
-                        );
-                        break;
-                }
-
-                JSONArray constraintArray = json.getJSONArray("constraint");
-                ItemCollection constraint = new ItemCollection();
-
-                for(int j = 0; j < constraintArray.length(); j++) {
-                    JSONObject constraintObject = constraintArray.getJSONObject(j);
-                    constraint.add(
-                            Corner.valueOf(constraintObject.getString("item")),
-                            constraintObject.getInt("amount")
-                    );
-                }
-
-                cards.add(Card.generateGoldCard(topLeft, topRight, bottomLeft, bottomRight, type, constraint, scoringStrategy));
-
-            }
-            else {
-                int score = json.getInt("free_score");
-
-                cards.add(Card.generateResourceCard(topLeft, topRight, bottomLeft, bottomRight, type, score));
-            }
-        }
-
-        return cards;
     }
 
     /**

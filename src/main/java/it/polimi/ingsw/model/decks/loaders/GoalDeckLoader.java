@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.decks;
+package it.polimi.ingsw.model.decks.loaders;
 
 import it.polimi.ingsw.model.ItemCollection;
 import it.polimi.ingsw.model.cards.corners.Corner;
@@ -11,37 +11,33 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.EmptyStackException;
 import java.util.List;
 
 /**
- * A deck of goals that helps to load, store and distribute the goals
+ * The GoalDeckLoader class allows to create objects to load standard game's goals from files.
  */
-public class GoalDeck extends Deck<Goal>{
-    private boolean isLocked=false;
-
+public class GoalDeckLoader extends DeckLoader<Goal>{
     /**
-     * Constructs a GoalDeck by loading its content from a file
+     * Build a new GoalDeckLoader that operates on the file whose name is provided.
      *
-     * @param goalFile the name of the files containing the goals
-     * @throws IOException if there's a problem when trying to read the file
+     * @param filename the name of the file which contains the deck's content
      */
-    public GoalDeck(String goalFile) throws IOException {
-        super(goalFile);
+    public GoalDeckLoader(String filename) {
+        super(filename);
     }
 
     /**
-     * Loads the goals' data from a file and returns them
-     * as a list of Goals objects
+     * Loads the goals deck's contents from the provided file. This method must be implemented
+     * by subclasses to specify how the deck's content is loaded
      *
-     * @param fileName the name of the file containing the deck's data
-     * @return a list of goals representing the deck's content
+     * @return a list of Goals representing the deck's content
      * @throws IOException if there's a problem when trying to read the file
      */
-    protected List<Goal> loadFromFile(String fileName) throws IOException {
+    @Override
+    public List<Goal> load() throws IOException {
         List<Goal> goals = new ArrayList<>();
 
-        JSONArray goalsJson = buildJSONArrayFromFile(fileName);
+        JSONArray goalsJson = buildJSONArrayFromFile(filename);
 
         for(int i = 0; i < goalsJson.length(); i++) {
             JSONObject json = goalsJson.getJSONObject(i);
@@ -98,26 +94,5 @@ public class GoalDeck extends Deck<Goal>{
         }
 
         return goals;
-    }
-
-    /**
-     * Locks the deck, preventing further drawing of goals
-     */
-    public void lock() {
-        isLocked=true;
-    }
-
-    /**
-     * If the deck is not locked, it draws a random goal from the deck and returns it.
-     * It also assures that the drawn goal is actually valid before returning it.
-     *
-     * @return a random goal among the remaining ones
-     * @throws UnsupportedOperationException if the goal is locked
-     * @throws EmptyStackException if the deck is empty
-     */
-    @Override
-    public Goal draw() {
-        if(isLocked) throw new UnsupportedOperationException("cannot get Goal from deck when locked");
-        return super.draw();
     }
 }
