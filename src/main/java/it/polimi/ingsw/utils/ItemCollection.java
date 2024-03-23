@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.utils;
 
 import it.polimi.ingsw.model.cards.corners.Corner;
 

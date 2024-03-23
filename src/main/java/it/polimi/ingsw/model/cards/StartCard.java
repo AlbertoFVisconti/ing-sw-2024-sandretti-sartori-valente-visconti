@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.cards;
 
-import it.polimi.ingsw.model.ItemCollection;
+import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.cards.corners.Corner;
 
 import java.util.Arrays;

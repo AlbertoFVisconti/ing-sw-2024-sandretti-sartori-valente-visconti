@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.decks.loaders;
 
 
-import it.polimi.ingsw.model.ItemCollection;
+import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import org.json.JSONArray;
