@@ -31,6 +31,8 @@ public class Game {
     private final Deck<Goal> goalsDeck;
     private GameStatus currStatus;
     private ScoreBoard scoreBoard;
+    private final int idGame;
+    private final int expectedPlayers;
 
     /**
      * Constructs a new Game object, initializing the game components.
@@ -40,9 +42,11 @@ public class Game {
      * @param resourceCardDeckLoader DeckLoader that loads the game's Resource Cards
      * @param startCardDeckLoader DeckLoader that loads the game's Start Cards
      * @param goalDeckLoader DeckLoader that loads the game's Goals
+     * @param idGame the Id of the game that players can use to rejoin a specific game
      * @throws IOException if there's a problem reading one of the files
      */
-    public Game(DeckLoader<PlayCard> goldCardDeckLoader, DeckLoader<PlayCard> resourceCardDeckLoader, DeckLoader<StartCard> startCardDeckLoader, DeckLoader<Goal> goalDeckLoader) throws IOException {
+    public Game(DeckLoader<PlayCard> goldCardDeckLoader, DeckLoader<PlayCard> resourceCardDeckLoader,
+                DeckLoader<StartCard> startCardDeckLoader, DeckLoader<Goal> goalDeckLoader, int idGame, int expectedPlayers) throws IOException {
         this.goldCardsDeck = new PlayCardDeck(goldCardDeckLoader);
         this.resourceCardsDeck = new PlayCardDeck(resourceCardDeckLoader);
         this.startCardsDeck = new Deck<>(startCardDeckLoader);
@@ -50,6 +54,8 @@ public class Game {
 
         this.players = new ArrayList<>();
         this.currStatus=GameStatus.LOBBY;
+        this.idGame=idGame;
+        this.expectedPlayers=expectedPlayers;
     }
 
     /**
@@ -171,4 +177,5 @@ public class Game {
     public void setCurrStatus(GameStatus gameStatus){
         currStatus=gameStatus;
     }
+    public int getExpectedPlayers(){return this.expectedPlayers;}
 }
