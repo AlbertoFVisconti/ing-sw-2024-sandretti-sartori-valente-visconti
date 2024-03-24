@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.decks.loaders;
 
 import it.polimi.ingsw.utils.ItemCollection;
-import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.cards.corners.Resource;
@@ -103,13 +102,13 @@ public class PlayCardDeckLoader extends DeckLoader<PlayCard>{
                     );
                 }
 
-                cards.add(Card.generateGoldCard(topLeft, topRight, bottomLeft, bottomRight, type, constraint, scoringStrategy));
+                cards.add(PlayCard.generateGoldCard(topLeft, topRight, bottomLeft, bottomRight, type, constraint, scoringStrategy));
 
             }
             else {
                 int score = json.getInt("free_score");
 
-                cards.add(Card.generateResourceCard(topLeft, topRight, bottomLeft, bottomRight, type, score));
+                cards.add(PlayCard.generateResourceCard(topLeft, topRight, bottomLeft, bottomRight, type, score));
             }
         }
 

@@ -31,7 +31,7 @@ public class StartCard extends Card {
      * @param backBottomRight the bottom-right corner on the back side of the card.
      * @param permanentResources ItemCollection representing the set of permanent resources on the back of the card.
      */
-    protected StartCard(Corner frontTopLeft, Corner frontTopRight, Corner frontBottomLeft, Corner frontBottomRight,
+    public StartCard(Corner frontTopLeft, Corner frontTopRight, Corner frontBottomLeft, Corner frontBottomRight,
                         Corner backTopLeft, Corner backTopRight, Corner backBottomLeft, Corner backBottomRight,
                         ItemCollection permanentResources) {
         super(frontTopLeft, frontTopRight, frontBottomLeft, frontBottomRight);

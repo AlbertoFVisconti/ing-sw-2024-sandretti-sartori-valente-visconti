@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.cards;
 
+import it.polimi.ingsw.model.cards.scoring.FreeScoreScoringStrategy;
 import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.cards.corners.Resource;
@@ -30,7 +31,7 @@ public class PlayCard extends Card {
      * @param placementConstraint ItemCollection representing the items the player needs to have in order to place the card.
      * @param scoringStrategy ScoringStrategy to evaluate the score to award the player with upon placement.
      */
-    protected PlayCard(Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
+    private PlayCard(Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
                        Resource resourceType,
                        boolean isGold,
                        ItemCollection placementConstraint,
@@ -43,6 +44,54 @@ public class PlayCard extends Card {
 
         this.scoringStrategy = scoringStrategy;
         this.type = resourceType;
+    }
+
+    /**
+     * Builds a new PlayCard representing a Gold card.
+     * Since Gold and Resource card share the same class, this method (alongside with the
+     * generateResourceCard method) allows to create the card and to avoid creating
+     * one with invalid data.
+     *
+     * @param topLeft the top-left corner on the front side of the card.
+     * @param topRight the top-right corner on the front side of the card.
+     * @param bottomLeft the bottom-left corner on the front side of the card.
+     * @param bottomRight the bottom-right corner on the front side of the card.
+     * @param resourceType the Resource type of the card (also the permanent resource on the back).
+     * @param placementConstraint ItemCollection representing the items the players needs to have to place the card.
+     * @param scoringStrategy ScoringStrategy to use to evaluate the score the player is awarded upon placing the card.
+     * @return a new PlayCard object representing the Gold card with the specified values.
+     */
+    public static PlayCard generateGoldCard(Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
+                                            Resource resourceType,
+                                            ItemCollection placementConstraint,
+                                            ScoringStrategy scoringStrategy) {
+        return new PlayCard(topLeft, topRight, bottomLeft, bottomRight, resourceType,
+                true,
+                placementConstraint,
+                scoringStrategy);
+    }
+
+    /**
+     * Builds a new PlayCard representing a Resource card.
+     * Since Gold and Resource card share the same class, this method (alongside with the
+     * generateGoldCard method) allows to create the card and to avoid creating
+     * one with invalid data.
+     *
+     * @param topLeft the top-left corner on the front side of the card.
+     * @param topRight the top-right corner on the front side of the card.
+     * @param bottomLeft the bottom-left corner on the front side of the card.
+     * @param bottomRight the bottom-right corner on the front side of the card.
+     * @param resourceType the Resource type of the card (also the permanent resource on the back).
+     * @param scoreUponPlacement the score the player is awarded upon placing the card.
+     * @return a new PlayCard object representing the Resource card with the specified values.
+     */
+    public static PlayCard generateResourceCard(Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
+                                                Resource resourceType,
+                                                int scoreUponPlacement) {
+        return new PlayCard(topLeft, topRight, bottomLeft, bottomRight, resourceType,
+                false,
+                null,
+                new FreeScoreScoringStrategy(scoreUponPlacement));
     }
 
     /**

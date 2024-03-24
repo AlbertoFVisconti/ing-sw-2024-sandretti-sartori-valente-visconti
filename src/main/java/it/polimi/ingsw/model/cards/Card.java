@@ -2,9 +2,6 @@ package it.polimi.ingsw.model.cards;
 
 import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.cards.corners.Corner;
-import it.polimi.ingsw.model.cards.corners.Resource;
-import it.polimi.ingsw.model.cards.scoring.FreeScoreScoringStrategy;
-import it.polimi.ingsw.model.cards.scoring.ScoringStrategy;
 
 import java.util.Arrays;
 
@@ -142,81 +139,6 @@ public abstract class Card {
      */
     final public Corner getBottomRightCorner() {
         return this.getCorner(3);
-    }
-
-    /**
-     * Builds a new StartCard.
-     * It basically just uses the StartCard constructor.
-     * <p>
-     * This method exists mainly to standardize the creation of cards.
-     * Gold Card and Resource Card, being both represented by the PlayCard class,
-     * need to be created through a factory method.
-     *
-     * @param frontTopLeft the top-left corner on the front side of the card.
-     * @param frontTopRight the top-right corner on the front side of the card.
-     * @param frontBottomLeft the bottom-left corner on the front side of the card.
-     * @param frontBottomRight the bottom-right corner on the front side of the card.
-     * @param backTopLeft the top-left corner on the back side of the card.
-     * @param backTopRight the top-right corner on the back side of the card.
-     * @param backBottomLeft the bottom-left corner on the back side of the card.
-     * @param backBottomRight the bottom-right corner on the back side of the card.
-     * @param permanentResources the ItemCollection representing the permanent resources on the back side of the card.
-     * @return a new StartCard object representing the card with the specified values.
-     */
-    public static StartCard generateStartCard(Corner frontTopLeft, Corner frontTopRight, Corner frontBottomLeft, Corner frontBottomRight,
-                                              Corner backTopLeft, Corner backTopRight, Corner backBottomLeft, Corner backBottomRight,
-                                              ItemCollection permanentResources) {
-        return new StartCard(frontTopLeft, frontTopRight, frontBottomLeft, frontBottomRight,
-                backTopLeft, backTopRight, backBottomLeft, backBottomRight,
-                permanentResources);
-    }
-
-    /**
-     * Builds a new PlayCard representing a Gold card.
-     * Since Gold and Resource card share the same class, this method (alongside with the
-     * generateResourceCard method) allows to create the card and to avoid creating
-     * one with invalid data.
-     *
-     * @param topLeft the top-left corner on the front side of the card.
-     * @param topRight the top-right corner on the front side of the card.
-     * @param bottomLeft the bottom-left corner on the front side of the card.
-     * @param bottomRight the bottom-right corner on the front side of the card.
-     * @param resourceType the Resource type of the card (also the permanent resource on the back).
-     * @param placementConstraint ItemCollection representing the items the players needs to have to place the card.
-     * @param scoringStrategy ScoringStrategy to use to evaluate the score the player is awarded upon placing the card.
-     * @return a new PlayCard object representing the Gold card with the specified values.
-     */
-    public static PlayCard generateGoldCard(Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
-                                            Resource resourceType,
-                                            ItemCollection placementConstraint,
-                                            ScoringStrategy scoringStrategy) {
-        return new PlayCard(topLeft, topRight, bottomLeft, bottomRight, resourceType,
-                true,
-                placementConstraint,
-                scoringStrategy);
-    }
-
-    /**
-     * Builds a new PlayCard representing a Resource card.
-     * Since Gold and Resource card share the same class, this method (alongside with the
-     * generateGoldCard method) allows to create the card and to avoid creating
-     * one with invalid data.
-     *
-     * @param topLeft the top-left corner on the front side of the card.
-     * @param topRight the top-right corner on the front side of the card.
-     * @param bottomLeft the bottom-left corner on the front side of the card.
-     * @param bottomRight the bottom-right corner on the front side of the card.
-     * @param resourceType the Resource type of the card (also the permanent resource on the back).
-     * @param scoreUponPlacement the score the player is awarded upon placing the card.
-     * @return a new PlayCard object representing the Resource card with the specified values.
-     */
-    public static PlayCard generateResourceCard(Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
-                                                Resource resourceType,
-                                                int scoreUponPlacement) {
-        return new PlayCard(topLeft, topRight, bottomLeft, bottomRight, resourceType,
-                false,
-                null,
-                new FreeScoreScoringStrategy(scoreUponPlacement));
     }
 
     /**
