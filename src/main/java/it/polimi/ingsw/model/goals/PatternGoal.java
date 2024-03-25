@@ -62,6 +62,7 @@ public class PatternGoal implements Goal {
             if(c instanceof PlayCard && ((PlayCard) c).getType().equals(pattern[pivot.y][pivot.x])) {
                 // the card at location p is compatible with the pattern's pivot, I check if there's a match
                 CardLocation startingCandidateCell = p.sub(pivot.x, -2*pivot.y - pivot.x);
+
                 if(isMatch(board, startingCandidateCell)) {
                     // there's a match, I add the Node to the list
                     matches.add(new GraphNode(startingCandidateCell));
@@ -84,10 +85,11 @@ public class PatternGoal implements Goal {
         }
 
         int validMatches = 0;
-        for(GraphNode node : matches) {
+        for (Iterator<GraphNode> iterator = matches.iterator(); iterator.hasNext(); ) {
+            GraphNode node = iterator.next();
             if(node.conflictingNodes.isEmpty()) {
                 validMatches++;
-                matches.remove(node);
+                iterator.remove();
             }
         }
 
@@ -263,7 +265,9 @@ public class PatternGoal implements Goal {
 
         for(int i = 0; i < pattern.length; i++) {
             for(int j = 0; j < pattern[0].length; j++) {
-                locations.add(a.add(j, -i*2-j));
+                if(pattern[i][j] != null) {
+                    locations.add(a.add(j, -i * 2 - j));
+                }
             }
         }
 
