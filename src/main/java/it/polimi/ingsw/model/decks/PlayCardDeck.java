@@ -5,10 +5,7 @@ import it.polimi.ingsw.model.decks.loaders.DeckLoader;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.EmptyStackException;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * This class represents the Decks of Resource and Gold cards.
@@ -101,5 +98,8 @@ public class PlayCardDeck extends Deck<PlayCard> {
         return pickedCard;
     }
 
-
+    @Override
+    public boolean isEmpty() {
+        return super.isEmpty() && Arrays.stream(this.visibleCards).allMatch(Objects::isNull);
+    }
 }
