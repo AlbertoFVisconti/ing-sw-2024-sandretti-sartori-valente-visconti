@@ -49,4 +49,7 @@ public class Deck<T>{
         if(drawnElement == null) throw new EmptyStackException();
         return drawnElement;
     }
+    public boolean isEmpty(){
+        return remaining.isEmpty();
+    }
 }
