@@ -3,8 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.decks.Deck;
-import it.polimi.ingsw.model.decks.PlayCardDeck;
-import it.polimi.ingsw.model.decks.loaders.DeckLoader;
+import it.polimi.ingsw.model.decks.DeckLoader;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 
@@ -25,8 +24,11 @@ public class Game {
 
     private Goal[] commonGoals;
 
-    private final PlayCardDeck goldCardsDeck;
-    private final PlayCardDeck resourceCardsDeck;
+    private final Deck<PlayCard> goldCardsDeck;
+    private final Deck<PlayCard> resourceCardsDeck;
+
+    private PlayCard[] visibleCards;
+
     private final Deck<StartCard> startCardsDeck;
     private final Deck<Goal> goalsDeck;
     private GameStatus currStatus;
@@ -47,10 +49,11 @@ public class Game {
      */
     public Game(DeckLoader<PlayCard> goldCardDeckLoader, DeckLoader<PlayCard> resourceCardDeckLoader,
                 DeckLoader<StartCard> startCardDeckLoader, DeckLoader<Goal> goalDeckLoader, int idGame, int expectedPlayers) throws IOException {
-        this.goldCardsDeck = new PlayCardDeck(goldCardDeckLoader);
-        this.resourceCardsDeck = new PlayCardDeck(resourceCardDeckLoader);
-        this.startCardsDeck = new Deck<>(startCardDeckLoader);
-        this.goalsDeck = new Deck<>(goalDeckLoader);
+        this.goldCardsDeck = goldCardDeckLoader.getDeck();
+        this.resourceCardsDeck = resourceCardDeckLoader.getDeck();
+
+        this.startCardsDeck = startCardDeckLoader.getDeck();
+        this.goalsDeck = goalDeckLoader.getDeck();
 
         this.players = new ArrayList<>();
         this.currStatus=GameStatus.LOBBY;
@@ -139,6 +142,15 @@ public class Game {
                 this.goalsDeck.draw(),
                 this.goalsDeck.draw()
         };
+
+        // Draws the visible cards
+        this.visibleCards = new PlayCard[]{
+                this.resourceCardsDeck.draw(),
+                this.resourceCardsDeck.draw(),
+                this.goldCardsDeck.draw(),
+                this.goldCardsDeck.draw()
+        };
+
 
         for(Player player : this.players) {
             // draws the player's private goal and startcard

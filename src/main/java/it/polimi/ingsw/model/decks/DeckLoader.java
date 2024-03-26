@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.decks.loaders;
+package it.polimi.ingsw.model.decks;
 
 import org.json.JSONArray;
 
@@ -20,6 +20,10 @@ public abstract class DeckLoader<T> {
     protected final String filename;
     private List<T> loadedContent = null;
 
+    public Deck<T> getDeck() throws IOException {
+        return new Deck<>(this.getContent());
+    }
+
     /**
      * Build a new DeckLoader that operates on the file whose name is provided.
      *
@@ -37,7 +41,7 @@ public abstract class DeckLoader<T> {
      * @return a list of elements T representing the deck's content
      * @throws IOException if there's a problem when trying to read the file
      */
-    public final ArrayList<T> getContent() throws IOException {
+    private ArrayList<T> getContent() throws IOException {
         if(loadedContent == null) {
             this.loadedContent = this.load();
         }

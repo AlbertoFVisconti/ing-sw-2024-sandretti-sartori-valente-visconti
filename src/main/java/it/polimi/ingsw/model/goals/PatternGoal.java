@@ -97,7 +97,7 @@ public class PatternGoal implements Goal {
 
         for(List<GraphNode> group : groups) {
             if(group.size() > 30) {
-                System.err.println("This will likely take a while");
+                System.err.println("A large ("+group.size()+") group of conflicting matches has been found; long elaboration time's is to be expected (you might want to kill if the size is beyond 50)");
             }
             minimumVertexSize(group, 0, new HashSet<>());
             validMatches += (group.size() - bound);

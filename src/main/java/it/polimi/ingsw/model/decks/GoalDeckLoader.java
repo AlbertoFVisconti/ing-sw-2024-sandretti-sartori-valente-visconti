@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.decks.loaders;
+package it.polimi.ingsw.model.decks;
 
 import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.cards.corners.Corner;

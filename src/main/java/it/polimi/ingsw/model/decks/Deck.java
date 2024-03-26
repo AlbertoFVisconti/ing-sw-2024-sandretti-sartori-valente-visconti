@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model.decks;
 
-import it.polimi.ingsw.model.decks.loaders.DeckLoader;
-
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.List;
 
@@ -14,27 +12,28 @@ import java.util.List;
  */
 public class Deck<T>{
     private final List<T> remaining;
+    private T topOfTheStack;
 
     /**
-     * Constructs e sets up a new deck from a specified loader.
+     * Constructs e sets up a new deck with the provided content.
      *
-     * @param deckLoader the DeckLoader that provides this deck's content
-     * @throws IOException if there's a problem when trying to read the file
+     * @param content a list of elements representing the deck's content
      */
-    public Deck(DeckLoader<T> deckLoader) throws IOException {
-        this.remaining = deckLoader.getContent();
+    Deck(List<T> content)  {
+        this.remaining = new ArrayList<>(content);
+        this.topOfTheStack = next();
     }
 
     /**
      * Takes a random element from the deck's content, removes it from the deck
      * and returns it. Intended for internal usage.
      *
-     * @return a random element among the remaining ones
+     * @return an element taken at random from the deck's content (top of the stack excluded)
      */
-    protected T drawRandom() {
+    private T next() {
         if(remaining.isEmpty()) return null;
 
-        int selectedIndex=(int) (Math.random()*remaining.size());
+        int selectedIndex = (int) (Math.random() * remaining.size());
         return remaining.remove(selectedIndex); // remove returns the removed element
     }
 
@@ -45,11 +44,29 @@ public class Deck<T>{
      * @return the drawn element
      */
     public T draw() {
-        T drawnElement = this.drawRandom();
+        T drawnElement = topOfTheStack;
+        topOfTheStack = next();
         if(drawnElement == null) throw new EmptyStackException();
         return drawnElement;
     }
-    public boolean isEmpty(){
-        return remaining.isEmpty();
+
+    /**
+     * Retrieves the element that's currently on top of the deck (which can be empty)
+     *
+     * @return the element that's on top of the stack {@code null} if the deck's empty
+     */
+    public T getTopOfTheStack() {
+        return this.topOfTheStack;
+    }
+
+    /**
+     * Checks whether the deck is empty or not.
+     * <p>
+     * The deck's empty if there's no card on top of the stack (thus, no stack)
+     *
+     * @return {@code true} if the deck's empty, {@code false} otherwise
+     */
+    public boolean isEmpty() {
+        return this.topOfTheStack == null;
     }
 }
