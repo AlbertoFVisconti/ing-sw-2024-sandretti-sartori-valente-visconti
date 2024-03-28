@@ -1,16 +1,19 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerColor;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 public class GameSelector {
     private Map<Integer,Game> Games;
     private int curr=0;
+    public GameSelector(){
+        this.Games= new HashMap<Integer, Game>() ;
+    }
+
 
     /**
      * returns true if there are no player with the same nickname in the selected game
@@ -35,21 +38,25 @@ public class GameSelector {
 
     }
 
-    public void JoinGame(int idGame) throws Exception{
+    public void JoinGame(int idGame, int color,String Nickname) throws Exception{
         Game game=Games.get(idGame);
-        if(game.getPlayers().size()==game.getExpectedPlayers()){
-            throw new Exception("Game already full");
+        if(game.getPlayers().size()==game.getExpectedPlayers()) throw new Exception("Game already full");
+        if (!isAvailable(game,Nickname)) throw new Exception("Nick already taken");
+        PlayerColor playerColor;
+        switch (color) {
+            case 1:
+                playerColor = PlayerColor.RED;
+                break;
+            case 2:
+                playerColor = PlayerColor.YELLOW;
+                break;
+            case 3:
+                playerColor = PlayerColor.GREEN;
+                break;
+            default:
+                playerColor = PlayerColor.BLUE;
         }
-
-
+        if (!game.getAvailableColor().contains(playerColor)) throw new Exception("Color not available, choose another one");
+        game.addPlayer(new Player(Nickname,playerColor));
     }
-
-
-
-
-
-
-
-
-
 }

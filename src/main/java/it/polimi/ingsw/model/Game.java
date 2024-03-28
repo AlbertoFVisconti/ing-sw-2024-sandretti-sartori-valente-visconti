@@ -6,11 +6,10 @@ import it.polimi.ingsw.model.decks.Deck;
 import it.polimi.ingsw.model.decks.DeckLoader;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerColor;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * The Game class represents a game session of the Codex Naturalis game
@@ -35,6 +34,8 @@ public class Game {
     private ScoreBoard scoreBoard;
     private final int idGame;
     private final int expectedPlayers;
+    private Set<PlayerColor> availableColor;
+
 
     /**
      * Constructs a new Game object, initializing the game components.
@@ -59,6 +60,8 @@ public class Game {
         this.currStatus=GameStatus.LOBBY;
         this.idGame=idGame;
         this.expectedPlayers=expectedPlayers;
+        this.availableColor= new HashSet<>();
+        this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE,PlayerColor.GREEN,PlayerColor.RED,PlayerColor.YELLOW));
     }
 
     /**
@@ -71,6 +74,7 @@ public class Game {
     public void addPlayer(Player player) throws Exception {
         if(isStarted) throw new Exception();
         players.add(player);
+        availableColor.remove(player.color);
     }
 
     /**
@@ -190,4 +194,5 @@ public class Game {
         currStatus=gameStatus;
     }
     public int getExpectedPlayers(){return this.expectedPlayers;}
+    public Set<PlayerColor> getAvailableColor(){ return this.availableColor;}
 }
