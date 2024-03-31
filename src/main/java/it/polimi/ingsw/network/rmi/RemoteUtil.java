@@ -6,6 +6,8 @@ import it.polimi.ingsw.model.decks.Deck;
 import java.awt.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+
+//https://www.developer.com/design/java-rmi-tutorial/
 public interface RemoteUtil extends Remote{
     public void joinGame ( int idgame, int color, String nick) throws RemoteException;
     public Card drawTopCard(Deck deck) throws RemoteException;

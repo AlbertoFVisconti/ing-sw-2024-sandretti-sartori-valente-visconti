@@ -120,8 +120,7 @@ public class Game {
      *
      * @throws Exception if the game has already started
      */
-    public void shufflePlayers() throws Exception {
-        if(isStarted) throw new Exception();
+    public void shufflePlayers(){
         Collections.shuffle(this.players);
     }
 
@@ -157,8 +156,7 @@ public class Game {
 
 
         for(Player player : this.players) {
-            // draws the player's private goal and startcard
-            player.setPrivateGoal(this.goalsDeck.draw());
+            // draws the player's private startcard
             player.setStartCard(this.startCardsDeck.draw());
 
             // draws the player 2 resource cards and 1 gold card
@@ -195,4 +193,6 @@ public class Game {
     }
     public int getExpectedPlayers(){return this.expectedPlayers;}
     public Set<PlayerColor> getAvailableColor(){ return this.availableColor;}
+    public Goal getGoal(){return  this.goalsDeck.draw();}
+    public ScoreBoard getScoreBoard(){return this.scoreBoard;}
 }
