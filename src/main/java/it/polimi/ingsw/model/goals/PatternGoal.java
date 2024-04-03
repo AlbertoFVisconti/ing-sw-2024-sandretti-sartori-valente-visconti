@@ -16,7 +16,7 @@ import java.util.List;
  * Represents a goal based on matching a specific pattern of resources on the player's board.
  * This goal computes the score based on how many times the pattern is found in the player's board
  */
-public class PatternGoal implements Goal {
+public class PatternGoal extends Goal {
     private final int scorePerMatch;
     private final Resource[][] pattern;
 

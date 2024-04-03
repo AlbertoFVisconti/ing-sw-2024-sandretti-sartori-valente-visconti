@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.decks;
 
+import it.polimi.ingsw.model.cards.corners.Resource;
+
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.List;
  *
  * @param <T> the type of elements contained by the deck
  */
-public class Deck<T>{
+public class Deck<T extends Drawable>{
     private final List<T> remaining;
     private T topOfTheStack;
 
@@ -51,12 +53,14 @@ public class Deck<T>{
     }
 
     /**
-     * Retrieves the element that's currently on top of the deck (which can be empty)
+     * Retrieves the Resource type of the card that's currently on top of the deck (which can be empty).
+     * <p>
+     * This method should only be used when dealing with a Deck of PlayCards (or subclass).
      *
      * @return the element that's on top of the stack {@code null} if the deck's empty
      */
-    public T getTopOfTheStack() {
-        return this.topOfTheStack;
+    public Resource getTopOfTheStack() {
+        return this.topOfTheStack.getCardResourceType();
     }
 
     /**

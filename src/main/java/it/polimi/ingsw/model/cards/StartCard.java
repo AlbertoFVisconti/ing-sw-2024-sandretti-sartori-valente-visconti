@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.cards;
 
+import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.cards.corners.Corner;
 
@@ -83,5 +84,10 @@ public class StartCard extends Card {
         return super.toString() +
                 "frontCorners = " + Arrays.toString(backCorners) + "\n" +
                 "permanentResources = " + permanentResources.toString();
+    }
+
+    @Override
+    public Resource getCardResourceType() {
+        return null;
     }
 }

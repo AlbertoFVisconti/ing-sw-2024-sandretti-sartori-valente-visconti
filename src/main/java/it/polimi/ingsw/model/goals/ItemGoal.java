@@ -7,7 +7,7 @@ import it.polimi.ingsw.model.player.Player;
  * Represents a goal based on collecting specific items.
  * This goal computes the score based on the number of sets of items collected by the player.
  */
-public class ItemGoal implements Goal {
+public class ItemGoal extends Goal {
     private final int scorePerSet;
     private final ItemCollection items;
 

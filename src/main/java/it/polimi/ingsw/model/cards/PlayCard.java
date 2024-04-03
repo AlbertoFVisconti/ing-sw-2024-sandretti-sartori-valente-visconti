@@ -164,4 +164,9 @@ public class PlayCard extends Card {
                 "constraint = " + constraint.toString() + "\n" +
                 "scoringStrategy = " + scoringStrategy.toString();
     }
+
+    @Override
+    public Resource getCardResourceType() {
+        return this.getType();
+    }
 }

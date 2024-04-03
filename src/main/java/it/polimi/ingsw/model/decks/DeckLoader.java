@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @param <T>
  */
-public abstract class DeckLoader<T> {
+public abstract class DeckLoader<T extends Drawable> {
     protected final String filename;
     private List<T> loadedContent = null;
 

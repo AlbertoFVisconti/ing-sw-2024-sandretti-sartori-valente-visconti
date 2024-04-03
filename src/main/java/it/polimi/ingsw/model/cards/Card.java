@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.cards;
 
+import it.polimi.ingsw.model.decks.Drawable;
 import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.cards.corners.Corner;
 
@@ -9,7 +10,7 @@ import java.util.Arrays;
  * Abstract representation of in-game cards
  * Holds methods and parameters that helps handle and generate every card in the game.
  */
-public abstract class Card {
+public abstract class Card implements Drawable {
     private boolean isBack=false;
     private boolean isPlaced=false;
     private int placementTurn=-1;
