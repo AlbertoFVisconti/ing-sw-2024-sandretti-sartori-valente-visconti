@@ -23,7 +23,7 @@ public class GameSelector {
     public boolean isAvailable(Game game, String Nickname){
         List<Player> temp=game.getPlayers();
         for(Player p: temp){
-            if(p.getNickName().equals(Nickname))  return false;
+            if(p.nickName.equals(Nickname))  return false;
         }
         return true;
     }
