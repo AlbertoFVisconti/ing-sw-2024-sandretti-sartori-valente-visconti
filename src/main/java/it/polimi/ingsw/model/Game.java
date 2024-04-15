@@ -178,21 +178,14 @@ public class Game {
      *
      * @return {@code true} if the game has started, {@code false} otherwise.
      */
-    public boolean isGameStarted() {
-        return this.isStarted;
-    }
 
     public List<Player> getPlayers(){
         return Collections.unmodifiableList(players);
-    }
-    public GameStatus getCurrStatus(){
-        return currStatus;
-    }
-    public void setCurrStatus(GameStatus gameStatus){
-        currStatus=gameStatus;
     }
     public int getExpectedPlayers(){return this.expectedPlayers;}
     public Set<PlayerColor> getAvailableColor(){ return this.availableColor;}
     public Goal getGoal(){return  this.goalsDeck.draw();}
     public ScoreBoard getScoreBoard(){return this.scoreBoard;}
+    public int getIdGame() {return this.idGame;}
+    public boolean emptyDecks(){ return (this.goldCardsDeck.isEmpty()&& this.resourceCardsDeck.isEmpty());}
 }

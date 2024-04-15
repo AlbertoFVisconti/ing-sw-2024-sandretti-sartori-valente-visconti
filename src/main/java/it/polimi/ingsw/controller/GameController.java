@@ -94,7 +94,7 @@ public class GameController {
              }
              ScoreBoard scoreBoard=this.game.getScoreBoard();
              for(Player player: game.getPlayers()){
-                 if(scoreBoard.getScore(player)>=20) {
+                 if(scoreBoard.getScore(player)>=20 || this.game.emptyDecks()) {
                      currstatus = GameStatus.LAST_TURN;
                      lastTurn();
                  }
