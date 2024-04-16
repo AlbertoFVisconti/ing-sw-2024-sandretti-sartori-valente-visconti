@@ -232,4 +232,8 @@ public class Player {
     public PlayCard[] getPlayerCards() {
         return playerCards;
     }
+    
+    public String getNickname() {
+        return nickName;
+    }
 }
