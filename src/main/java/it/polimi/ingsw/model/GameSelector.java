@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.decks.GoalDeckLoader;
 import it.polimi.ingsw.model.decks.PlayCardDeckLoader;
 import it.polimi.ingsw.model.decks.StartCardDeckLoader;
@@ -11,10 +12,10 @@ import java.util.*;
 
 
 public class GameSelector {
-    private Map<Integer,Game> Games;
+    private Map<Integer, GameController> Games;
     private int curr=0;
     public GameSelector(){
-        this.Games= new HashMap<Integer, Game>() ;
+        this.Games= new HashMap<Integer, GameController>() ;
     }
 
 
@@ -36,22 +37,29 @@ public class GameSelector {
     /**
      * @param expectedPlayers: the number of player expected for that game
      * **/
-    public void CreateGame(int expectedPlayers) throws IOException {
+    public int CreateGame(int expectedPlayers) throws IOException {
         //TODO sostituire con i valori effettivi
-        GoalDeckLoader goalDeckLoader= new GoalDeckLoader("goals.json");
-        PlayCardDeckLoader resourceCardDeckLoader= new PlayCardDeckLoader("resourcecards.json");
-        PlayCardDeckLoader goldCardDeckLoader= new PlayCardDeckLoader("goldcards.json");
-        StartCardDeckLoader startCardDeckLoader= new StartCardDeckLoader("startcards.json");
+        GoalDeckLoader goalDeckLoader= new GoalDeckLoader("src/main/resources/json/goals.json");
+        PlayCardDeckLoader resourceCardDeckLoader= new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");
+        PlayCardDeckLoader goldCardDeckLoader= new PlayCardDeckLoader("src/main/resources/json/cards/goldcards.json");
+        StartCardDeckLoader startCardDeckLoader= new StartCardDeckLoader("src/main/resources/json/cards/startcards.json");
 
 
         Game g=new Game(goldCardDeckLoader,resourceCardDeckLoader,startCardDeckLoader,goalDeckLoader, curr,expectedPlayers );
-        Games.put(curr,g);
-        curr++;
 
+        GameController controller = new GameController(g);
+
+        Games.put(curr,controller);
+
+        return curr++;
     }
 
-    public void JoinGame(int idGame, int color,String Nickname) throws Exception{
-        Game game=Games.get(idGame);
+    public GameController getGame(int gameId) {
+        return this.Games.get(gameId);
+    }
+
+    public void JoinGame(int idGame, int color, String Nickname) throws Exception{
+        Game game=Games.get(idGame).getGame();
         if(game.getPlayers().size()==game.getExpectedPlayers()) throw new Exception("Game already full");
         if (!isAvailable(game,Nickname)) throw new Exception("Nick already taken");
         PlayerColor playerColor;

@@ -163,6 +163,14 @@ public class Game {
             player.setPlayerCard(this.resourceCardsDeck.draw(), 0);
             player.setPlayerCard(this.resourceCardsDeck.draw(), 1);
             player.setPlayerCard(this.goldCardsDeck.draw(), 2);
+
+            Goal[] availableGoals = new Goal[]{
+                    this.goalsDeck.draw(),
+                    this.goalsDeck.draw()
+            };
+
+            player.setAvailableGoals(availableGoals);
+
         }
 
         // initialize the scoreboard with the current set of players

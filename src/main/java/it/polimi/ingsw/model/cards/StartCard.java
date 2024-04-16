@@ -82,7 +82,7 @@ public class StartCard extends Card {
     @Override
     public String toString() {
         return super.toString() +
-                "frontCorners = " + Arrays.toString(backCorners) + "\n" +
+                "backCorners = " + Arrays.toString(backCorners) + "\n" +
                 "permanentResources = " + permanentResources.toString();
     }
 

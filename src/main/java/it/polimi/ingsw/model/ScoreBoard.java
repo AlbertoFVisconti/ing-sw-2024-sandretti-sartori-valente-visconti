@@ -53,4 +53,15 @@ public class ScoreBoard {
         if(!scores.containsKey(player)) throw new NoSuchElementException("This player is not in the scoreboard");
         scores.put(player,scores.get(player) + scoreDelta);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+
+        for(Player p : this.scores.keySet()) {
+            s.append(p.nickName).append(": ").append(scores.get(p)).append("\n");
+        }
+
+        return s.toString();
+    }
 }

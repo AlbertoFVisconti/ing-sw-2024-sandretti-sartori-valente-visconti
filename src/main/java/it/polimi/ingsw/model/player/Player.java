@@ -62,6 +62,11 @@ public class Player {
         else playerCards[index]=card;
 
     }
+
+    public void setAvailableGoals(Goal[] availableGoals) {
+        this.availableGoals = availableGoals.clone();
+    }
+
     /**
      * Allows to place a card from the hand of a player to his board, the position the card was is then set to null,
      *
@@ -218,6 +223,10 @@ public class Player {
 
     public Goal[] getAvailableGoals() {
         return availableGoals;
+    }
+
+    public StartCard getStartCard() {
+        return this.startCard;
     }
 
     public PlayCard[] getPlayerCards() {
