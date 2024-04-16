@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.decks.GoalDeckLoader;
+import it.polimi.ingsw.model.decks.PlayCardDeckLoader;
+import it.polimi.ingsw.model.decks.StartCardDeckLoader;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
 
@@ -30,9 +33,18 @@ public class GameSelector {
     public void RemoveGame(int idGame){
         Games.remove(idGame);
     }
-
+    /**
+     * @param expectedPlayers: the number of player expected for that game
+     * **/
     public void CreateGame(int expectedPlayers) throws IOException {
-        Game g=new Game(null,null,null,null, curr,expectedPlayers ); //TODO sostituire con i valori effettivi
+        //TODO sostituire con i valori effettivi
+        GoalDeckLoader goalDeckLoader= new GoalDeckLoader("goals.json");
+        PlayCardDeckLoader resourceCardDeckLoader= new PlayCardDeckLoader("resourcecards.json");
+        PlayCardDeckLoader goldCardDeckLoader= new PlayCardDeckLoader("goldcards.json");
+        StartCardDeckLoader startCardDeckLoader= new StartCardDeckLoader("startcards.json");
+
+
+        Game g=new Game(goldCardDeckLoader,resourceCardDeckLoader,startCardDeckLoader,goalDeckLoader, curr,expectedPlayers );
         Games.put(curr,g);
         curr++;
 
@@ -59,4 +71,8 @@ public class GameSelector {
         if (!game.getAvailableColor().contains(playerColor)) throw new Exception("Color not available, choose another one");
         game.addPlayer(new Player(Nickname,playerColor));
     }
+    public Set<Integer> getAvailableGames(){
+        return Games.keySet();
+    }
+
 }
