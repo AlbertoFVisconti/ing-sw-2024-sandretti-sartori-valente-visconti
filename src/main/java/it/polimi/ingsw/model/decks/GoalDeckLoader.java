@@ -56,9 +56,9 @@ public class GoalDeckLoader extends DeckLoader<Goal>{
 
                     pattern = new Resource[rows][cols];
 
-                    for(int y = 0; y < cols; y++) {
+                    for(int y = 0; y < rows; y++) {
                         JSONArray currentRow = patternJson.getJSONArray(y);
-                        for(int x = 0; x < rows; x++) {
+                        for(int x = 0; x < cols; x++) {
                             String resourceName = currentRow.get(x).toString();
 
                             if(resourceName.isEmpty()){

@@ -37,7 +37,6 @@ public class Game {
     private final int expectedPlayers;
     private Set<PlayerColor> availableColor;
 
-
     /**
      * Constructs a new Game object, initializing the game components.
      * In particular, the Decks' content is loaded from the provided files.

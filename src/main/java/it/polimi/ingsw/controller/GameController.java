@@ -25,6 +25,10 @@ public class GameController {
         this.waitPlayers();
     }
 
+    public GameStatus getGameStatus() {
+        return gameStatus;
+    }
+
     private void updateStatus() {
          if(gameStatus == GameStatus.GAME_CREATION) {
              for (Player p : game.getPlayers()) {

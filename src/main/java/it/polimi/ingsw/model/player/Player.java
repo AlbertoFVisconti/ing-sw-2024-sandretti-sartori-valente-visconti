@@ -219,4 +219,8 @@ public class Player {
     public Goal[] getAvailableGoals() {
         return availableGoals;
     }
+
+    public PlayCard[] getPlayerCards() {
+        return playerCards;
+    }
 }

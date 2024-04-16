@@ -169,4 +169,8 @@ public class PlayCard extends Card {
     public Resource getCardResourceType() {
         return this.getType();
     }
+
+    public boolean isGold() {
+        return isGold;
+    }
 }
