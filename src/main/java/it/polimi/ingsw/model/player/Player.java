@@ -19,6 +19,7 @@ public class Player {
     private StartCard startCard;
     private final PlayCard[] playerCards;
     private Goal privateGoal;
+    private Goal[] availableGoals;
 
     private final HashMap<CardLocation, Card> board;
     private final ItemCollection inventory;
@@ -79,12 +80,16 @@ public class Player {
 
     /**
      * Places the player's StartCard in the origin of the board.
-     * It's assumed that the player already decided the orientation of the card.
+     * The orientation of the cards is also required
+     *
+     * @param onBackside {@code true} if the card should show the back side, {@code false} otherwise
      *
      * @throws Exception if the players has no StartCard to place
      */
-    public void placeStartingCard() throws Exception{
+    public void placeStartingCard(boolean onBackside) throws Exception{
         if (startCard==null) throw new Exception("no start card found");
+
+        if(startCard.isOnBackSide() != onBackside) startCard.flip();
 
         // before we put the card in the board, we make it immutable to prevent later changes
         startCard.place(0);
@@ -198,5 +203,20 @@ public class Player {
     }
     private void disconnected(boolean b){
         this.Disconnected=b;
+    }
+
+    public void addPlayerCard(PlayCard draw) throws Exception {
+        for(int i = 0; i < playerCards.length; i++) {
+            if(playerCards[i] == null) {
+                playerCards[i] = draw;
+                return;
+            }
+        }
+
+        throw new Exception("Player's hand is full");
+    }
+
+    public Goal[] getAvailableGoals() {
+        return availableGoals;
     }
 }

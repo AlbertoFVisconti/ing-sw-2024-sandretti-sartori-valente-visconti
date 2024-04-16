@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.decks.Deck;
@@ -195,4 +196,58 @@ public class Game {
     public Set<PlayerColor> getAvailableColor(){ return this.availableColor;}
     public Goal getGoal(){return  this.goalsDeck.draw();}
     public ScoreBoard getScoreBoard(){return this.scoreBoard;}
+
+    public Deck<PlayCard> getResourceCardsDeck() {
+        return resourceCardsDeck;
+    }
+
+    public Deck<PlayCard> getGoldCardsDeck() {
+        return goldCardsDeck;
+    }
+
+    public PlayCard[] getVisibleCards() {
+        return visibleCards;
+    }
+
+    public void refillVisibleCards() {
+        // first i try to fill the empty slots with the preferred card type
+        for(int i = 0; i < visibleCards.length; i++) {
+            if(visibleCards[i] == null) {
+                if(i < 2) {
+                    // resource card preferred
+                    if(!this.resourceCardsDeck.isEmpty()) {
+                        visibleCards[i] = resourceCardsDeck.draw();
+                    }
+                }
+                else {
+                    // gold card
+                    if(!this.goldCardsDeck.isEmpty()) {
+                        visibleCards[i] = goldCardsDeck.draw();
+                    }
+                }
+            }
+        }
+
+        // in the second run i try to fill the empty slots with whichever type of card is available
+        for(int i = 0; i < visibleCards.length; i++) {
+            if(visibleCards[i] == null) {
+                if(i < 2) {
+                    // resource card preferred
+                    if(!this.goldCardsDeck.isEmpty()) {
+                        visibleCards[i] = goldCardsDeck.draw();
+                    }
+                }
+                else {
+                    // gold card
+                    if(!this.resourceCardsDeck.isEmpty()) {
+                        visibleCards[i] = resourceCardsDeck.draw();
+                    }
+                }
+            }
+        }
+    }
+
+    public boolean isFirstPlayersTurn() {
+        return currentTurn == 0;
+    }
 }

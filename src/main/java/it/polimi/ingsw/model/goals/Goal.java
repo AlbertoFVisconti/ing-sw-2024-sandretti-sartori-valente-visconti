@@ -17,7 +17,7 @@ public abstract class Goal implements Drawable {
      * @param player Player whose board or inventory needs to be evaluated.
      * @return score obtained by the player.
      */
-    abstract int evaluate(Player player);
+    abstract public int evaluate(Player player);
 
     @Override
     public Resource getCardResourceType() {

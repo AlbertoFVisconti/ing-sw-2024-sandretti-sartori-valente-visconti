@@ -48,4 +48,9 @@ public class ScoreBoard {
         if(!scores.containsKey(player)) throw new NoSuchElementException("This player is not in the scoreboard");
         scores.put(player,score);
     }
+
+    public void addScore(Player player, int scoreDelta) {
+        if(!scores.containsKey(player)) throw new NoSuchElementException("This player is not in the scoreboard");
+        scores.put(player,scores.get(player) + scoreDelta);
+    }
 }
