@@ -1,3 +1,4 @@
+package it.polimi.ingsw.model.chat;
 import it.polimi.ingsw.model.player.Player;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 
-package it.polimi.ingsw.model.chat;
+
 
 /**
  * The Chat class allows users to communicate with each other through an in-game

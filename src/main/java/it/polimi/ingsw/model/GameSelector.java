@@ -77,6 +77,7 @@ public class GameSelector {
                 playerColor = PlayerColor.BLUE;
         }
         if (!game.getAvailableColor().contains(playerColor)) throw new Exception("Color not available, choose another one");
+        game.getAvailableColor().remove(playerColor);
         game.addPlayer(new Player(Nickname,playerColor));
     }
     public Set<Integer> getAvailableGames(){

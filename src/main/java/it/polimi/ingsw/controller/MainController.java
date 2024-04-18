@@ -3,6 +3,9 @@ import it.polimi.ingsw.model.GameSelector;
 
 import java.io.IOException;
 import java.util.*;
+/**
+ * this class manages the client before he joins a game and becomes a player, it allows him to either select or to create a game and to choose his Nickname and Color
+ * **/
 public class MainController {
     public static void main(String[] args) throws IOException {
         GameSelector gameSelector = new GameSelector();
@@ -28,6 +31,7 @@ public class MainController {
                 gameSelector.JoinGame(idGame, color, nick);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
+                i--;
             }
         }
 
