@@ -15,6 +15,7 @@ import java.util.Map;
 
 public class Player {
     public final String nickName;
+    public final String identifier;
     public final PlayerColor color;
     private StartCard startCard;
     private final PlayCard[] playerCards;
@@ -27,10 +28,12 @@ public class Player {
     /**
      * Constructs a new Player object.
      *
+     * @param playerIdentifier a string that is uniquely associated to this player
      * @param name String containing the player's nickname
      * @param playerColor Color value representing the unique color assigned to the player
      */
-    public Player(String name, PlayerColor playerColor) {
+    public Player(String playerIdentifier ,String name, PlayerColor playerColor) {
+        identifier = playerIdentifier;
         nickName=name;
         color=playerColor;
         startCard=null;

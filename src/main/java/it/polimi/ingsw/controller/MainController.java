@@ -1,43 +1,78 @@
 package it.polimi.ingsw.controller;
+
 import it.polimi.ingsw.model.GameSelector;
+import it.polimi.ingsw.model.player.PlayerColor;
+import it.polimi.ingsw.network.rmi.VirtualMainController;
 
 import java.io.IOException;
-import java.util.*;
-/**
- * this class manages the client before he joins a game and becomes a player, it allows him to either select or to create a game and to choose his Nickname and Color
- * **/
-public class MainController {
-    public static void main(String[] args) throws IOException {
-        GameSelector gameSelector = new GameSelector();
+import java.math.BigInteger;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Random;
 
-        int numPlayers;
+public class MainController extends UnicastRemoteObject implements VirtualMainController {
+    public MainController() throws RemoteException {
+    }
 
-        Scanner scanner = new Scanner(System.in);
+    @Override
+    public String joinGame(int IDgame, PlayerColor color, String nick) throws RemoteException {
+        GameSelector gameSelector = GameSelector.getInstance();
 
-        System.out.println("insert the number of player you want in your game:");
-        numPlayers= scanner.nextInt();
-        int idGame = gameSelector.CreateGame(numPlayers);
+        GameController controller = gameSelector.getGameController(IDgame);
 
+        if(controller == null) throw new NoSuchElementException("The selected game does not exist");
 
-        for(int i = 1; i <= numPlayers; i++) {
-            System.out.println("Player #"+i);
-            System.out.println("\tnow select your color:\n \t\t1-red \n \t\t2-yellow \n \t\t3-green \n \t\t4-blue");
-            int color = scanner.nextInt();
-            System.out.println("\tnow enter your nickname and remember, it must be unique!");
-            scanner.nextLine();
-            String nick = scanner.nextLine();
+        // TODO: check if game is already started (also check if player is trying to rejoin)
 
-            try {
-                gameSelector.JoinGame(idGame, color, nick);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                i--;
-            }
+        if(!GameSelector.isAvailable(controller.getGame(), nick)) throw new IllegalArgumentException("The selected nickname is not available");
+
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA-1");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
 
+        Random rand = new Random();
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String t = IDgame + nick + timestamp + rand.nextInt(0, 1000);
 
-        GameController controller = gameSelector.getGame(idGame);
-        controller.run();
+        md.update(t.getBytes());
+        byte[] digest = md.digest();
 
+        String playerIdentifier = String.format("%032X", new BigInteger(1, digest));
+
+        try {
+            gameSelector.addPlayer(IDgame, playerIdentifier, nick, color);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        System.err.println(nick + " joined the game");
+
+        controller.updateStatus();
+
+        return playerIdentifier;
+    }
+
+    @Override
+    public String createGame(int expectedPlayers, PlayerColor color, String nick) throws RemoteException {
+        GameSelector gameSelector = GameSelector.getInstance();
+
+        try {
+            return this.joinGame(gameSelector.CreateGame(expectedPlayers), color, nick);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Integer> getAvailableGames() throws RemoteException {
+        return GameSelector.getInstance().getAvailableGames().stream().toList();
     }
 }

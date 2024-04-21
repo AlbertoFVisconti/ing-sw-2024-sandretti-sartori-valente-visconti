@@ -22,6 +22,7 @@ public class GameController  {
      * @param game  the game you want to be controlled
      * **/
     public GameController(Game game){
+        System.err.println("GameController created");
         this.game=game;
         gameStatus=GameStatus.LOBBY;
     }
@@ -38,8 +39,19 @@ public class GameController  {
         return game;
     }
 
-    private void updateStatus() {
-         if(gameStatus == GameStatus.GAME_CREATION) {
+    public void updateStatus() {
+        if(gameStatus == GameStatus.LOBBY) {
+            if (game.getExpectedPlayers() == game.getPlayers().size()) {
+                System.err.println("ExpectedPlayers amount reached, game starts. Player list:");
+
+                for(Player p : game.getPlayers()) {
+                    System.err.println("\t" + p.nickName);
+                }
+
+                gameStatus = GameStatus.GAME_CREATION;
+            }
+        }
+        else if(gameStatus == GameStatus.GAME_CREATION) {
              for (Player p : game.getPlayers()) {
                  if(p.getPlacedCard(new CardLocation(0,0)) == null
                     || p.getPrivateGoal() == null) {
@@ -47,26 +59,31 @@ public class GameController  {
                  }
              }
 
+             System.err.println("Players placed starting cards and selected goal, first turn starts");
              gameStatus = GameStatus.NORMAL_TURN;
-         }
-         else if(game.isFirstPlayersTurn()) {
-             if (gameStatus == GameStatus.LAST_TURN) {
-                 gameStatus = GameStatus.END;
-             }
-             else if (gameStatus == GameStatus.NORMAL_TURN) {
-                 for (Player p : game.getPlayers()) {
-                     if (game.getScoreBoard().getScore(p) >= 20) {
-                         this.gameStatus = GameStatus.LAST_TURN;
-                         return;
-                     }
-                 }
+        }
+        else if(game.isFirstPlayersTurn()) {
+            if (gameStatus == GameStatus.LAST_TURN) {
+                System.err.println("GAME FINISHED");
+                gameStatus = GameStatus.END;
+            }
+            else if (gameStatus == GameStatus.NORMAL_TURN) {
+                for (Player p : game.getPlayers()) {
+                    if (game.getScoreBoard().getScore(p) >= 20) {
+                        System.err.println(p.nickName + "reached 20 points, last turn starts");
+                        this.gameStatus = GameStatus.LAST_TURN;
+                        return;
+                    }
+                }
 
-                 if(game.getResourceCardsDeck().isEmpty() && game.getGoldCardsDeck().isEmpty()) {
-                     this.gameStatus = GameStatus.LAST_TURN;
-                 }
-             }
+                if(game.getResourceCardsDeck().isEmpty() && game.getGoldCardsDeck().isEmpty()) {
 
-         }
+                    System.err.println("Decks are empty, last turn starts");
+                    this.gameStatus = GameStatus.LAST_TURN;
+                }
+            }
+
+        }
 
     }
 
