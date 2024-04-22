@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.events.Observable;
 import it.polimi.ingsw.model.player.Player;
 
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import java.util.NoSuchElementException;
 /**
  * The ScoreBoard class represents a scoreboard that tracks players' score throughout the game.
  */
-public class ScoreBoard {
+public class ScoreBoard extends Observable {
     private final HashMap<Player, Integer> scores;
 
     /**

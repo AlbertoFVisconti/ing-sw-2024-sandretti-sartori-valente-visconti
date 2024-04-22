@@ -8,7 +8,6 @@ import it.polimi.ingsw.utils.CardLocation;
 import it.polimi.ingsw.utils.ItemCollection;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerTest {
@@ -17,7 +16,7 @@ public class PlayerTest {
      * player's hand and correctly placed in the board**/
     @Test
     void placeCardTest() throws Exception {
-        Player player=new Player("Pippo123", PlayerColor.BLUE);
+        Player player=new Player("","Pippo123", PlayerColor.BLUE, null);
         PlayCard card1=PlayCard.generateResourceCard(Corner.FUNGUS, Corner.EMPTY, Corner.FUNGUS, null, Resource.FUNGUS, 0);
         PlayCard card2=PlayCard.generateResourceCard(Corner.FUNGUS, Corner.FUNGUS, null, Corner.EMPTY, Resource.FUNGUS, 0);
         PlayCard gcard1=PlayCard.generateGoldCard(Corner.EMPTY, null, Corner.EMPTY, null, Resource.FUNGUS, new ItemCollection().add(Corner.FUNGUS, 5), new FreeScoreScoringStrategy(5));
@@ -25,7 +24,7 @@ public class PlayerTest {
         player.addPlayerCard(card2);
         player.addPlayerCard(gcard1);
         CardLocation x= new CardLocation(1,1);
-        player.placeCard(0, x);
+        player.placeCard(0, false, x);
         assertNull(player.getPlayerCards()[0]);
         assertEquals(player.getPlacedCard(x), card1);
     }

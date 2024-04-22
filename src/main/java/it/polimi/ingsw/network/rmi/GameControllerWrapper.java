@@ -13,12 +13,12 @@ public class GameControllerWrapper extends UnicastRemoteObject implements Virtua
     }
 
     @Override
-    public void placeCard(String playerIdentifier, int index, CardLocation location) throws RemoteException {
+    public void placeCard(String playerIdentifier, int index, boolean onBackSide ,CardLocation location) throws RemoteException {
         GameController controller = gameSelector.getPlayersGame(playerIdentifier);
 
         if (controller == null) throw new IllegalArgumentException("Unknown player");
 
-        controller.placeCard(gameSelector.getPlayer(playerIdentifier), index, location);
+        controller.placeCard(gameSelector.getPlayer(playerIdentifier), index, onBackSide, location);
     }
 
     @Override

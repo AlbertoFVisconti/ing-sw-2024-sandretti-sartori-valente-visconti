@@ -1,5 +1,10 @@
 package it.polimi.ingsw.model.player;
 
+import it.polimi.ingsw.model.events.Observable;
+import it.polimi.ingsw.model.events.messages.updates.PlayersBoardUpdateMessage;
+import it.polimi.ingsw.model.events.messages.updates.PlayersHandUpdateMessage;
+import it.polimi.ingsw.model.events.messages.updates.PrivateGoalUpdateMessage;
+import it.polimi.ingsw.model.events.messages.updates.StartCardUpdateMessage;
 import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
@@ -7,15 +12,17 @@ import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.utils.CardLocation;
+import it.polimi.ingsw.view.ViewWrapper;
 
 import java.security.InvalidParameterException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Player {
+public class Player extends Observable {
     public final String nickName;
-    public final String identifier;
+    public String identifier;
+    private ViewWrapper viewWrapper;
     public final PlayerColor color;
     private StartCard startCard;
     private final PlayCard[] playerCards;
@@ -31,15 +38,31 @@ public class Player {
      * @param playerIdentifier a string that is uniquely associated to this player
      * @param name String containing the player's nickname
      * @param playerColor Color value representing the unique color assigned to the player
+     * @param viewWrapper player's view wrapper
      */
-    public Player(String playerIdentifier ,String name, PlayerColor playerColor) {
-        identifier = playerIdentifier;
-        nickName=name;
-        color=playerColor;
-        startCard=null;
-        board=new HashMap<>();
-        playerCards=new PlayCard[3];
-        inventory = new ItemCollection();
+    public Player(String playerIdentifier , String name, PlayerColor playerColor, ViewWrapper viewWrapper) {
+        this.identifier = playerIdentifier;
+        this.nickName=name;
+        this.color=playerColor;
+        this.viewWrapper = viewWrapper;
+        this.startCard=null;
+        this.board=new HashMap<>();
+        this.playerCards=new PlayCard[3];
+        this.inventory = new ItemCollection();
+
+        if(viewWrapper != null)
+            this.subscribe(this.viewWrapper);
+    }
+
+    public void setViewWrapper(ViewWrapper viewWrapper) {
+        if(this.viewWrapper != null)
+            this.unsubscribe(this.viewWrapper);
+        this.viewWrapper = viewWrapper;
+        if(this.viewWrapper != null)
+            this.subscribe(this.viewWrapper);
+    }
+    public ViewWrapper getViewWrapper() {
+        return viewWrapper;
     }
 
     /**
@@ -50,6 +73,7 @@ public class Player {
      */
     public void setStartCard(StartCard startCard) {
         this.startCard = startCard;
+        this.notifyObservers(new StartCardUpdateMessage(startCard));
     }
 
     /**
@@ -64,26 +88,36 @@ public class Player {
         else if(card==null) throw new InvalidParameterException("please select a card first");
         else playerCards[index]=card;
 
+        this.notifyObservers(new PlayersHandUpdateMessage(card, index));
     }
 
     public void setAvailableGoals(Goal[] availableGoals) {
         this.availableGoals = availableGoals.clone();
+
+        this.notifyObservers(new PrivateGoalUpdateMessage(availableGoals.clone()));
     }
 
     /**
      * Allows to place a card from the hand of a player to his board, the position the card was is then set to null,
      *
-     * @param index the index of the card you want to place (<=2)
-     * @param location the CardLocation where the card needs to be placed
+     * @param index      the index of the card you want to place (<=2)
+     * @param onBackSide {@code true} if the cards needs to be place with the back side up, {@code} false otherwise
+     * @param location   the CardLocation where the card needs to be placed
      * @throws InvalidParameterException if there already is a card in the selected location or index is too big
      */
-    public void placeCard(int index, CardLocation location) throws InvalidParameterException{
+    public void placeCard(int index, boolean onBackSide, CardLocation location) throws InvalidParameterException{
         if (this.getPlacedCard(location)!=null|| index>2) throw new InvalidParameterException();
         else {
+            if(playerCards[index].isOnBackSide() != onBackSide) {
+                playerCards[index].flip();
+            }
+
+            playerCards[index].place(-1 /*TODO*/);
             board.put(location,playerCards[index]);
             playerCards[index]=null;
         }
 
+        this.notifyObservers(new PlayersBoardUpdateMessage(board.get(location), location));
     }
 
     /**
@@ -104,6 +138,8 @@ public class Player {
 
         board.put(new CardLocation(0,0),startCard);
         startCard=null;
+
+        this.notifyObservers(new PlayersBoardUpdateMessage(board.get(new CardLocation(0,0)), new CardLocation(0,0)));
     }
 
     /**
@@ -122,6 +158,8 @@ public class Player {
      */
     public void setPrivateGoal(Goal privateGoal) {
         this.privateGoal = privateGoal;
+
+        this.notifyObservers(new PrivateGoalUpdateMessage(privateGoal));
     }
 
     /**
@@ -217,6 +255,8 @@ public class Player {
         for(int i = 0; i < playerCards.length; i++) {
             if(playerCards[i] == null) {
                 playerCards[i] = draw;
+
+                this.notifyObservers(new PlayersHandUpdateMessage(draw, i));
                 return;
             }
         }

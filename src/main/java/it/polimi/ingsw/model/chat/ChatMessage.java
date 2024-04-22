@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.chat;
 
-public class Message {
+public class ChatMessage {
     private final String text; // The text content of the message
     private final Long timestamp; // The timestamp when the message was created
     private final String senderNick; // The nickname of the message sender
@@ -11,7 +11,7 @@ public class Message {
      * @param text       The text content of the message.
      * @param senderNick The nickname of the message sender.
      */
-    public Message(String text, String senderNick) {
+    public ChatMessage(String text, String senderNick) {
         this.text = text;
         this.senderNick = senderNick;
         timestamp = System.currentTimeMillis();

@@ -6,6 +6,8 @@ import it.polimi.ingsw.model.decks.PlayCardDeckLoader;
 import it.polimi.ingsw.model.decks.StartCardDeckLoader;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
+import it.polimi.ingsw.view.ViewWrapper;
+import it.polimi.ingsw.view.VirtualView;
 
 import java.io.IOException;
 import java.util.*;
@@ -67,14 +69,14 @@ public class GameSelector {
         return this.Games.get(gameId);
     }
 
-    public void addPlayer(int IDGame, String playerIdentifier, String nickname, PlayerColor playerColor) throws Exception {
+    public void addPlayer(int IDGame, String playerIdentifier, String nickname, PlayerColor playerColor, VirtualView playersView) throws Exception {
         Game game = this.Games.get(IDGame).getGame();
 
         this.players.put(playerIdentifier, this.Games.get(IDGame));
 
         if (!game.getAvailableColor().contains(playerColor)) throw new Exception("Color not available");
         game.getAvailableColor().remove(playerColor);
-        game.addPlayer(new Player(playerIdentifier,nickname,playerColor));
+        game.addPlayer(new Player(playerIdentifier,nickname,playerColor, new ViewWrapper(playersView)));
     }
 
     public GameController getPlayersGame(String playerIdentifier) {

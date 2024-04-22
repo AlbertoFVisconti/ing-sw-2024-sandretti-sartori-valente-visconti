@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public class Chat {
     // HashMap to store messages between pairs of players
-    private final HashMap<HashSet<Player>, List<Message>> messages;
+    private final HashMap<HashSet<Player>, List<ChatMessage>> messages;
 
     /**
      * Constructs a Chat object with the given list of players.
@@ -45,7 +45,7 @@ public class Chat {
      * @throws NoSuchElementException if the pair of players is not found in the
      *                                messages map
      */
-    public List<Message> getMessagesChat(Player player, Player player1) {
+    public List<ChatMessage> getMessagesChat(Player player, Player player1) {
         Set<Player> playersSet = new HashSet<>(Arrays.asList(player, player1));
         if (!messages.containsKey(playersSet))
             throw new NoSuchElementException("This playersSet is not in messages");
@@ -65,7 +65,7 @@ public class Chat {
         Set<Player> playersSet = new HashSet<>(Arrays.asList(player_send, player_rec));
         if (!messages.containsKey(playersSet))
             throw new NoSuchElementException("This playersSet is not in messages");
-        Message message = new Message(player_send.getNickname(), message_text);
+        ChatMessage message = new ChatMessage(player_send.getNickname(), message_text);
         messages.get(playersSet).add(message);
     }
 
@@ -74,7 +74,7 @@ public class Chat {
      *
      * @param message the message to be deleted
      */
-    public void deleteMessage(Message message) {
+    public void deleteMessage(ChatMessage message) {
         // Implementation for deleting a message can be added here
     }
 }

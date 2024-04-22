@@ -2,6 +2,7 @@ package it.polimi.ingsw.utils;
 
 import it.polimi.ingsw.model.cards.corners.Corner;
 
+import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.NoSuchElementException;
 
@@ -32,7 +33,7 @@ import java.util.NoSuchElementException;
  *            .sub(Corner.ANIMAL);
  *  }</pre>
  */
-public class ItemCollection {
+public class ItemCollection implements Serializable {
     private final EnumMap<Corner, Integer> content;
 
     /**

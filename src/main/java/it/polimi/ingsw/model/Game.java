@@ -5,6 +5,9 @@ import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.decks.Deck;
 import it.polimi.ingsw.model.decks.DeckLoader;
+import it.polimi.ingsw.model.events.Observable;
+import it.polimi.ingsw.model.events.messages.updates.PublicGoalsUpdateMessage;
+import it.polimi.ingsw.model.events.messages.updates.VisibleCardUpdateMessage;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
@@ -15,7 +18,7 @@ import java.util.*;
 /**
  * The Game class represents a game session of the Codex Naturalis game
  */
-public class Game {
+public class Game extends Observable {
     private int currentTurn;
     private final List<Player> players;
 
@@ -51,7 +54,9 @@ public class Game {
     public Game(DeckLoader<PlayCard> goldCardDeckLoader, DeckLoader<PlayCard> resourceCardDeckLoader,
                 DeckLoader<StartCard> startCardDeckLoader, DeckLoader<Goal> goalDeckLoader, int idGame, int expectedPlayers) throws IOException {
         this.goldCardsDeck = goldCardDeckLoader.getDeck();
+        this.goldCardsDeck.setDeckIdentifier(1);
         this.resourceCardsDeck = resourceCardDeckLoader.getDeck();
+        this.resourceCardsDeck.setDeckIdentifier(0);
 
         this.startCardsDeck = startCardDeckLoader.getDeck();
         this.goalsDeck = goalDeckLoader.getDeck();
@@ -146,6 +151,8 @@ public class Game {
                 this.goalsDeck.draw()
         };
 
+        this.notifyObservers(new PublicGoalsUpdateMessage(commonGoals));
+
         // Draws the visible cards
         this.visibleCards = new PlayCard[]{
                 this.resourceCardsDeck.draw(),
@@ -153,6 +160,10 @@ public class Game {
                 this.goldCardsDeck.draw(),
                 this.goldCardsDeck.draw()
         };
+
+        for(int i = 0; i < visibleCards.length; i++) {
+            this.notifyObservers(new VisibleCardUpdateMessage(visibleCards[i], i));
+        }
 
 
         for(Player player : this.players) {
@@ -250,4 +261,12 @@ public class Game {
     }
     public int getIdGame() {return this.idGame;}
     public boolean emptyDecks(){ return (this.goldCardsDeck.isEmpty()&& this.resourceCardsDeck.isEmpty());}
+
+    public void subscribeCommonObservers() {
+        for(Player p : this.players) {
+            this.subscribe(p.getViewWrapper());
+            this.goldCardsDeck.subscribe((p.getViewWrapper()));
+            this.resourceCardsDeck.subscribe((p.getViewWrapper()));
+        }
+    }
 }

@@ -1,8 +1,9 @@
 package it.polimi.ingsw.utils;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class CardLocation {
+public class CardLocation implements Serializable {
     public final int x;
     public final int y;
 

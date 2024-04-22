@@ -3,11 +3,13 @@ package it.polimi.ingsw.model.cards.scoring;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.utils.CardLocation;
 
+import java.io.Serializable;
+
 /**
  * The ScoringStrategy functional interface allows providing a function that evaluates a card placement.
  * This function will return an integer value that represents the score the player obtained placing the card
  */
-public interface ScoringStrategy {
+public interface ScoringStrategy extends Serializable {
     /**
      * Computes the score obtained by a player by placing a Card with the implemented scoring strategy
      * in a specific location on their board.

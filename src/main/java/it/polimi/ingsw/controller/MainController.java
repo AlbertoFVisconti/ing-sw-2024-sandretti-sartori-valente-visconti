@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.GameSelector;
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.rmi.VirtualMainController;
+import it.polimi.ingsw.view.VirtualView;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -20,7 +21,7 @@ public class MainController extends UnicastRemoteObject implements VirtualMainCo
     }
 
     @Override
-    public String joinGame(int IDgame, PlayerColor color, String nick) throws RemoteException {
+    public String joinGame(VirtualView view, int IDgame, PlayerColor color, String nick) throws RemoteException {
         GameSelector gameSelector = GameSelector.getInstance();
 
         GameController controller = gameSelector.getGameController(IDgame);
@@ -48,7 +49,7 @@ public class MainController extends UnicastRemoteObject implements VirtualMainCo
         String playerIdentifier = String.format("%032X", new BigInteger(1, digest));
 
         try {
-            gameSelector.addPlayer(IDgame, playerIdentifier, nick, color);
+            gameSelector.addPlayer(IDgame, playerIdentifier, nick, color, view);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -61,11 +62,11 @@ public class MainController extends UnicastRemoteObject implements VirtualMainCo
     }
 
     @Override
-    public String createGame(int expectedPlayers, PlayerColor color, String nick) throws RemoteException {
+    public String createGame(VirtualView view, int expectedPlayers, PlayerColor color, String nick) throws RemoteException {
         GameSelector gameSelector = GameSelector.getInstance();
 
         try {
-            return this.joinGame(gameSelector.CreateGame(expectedPlayers), color, nick);
+            return this.joinGame(view, gameSelector.CreateGame(expectedPlayers), color, nick);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

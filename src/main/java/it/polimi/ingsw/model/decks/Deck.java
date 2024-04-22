@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.decks;
 
 import it.polimi.ingsw.model.cards.corners.Resource;
+import it.polimi.ingsw.model.events.Observable;
+import it.polimi.ingsw.model.events.messages.updates.DeckUpdateMessage;
 
 import java.util.ArrayList;
 import java.util.EmptyStackException;
@@ -12,9 +14,11 @@ import java.util.List;
  *
  * @param <T> the type of elements contained by the deck
  */
-public class Deck<T extends Drawable>{
+public class Deck<T extends Drawable> extends Observable {
     private final List<T> remaining;
     private T topOfTheStack;
+
+    private int deckIdentifier;
 
     /**
      * Constructs e sets up a new deck with the provided content.
@@ -24,6 +28,10 @@ public class Deck<T extends Drawable>{
     Deck(List<T> content)  {
         this.remaining = new ArrayList<>(content);
         this.topOfTheStack = next();
+    }
+
+    public void setDeckIdentifier(int deckIdentifier) {
+        this.deckIdentifier = deckIdentifier;
     }
 
     /**
@@ -49,6 +57,9 @@ public class Deck<T extends Drawable>{
         T drawnElement = topOfTheStack;
         topOfTheStack = next();
         if(drawnElement == null) throw new EmptyStackException();
+
+        this.notifyObservers(new DeckUpdateMessage(this.getTopOfTheStack(), deckIdentifier));
+
         return drawnElement;
     }
 

@@ -52,7 +52,7 @@ class PatternGoalTest {
                 12
         );
 
-        Player p = new Player("", PlayerColor.BLUE);
+        Player p = new Player("", "", PlayerColor.BLUE, null);
 
         // creates a board that has 21 ANIMAL cards one on top of the other
         // each ANIMAL card also has an INSECT card as its top-left neighbour
@@ -61,9 +61,9 @@ class PatternGoalTest {
             PlayCard c2 = PlayCard.generateResourceCard(Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.INSECT, 2);
 
             p.setPlayerCard(c1,0);
-            p.placeCard(0, new CardLocation(0,-i*2));
+            p.placeCard(0, false, new CardLocation(0,-i*2));
             p.setPlayerCard(c2,0);
-            p.placeCard(0, new CardLocation(-1,1+-i*2));
+            p.placeCard(0, false, new CardLocation(-1,1+-i*2));
 
         }
 
@@ -126,7 +126,7 @@ class PatternGoalTest {
                 12
         );
 
-        Player p = new Player("", PlayerColor.BLUE);
+        Player p = new Player("", "", PlayerColor.BLUE, null);
 
         // creates a board 4 distant columns
         // Each column has a certain number of ANIMAL cards one on top of the other
@@ -140,9 +140,9 @@ class PatternGoalTest {
             PlayCard c2 = PlayCard.generateResourceCard(Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.INSECT, 2);
 
             p.setPlayerCard(c1,0);
-            p.placeCard(0, new CardLocation(0,-i*2));
+            p.placeCard(0, false, new CardLocation(0,-i*2));
             p.setPlayerCard(c2,0);
-            p.placeCard(0, new CardLocation(-1,1+-i*2));
+            p.placeCard(0, false, new CardLocation(-1,1+-i*2));
         }
 
         // creates the second column with 24 ANIMAL cards (+24 INSECTs)
@@ -151,9 +151,9 @@ class PatternGoalTest {
             PlayCard c2 = PlayCard.generateResourceCard(Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.INSECT, 2);
 
             p.setPlayerCard(c1,0);
-            p.placeCard(0, new CardLocation(10,-i*2));
+            p.placeCard(0, false, new CardLocation(10,-i*2));
             p.setPlayerCard(c2,0);
-            p.placeCard(0, new CardLocation(9,1+-i*2));
+            p.placeCard(0, false, new CardLocation(9,1+-i*2));
 
         }
 
@@ -163,9 +163,9 @@ class PatternGoalTest {
             PlayCard c2 = PlayCard.generateResourceCard(Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.INSECT, 2);
 
             p.setPlayerCard(c1,0);
-            p.placeCard(0, new CardLocation(20,-i*2));
+            p.placeCard(0, false, new CardLocation(20,-i*2));
             p.setPlayerCard(c2,0);
-            p.placeCard(0, new CardLocation(19,1+-i*2));
+            p.placeCard(0, false, new CardLocation(19,1+-i*2));
 
         }
         // creates the forth column with 29 ANIMAL cards (+29 INSECTs)
@@ -174,9 +174,9 @@ class PatternGoalTest {
             PlayCard c2 = PlayCard.generateResourceCard(Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.INSECT, 2);
 
             p.setPlayerCard(c1,0);
-            p.placeCard(0, new CardLocation(30,-i*2));
+            p.placeCard(0, false, new CardLocation(30,-i*2));
             p.setPlayerCard(c2,0);
-            p.placeCard(0, new CardLocation(29,1+-i*2));
+            p.placeCard(0, false, new CardLocation(29,1+-i*2));
 
         }
 
