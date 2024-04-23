@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ItemGoalTest {
     @Test
     void testEvaluate1() {
-        Player player = new Player("test1Player", PlayerColor.BLUE);
+        Player player = new Player("","test1Player", PlayerColor.BLUE, null);
 
         // sets up the inventory of the player
         // so that they've the exact number of items described by the instructions below
@@ -80,7 +80,7 @@ class ItemGoalTest {
 
     @Test
     void testEvaluate2() {
-        Player player = new Player("test2Player", PlayerColor.RED);
+        Player player = new Player("","test2Player", PlayerColor.RED, null);
 
         // sets up the inventory of the player
         // so that they've the exact number of items described by the instructions below

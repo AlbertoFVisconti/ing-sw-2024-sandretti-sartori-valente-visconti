@@ -88,7 +88,7 @@ public class Player extends Observable {
         else if(card==null) throw new InvalidParameterException("please select a card first");
         else playerCards[index]=card;
 
-        this.notifyObservers(new PlayersHandUpdateMessage(card, index));
+        this.notifyObservers(new PlayersHandUpdateMessage(this.nickName,card, index));
     }
 
     public void setAvailableGoals(Goal[] availableGoals) {
@@ -117,7 +117,7 @@ public class Player extends Observable {
             playerCards[index]=null;
         }
 
-        this.notifyObservers(new PlayersBoardUpdateMessage(board.get(location), location));
+        this.notifyObservers(new PlayersBoardUpdateMessage(this.nickName, board.get(location), location));
     }
 
     /**
@@ -139,7 +139,7 @@ public class Player extends Observable {
         board.put(new CardLocation(0,0),startCard);
         startCard=null;
 
-        this.notifyObservers(new PlayersBoardUpdateMessage(board.get(new CardLocation(0,0)), new CardLocation(0,0)));
+        this.notifyObservers(new PlayersBoardUpdateMessage(this.nickName,board.get(new CardLocation(0,0)), new CardLocation(0,0)));
     }
 
     /**
@@ -256,7 +256,7 @@ public class Player extends Observable {
             if(playerCards[i] == null) {
                 playerCards[i] = draw;
 
-                this.notifyObservers(new PlayersHandUpdateMessage(draw, i));
+                this.notifyObservers(new PlayersHandUpdateMessage(this.nickName,draw, i));
                 return;
             }
         }

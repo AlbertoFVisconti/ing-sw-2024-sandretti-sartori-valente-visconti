@@ -43,9 +43,9 @@ public class View extends UnicastRemoteObject implements VirtualView{
     }
 
     @Override
-    public void setPlayersCard(PlayCard card, int index) throws RemoteException {
+    public void setPlayersCard(String playerNickname, PlayCard card, int index) throws RemoteException {
         index++;
-        System.err.println("You received your card n°"+index);
+        System.err.println(playerNickname+" received a card n°"+index);
         System.err.println(card);
         System.err.println();
     }
@@ -66,8 +66,8 @@ public class View extends UnicastRemoteObject implements VirtualView{
     }
 
     @Override
-    public void placeCardOnPlayersBoard(Card card, CardLocation location) throws RemoteException {
-        System.err.println("Card Placed in " + location);
+    public void placeCardOnPlayersBoard(String playerNickname,Card card, CardLocation location) throws RemoteException {
+        System.err.println(playerNickname+" placed a card in " + location);
         System.err.println(card);
         System.err.println();
     }
