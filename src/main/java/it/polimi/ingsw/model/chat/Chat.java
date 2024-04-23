@@ -1,4 +1,5 @@
 package it.polimi.ingsw.model.chat;
+import it.polimi.ingsw.model.events.messages.ChatMessage;
 import it.polimi.ingsw.model.player.Player;
 import java.util.HashMap;
 import java.util.HashSet;

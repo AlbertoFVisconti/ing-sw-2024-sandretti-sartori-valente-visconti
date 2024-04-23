@@ -1,11 +1,12 @@
 package it.polimi.ingsw.model.events.messages.updates;
 
 import it.polimi.ingsw.model.cards.PlayCard;
+import it.polimi.ingsw.model.events.messages.Message;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
 
-public class PlayersHandUpdateMessage implements ModelUpdateMessage{
+public class PlayersHandUpdateMessage implements Message {
     private final String nickname;
     private final PlayCard card;
     private final int cardSlot;

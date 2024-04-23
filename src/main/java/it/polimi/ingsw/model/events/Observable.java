@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.events;
 
-import it.polimi.ingsw.model.events.messages.updates.ModelUpdateMessage;
+import it.polimi.ingsw.model.events.messages.Message;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public abstract class Observable {
         this.subscribers.remove(subscriber);
     }
 
-    protected void notifyObservers(ModelUpdateMessage updateMessage) {
+    protected void notifyObservers(Message updateMessage) {
         for(Observer observer : subscribers) {
             observer.onUpdate(updateMessage);
         }

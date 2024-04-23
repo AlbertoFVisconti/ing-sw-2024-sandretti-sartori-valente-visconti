@@ -1,11 +1,12 @@
 package it.polimi.ingsw.model.events.messages.updates;
 
+import it.polimi.ingsw.model.events.messages.Message;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
 
-public class PrivateGoalUpdateMessage implements ModelUpdateMessage{
+public class PrivateGoalUpdateMessage implements Message {
     private final boolean definitive;
     private final Goal[] goals;
 

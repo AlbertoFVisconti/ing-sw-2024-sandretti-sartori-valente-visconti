@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.events.Observable;
+import it.polimi.ingsw.model.events.Observer;
 import it.polimi.ingsw.model.events.messages.updates.PlayersBoardUpdateMessage;
 import it.polimi.ingsw.model.events.messages.updates.PlayersHandUpdateMessage;
 import it.polimi.ingsw.model.events.messages.updates.PrivateGoalUpdateMessage;
@@ -12,7 +13,6 @@ import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.utils.CardLocation;
-import it.polimi.ingsw.view.ViewWrapper;
 
 import java.security.InvalidParameterException;
 import java.util.Collections;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class Player extends Observable {
     public final String nickName;
     public String identifier;
-    private ViewWrapper viewWrapper;
+    private Observer viewWrapper;
     public final PlayerColor color;
     private StartCard startCard;
     private final PlayCard[] playerCards;
@@ -40,7 +40,7 @@ public class Player extends Observable {
      * @param playerColor Color value representing the unique color assigned to the player
      * @param viewWrapper player's view wrapper
      */
-    public Player(String playerIdentifier , String name, PlayerColor playerColor, ViewWrapper viewWrapper) {
+    public Player(String playerIdentifier , String name, PlayerColor playerColor, Observer viewWrapper) {
         this.identifier = playerIdentifier;
         this.nickName=name;
         this.color=playerColor;
@@ -54,14 +54,14 @@ public class Player extends Observable {
             this.subscribe(this.viewWrapper);
     }
 
-    public void setViewWrapper(ViewWrapper viewWrapper) {
+    public void setViewWrapper(Observer viewWrapper) {
         if(this.viewWrapper != null)
             this.unsubscribe(this.viewWrapper);
         this.viewWrapper = viewWrapper;
         if(this.viewWrapper != null)
             this.subscribe(this.viewWrapper);
     }
-    public ViewWrapper getViewWrapper() {
+    public Observer getViewWrapper() {
         return viewWrapper;
     }
 

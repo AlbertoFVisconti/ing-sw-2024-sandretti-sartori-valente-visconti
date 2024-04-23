@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.events;
 
-import it.polimi.ingsw.model.events.messages.updates.ModelUpdateMessage;
+import it.polimi.ingsw.model.events.messages.Message;
 
 public interface Observer {
-    void onUpdate(ModelUpdateMessage updateMessage);
+    void onUpdate(Message message);
 }

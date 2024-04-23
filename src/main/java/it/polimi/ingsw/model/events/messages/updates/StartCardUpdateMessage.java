@@ -1,11 +1,12 @@
 package it.polimi.ingsw.model.events.messages.updates;
 
 import it.polimi.ingsw.model.cards.StartCard;
+import it.polimi.ingsw.model.events.messages.Message;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
 
-public class StartCardUpdateMessage implements ModelUpdateMessage{
+public class StartCardUpdateMessage implements Message {
     private final StartCard card;
 
     public StartCardUpdateMessage(StartCard card) {

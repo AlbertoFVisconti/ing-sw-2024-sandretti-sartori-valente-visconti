@@ -1,6 +1,8 @@
-package it.polimi.ingsw.model.chat;
+package it.polimi.ingsw.model.events.messages;
 
-public class ChatMessage {
+import it.polimi.ingsw.view.VirtualView;
+
+public class ChatMessage implements Message {
     private final String text; // The text content of the message
     private final Long timestamp; // The timestamp when the message was created
     private final String senderNick; // The nickname of the message sender
@@ -42,5 +44,10 @@ public class ChatMessage {
      */
     public String getSenderNick() {
         return senderNick;
+    }
+
+    @Override
+    public void updateView(VirtualView view) {
+        // TODO
     }
 }
