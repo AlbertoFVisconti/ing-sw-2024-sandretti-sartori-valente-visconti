@@ -12,24 +12,29 @@ import java.util.Scanner;
 
 public class RMIClient {
     private static String playerIdentifier;
-    public static void main(String[] args) throws RemoteException, NotBoundException {
-        Registry registry = LocateRegistry.getRegistry(1234);
+    private static VirtualMainController virtualMainController;
+    private static VirtualController virtualGameController;
+    private static Scanner scanner = new Scanner(System.in);
+    private static VirtualView view;
 
-        VirtualMainController virtualMainController = (VirtualMainController) registry.lookup("MainController");
-        VirtualController virtualGameController = (VirtualController) registry.lookup("GameController");
 
-        VirtualView view = new View();
+    private static void joinGame() throws RemoteException {
+        PlayerColor color;
 
-        Scanner scanner = new Scanner(System.in);
+        do {
+            System.out.println("Select color (1 -> RED, 2 -> YELLOW, 3 -> GREEN, 4 ->BLUE): ");
+            color = switch (scanner.nextInt()) {
+                case 1 -> PlayerColor.RED;
+                case 2 -> PlayerColor.YELLOW;
+                case 3 -> PlayerColor.GREEN;
+                case 4 -> PlayerColor.BLUE;
+                default -> null;
+            };
 
-        System.out.println("Select color (1 -> RED, 2 -> YELLOW, 3 -> GREEN, 4 ->BLUE): ");
-        PlayerColor color = switch (scanner.nextInt()) {
-            case 1 -> PlayerColor.RED;
-            case 2 -> PlayerColor.YELLOW;
-            case 3 -> PlayerColor.GREEN;
-            case 4 -> PlayerColor.BLUE;
-            default -> throw new RuntimeException("Invalid color code");
-        };
+            if(color == null) {
+                System.err.println("Invalid color code!");
+            }
+        } while(color == null);
 
         System.out.println("Insert nickname: ");
         scanner.nextLine();
@@ -37,43 +42,57 @@ public class RMIClient {
 
 
         List<Integer> availableGames = virtualMainController.getAvailableGames();
+        int selectedGame;
 
-        System.out.println("List of available games:");
-        for(Integer game : availableGames) {
-            System.out.println("\t" + game);
-        }
-        System.out.println("Select game to join (insert -1 to create game): ");
+        do {
+            System.out.println("List of available games:");
+            for (Integer game : availableGames) {
+                System.out.println("\t" + game);
+            }
+            System.out.println("Select game to join (insert -1 to create game, -2 to reload): ");
 
-        int selectedGame = scanner.nextInt();
+            selectedGame = scanner.nextInt();
+
+            if(selectedGame == -2) {
+                availableGames = virtualMainController.getAvailableGames();
+            }
+            else if(selectedGame != -1 && !availableGames.contains(selectedGame)) {
+                System.err.println("Invalid selection!");
+            }
+
+        } while(selectedGame < -1 && !availableGames.contains(selectedGame));
 
         if(selectedGame == -1){
-            System.out.println("How many players do you expect? ");
-            int expectedPlayers = scanner.nextInt();
+            int expectedPlayers;
+            do {
+                System.out.println("How many players do you expect? ");
+                expectedPlayers = scanner.nextInt();
 
-            RMIClient.playerIdentifier = virtualMainController.createGame(view, expectedPlayers, color, nickName);
+                if(expectedPlayers <= 0) {
+                    System.err.println("Invalid number of players!");
+                }
+            } while (expectedPlayers <= 0);
+
+
+            playerIdentifier = virtualMainController.createGame(view, expectedPlayers, color, nickName);
+
         }
         else {
             if(!availableGames.contains(selectedGame)) {
                 throw new IllegalArgumentException("There's no game with that ID");
             }
 
-            RMIClient.playerIdentifier = virtualMainController.joinGame(view, selectedGame, color, nickName);
+            playerIdentifier = virtualMainController.joinGame(view, selectedGame, color, nickName);
         }
+    }
 
-        System.err.println("Successfully joined the game. Identifier: " + RMIClient.playerIdentifier);
-
-        System.out.println("Select your private goal: ");
-        int t = scanner.nextInt();
-
-        virtualGameController.selectPrivateGoal(RMIClient.playerIdentifier,t );
-
-        System.out.println("Select start card side (0 -> front, 1 -> back): ");
-        t = scanner.nextInt();
-
-        virtualGameController.placeStartCard(RMIClient.playerIdentifier, t==1);
-
-        int x,y ,side;
-        while(true) {
+    public static void playGameTurn() throws RemoteException {
+        boolean success;
+        int t;
+        int side;
+        int x,y;
+        do {
+            success = true;
             System.out.println("Select card to place: ");
             t = scanner.nextInt();
 
@@ -86,24 +105,104 @@ public class RMIClient {
             System.out.println("\tY=");
             y = scanner.nextInt();
 
-            virtualGameController.placeCard(RMIClient.playerIdentifier, t, side==1,new CardLocation(x,y));
+            try {
+                virtualGameController.placeCard(playerIdentifier, t, side == 1, new CardLocation(x, y));
+            }
+            catch (RuntimeException e) {
+                System.err.println(e.getMessage());
+                success = false;
+            }
 
+        } while(!success);
 
+        do {
+            success = true;
             System.out.println("Do you want to pick up a visible cards or to draw from a deck? (0 -> visible cards, 1-> decks): ");
             t = scanner.nextInt();
 
-            if(t == 0) {
+            if (t == 0) {
                 System.out.println("Provide the index of the card you want to pick up: ");
                 t = scanner.nextInt();
 
-                virtualGameController.drawCard(RMIClient.playerIdentifier, 2+t);
-            }
-            else {
+                try {
+                    virtualGameController.drawCard(playerIdentifier, 2 + t);
+                }
+                catch(RuntimeException e){
+                    System.err.println(e.getMessage());
+                    success = false;
+                }
+            } else {
                 System.out.println("Select the deck you want to draw from (0 -> resource, 1 -> gold):  ");
                 t = scanner.nextInt();
 
-                virtualGameController.drawCard(RMIClient.playerIdentifier, t);
+                try {
+                    virtualGameController.drawCard(playerIdentifier, t);
+                }
+                catch (RuntimeException e) {
+                    System.err.println(e.getMessage());
+                    success = false;
+                }
             }
+        } while(!success);
+    }
+
+    public static void playGameSetup() throws RemoteException {
+        boolean success;
+        int t;
+        do {
+            success = true;
+            System.out.println("Select your private goal: ");
+            t = scanner.nextInt();
+
+            try {
+                virtualGameController.selectPrivateGoal(playerIdentifier, t);
+            }
+            catch (RuntimeException e) {
+                System.err.println(e.getMessage());
+                success = false;
+            }
+        } while(!success);
+
+        do {
+            success = true;
+            System.out.println("Select start card side (0 -> front, 1 -> back): ");
+            t = scanner.nextInt();
+
+            try {
+                virtualGameController.placeStartCard(playerIdentifier, t == 1);
+            }
+            catch (RuntimeException e) {
+                System.err.println(e.getMessage());
+                success = false;
+            }
+        } while(!success);
+    }
+
+    public static void main(String[] args) throws RemoteException, NotBoundException {
+        Registry registry = LocateRegistry.getRegistry(1234);
+
+        virtualMainController = (VirtualMainController) registry.lookup("MainController");
+        virtualGameController = (VirtualController) registry.lookup("GameController");
+        view = new View();
+
+        boolean success;
+        do {
+            success = true;
+            try {
+                joinGame();
+            }
+            catch (RuntimeException e) {
+                System.err.println(e);
+                success = false;
+            }
+        } while(!success);
+
+        System.err.println("Successfully joined the game. Identifier: " + playerIdentifier);
+
+        playGameSetup();
+
+        while(true) {
+            playGameTurn();
         }
     }
 }

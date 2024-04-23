@@ -87,28 +87,30 @@ public class GameController  {
     }
 
     private boolean isLocationValid(CardLocation location, Player player){
-         if (player.getPlacedCard(location.topRightNeighbour()) != null&&
+        if (player.getPlacedCard(location) != null) return false;
+
+
+        if (player.getPlacedCard(location.topRightNeighbour()) != null&&
                 (player.getPlacedCard(location.topRightNeighbour()).getBottomLeftCorner()==null)) {
             return false;
-         }
-         if (player.getPlacedCard(location.topLeftNeighbour()) != null&&
+        }
+        if (player.getPlacedCard(location.topLeftNeighbour()) != null&&
                 (player.getPlacedCard(location.topLeftNeighbour()).getBottomRightCorner()==null)) {
              return false;
-         }
-         if (player.getPlacedCard(location.bottomRightNeighbour())!=null&&
+        }
+        if (player.getPlacedCard(location.bottomRightNeighbour())!=null&&
                 (player.getPlacedCard(location.bottomRightNeighbour()).getTopLeftCorner()==null)) {
-             return false;
-         }
-         if (player.getPlacedCard(location.bottomLeftNeighbour())!=null&&
+            return false;
+        }
+        if (player.getPlacedCard(location.bottomLeftNeighbour())!=null&&
                 (player.getPlacedCard(location.bottomLeftNeighbour()).getTopRightCorner()==null)) {
-             return false;
-         }
+            return false;
+        }
 
         return player.getPlacedCard(location.topRightNeighbour()) != null
                 || player.getPlacedCard(location.topLeftNeighbour()) != null
                 || player.getPlacedCard(location.bottomRightNeighbour()) != null
                 || player.getPlacedCard(location.bottomLeftNeighbour()) != null;
-
     }
 
     public void evaluateGoals() {
