@@ -14,7 +14,7 @@ public class RMIClient {
     private static String playerIdentifier;
     private static VirtualMainController virtualMainController;
     private static VirtualController virtualGameController;
-    private static Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
     private static VirtualView view;
 
 
@@ -192,7 +192,7 @@ public class RMIClient {
                 joinGame();
             }
             catch (RuntimeException e) {
-                System.err.println(e);
+                System.err.println(e.getMessage());
                 success = false;
             }
         } while(!success);
