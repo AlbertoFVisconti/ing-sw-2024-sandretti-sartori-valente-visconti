@@ -15,6 +15,8 @@ import java.rmi.RemoteException;
  */
 public interface VirtualView extends Remote {
 
+    void setPlayerIdentifier(String playerIdentifier) throws RemoteException;
+
     /**
      * Allows the server to give the player their starting card.
      *

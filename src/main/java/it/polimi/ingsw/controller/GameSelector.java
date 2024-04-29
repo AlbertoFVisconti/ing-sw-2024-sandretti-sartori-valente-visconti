@@ -1,22 +1,32 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.decks.GoalDeckLoader;
 import it.polimi.ingsw.model.decks.PlayCardDeckLoader;
 import it.polimi.ingsw.model.decks.StartCardDeckLoader;
+import it.polimi.ingsw.model.events.messages.MessageType;
+import it.polimi.ingsw.model.events.messages.client.ClientMessage;
+import it.polimi.ingsw.model.events.messages.server.JoinConfirmationMessage;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
-import it.polimi.ingsw.view.ViewWrapperRMI;
-import it.polimi.ingsw.view.VirtualView;
+import it.polimi.ingsw.view.ClientHandler;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 
-public class GameSelector {
+public class GameSelector extends Thread{
     private Map<Integer, GameController> Games;
     private Map<String, GameController> players;
     private int curr=0;
+
+    private BlockingQueue<ClientMessage> messageQueue;
 
     GoalDeckLoader goalDeckLoader= new GoalDeckLoader("src/main/resources/json/goals.json");
     PlayCardDeckLoader resourceCardDeckLoader= new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");
@@ -27,6 +37,8 @@ public class GameSelector {
     private GameSelector(){
         this.Games= new HashMap<>();
         this.players = new HashMap<>();
+        this.messageQueue = new ArrayBlockingQueue<>(100);
+        this.start();
     }
 
     private static GameSelector instance = null;
@@ -35,6 +47,20 @@ public class GameSelector {
             instance = new GameSelector();
         }
         return instance;
+    }
+
+    public void forwardMessage(ClientMessage message)  {
+        try {
+            if (message.messageType == MessageType.CONNECT_JOIN_MESSAGE) {
+                this.messageQueue.put(message);
+            } else {
+                GameController controller = this.players.get(message.playerIdentifier);
+                controller.forwardMessage(message);
+            }
+        }
+        catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -69,14 +95,38 @@ public class GameSelector {
         return this.Games.get(gameId);
     }
 
-    public void addPlayer(int IDGame, String playerIdentifier, String nickname, PlayerColor playerColor, VirtualView playersView) throws Exception {
-        Game game = this.Games.get(IDGame).getGame();
+    public void addPlayer(int IDGame, String nickname, PlayerColor playerColor, ClientHandler clientHandler) throws Exception {
+        GameController controller = this.Games.get(IDGame);
+
+        Random rand = new Random();
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String t = IDGame + nickname + timestamp + rand.nextInt(0, 1000);
+
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA-1");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+
+        md.update(t.getBytes());
+        byte[] digest = md.digest();
+
+        String playerIdentifier = String.format("%032X", new BigInteger(1, digest));
 
         this.players.put(playerIdentifier, this.Games.get(IDGame));
 
+        Game game = controller.getGame();
         if (!game.getAvailableColor().contains(playerColor)) throw new Exception("Color not available");
         game.getAvailableColor().remove(playerColor);
-        game.addPlayer(new Player(playerIdentifier,nickname,playerColor, new ViewWrapperRMI(playersView)));
+        game.addPlayer(new Player(playerIdentifier,nickname,playerColor, clientHandler));
+
+        clientHandler.onUpdate(new JoinConfirmationMessage(playerIdentifier));
+
+
+        System.err.println(nickname + " joined the game");
+
+        controller.updateStatus();
     }
 
     public GameController getPlayersGame(String playerIdentifier) {
@@ -123,4 +173,16 @@ public class GameSelector {
         return Games.keySet();
     }
 
+    @Override
+    public void run() {
+        GameSelector selector = GameSelector.getInstance();
+        while(true) {
+            System.out.println("waiting...");
+            try {
+                this.messageQueue.take().execute(this, null);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

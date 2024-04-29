@@ -21,11 +21,10 @@ public interface VirtualMainController extends Remote {
      * @param IDgame The numerical identifier of the game, chosen among the available ones
      * @param color The players color, unique for the game
      * @param nick The players nickname, unique for the game
-     * @return a string representing the session identifier, used as an authentication key to recognise the player
      * @throws RemoteException in case of errors with the remote communication
      * @throws RuntimeException if color or nickname are unavailable or if game doesn't exist
      */
-    String joinGame (VirtualView view, int IDgame, PlayerColor color, String nick) throws RemoteException;
+    void joinGame (VirtualView view, int IDgame, PlayerColor color, String nick) throws RemoteException;
 
     /**
      * Allows a remote client to try to create and join a new game.
@@ -34,13 +33,12 @@ public interface VirtualMainController extends Remote {
      * @param expectedPlayers The number of players the game is expected to handle
      * @param color The color of the player creating the game
      * @param nick The nickname of the player creating the game
-     * @return a string representing the session identifier, used as an authentication key to recognise the player
      * @throws RemoteException in case of errors with the remote communication
      */
-    String createGame(VirtualView view, int expectedPlayers, PlayerColor color, String nick) throws RemoteException;
+    void createGame(VirtualView view, int expectedPlayers, PlayerColor color, String nick) throws RemoteException;
 
     /**
-     * Retrieves a list of all the available games' identifier in order to allow a client to select one to join.
+     * Asks the controller to retrieve a list of all the available games' identifier in order to allow a client to select one to join.
      *
      * @return a List of integer where each number represents a game
      * @throws RemoteException in case of errors with the remote communication

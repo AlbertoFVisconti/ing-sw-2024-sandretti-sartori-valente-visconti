@@ -3,19 +3,25 @@ import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.ScoreBoard;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.decks.Deck;
+import it.polimi.ingsw.model.events.messages.client.ClientMessage;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.utils.CardLocation;
 
 import java.security.InvalidParameterException;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * deals with all the logic after a game is selected and created
  * **/
-public class GameController  {
+public class GameController extends Thread {
     private final Game game;
     private GameStatus gameStatus;
     private TurnStatus turnStatus;
+
+    private BlockingQueue<ClientMessage> messageQueue;
+
     //TODO  create some lock to avoid a data race if we want ot give the same controller to diff games, otherwise keep it as is
     /**
      * @param game  the game you want to be controlled
@@ -24,6 +30,7 @@ public class GameController  {
         System.err.println("GameController created");
         this.game=game;
         gameStatus=GameStatus.LOBBY;
+        this.messageQueue = new ArrayBlockingQueue<>(100);
     }
 
     public GameStatus getGameStatus() {
@@ -34,6 +41,9 @@ public class GameController  {
         return game;
     }
 
+    public void forwardMessage(ClientMessage message) throws InterruptedException {
+        this.messageQueue.put(message);
+    }
 
     public void updateStatus() {
         if(gameStatus == GameStatus.LOBBY) {
@@ -48,6 +58,7 @@ public class GameController  {
                 turnStatus = TurnStatus.PLACE;
                 gameStatus = GameStatus.GAME_CREATION;
                 game.startGame();
+                this.start();
             }
         }
         else if(gameStatus == GameStatus.GAME_CREATION) {
@@ -272,4 +283,15 @@ public class GameController  {
         }
     }
 
+    @Override
+    public void run() {
+        GameSelector selector = GameSelector.getInstance();
+        while(true) {
+            try {
+                this.messageQueue.take().execute(selector, this);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

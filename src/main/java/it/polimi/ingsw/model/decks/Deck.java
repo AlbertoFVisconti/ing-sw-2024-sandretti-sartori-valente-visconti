@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.decks;
 
 import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.events.Observable;
-import it.polimi.ingsw.model.events.messages.updates.DeckUpdateMessage;
+import it.polimi.ingsw.model.events.messages.server.DeckUpdateMessage;
 
 import java.util.ArrayList;
 import java.util.EmptyStackException;

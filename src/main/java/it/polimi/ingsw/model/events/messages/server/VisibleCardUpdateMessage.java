@@ -1,16 +1,17 @@
-package it.polimi.ingsw.model.events.messages.updates;
+package it.polimi.ingsw.model.events.messages.server;
 
 import it.polimi.ingsw.model.cards.PlayCard;
-import it.polimi.ingsw.model.events.messages.Message;
+import it.polimi.ingsw.model.events.messages.MessageType;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
 
-public class VisibleCardUpdateMessage implements Message {
+public class VisibleCardUpdateMessage extends ServerMessage {
     private final PlayCard visibleCard;
     private final int cardSlot;
 
     public VisibleCardUpdateMessage(PlayCard visibleCard, int cardSlot) {
+        super(MessageType.MODEL_UPDATE_MESSAGE);
         this.visibleCard = visibleCard;
         this.cardSlot = cardSlot;
     }

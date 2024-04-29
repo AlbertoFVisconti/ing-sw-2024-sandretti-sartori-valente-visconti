@@ -12,7 +12,18 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
 
 public class View extends UnicastRemoteObject implements VirtualView{
+    private String playerIdentifier = null;
+
     public View() throws RemoteException {}
+
+    public String getPlayerIdentifier() {
+        return playerIdentifier;
+    }
+
+    @Override
+    public void setPlayerIdentifier(String playerIdentifier) {
+        this.playerIdentifier = playerIdentifier;
+    }
 
     @Override
     public void setStartingCard(StartCard card) throws RemoteException {

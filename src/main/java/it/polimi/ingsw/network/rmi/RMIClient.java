@@ -2,7 +2,6 @@ package it.polimi.ingsw.network.rmi;
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.utils.CardLocation;
 import it.polimi.ingsw.view.View;
-import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
@@ -15,7 +14,7 @@ public class RMIClient {
     private static VirtualMainController virtualMainController;
     private static VirtualController virtualGameController;
     private static final Scanner scanner = new Scanner(System.in);
-    private static VirtualView view;
+    private static View view;
 
 
     private static void joinGame() throws RemoteException {
@@ -74,7 +73,7 @@ public class RMIClient {
             } while (expectedPlayers <= 0);
 
 
-            playerIdentifier = virtualMainController.createGame(view, expectedPlayers, color, nickName);
+            virtualMainController.createGame(view, expectedPlayers, color, nickName);
 
         }
         else {
@@ -82,7 +81,7 @@ public class RMIClient {
                 throw new IllegalArgumentException("There's no game with that ID");
             }
 
-            playerIdentifier = virtualMainController.joinGame(view, selectedGame, color, nickName);
+            virtualMainController.joinGame(view, selectedGame, color, nickName);
         }
     }
 
@@ -178,7 +177,7 @@ public class RMIClient {
         } while(!success);
     }
 
-    public static void main(String[] args) throws RemoteException, NotBoundException {
+    public static void main(String[] args) throws RemoteException, NotBoundException, InterruptedException {
         Registry registry = LocateRegistry.getRegistry(1234);
 
         virtualMainController = (VirtualMainController) registry.lookup("MainController");
@@ -197,6 +196,8 @@ public class RMIClient {
             }
         } while(!success);
 
+        while(view.getPlayerIdentifier() == null) Thread.sleep(100);
+        playerIdentifier = view.getPlayerIdentifier();
         System.err.println("Successfully joined the game. Identifier: " + playerIdentifier);
 
         playGameSetup();

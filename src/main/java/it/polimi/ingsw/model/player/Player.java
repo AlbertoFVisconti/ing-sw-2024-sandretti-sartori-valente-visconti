@@ -2,10 +2,10 @@ package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.events.Observable;
 import it.polimi.ingsw.model.events.Observer;
-import it.polimi.ingsw.model.events.messages.updates.PlayersBoardUpdateMessage;
-import it.polimi.ingsw.model.events.messages.updates.PlayersHandUpdateMessage;
-import it.polimi.ingsw.model.events.messages.updates.PrivateGoalUpdateMessage;
-import it.polimi.ingsw.model.events.messages.updates.StartCardUpdateMessage;
+import it.polimi.ingsw.model.events.messages.server.PlayersBoardUpdateMessage;
+import it.polimi.ingsw.model.events.messages.server.PlayersHandUpdateMessage;
+import it.polimi.ingsw.model.events.messages.server.PrivateGoalUpdateMessage;
+import it.polimi.ingsw.model.events.messages.server.StartCardUpdateMessage;
 import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;

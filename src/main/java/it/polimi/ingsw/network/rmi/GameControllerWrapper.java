@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.rmi;
-import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.model.GameSelector;
+import it.polimi.ingsw.controller.GameSelector;
+import it.polimi.ingsw.model.events.messages.client.*;
 import it.polimi.ingsw.utils.CardLocation;
 
 import java.rmi.RemoteException;
@@ -14,37 +14,25 @@ public class GameControllerWrapper extends UnicastRemoteObject implements Virtua
 
     @Override
     public void placeCard(String playerIdentifier, int index, boolean onBackSide ,CardLocation location) throws RemoteException {
-        GameController controller = gameSelector.getPlayersGame(playerIdentifier);
-
-        if (controller == null) throw new IllegalArgumentException("Unknown player");
-
-        controller.placeCard(gameSelector.getPlayer(playerIdentifier), index, onBackSide, location);
+        ClientMessage message = new PlaceCardMessage(playerIdentifier, index, onBackSide, location);
+        gameSelector.forwardMessage(message);
     }
 
     @Override
     public void drawCard(String playerIdentifier, int index) throws RemoteException {
-        GameController controller = gameSelector.getPlayersGame(playerIdentifier);
-
-        if (controller == null) throw new IllegalArgumentException("Unknown player");
-
-        controller.drawCard(gameSelector.getPlayer(playerIdentifier), index);
+        ClientMessage message = new DrawCardMessage(playerIdentifier, index);
+        gameSelector.forwardMessage(message);
     }
 
     @Override
     public void placeStartCard(String playerIdentifier, boolean onBackSide) throws RemoteException {
-        GameController controller = gameSelector.getPlayersGame(playerIdentifier);
-
-        if (controller == null) throw new IllegalArgumentException("Unknown player");
-
-        controller.placeStartCard(gameSelector.getPlayer(playerIdentifier), onBackSide);
+        ClientMessage message = new PlaceStartCardMessage(playerIdentifier, onBackSide);
+        gameSelector.forwardMessage(message);
     }
 
     @Override
     public void selectPrivateGoal(String playerIdentifier, int index) throws RemoteException {
-        GameController controller = gameSelector.getPlayersGame(playerIdentifier);
-
-        if (controller == null) throw new IllegalArgumentException("Unknown player");
-
-        controller.selectPrivateGoal(gameSelector.getPlayer(playerIdentifier), index);
+        ClientMessage message = new SelectGoalMessage(playerIdentifier, index);
+        gameSelector.forwardMessage(message);
     }
 }

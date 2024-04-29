@@ -1,15 +1,16 @@
-package it.polimi.ingsw.model.events.messages.updates;
+package it.polimi.ingsw.model.events.messages.server;
 
-import it.polimi.ingsw.model.events.messages.Message;
+import it.polimi.ingsw.model.events.messages.MessageType;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
 
-public class PublicGoalsUpdateMessage implements Message {
+public class PublicGoalsUpdateMessage extends ServerMessage {
     private final Goal[] goals;
 
     public PublicGoalsUpdateMessage(Goal[] goals) {
+        super(MessageType.MODEL_UPDATE_MESSAGE);
         this.goals = goals;
     }
 

@@ -1,7 +1,11 @@
 package it.polimi.ingsw.model.events.messages;
 
-import it.polimi.ingsw.view.VirtualView;
+import java.io.Serializable;
 
-public interface Message {
-    void updateView(VirtualView view) ;
+public abstract class Message implements Serializable {
+    final public MessageType messageType;
+
+    public Message(MessageType messageType) {
+        this.messageType = messageType;
+    }
 }
