@@ -6,21 +6,26 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class SocketServer {
+public class SocketServer extends Thread {
 
-    private static final int SERVER_PORT = 1235;
+    private final int port;
 
-    public static void main(String[] args) {
+    public SocketServer(int port) {
+        this.port = port;
+    }
+
+    @Override
+    public void run() {
         ServerSocket serverSocket;
         Socket clientSocket;
         try {
-            serverSocket = new ServerSocket(SERVER_PORT);
+            serverSocket = new ServerSocket(port);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         while(true) {
-            System.err.println("Waiting for a client to connect...");
+            System.err.println("Waiting for a socket client to connect...");
             try {
                 clientSocket = serverSocket.accept();
             } catch (IOException e) {

@@ -226,12 +226,14 @@ public class Game extends Observable {
                     // resource card preferred
                     if(!this.resourceCardsDeck.isEmpty()) {
                         visibleCards[i] = resourceCardsDeck.draw();
+                        this.notifyObservers(new VisibleCardUpdateMessage(visibleCards[i], i));
                     }
                 }
                 else {
                     // gold card
                     if(!this.goldCardsDeck.isEmpty()) {
                         visibleCards[i] = goldCardsDeck.draw();
+                        this.notifyObservers(new VisibleCardUpdateMessage(visibleCards[i], i));
                     }
                 }
             }
@@ -244,12 +246,14 @@ public class Game extends Observable {
                     // resource card preferred
                     if(!this.goldCardsDeck.isEmpty()) {
                         visibleCards[i] = goldCardsDeck.draw();
+                        this.notifyObservers(new VisibleCardUpdateMessage(visibleCards[i], i));
                     }
                 }
                 else {
                     // gold card
                     if(!this.resourceCardsDeck.isEmpty()) {
                         visibleCards[i] = resourceCardsDeck.draw();
+                        this.notifyObservers(new VisibleCardUpdateMessage(visibleCards[i], i));
                     }
                 }
             }
