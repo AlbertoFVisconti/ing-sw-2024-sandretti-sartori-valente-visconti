@@ -181,7 +181,7 @@ public class RMIClient {
         Registry registry = LocateRegistry.getRegistry(1234);
 
         virtualMainController = (VirtualMainController) registry.lookup("MainController");
-        virtualGameController = (VirtualController) registry.lookup("GameController");
+
         view = new View();
 
         boolean success;
@@ -198,6 +198,7 @@ public class RMIClient {
 
         while(view.getPlayerIdentifier() == null) Thread.sleep(100);
         playerIdentifier = view.getPlayerIdentifier();
+        virtualGameController =  view.getController();
         System.err.println("Successfully joined the game. Identifier: " + playerIdentifier);
 
         playGameSetup();

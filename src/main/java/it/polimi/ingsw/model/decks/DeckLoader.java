@@ -20,6 +20,14 @@ public abstract class DeckLoader<T extends Drawable> {
     protected final String filename;
     private List<T> loadedContent = null;
 
+    /**
+     * Allows to create a Deck object with the content loaded by the object.
+     * The first time this method is called, the content will be loaded/constructed.
+     * From the second time on, this operation will be skipped.
+     *
+     * @return a new Deck object with the content loaded form the file.
+     * @throws IOException the first time errors could occur trying to load the content.
+     */
     public Deck<T> getDeck() throws IOException {
         return new Deck<>(this.getContent());
     }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.ScoreBoard;
+import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.decks.Deck;
 import it.polimi.ingsw.model.events.messages.client.ClientMessage;
@@ -13,19 +14,23 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * deals with all the logic after a game is selected and created
- * **/
+ * GameController allows players to play a game.
+ * It handles all the game logic and checks that the player is performing legal operations.
+ **/
 public class GameController extends Thread {
     private final Game game;
     private GameStatus gameStatus;
     private TurnStatus turnStatus;
 
-    private BlockingQueue<ClientMessage> messageQueue;
+    private final BlockingQueue<ClientMessage> messageQueue;
 
-    //TODO  create some lock to avoid a data race if we want ot give the same controller to diff games, otherwise keep it as is
     /**
+     * Constructs a GameController that handles the provided game.
+     * <p>
+     * By default, the game will be in LOBBY status.
+     *
      * @param game  the game you want to be controlled
-     * **/
+     **/
     public GameController(Game game){
         System.err.println("GameController created");
         this.game=game;
@@ -33,18 +38,60 @@ public class GameController extends Thread {
         this.messageQueue = new ArrayBlockingQueue<>(100);
     }
 
+    /**
+     * Retrieves the current game status.
+     *
+     * @return the current game status.
+     */
     public GameStatus getGameStatus() {
         return gameStatus;
     }
 
+    /**
+     * Retrieves the current turn status.
+     *
+     * @return the current turn status.
+     */
+    public TurnStatus getTurnStatus() {
+        return turnStatus;
+    }
+
+    /**
+     * Retrieves a reference to the Game that the controller is handling.
+     *
+     * @return the Game the controller is handling.
+     */
     public Game getGame() {
         return game;
     }
 
-    public void forwardMessage(ClientMessage message) throws InterruptedException {
-        this.messageQueue.put(message);
+    /**
+     * Put a message for this Game in a blocking queue.
+     * Messages are elaborated asynchronously on another thread.
+     *
+     * @param message the message that needs to be processed by this controller.
+     */
+    public void forwardMessage(ClientMessage message)  {
+        try {
+            this.messageQueue.put(message);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    /**
+     * Updates, if needed, the Game status.
+     * Allows to start and end games.
+     * A game enters the GAME_CREATION status once the number of players matches the
+     * number of expected players. In this phase players can asynchronously select their
+     * private goal and place their starting card.
+     * When everyone has selected their goal and placed their starting card, the game
+     * enters the NORMAL_TURN status.
+     * When an even trigger the last turn of the game and the current turn ends,
+     * the game enters its LAST_TURN status.
+     * After the last player placed their last card, the game comes to an end.
+     * Thus, the Game is put in END status.
+     */
     public void updateStatus() {
         if(gameStatus == GameStatus.LOBBY) {
             if (game.getExpectedPlayers() == game.getPlayers().size()) {
@@ -86,7 +133,7 @@ public class GameController extends Thread {
                     }
                 }
 
-                if(game.getResourceCardsDeck().isEmpty() && game.getGoldCardsDeck().isEmpty()) {
+                if(game.emptyDecks()) {
 
                     System.err.println("Decks are empty, last turn starts");
                     this.gameStatus = GameStatus.LAST_TURN;
@@ -97,7 +144,15 @@ public class GameController extends Thread {
 
     }
 
-    private boolean isLocationValid(CardLocation location, Player player){
+    /**
+     * Helper method to check if a card can be placed in the player's board
+     * in a specified location.
+     *
+     * @param location the location that needs to be checked.
+     * @param player the player whose board needs to be checked.
+     * @return {@code true} if the location is valid and a card can be placed, {@code false} otherwise.
+     */
+    private static boolean isLocationValid(CardLocation location, Player player){
         if (player.getPlacedCard(location) != null) return false;
 
 
@@ -124,6 +179,10 @@ public class GameController extends Thread {
                 || player.getPlacedCard(location.bottomLeftNeighbour()) != null;
     }
 
+    /**
+     * Runs evaluations for all goals (both public and private goals).
+     * Updates each player's scoring with the result of the evaluations.
+     */
     public void evaluateGoals() {
          if(gameStatus != GameStatus.END) {
              throw new RuntimeException("The game's still running");
@@ -139,6 +198,16 @@ public class GameController extends Thread {
          }
     }
 
+    /**
+     * Allows to select the private goal, among the available ones, for the
+     * specified player.
+     * <p>
+     * This operation is only valid if the game is in GAME_CREATION status, if the
+     * player exists and if they haven't already selected their private goal.
+     *
+     * @param player the player who is selecting the private goal.
+     * @param index the index of the selected goal in the available ones.
+     */
     public void selectPrivateGoal(Player player, int index) {
          if(gameStatus != GameStatus.GAME_CREATION) {
              throw new RuntimeException("Cannot select private goal in this game status");
@@ -159,6 +228,15 @@ public class GameController extends Thread {
          updateStatus();
     }
 
+    /**
+     * Allows to place the starting card, on a specific side, for the player.
+     * <p>
+     * This operation is only valid if the game is in NORMAL_TURN status or in LAST_TURN status,
+     * if the player exists and if they haven't already placed their starting card.
+     *
+     * @param player the player who is placing the starting card.
+     * @param onBackSide {@code true} if the starting card needs to be placed with the back side up, {@code false} otherwise.
+     */
     public void placeStartCard(Player player, boolean onBackSide) {
         if(gameStatus != GameStatus.GAME_CREATION) {
             throw new RuntimeException("Cannot place starting card in this game status");
@@ -177,6 +255,48 @@ public class GameController extends Thread {
         updateStatus();
     }
 
+    /**
+     * Helper method that updates a player inventory after a placement occurred.
+     *
+     * @param player the player whose inventory needs to be updated.
+     * @param location the location where the placement occurred.
+     */
+    private static void updateInventory(Player player, CardLocation location) {
+        PlayCard placedCard = (PlayCard)player.getPlacedCard(location);
+        player.addItems(placedCard.collectItems());
+
+        Card t = player.getPlacedCard(location.topLeftNeighbour());
+        if(t != null) {
+            player.removeItem(t.getBottomRightCorner());
+        }
+
+        t = player.getPlacedCard(location.topRightNeighbour());
+        if(t != null) {
+            player.removeItem(t.getBottomLeftCorner());
+        }
+
+        t = player.getPlacedCard(location.bottomLeftNeighbour());
+        if(t != null) {
+            player.removeItem(t.getTopRightCorner());
+        }
+
+        t = player.getPlacedCard(location.bottomRightNeighbour());
+        if(t != null) {
+            player.removeItem(t.getTopLeftCorner());
+        }
+    }
+
+    /**
+     * Allows to place a card, on a specific side, in a player's board.
+     * <p>
+     * This operation is only valid if the game is in NORMAL_TURN status or in LAST_TURN status,
+     * if the player exists, if it's their turn and if they haven't already placed a card in the current turn.
+     *
+     * @param player the player who is placing the card.
+     * @param index the index of the card in the player's hand that needs to be placed.
+     * @param onBackSide {@code true} if the starting card needs to be placed with the back side up, {@code false} otherwise.
+     * @param location the CardLocation where the card needs to be placed in the player's board.
+     */
     public void placeCard(Player player, int index, boolean onBackSide, CardLocation location) {
          if (!player.identifier.equals(game.getTurn().identifier)) {
              throw new RuntimeException("it is not this player's turn");
@@ -191,14 +311,18 @@ public class GameController extends Thread {
          if(isLocationValid(location, player)) {
             try {
                 player.placeCard(index, onBackSide, location);
-                // Card successfully placed
-                this.turnStatus = TurnStatus.DRAW;
+
+                updateInventory(player, location);
+
                 game.getScoreBoard().addScore(player,
 
-                        // is safe to assume that the card that was just placed is a PlayCard
+                        // it is safe to assume that the card that was just placed is a PlayCard
                         // since it is certain to come from the player's hand
                         ((PlayCard)player.getPlacedCard(location)).getScoringStrategy().evaluate(player, location)
                 );
+
+                // Card successfully placed
+                this.turnStatus = TurnStatus.DRAW;
             } catch (InvalidParameterException e) {
                 // Invalid index
                 throw new RuntimeException(e);
@@ -209,6 +333,15 @@ public class GameController extends Thread {
          }
     }
 
+    /**
+     * Allows to a player to pick up one of the visible cards or to draw from the decks.
+     * <p>
+     * This operation is only valid if the game is in NORMAL_TURN status,
+     * if the player exists, if it's their turn and if they have already placed a card in the current turn.
+     *
+     * @param player the player who is drawing.
+     * @param index the index of the cards that the player wants to pick up.
+     */
     public void drawCard(Player player, int index) {
         if (!player.identifier.equals(game.getTurn().identifier)) {
             throw new RuntimeException("it is not this player's turn");
@@ -283,6 +416,9 @@ public class GameController extends Thread {
         }
     }
 
+    /**
+     * Thread method that processes messages asynchronously.
+     */
     @Override
     public void run() {
         GameSelector selector = GameSelector.getInstance();

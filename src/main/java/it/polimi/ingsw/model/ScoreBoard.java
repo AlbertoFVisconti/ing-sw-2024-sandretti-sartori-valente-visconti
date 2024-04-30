@@ -50,6 +50,12 @@ public class ScoreBoard extends Observable {
         scores.put(player,score);
     }
 
+    /**
+     * Increases the score of a player in the scoreboard by a specified amount.
+     *
+     * @param player the Player whose score needs to be updated
+     * @param scoreDelta the amount to add to the Player's score.
+     */
     public void addScore(Player player, int scoreDelta) {
         if(!scores.containsKey(player)) throw new NoSuchElementException("This player is not in the scoreboard");
         scores.put(player,scores.get(player) + scoreDelta);

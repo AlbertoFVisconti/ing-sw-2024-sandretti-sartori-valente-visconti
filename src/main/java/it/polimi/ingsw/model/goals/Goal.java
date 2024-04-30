@@ -21,6 +21,9 @@ public abstract class Goal implements Drawable, Serializable {
      */
     abstract public int evaluate(Player player);
 
+    /**
+     * @return {@code null}
+     */
     @Override
     public Resource getCardResourceType() {
         return null;

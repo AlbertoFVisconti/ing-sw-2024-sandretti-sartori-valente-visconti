@@ -1,5 +1,9 @@
 package it.polimi.ingsw.model.events.messages;
 
+/**
+ * Enum that represents the possible types of message that can be
+ * sent/received.
+ */
 public enum MessageType {
     MODEL_UPDATE_MESSAGE,
     CHAT_MESSAGE,

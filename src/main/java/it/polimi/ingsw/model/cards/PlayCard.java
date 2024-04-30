@@ -155,7 +155,26 @@ public class PlayCard extends Card {
         }
         return super.collectItems();
     }
-    
+
+    /**
+     * Allows decks to ask for the resource on the back of the card.
+     *
+     * @return the resource on the back of the card (the type of the card)
+     */
+    @Override
+    public Resource getCardResourceType() {
+        return this.getType();
+    }
+
+    /**
+     * Allows to check whether the card is a golden card.
+     *
+     * @return {@code true} if this is a golden card, {@code false} otherwise.
+     */
+    public boolean isGold() {
+        return isGold;
+    }
+
     @Override
     public String toString() {
         return super.toString() +
@@ -163,14 +182,5 @@ public class PlayCard extends Card {
                 "type = " + type + "\n" +
                 "constraint = " + constraint.toString() + "\n" +
                 "scoringStrategy = " + scoringStrategy.toString();
-    }
-
-    @Override
-    public Resource getCardResourceType() {
-        return this.getType();
-    }
-
-    public boolean isGold() {
-        return isGold;
     }
 }

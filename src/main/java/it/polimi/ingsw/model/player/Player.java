@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.events.Observable;
-import it.polimi.ingsw.model.events.Observer;
 import it.polimi.ingsw.model.events.messages.server.PlayersBoardUpdateMessage;
 import it.polimi.ingsw.model.events.messages.server.PlayersHandUpdateMessage;
 import it.polimi.ingsw.model.events.messages.server.PrivateGoalUpdateMessage;
@@ -13,6 +12,7 @@ import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.utils.CardLocation;
+import it.polimi.ingsw.view.ClientHandler;
 
 import java.security.InvalidParameterException;
 import java.util.Collections;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class Player extends Observable {
     public final String nickName;
     public String identifier;
-    private Observer viewWrapper;
+    private ClientHandler clientHandler;
     public final PlayerColor color;
     private StartCard startCard;
     private final PlayCard[] playerCards;
@@ -31,38 +31,49 @@ public class Player extends Observable {
 
     private final HashMap<CardLocation, Card> board;
     private final ItemCollection inventory;
-    private boolean Disconnected;
+    private boolean disconnected;
     /**
      * Constructs a new Player object.
      *
      * @param playerIdentifier a string that is uniquely associated to this player
      * @param name String containing the player's nickname
      * @param playerColor Color value representing the unique color assigned to the player
-     * @param viewWrapper player's view wrapper
+     * @param clientHandler player's client handler
      */
-    public Player(String playerIdentifier , String name, PlayerColor playerColor, Observer viewWrapper) {
+    public Player(String playerIdentifier , String name, PlayerColor playerColor, ClientHandler clientHandler) {
         this.identifier = playerIdentifier;
         this.nickName=name;
         this.color=playerColor;
-        this.viewWrapper = viewWrapper;
+        this.clientHandler = clientHandler;
         this.startCard=null;
         this.board=new HashMap<>();
         this.playerCards=new PlayCard[3];
         this.inventory = new ItemCollection();
 
-        if(viewWrapper != null)
-            this.subscribe(this.viewWrapper);
+        if(this.clientHandler != null)
+            this.subscribe(this.clientHandler);
     }
 
-    public void setViewWrapper(Observer viewWrapper) {
-        if(this.viewWrapper != null)
-            this.unsubscribe(this.viewWrapper);
-        this.viewWrapper = viewWrapper;
-        if(this.viewWrapper != null)
-            this.subscribe(this.viewWrapper);
+    /**
+     * Allows to replace the player's ClientHandler with a new one.
+     *
+     * @param clientHandler the new player's ClientHandler.
+     */
+    public void setClientHandler(ClientHandler clientHandler) {
+        if(this.clientHandler != null)
+            this.unsubscribe(this.clientHandler);
+        this.clientHandler = clientHandler;
+        if(this.clientHandler != null)
+            this.subscribe(this.clientHandler);
     }
-    public Observer getViewWrapper() {
-        return viewWrapper;
+
+    /**
+     * Retrieves the player's ClientHandler
+     *
+     * @return the player's ClientHandler
+     */
+    public ClientHandler getClientHandler() {
+        return clientHandler;
     }
 
     /**
@@ -91,6 +102,12 @@ public class Player extends Observable {
         this.notifyObservers(new PlayersHandUpdateMessage(this.nickName,card, index));
     }
 
+    /**
+     * Sets the player's available goals.
+     * The player is then required to select one among these as their definitive private goal.
+     *
+     * @param availableGoals an array of goals that represents the available goals for the player.
+     */
     public void setAvailableGoals(Goal[] availableGoals) {
         this.availableGoals = availableGoals.clone();
 
@@ -241,22 +258,42 @@ public class Player extends Observable {
     public void removeItem(Corner corner) {
         this.inventory.sub(corner);
     }
+
     /**
-     * with no param returns if a player is disconnected, with a bool set its value to it
-     * **/
-    private boolean disconnected(){
-        return this.Disconnected;
-    }
-    private void disconnected(boolean b){
-        this.Disconnected=b;
+     * Checks whether a player has disconnected
+     *
+     * @return {@code true} if the player has disconnected, {@code false} otherwise
+     */
+    public boolean hasDisconnected() {
+        return this.disconnected;
     }
 
-    public void addPlayerCard(PlayCard draw) throws Exception {
+    /**
+     * Sets the player has disconnected
+     */
+    public void disconnect(){
+        this.disconnected = true;
+    }
+
+    /**
+     * Sets the player has connected again.
+     */
+    public void reconnect(){
+        this.disconnected = false;
+    }
+
+    /**
+     * Adds the specified card in the first available slots in the player's hand
+     *
+     * @param card the card that needs to be added to the player's hand.
+     * @throws Exception if the player's hand is full, so there's no room for a new card.
+     */
+    public void addPlayerCard(PlayCard card) throws Exception {
         for(int i = 0; i < playerCards.length; i++) {
             if(playerCards[i] == null) {
-                playerCards[i] = draw;
+                playerCards[i] = card;
 
-                this.notifyObservers(new PlayersHandUpdateMessage(this.nickName,draw, i));
+                this.notifyObservers(new PlayersHandUpdateMessage(this.nickName,card, i));
                 return;
             }
         }
@@ -264,18 +301,38 @@ public class Player extends Observable {
         throw new Exception("Player's hand is full");
     }
 
+    /**
+     * Retrieves the player's available goals.
+     *
+     * @return an array of goals that represents the available goals for the player.
+     */
     public Goal[] getAvailableGoals() {
         return availableGoals;
     }
 
+    /**
+     * Retrieves the player's starting card.
+     *
+     * @return a StartCard object representing the player's starting card.
+     */
     public StartCard getStartCard() {
         return this.startCard;
     }
 
+    /**
+     * Retrieves the cards in the player's hand.
+     *
+     * @return an array of PlayCards representing the content of the player's hand.
+     */
     public PlayCard[] getPlayerCards() {
         return playerCards;
     }
-    
+
+    /**
+     * Retrieves the player's nickname.
+     *
+     * @return the player's nickname.
+     */
     public String getNickname() {
         return nickName;
     }

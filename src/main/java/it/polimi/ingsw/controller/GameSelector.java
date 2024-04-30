@@ -4,11 +4,11 @@ import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.decks.GoalDeckLoader;
 import it.polimi.ingsw.model.decks.PlayCardDeckLoader;
 import it.polimi.ingsw.model.decks.StartCardDeckLoader;
-import it.polimi.ingsw.model.events.messages.MessageType;
 import it.polimi.ingsw.model.events.messages.client.ClientMessage;
 import it.polimi.ingsw.model.events.messages.server.JoinConfirmationMessage;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
+import it.polimi.ingsw.network.rmi.GameControllerWrapper;
 import it.polimi.ingsw.view.ClientHandler;
 
 import java.io.IOException;
@@ -20,28 +20,46 @@ import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-
+/**
+ * Allows to manage multiple games. It's a singleton that resides on the Server.
+ * Receive messages from clients that wants to join or creates game.
+ * Those messages are put in a BlockingQueue and are processed asynchronously.
+ */
 public class GameSelector extends Thread{
-    private Map<Integer, GameController> Games;
-    private Map<String, GameController> players;
-    private int curr=0;
+    private final Map<Integer, GameControllerWrapper> games;
+    private final Map<String, GameController> playerIdentifierToGameController;
+    private int nextGameID =0;
 
-    private BlockingQueue<ClientMessage> messageQueue;
+    private final BlockingQueue<ClientMessage> messageQueue;
 
+    // Default deck loaders ready to build decks for all game (thus accessing the files only once)
     GoalDeckLoader goalDeckLoader= new GoalDeckLoader("src/main/resources/json/goals.json");
     PlayCardDeckLoader resourceCardDeckLoader= new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");
     PlayCardDeckLoader goldCardDeckLoader= new PlayCardDeckLoader("src/main/resources/json/cards/goldcards.json");
     StartCardDeckLoader startCardDeckLoader= new StartCardDeckLoader("src/main/resources/json/cards/startcards.json");
 
+    private static GameSelector instance = null;
 
+    /**
+     * Construct the GameSelector object (only one since it's a singleton).
+     * It's a private method because only the getInstance() method should be used
+     * to get the instance.
+     * Upon being created, the GameSelector instance starts processing messages
+     * right away.
+     */
     private GameSelector(){
-        this.Games= new HashMap<>();
-        this.players = new HashMap<>();
+        this.games = new HashMap<>();
+        this.playerIdentifierToGameController = new HashMap<>();
         this.messageQueue = new ArrayBlockingQueue<>(100);
         this.start();
     }
 
-    private static GameSelector instance = null;
+    /**
+     * Retrieves the only available instance of GameSelector.
+     * If the instance hasn't been created yet, the method creates it first.
+     *
+     * @return reference to the GameSelector instance.
+     */
     public static GameSelector getInstance() {
         if(instance == null) {
             instance = new GameSelector();
@@ -49,14 +67,14 @@ public class GameSelector extends Thread{
         return instance;
     }
 
+    /**
+     * Allows to put a message in the GameSelector queue.
+     *
+     * @param message the message that needs to be processed by the GameSelector.
+     */
     public void forwardMessage(ClientMessage message)  {
         try {
-            if (message.messageType == MessageType.CONNECT_JOIN_MESSAGE) {
-                this.messageQueue.put(message);
-            } else {
-                GameController controller = this.players.get(message.playerIdentifier);
-                controller.forwardMessage(message);
-            }
+            this.messageQueue.put(message);
         }
         catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -64,39 +82,69 @@ public class GameSelector extends Thread{
     }
 
     /**
-     * returns true if there are no player with the same nickname in the selected game
-     * @param game: the Game you want to check
-     * @param Nickname: the nick you want to check
+     * Helper method that allows to check whether a given nickname is available in a given Game.
+     *
+     * @param game the Game you want to check.
+     * @param nickname the nick you want to check.
+     * @return {@code true} if there are no player with the same nickname in the selected game, {@code false} otherwise.
      * **/
-    public static boolean isAvailable(Game game, String Nickname){
+    public static boolean isAvailable(Game game, String nickname){
         List<Player> temp=game.getPlayers();
         for(Player p: temp){
-            if(p.nickName.equals(Nickname))  return false;
+            if(p.nickName.equals(nickname))  return false;
         }
         return true;
     }
-    public void RemoveGame(int idGame){
-        Games.remove(idGame);
-    }
+
     /**
-     * @param expectedPlayers: the number of player expected for that game
-     * **/
+     * Removes a specified game from the Game list
+     *
+     * @param idGame the id of the game that needs to be removed.
+     */
+    public void RemoveGame(int idGame){
+        games.remove(idGame);
+    }
+
+    /**
+     * Crates a new game.
+     * Also sets up the GameControllerWrapper (the remote object).
+     *
+     * @param expectedPlayers the number of player expected for that game.
+     * @return the GameID for the game that was just created.
+     */
     public int CreateGame(int expectedPlayers) throws IOException {
-        Game g=new Game(goldCardDeckLoader,resourceCardDeckLoader,startCardDeckLoader,goalDeckLoader, curr,expectedPlayers );
+        Game g=new Game(goldCardDeckLoader,resourceCardDeckLoader,startCardDeckLoader,goalDeckLoader, nextGameID,expectedPlayers );
 
         GameController controller = new GameController(g);
+        GameControllerWrapper controllerWrapper = new GameControllerWrapper(controller);
 
-        Games.put(curr,controller);
+        games.put(nextGameID,controllerWrapper);
 
-        return curr++;
+        return nextGameID++;
     }
 
+    /**
+     * Return the GameController object for a given game.
+     *
+     * @param gameId the gameID of the game whose GameController is needed.
+     * @return a reference to the GameController that handles the specified game, {@code null} if there's no game with the provided GameID.
+     */
     public GameController getGameController(int gameId) {
-        return this.Games.get(gameId);
+        return this.games.get(gameId).getGameController();
     }
 
+    /**
+     * Adds a player to an existing game.
+     *
+     * @param IDGame the ID of the game that the player wants to join.
+     * @param nickname the nickname that the player has chosen
+     * @param playerColor the color that the player has chosen
+     * @param clientHandler the ClientHandler that handles communication with the player's client
+     * @throws Exception if the parameters are invalid
+     */
     public void addPlayer(int IDGame, String nickname, PlayerColor playerColor, ClientHandler clientHandler) throws Exception {
-        GameController controller = this.Games.get(IDGame);
+        clientHandler.setController(this.games.get(IDGame));
+        GameController controller = this.games.get(IDGame).getGameController();
 
         Random rand = new Random();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -114,27 +162,40 @@ public class GameSelector extends Thread{
 
         String playerIdentifier = String.format("%032X", new BigInteger(1, digest));
 
-        this.players.put(playerIdentifier, this.Games.get(IDGame));
+        this.playerIdentifierToGameController.put(playerIdentifier, this.games.get(IDGame).getGameController());
 
         Game game = controller.getGame();
         if (!game.getAvailableColor().contains(playerColor)) throw new Exception("Color not available");
         game.getAvailableColor().remove(playerColor);
         game.addPlayer(new Player(playerIdentifier,nickname,playerColor, clientHandler));
 
-        clientHandler.onUpdate(new JoinConfirmationMessage(playerIdentifier));
 
+        clientHandler.onUpdate(new JoinConfirmationMessage(playerIdentifier));
 
         System.err.println(nickname + " joined the game");
 
         controller.updateStatus();
     }
 
-    public GameController getPlayersGame(String playerIdentifier) {
-        return players.get(playerIdentifier);
+    /**
+     * Retrieves the GameController that handles the game that
+     * the player (whose identifier is provided) is playing.
+     *
+     * @param playerIdentifier the identifier of the player whose GameController is needed.
+     * @return a reference to the GameController that handles the player's game, {@code null} if the player wasn't recognised.
+     */
+    public GameController getPlayersGameController(String playerIdentifier) {
+        return playerIdentifierToGameController.get(playerIdentifier);
     }
 
+    /**
+     * Retrieves the Player object that represents the player whose playerIdentifier is provided.
+     *
+     * @param playerIdentifier the identifier of the player whose object is needed.
+     * @return a reference to the Player with the specified playerIdentifier, {@code null} if the player wasn't recognised.
+     */
     public Player getPlayer(String playerIdentifier) {
-        GameController controller = players.get(playerIdentifier);
+        GameController controller = playerIdentifierToGameController.get(playerIdentifier);
         if(controller == null) return null;
 
         Game game = controller.getGame();
@@ -147,32 +208,13 @@ public class GameSelector extends Thread{
         return null;
     }
 
-//    public void JoinGame(int idGame, int color, String Nickname) throws Exception{
-//        Game game=Games.get(idGame).getGame();
-//        if(game.getPlayers().size()==game.getExpectedPlayers()) throw new Exception("Game already full");
-//        if (!isAvailable(game,Nickname)) throw new Exception("Nick already taken");
-//        PlayerColor playerColor;
-//        switch (color) {
-//            case 1:
-//                playerColor = PlayerColor.RED;
-//                break;
-//            case 2:
-//                playerColor = PlayerColor.YELLOW;
-//                break;
-//            case 3:
-//                playerColor = PlayerColor.GREEN;
-//                break;
-//            default:
-//                playerColor = PlayerColor.BLUE;
-//        }
-//        if (!game.getAvailableColor().contains(playerColor)) throw new Exception("Color not available, choose another one");
-//        game.getAvailableColor().remove(playerColor);
-//        game.addPlayer(new Player(Nickname,playerColor));
-//    }
     public Set<Integer> getAvailableGames(){
-        return Games.keySet();
+        return games.keySet();
     }
 
+    /**
+     * Thread method that asynchronously processes the GameSelector messages.
+     */
     @Override
     public void run() {
         GameSelector selector = GameSelector.getInstance();

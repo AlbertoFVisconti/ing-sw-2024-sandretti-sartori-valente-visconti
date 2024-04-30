@@ -8,15 +8,15 @@ import java.rmi.registry.Registry;
 
 public class RMIServer {
     private static final String MAIN_CONTROLLER_OBJECT_NAME = "MainController";
-    private static final String GAME_CONTROLLER_OBJECT_NAME = "GameController";
+    //private static final String GAME_CONTROLLER_OBJECT_NAME = "GameController";
     public static void setup(int registryPort) throws RemoteException, AlreadyBoundException {
 
         MainController mainController = new MainController();
-        GameControllerWrapper gameControllerWrapper = new GameControllerWrapper();
+        //GameControllerWrapper gameControllerWrapper = new GameControllerWrapper();
 
         Registry registry = LocateRegistry.createRegistry(registryPort);
         registry.bind(MAIN_CONTROLLER_OBJECT_NAME, mainController);
-        registry.bind(GAME_CONTROLLER_OBJECT_NAME, gameControllerWrapper);
+        //registry.bind(GAME_CONTROLLER_OBJECT_NAME, gameControllerWrapper);
 
         System.out.println("RMI Server ready");
     }

@@ -79,15 +79,18 @@ public class StartCard extends Card {
         return super.collectItems();
     }
 
+    /**
+     * @return {@code mull}
+     */
+    @Override
+    public Resource getCardResourceType() {
+        return null;
+    }
+
     @Override
     public String toString() {
         return super.toString() +
                 "backCorners = " + Arrays.toString(backCorners) + "\n" +
                 "permanentResources = " + permanentResources.toString();
-    }
-
-    @Override
-    public Resource getCardResourceType() {
-        return null;
     }
 }

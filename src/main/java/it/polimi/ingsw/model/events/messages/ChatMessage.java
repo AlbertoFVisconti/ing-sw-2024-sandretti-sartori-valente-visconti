@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model.events.messages;
 
+/**
+ * ChatMessage represents a message sent from a player to another (or broadcast)
+ */
 public class ChatMessage extends Message {
     private final String text; // The text content of the message
     private final Long timestamp; // The timestamp when the message was created

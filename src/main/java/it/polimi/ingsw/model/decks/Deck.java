@@ -30,6 +30,12 @@ public class Deck<T extends Drawable> extends Observable {
         this.topOfTheStack = next();
     }
 
+    /**
+     * Allows to set the deck's identifier number.
+     * This value is used to recognise the deck.
+     *
+     * @param deckIdentifier the new identifier number for this deck.
+     */
     public void setDeckIdentifier(int deckIdentifier) {
         this.deckIdentifier = deckIdentifier;
     }

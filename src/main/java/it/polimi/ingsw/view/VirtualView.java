@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.goals.Goal;
+import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.utils.CardLocation;
 
 import java.rmi.Remote;
@@ -14,6 +15,8 @@ import java.rmi.RemoteException;
  *
  */
 public interface VirtualView extends Remote {
+
+    void setController(VirtualController controller) throws RemoteException;
 
     void setPlayerIdentifier(String playerIdentifier) throws RemoteException;
 

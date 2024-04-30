@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.decks.Deck;
@@ -34,11 +33,10 @@ public class Game extends Observable {
 
     private final Deck<StartCard> startCardsDeck;
     private final Deck<Goal> goalsDeck;
-    private GameStatus currStatus;
     private ScoreBoard scoreBoard;
     private final int idGame;
     private final int expectedPlayers;
-    private Set<PlayerColor> availableColor;
+    private final Set<PlayerColor> availableColor;
 
     /**
      * Constructs a new Game object, initializing the game components.
@@ -62,7 +60,6 @@ public class Game extends Observable {
         this.goalsDeck = goalDeckLoader.getDeck();
 
         this.players = new ArrayList<>();
-        this.currStatus=GameStatus.LOBBY;
         this.idGame=idGame;
         this.expectedPlayers=expectedPlayers;
         this.availableColor= new HashSet<>();
@@ -125,7 +122,8 @@ public class Game extends Observable {
      *
      * @throws Exception if the game has already started
      */
-    public void shufflePlayers(){
+    public void shufflePlayers() throws Exception {
+        if (this.isStarted) throw new Exception("Game has already started");
         Collections.shuffle(this.players);
     }
 
@@ -193,31 +191,70 @@ public class Game extends Observable {
     }
 
     /**
-     * Checks if the game has started.
+     * Retrieves the players that are playing the game (or that are waiting to play the game)
      *
-     * @return {@code true} if the game has started, {@code false} otherwise.
+     * @return a list of Player objects that represents the players in the game.
      */
-
     public List<Player> getPlayers(){
         return Collections.unmodifiableList(players);
     }
+
+    /**
+     * Retrieves the number of players that the game is expecting.
+     *
+     * @return the number of players that the game is expecting.
+     */
     public int getExpectedPlayers(){return this.expectedPlayers;}
+
+    /**
+     * Retrieves the available player colors for this game.
+     *
+     * @return a set of PlayerColor that represents the set of available colors.
+     */
     public Set<PlayerColor> getAvailableColor(){ return this.availableColor;}
-    public Goal getGoal(){return  this.goalsDeck.draw();}
+
+    /**
+     * Retrieves the game scoreboard.
+     *
+     * @return a reference to the scoreboard that contains player's score for this game.
+     */
     public ScoreBoard getScoreBoard(){return this.scoreBoard;}
 
+    /**
+     * Retrieves the Resource cards deck.
+     *
+     * @return a reference to the resource cards deck.
+     */
     public Deck<PlayCard> getResourceCardsDeck() {
         return resourceCardsDeck;
     }
 
+    /**
+     * Retrieves the Gold cards deck.
+     *
+     * @return a reference to the gold cards deck.
+     */
     public Deck<PlayCard> getGoldCardsDeck() {
         return goldCardsDeck;
     }
 
+    /**
+     * Retrieves the visible cards.
+     *
+     * @return an array of PlayCard that represents the visible cards that can be picked up.
+     */
     public PlayCard[] getVisibleCards() {
         return visibleCards;
     }
 
+    /**
+     * Tries to fill the empty visible cards slots.
+     * First, it tries to fill each slots with its expected card type.
+     * It one of the decks runs out of cards, the visible cards slots that
+     * expect this kind of card can be filled with cards of the opposite type.
+     * If both decks are empty, the visible card slots will be left empty.
+     * (the game is bound to end shortly after in this case).
+     */
     public void refillVisibleCards() {
         // first i try to fill the empty slots with the preferred card type
         for(int i = 0; i < visibleCards.length; i++) {
@@ -260,17 +297,37 @@ public class Game extends Observable {
         }
     }
 
+    /**
+     * Checks whether a new turn is starting.
+     *
+     * @return {@code true} if the player that is expected to player is the first player of the list, {@code false} otherwise.
+     */
     public boolean isFirstPlayersTurn() {
         return currentTurn == 0;
     }
+
+    /**
+     * Retrieves the game's Identifier.
+     *
+     * @return the GameID for the current game.
+     */
     public int getIdGame() {return this.idGame;}
+
+    /**
+     * Checks whether both decks are empty.
+     *
+     * @return {@code true} if both decks are empty, {@code false} otherwise.
+     */
     public boolean emptyDecks(){ return (this.goldCardsDeck.isEmpty()&& this.resourceCardsDeck.isEmpty());}
 
+    /**
+     * Subscribes players to the decks and to the game itself.
+     */
     public void subscribeCommonObservers() {
         for(Player p : this.players) {
-            this.subscribe(p.getViewWrapper());
-            this.goldCardsDeck.subscribe((p.getViewWrapper()));
-            this.resourceCardsDeck.subscribe((p.getViewWrapper()));
+            this.subscribe(p.getClientHandler());
+            this.goldCardsDeck.subscribe((p.getClientHandler()));
+            this.resourceCardsDeck.subscribe((p.getClientHandler()));
         }
     }
 }
