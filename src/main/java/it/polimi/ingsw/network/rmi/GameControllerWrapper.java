@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.rmi;
 import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.model.events.messages.client.*;
+import it.polimi.ingsw.events.messages.client.*;
 import it.polimi.ingsw.utils.CardLocation;
 
 import java.rmi.RemoteException;

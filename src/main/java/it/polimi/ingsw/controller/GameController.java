@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.ScoreBoard;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.decks.Deck;
-import it.polimi.ingsw.model.events.messages.client.ClientMessage;
+import it.polimi.ingsw.events.messages.client.ClientMessage;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.utils.CardLocation;
@@ -252,6 +252,8 @@ public class GameController extends Thread {
             throw new RuntimeException(e);
         }
 
+        updateInventory(player,new CardLocation(0,0));
+
         updateStatus();
     }
 
@@ -262,7 +264,7 @@ public class GameController extends Thread {
      * @param location the location where the placement occurred.
      */
     private static void updateInventory(Player player, CardLocation location) {
-        PlayCard placedCard = (PlayCard)player.getPlacedCard(location);
+        Card placedCard = player.getPlacedCard(location);
         player.addItems(placedCard.collectItems());
 
         Card t = player.getPlacedCard(location.topLeftNeighbour());
@@ -298,7 +300,7 @@ public class GameController extends Thread {
      * @param location the CardLocation where the card needs to be placed in the player's board.
      */
     public void placeCard(Player player, int index, boolean onBackSide, CardLocation location) {
-         if (!player.identifier.equals(game.getTurn().identifier)) {
+         if (!player.getClientHandler().getPlayerIdentifier().equals(game.getTurn().getClientHandler().getPlayerIdentifier())) {
              throw new RuntimeException("it is not this player's turn");
          }
          if(this.gameStatus != GameStatus.NORMAL_TURN && this.gameStatus != GameStatus.LAST_TURN) {
@@ -343,7 +345,7 @@ public class GameController extends Thread {
      * @param index the index of the cards that the player wants to pick up.
      */
     public void drawCard(Player player, int index) {
-        if (!player.identifier.equals(game.getTurn().identifier)) {
+        if (!player.getClientHandler().getPlayerIdentifier().equals(game.getTurn().getClientHandler().getPlayerIdentifier())) {
             throw new RuntimeException("it is not this player's turn");
         }
         if(this.gameStatus != GameStatus.NORMAL_TURN && this.gameStatus != GameStatus.LAST_TURN) {

@@ -4,9 +4,9 @@ import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.decks.Deck;
 import it.polimi.ingsw.model.decks.DeckLoader;
-import it.polimi.ingsw.model.events.Observable;
-import it.polimi.ingsw.model.events.messages.server.PublicGoalsUpdateMessage;
-import it.polimi.ingsw.model.events.messages.server.VisibleCardUpdateMessage;
+import it.polimi.ingsw.events.Observable;
+import it.polimi.ingsw.events.messages.server.PublicGoalsUpdateMessage;
+import it.polimi.ingsw.events.messages.server.VisibleCardUpdateMessage;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
@@ -51,13 +51,29 @@ public class Game extends Observable {
      */
     public Game(DeckLoader<PlayCard> goldCardDeckLoader, DeckLoader<PlayCard> resourceCardDeckLoader,
                 DeckLoader<StartCard> startCardDeckLoader, DeckLoader<Goal> goalDeckLoader, int idGame, int expectedPlayers) throws IOException {
-        this.goldCardsDeck = goldCardDeckLoader.getDeck();
-        this.goldCardsDeck.setDeckIdentifier(1);
-        this.resourceCardsDeck = resourceCardDeckLoader.getDeck();
-        this.resourceCardsDeck.setDeckIdentifier(0);
+        if(goldCardDeckLoader != null) {
+            this.goldCardsDeck = goldCardDeckLoader.getDeck();
+            this.goldCardsDeck.setDeckIdentifier(1);
+        }
+        else {
+            this.goldCardsDeck = null;
+        }
+        if(resourceCardDeckLoader != null) {
+            this.resourceCardsDeck = resourceCardDeckLoader.getDeck();
+            this.resourceCardsDeck.setDeckIdentifier(0);
+        }
+        else {
+            this.resourceCardsDeck = null;
+        }
 
-        this.startCardsDeck = startCardDeckLoader.getDeck();
-        this.goalsDeck = goalDeckLoader.getDeck();
+        if(startCardDeckLoader != null)
+            this.startCardsDeck = startCardDeckLoader.getDeck();
+        else
+            this.startCardsDeck = null;
+        if(goalDeckLoader != null)
+            this.goalsDeck = goalDeckLoader.getDeck();
+        else
+            this.goalsDeck = null;
 
         this.players = new ArrayList<>();
         this.idGame=idGame;

@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.decks;
 
 import it.polimi.ingsw.model.cards.corners.Resource;
-import it.polimi.ingsw.model.events.Observable;
-import it.polimi.ingsw.model.events.messages.server.DeckUpdateMessage;
+import it.polimi.ingsw.events.Observable;
+import it.polimi.ingsw.events.messages.server.DeckUpdateMessage;
 
 import java.util.ArrayList;
 import java.util.EmptyStackException;
@@ -18,16 +18,24 @@ public class Deck<T extends Drawable> extends Observable {
     private final List<T> remaining;
     private T topOfTheStack;
 
-    private int deckIdentifier;
+    protected int deckIdentifier;
 
     /**
-     * Constructs e sets up a new deck with the provided content.
+     * Constructs and sets up a new deck with the provided content.
      *
      * @param content a list of elements representing the deck's content
      */
     Deck(List<T> content)  {
         this.remaining = new ArrayList<>(content);
         this.topOfTheStack = next();
+    }
+
+    /**
+     * Constructs an empty deck (used to create virtual decks).
+     */
+    protected Deck() {
+        this.remaining = null;
+        this.topOfTheStack = null;
     }
 
     /**

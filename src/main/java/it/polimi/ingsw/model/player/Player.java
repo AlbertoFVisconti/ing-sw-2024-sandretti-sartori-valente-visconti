@@ -1,10 +1,10 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.model.events.Observable;
-import it.polimi.ingsw.model.events.messages.server.PlayersBoardUpdateMessage;
-import it.polimi.ingsw.model.events.messages.server.PlayersHandUpdateMessage;
-import it.polimi.ingsw.model.events.messages.server.PrivateGoalUpdateMessage;
-import it.polimi.ingsw.model.events.messages.server.StartCardUpdateMessage;
+import it.polimi.ingsw.events.Observable;
+import it.polimi.ingsw.events.messages.server.PlayersBoardUpdateMessage;
+import it.polimi.ingsw.events.messages.server.PlayersHandUpdateMessage;
+import it.polimi.ingsw.events.messages.server.PrivateGoalUpdateMessage;
+import it.polimi.ingsw.events.messages.server.StartCardUpdateMessage;
 import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
@@ -12,7 +12,7 @@ import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.utils.CardLocation;
-import it.polimi.ingsw.view.ClientHandler;
+import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
 
 import java.security.InvalidParameterException;
 import java.util.Collections;
@@ -21,7 +21,6 @@ import java.util.Map;
 
 public class Player extends Observable {
     public final String nickName;
-    public String identifier;
     private ClientHandler clientHandler;
     public final PlayerColor color;
     private StartCard startCard;
@@ -35,13 +34,11 @@ public class Player extends Observable {
     /**
      * Constructs a new Player object.
      *
-     * @param playerIdentifier a string that is uniquely associated to this player
      * @param name String containing the player's nickname
      * @param playerColor Color value representing the unique color assigned to the player
      * @param clientHandler player's client handler
      */
-    public Player(String playerIdentifier , String name, PlayerColor playerColor, ClientHandler clientHandler) {
-        this.identifier = playerIdentifier;
+    public Player(String name, PlayerColor playerColor, ClientHandler clientHandler) {
         this.nickName=name;
         this.color=playerColor;
         this.clientHandler = clientHandler;

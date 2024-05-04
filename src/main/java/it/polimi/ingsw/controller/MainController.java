@@ -1,15 +1,15 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.model.events.messages.client.ClientMessage;
-import it.polimi.ingsw.model.events.messages.client.JoinGameMessage;
+import it.polimi.ingsw.events.messages.client.ClientMessage;
+import it.polimi.ingsw.events.messages.client.GameListRequestMessage;
+import it.polimi.ingsw.events.messages.client.JoinGameMessage;
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.rmi.VirtualMainController;
-import it.polimi.ingsw.view.RMIClientHandler;
+import it.polimi.ingsw.network.cliendhandlers.RMIClientHandler;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
 
 /**
  * Remote object that allows players with RMI client to join and create game.
@@ -30,17 +30,17 @@ public class MainController extends UnicastRemoteObject implements VirtualMainCo
      * Builds the message that represents such request and forwards it to the GameSelector.
      * The GameSelector will then give the player another remote object that will handle the communication for the game.
      *
-     * @param view A remote object representing the client's view. Used to push updates of the game model
+     * @param playerIdentifier the identifier of the client
      * @param IDGame The numerical identifier of the game, chosen among the available ones
      * @param color The players color, unique for the game
      * @param nick The players nickname, unique for the game
      * @throws RemoteException in case of errors during the remote method invocation.
      */
     @Override
-    public void joinGame(VirtualView view, int IDGame, PlayerColor color, String nick) throws RemoteException {
+    public void joinGame(String playerIdentifier, int IDGame, PlayerColor color, String nick) throws RemoteException {
         GameSelector gameSelector = GameSelector.getInstance();
 
-        ClientMessage message = new JoinGameMessage(IDGame, false, -1, nick, color, new RMIClientHandler(view));
+        ClientMessage message = new JoinGameMessage(playerIdentifier, IDGame, false, -1, nick, color);
 
         gameSelector.forwardMessage(message);
     }
@@ -50,24 +50,32 @@ public class MainController extends UnicastRemoteObject implements VirtualMainCo
      * Builds the message that represents such request and forward it to the GameSelector.
      * The GameSelector will then give the player another remote object that will handle the communication for the game.
      *
-     * @param view a remote object representing the client's view. Used to push updates of the game model
+     * @param playerIdentifier the identifier of the client
      * @param expectedPlayers The number of players the game is expected to handle
      * @param color The color of the player creating the game
      * @param nick The nickname of the player creating the game
      * @throws RemoteException in case of errors during the remote method invocation.
      */
     @Override
-    public void createGame(VirtualView view, int expectedPlayers, PlayerColor color, String nick) throws RemoteException {
+    public void createGame(String playerIdentifier, int expectedPlayers, PlayerColor color, String nick) throws RemoteException {
         GameSelector gameSelector = GameSelector.getInstance();
 
 
-        ClientMessage message = new JoinGameMessage(-1, true, expectedPlayers, nick, color, new RMIClientHandler(view));
+        ClientMessage message = new JoinGameMessage(playerIdentifier,-1, true, expectedPlayers, nick, color);
         gameSelector.forwardMessage(message);
 
     }
 
     @Override
-    public List<Integer> getAvailableGames() throws RemoteException {
-        return GameSelector.getInstance().getAvailableGames().stream().toList();
+    public void getAvailableGames(String playerIdentifier) throws RemoteException {
+        GameSelector gameSelector = GameSelector.getInstance();
+
+        ClientMessage message = new GameListRequestMessage(playerIdentifier);
+        gameSelector.forwardMessage(message);
+    }
+
+    @Override
+    public void connect(VirtualView view) throws RemoteException {
+        GameSelector.getInstance().connectClient(new RMIClientHandler(view));
     }
 }

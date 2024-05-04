@@ -10,6 +10,7 @@ import it.polimi.ingsw.utils.CardLocation;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.Set;
 
 /**
  *
@@ -87,4 +88,6 @@ public interface VirtualView extends Remote {
      * @throws RemoteException in case of error with the remote communication
      */
     void placeCardOnPlayersBoard(String playerNickName, Card card, CardLocation location) throws RemoteException;
+
+    void updateGameList(Set<Integer> availableGames) throws RemoteException;
 }

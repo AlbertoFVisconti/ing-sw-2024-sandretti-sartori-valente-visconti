@@ -97,10 +97,11 @@ public class ItemCollection implements Serializable {
      * @return this ItemCollection after the operation
      */
     public ItemCollection add(Corner corner, int amount) {
+        if(corner == Corner.EMPTY || corner == null) return this;
         if(this.count(corner) + amount < 0) throw new ArithmeticException("sub(Corner): itemCollection cannot have negative amounts");
-        if(corner != null && corner != Corner.EMPTY) {
-            this.content.put(corner, content.get(corner) + amount);
-        }
+
+        this.content.put(corner, content.get(corner) + amount);
+
         return this;
     }
 

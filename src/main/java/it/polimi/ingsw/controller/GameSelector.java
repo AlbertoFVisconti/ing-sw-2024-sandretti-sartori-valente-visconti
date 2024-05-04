@@ -4,12 +4,12 @@ import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.decks.GoalDeckLoader;
 import it.polimi.ingsw.model.decks.PlayCardDeckLoader;
 import it.polimi.ingsw.model.decks.StartCardDeckLoader;
-import it.polimi.ingsw.model.events.messages.client.ClientMessage;
-import it.polimi.ingsw.model.events.messages.server.JoinConfirmationMessage;
+import it.polimi.ingsw.events.messages.client.ClientMessage;
+import it.polimi.ingsw.events.messages.server.ConnectionConfirmationMessage;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.rmi.GameControllerWrapper;
-import it.polimi.ingsw.view.ClientHandler;
+import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -28,6 +28,7 @@ import java.util.concurrent.BlockingQueue;
 public class GameSelector extends Thread{
     private final Map<Integer, GameControllerWrapper> games;
     private final Map<String, GameController> playerIdentifierToGameController;
+    private final Map<String, ClientHandler> playerIdentifierToClientHandler;
     private int nextGameID =0;
 
     private final BlockingQueue<ClientMessage> messageQueue;
@@ -48,6 +49,7 @@ public class GameSelector extends Thread{
      * right away.
      */
     private GameSelector(){
+        this.playerIdentifierToClientHandler = new HashMap<>();
         this.games = new HashMap<>();
         this.playerIdentifierToGameController = new HashMap<>();
         this.messageQueue = new ArrayBlockingQueue<>(100);
@@ -112,7 +114,7 @@ public class GameSelector extends Thread{
      * @param expectedPlayers the number of player expected for that game.
      * @return the GameID for the game that was just created.
      */
-    public int CreateGame(int expectedPlayers) throws IOException {
+    public int createGame(int expectedPlayers) throws IOException {
         Game g=new Game(goldCardDeckLoader,resourceCardDeckLoader,startCardDeckLoader,goalDeckLoader, nextGameID,expectedPlayers );
 
         GameController controller = new GameController(g);
@@ -136,19 +138,37 @@ public class GameSelector extends Thread{
     /**
      * Adds a player to an existing game.
      *
+     * @param playerIdentifier the identifier of the client that is joining a game
      * @param IDGame the ID of the game that the player wants to join.
      * @param nickname the nickname that the player has chosen
      * @param playerColor the color that the player has chosen
-     * @param clientHandler the ClientHandler that handles communication with the player's client
      * @throws Exception if the parameters are invalid
      */
-    public void addPlayer(int IDGame, String nickname, PlayerColor playerColor, ClientHandler clientHandler) throws Exception {
+    public void addPlayerToGame(String playerIdentifier ,int IDGame, String nickname, PlayerColor playerColor) throws Exception {
+        ClientHandler clientHandler = this.playerIdentifierToClientHandler.get(playerIdentifier);
         clientHandler.setController(this.games.get(IDGame));
         GameController controller = this.games.get(IDGame).getGameController();
 
+
+        this.playerIdentifierToGameController.put(clientHandler.getPlayerIdentifier(), this.games.get(IDGame).getGameController());
+
+        Game game = controller.getGame();
+        if (!game.getAvailableColor().contains(playerColor)) throw new Exception("Color not available");
+        game.getAvailableColor().remove(playerColor);
+        game.addPlayer(new Player( nickname,playerColor, clientHandler));
+
+
+        clientHandler.sendMessage(new ConnectionConfirmationMessage(clientHandler.getPlayerIdentifier()));
+
+        System.err.println(nickname + " joined the game");
+
+        controller.updateStatus();
+    }
+
+    public void connectClient(ClientHandler clientHandler) {
         Random rand = new Random();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        String t = IDGame + nickname + timestamp + rand.nextInt(0, 1000);
+        String t = timestamp.toString() + rand.nextInt(0, 1000000);
 
         MessageDigest md;
         try {
@@ -162,19 +182,9 @@ public class GameSelector extends Thread{
 
         String playerIdentifier = String.format("%032X", new BigInteger(1, digest));
 
-        this.playerIdentifierToGameController.put(playerIdentifier, this.games.get(IDGame).getGameController());
-
-        Game game = controller.getGame();
-        if (!game.getAvailableColor().contains(playerColor)) throw new Exception("Color not available");
-        game.getAvailableColor().remove(playerColor);
-        game.addPlayer(new Player(playerIdentifier,nickname,playerColor, clientHandler));
-
-
-        clientHandler.onUpdate(new JoinConfirmationMessage(playerIdentifier));
-
-        System.err.println(nickname + " joined the game");
-
-        controller.updateStatus();
+        this.playerIdentifierToClientHandler.put(playerIdentifier, clientHandler);
+        clientHandler.setPlayerIdentifier(playerIdentifier);
+        clientHandler.sendMessage(new ConnectionConfirmationMessage(playerIdentifier));
     }
 
     /**
@@ -186,6 +196,10 @@ public class GameSelector extends Thread{
      */
     public GameController getPlayersGameController(String playerIdentifier) {
         return playerIdentifierToGameController.get(playerIdentifier);
+    }
+
+    public ClientHandler getPlayersClientHandler(String playerIdentifier) {
+        return playerIdentifierToClientHandler.get(playerIdentifier);
     }
 
     /**
@@ -201,7 +215,7 @@ public class GameSelector extends Thread{
         Game game = controller.getGame();
 
         for(Player p : game.getPlayers()) {
-            if(Objects.equals(p.identifier, playerIdentifier)) {
+            if(Objects.equals(p.getClientHandler().getPlayerIdentifier(), playerIdentifier)) {
                 return p;
             }
         }
@@ -217,7 +231,6 @@ public class GameSelector extends Thread{
      */
     @Override
     public void run() {
-        GameSelector selector = GameSelector.getInstance();
         while(true) {
             System.out.println("waiting...");
             try {

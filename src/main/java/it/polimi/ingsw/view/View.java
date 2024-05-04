@@ -9,10 +9,10 @@ import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.utils.CardLocation;
 
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
+import java.util.Set;
 
-public class View extends UnicastRemoteObject implements VirtualView{
+public class View implements VirtualView{
     private String playerIdentifier = null;
     private VirtualController controller = null;
 
@@ -92,5 +92,10 @@ public class View extends UnicastRemoteObject implements VirtualView{
         System.err.println(playerNickname+" placed a card in " + location);
         System.err.println(card);
         System.err.println();
+    }
+
+    @Override
+    public void updateGameList(Set<Integer> availableGames) throws RemoteException {
+        System.err.println("Available games: " + availableGames);
     }
 }
