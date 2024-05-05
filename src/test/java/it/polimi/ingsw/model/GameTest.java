@@ -5,7 +5,6 @@ import it.polimi.ingsw.model.decks.GoalDeckLoader;
 import it.polimi.ingsw.model.decks.PlayCardDeckLoader;
 import it.polimi.ingsw.model.decks.StartCardDeckLoader;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayerColor;
 import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
@@ -19,8 +18,8 @@ public class GameTest {
     @Test
     void StartedGameTest() throws Exception {
         //create players
-        Player p1=new Player("","pippo1", PlayerColor.BLUE, null);
-        Player p2= new Player("","pippo2", PlayerColor.GREEN, null);
+        Player p1=new Player("pippo1", null);
+        Player p2= new Player("pippo2", null);
         //initialize parameters for game
         int id=1;
         int expectedPlayers=2;
@@ -84,8 +83,8 @@ public class GameTest {
     @Test
     void nextTurnTest() throws Exception {
         //create players
-        Player p1=new Player("","pippo1", PlayerColor.BLUE, null);
-        Player p2= new Player("","pippo2", PlayerColor.GREEN, null);
+        Player p1=new Player("pippo1", null);
+        Player p2= new Player("pippo2", null);
         //initialize parameters for game
         int id=1;
         int expectedPlayers=2;
@@ -113,8 +112,8 @@ public class GameTest {
     @Test
     void RefillVisibleCardTest() throws Exception {
         //create players
-        Player p1=new Player("", "pippo1", PlayerColor.BLUE, null);
-        Player p2= new Player("", "pippo2", PlayerColor.GREEN, null);
+        Player p1=new Player( "pippo1", null);
+        Player p2= new Player( "pippo2", null);
         //initialize parameters for game
         int id=1;
         int expectedPlayers=2;

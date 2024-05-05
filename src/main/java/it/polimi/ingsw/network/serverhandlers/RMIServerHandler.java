@@ -3,8 +3,8 @@ package it.polimi.ingsw.network.serverhandlers;
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.network.rmi.VirtualMainController;
+import it.polimi.ingsw.view.ui.UserInterface;
 import it.polimi.ingsw.utils.CardLocation;
-import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.ViewWrapper;
 
 import java.rmi.NotBoundException;
@@ -18,14 +18,14 @@ public class RMIServerHandler extends ServerHandler{
     private final VirtualMainController mainController;
 
 
-    public RMIServerHandler(View clientView, String ip, int port) throws RemoteException, NotBoundException {
-        super(clientView);
+    public RMIServerHandler(UserInterface userInterface,String ip, int port) throws RemoteException, NotBoundException {
+        super(userInterface);
 
         Registry registry = LocateRegistry.getRegistry(ip, port);
 
         mainController = (VirtualMainController) registry.lookup("MainController");
 
-        mainController.connect(new ViewWrapper(this));
+        mainController.connect(new ViewWrapper(userInterface));
 
     }
 
@@ -34,18 +34,18 @@ public class RMIServerHandler extends ServerHandler{
     }
 
     @Override
-    public void joinGame(int IDGame, PlayerColor color, String nick) {
+    public void joinGame(int IDGame, String nick) {
         try {
-            mainController.joinGame(this.getClientView().getPlayerIdentifier(), IDGame ,color, nick);
+            mainController.joinGame(this.getUserInterface().getPlayerIdentifier(), IDGame, nick);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void createGame(int expectedPlayers, PlayerColor color, String nick) {
+    public void createGame(int expectedPlayers, String nick) {
         try {
-            mainController.createGame(this.getClientView().getPlayerIdentifier(), expectedPlayers ,color, nick);
+            mainController.createGame(this.getUserInterface().getPlayerIdentifier(), expectedPlayers, nick);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -54,7 +54,7 @@ public class RMIServerHandler extends ServerHandler{
     @Override
     public void getAvailableGames() {
         try {
-            mainController.getAvailableGames(this.getClientView().getPlayerIdentifier());
+            mainController.getAvailableGames(this.getUserInterface().getPlayerIdentifier());
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -63,7 +63,7 @@ public class RMIServerHandler extends ServerHandler{
     @Override
     public void placeCard(int index, boolean onBackSide, CardLocation location) {
         try {
-            controller.placeCard(this.getClientView().getPlayerIdentifier(), index, onBackSide, location);
+            controller.placeCard(this.getUserInterface().getPlayerIdentifier(), index, onBackSide, location);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -72,7 +72,7 @@ public class RMIServerHandler extends ServerHandler{
     @Override
     public void drawCard(int index) {
         try {
-            controller.drawCard(this.getClientView().getPlayerIdentifier(), index);
+            controller.drawCard(this.getUserInterface().getPlayerIdentifier(), index);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -81,7 +81,7 @@ public class RMIServerHandler extends ServerHandler{
     @Override
     public void placeStartCard(boolean onBackSide) {
         try {
-            controller.placeStartCard(this.getClientView().getPlayerIdentifier(), onBackSide);
+            controller.placeStartCard(this.getUserInterface().getPlayerIdentifier(), onBackSide);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -90,7 +90,16 @@ public class RMIServerHandler extends ServerHandler{
     @Override
     public void selectPrivateGoal(int index) {
         try {
-            controller.selectPrivateGoal(this.getClientView().getPlayerIdentifier(), index);
+            controller.selectPrivateGoal(this.getUserInterface().getPlayerIdentifier(), index);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void selectColor(PlayerColor color) {
+        try {
+            controller.selectColor(this.getUserInterface().getPlayerIdentifier(),color);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

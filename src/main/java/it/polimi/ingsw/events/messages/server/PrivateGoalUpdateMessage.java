@@ -19,8 +19,21 @@ public class PrivateGoalUpdateMessage extends ServerMessage {
      *
      * @param goals an array of goal objects.
      */
+    public PrivateGoalUpdateMessage(String addresseeIdentifier,  Goal[] goals) {
+        super(MessageType.PRIVATE_MODEL_UPDATE_MESSAGE, addresseeIdentifier);
+        this.goals = goals;
+        definitive = false;
+    }
+
+    /**
+     * Builds the message for available goals.
+     * Warning! using this constructor the message will never be delivered to a client.
+     * This constructor is intended for communication withing the client's classes.
+     *
+     * @param goals an array of goal objects.
+     */
     public PrivateGoalUpdateMessage(Goal[] goals) {
-        super(MessageType.MODEL_UPDATE_MESSAGE);
+        super(MessageType.PRIVATE_MODEL_UPDATE_MESSAGE, null);
         this.goals = goals;
         definitive = false;
     }
@@ -30,8 +43,21 @@ public class PrivateGoalUpdateMessage extends ServerMessage {
      *
      * @param goal a goal object representing the player's definitive private goal.
      */
+    public PrivateGoalUpdateMessage(String addresseeIdentifier,Goal goal) {
+        super(MessageType.PRIVATE_MODEL_UPDATE_MESSAGE, addresseeIdentifier);
+        this.goals = new Goal[]{goal};
+        definitive = true;
+    }
+
+    /**
+     * Builds the message for the definitive goal
+     * Warning! using this constructor the message will never be delivered to a client.
+     * This constructor is intended for communication withing the client's classes.
+     *
+     * @param goal a goal object representing the player's definitive private goal.
+     */
     public PrivateGoalUpdateMessage(Goal goal) {
-        super(MessageType.MODEL_UPDATE_MESSAGE);
+        super(MessageType.PRIVATE_MODEL_UPDATE_MESSAGE, null);
         this.goals = new Goal[]{goal};
         definitive = true;
     }

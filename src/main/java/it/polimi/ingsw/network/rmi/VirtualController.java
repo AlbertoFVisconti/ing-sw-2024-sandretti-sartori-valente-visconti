@@ -1,4 +1,5 @@
 package it.polimi.ingsw.network.rmi;
+import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.utils.CardLocation;
 
 import java.rmi.Remote;
@@ -85,4 +86,6 @@ public interface VirtualController extends Remote {
      * @throws RuntimeException in case of poorly set parameters.
      */
     void selectPrivateGoal(String playerIdentifier, int index) throws RemoteException;
+
+    void selectColor(String playerIdentifier,PlayerColor color) throws RemoteException;
 }

@@ -1,10 +1,13 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.controller.GameStatus;
+import it.polimi.ingsw.controller.TurnStatus;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.goals.Goal;
+import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.utils.CardLocation;
 
@@ -90,4 +93,10 @@ public interface VirtualView extends Remote {
     void placeCardOnPlayersBoard(String playerNickName, Card card, CardLocation location) throws RemoteException;
 
     void updateGameList(Set<Integer> availableGames) throws RemoteException;
+
+    void confirmJoin(String nickname) throws RemoteException;
+
+    void updatePlayersList(String[] nicknames, PlayerColor[] colors) throws RemoteException;
+
+    void updateGameStatus(GameStatus gameStatus, TurnStatus turnStatus, String playersTurn) throws RemoteException;
 }

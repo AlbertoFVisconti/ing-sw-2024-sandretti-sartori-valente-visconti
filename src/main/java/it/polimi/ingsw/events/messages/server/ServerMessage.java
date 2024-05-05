@@ -9,6 +9,19 @@ import it.polimi.ingsw.view.VirtualView;
  * Allows to update the client's view.
  */
 public abstract class ServerMessage extends Message {
+    private final String addressee;
+
+    /**
+     * Builds a ServerMessage with a specified type.
+     * The message has a specified recipient.
+     *
+     * @param messageType the type of the message
+     * @param addresseeIdentifier if the message is for a single client only, provide its identifier
+     */
+    public ServerMessage(MessageType messageType, String addresseeIdentifier) {
+        super(messageType);
+        this.addressee = addresseeIdentifier;
+    }
 
     /**
      * Builds a ServerMessage with a specified type.
@@ -17,8 +30,12 @@ public abstract class ServerMessage extends Message {
      */
     public ServerMessage(MessageType messageType) {
         super(messageType);
+        this.addressee = null;
     }
 
+    public String getAddresseeIdentifier() {
+        return addressee;
+    }
 
     /**
      * Updates the View with the content of the message.

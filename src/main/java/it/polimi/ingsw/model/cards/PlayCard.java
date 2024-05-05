@@ -22,6 +22,7 @@ public class PlayCard extends Card {
     /**
      * Constructs a PlayCard object with specified corners, placement constraint and scoring strategy.
      *
+     * @param cardID the card identifier
      * @param topLeft the top-left corner on the front side.
      * @param topRight the top-right corner on the front side.
      * @param bottomLeft the bottom-left corner on the front side.
@@ -31,12 +32,13 @@ public class PlayCard extends Card {
      * @param placementConstraint ItemCollection representing the items the player needs to have in order to place the card.
      * @param scoringStrategy ScoringStrategy to evaluate the score to award the player with upon placement.
      */
-    private PlayCard(Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
-                       Resource resourceType,
-                       boolean isGold,
-                       ItemCollection placementConstraint,
-                       ScoringStrategy scoringStrategy) {
-        super(topLeft, topRight, bottomLeft, bottomRight);
+    private PlayCard(String cardID,
+                        Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
+                        Resource resourceType,
+                        boolean isGold,
+                        ItemCollection placementConstraint,
+                        ScoringStrategy scoringStrategy) {
+        super(cardID, topLeft, topRight, bottomLeft, bottomRight);
         this.isGold = isGold;
 
         if(isGold) this.constraint = new ItemCollection(placementConstraint);
@@ -52,6 +54,7 @@ public class PlayCard extends Card {
      * generateResourceCard method) allows to create the card and to avoid creating
      * one with invalid data.
      *
+     * @param cardID the card's identifier
      * @param topLeft the top-left corner on the front side of the card.
      * @param topRight the top-right corner on the front side of the card.
      * @param bottomLeft the bottom-left corner on the front side of the card.
@@ -61,11 +64,12 @@ public class PlayCard extends Card {
      * @param scoringStrategy ScoringStrategy to use to evaluate the score the player is awarded upon placing the card.
      * @return a new PlayCard object representing the Gold card with the specified values.
      */
-    public static PlayCard generateGoldCard(Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
+    public static PlayCard generateGoldCard(String cardID,
+                                            Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
                                             Resource resourceType,
                                             ItemCollection placementConstraint,
                                             ScoringStrategy scoringStrategy) {
-        return new PlayCard(topLeft, topRight, bottomLeft, bottomRight, resourceType,
+        return new PlayCard(cardID, topLeft, topRight, bottomLeft, bottomRight, resourceType,
                 true,
                 placementConstraint,
                 scoringStrategy);
@@ -77,6 +81,7 @@ public class PlayCard extends Card {
      * generateGoldCard method) allows to create the card and to avoid creating
      * one with invalid data.
      *
+     * @param cardID the card's identifier
      * @param topLeft the top-left corner on the front side of the card.
      * @param topRight the top-right corner on the front side of the card.
      * @param bottomLeft the bottom-left corner on the front side of the card.
@@ -85,10 +90,11 @@ public class PlayCard extends Card {
      * @param scoreUponPlacement the score the player is awarded upon placing the card.
      * @return a new PlayCard object representing the Resource card with the specified values.
      */
-    public static PlayCard generateResourceCard(Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
+    public static PlayCard generateResourceCard(String cardID,
+                                                Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
                                                 Resource resourceType,
                                                 int scoreUponPlacement) {
-        return new PlayCard(topLeft, topRight, bottomLeft, bottomRight, resourceType,
+        return new PlayCard(cardID ,topLeft, topRight, bottomLeft, bottomRight, resourceType,
                 false,
                 null,
                 new FreeScoreScoringStrategy(scoreUponPlacement));

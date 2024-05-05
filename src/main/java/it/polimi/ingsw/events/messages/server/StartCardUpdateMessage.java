@@ -14,11 +14,22 @@ public class StartCardUpdateMessage extends ServerMessage {
 
     /**
      * Builds the message
-     *
+     * Warning! using this constructor the message will never be delivered to a client.
+     * This constructor is intended for communication withing the client's classes.
      * @param card the StartCard object that represents the player's starting card.
      */
     public StartCardUpdateMessage(StartCard card) {
-        super(MessageType.MODEL_UPDATE_MESSAGE);
+        super(MessageType.PRIVATE_MODEL_UPDATE_MESSAGE, null);
+        this.card = card;
+    }
+
+    /**
+     * Builds the message
+     *
+     * @param card the StartCard object that represents the player's starting card.
+     */
+    public StartCardUpdateMessage(String addresseeIdentifier, StartCard card) {
+        super(MessageType.PRIVATE_MODEL_UPDATE_MESSAGE, addresseeIdentifier);
         this.card = card;
     }
 

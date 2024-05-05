@@ -83,7 +83,9 @@ public class StartCardDeckLoader extends DeckLoader<StartCard> {
             }
 
             cards.add(
-                    new StartCard(frontTopLeft,frontTopRight, frontBottomLeft, frontBottomRight,
+                    new StartCard(
+                            "start_card" + i,
+                            frontTopLeft,frontTopRight, frontBottomLeft, frontBottomRight,
                             backTopLeft, backTopRight, backBottomLeft, backBottomRight,
                             permanentResources
                     )

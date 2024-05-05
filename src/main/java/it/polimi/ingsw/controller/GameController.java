@@ -1,4 +1,6 @@
 package it.polimi.ingsw.controller;
+import it.polimi.ingsw.events.Observable;
+import it.polimi.ingsw.events.messages.server.GameStatusUpdateMessage;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.ScoreBoard;
 import it.polimi.ingsw.model.cards.Card;
@@ -7,6 +9,7 @@ import it.polimi.ingsw.model.decks.Deck;
 import it.polimi.ingsw.events.messages.client.ClientMessage;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.utils.CardLocation;
 
 import java.security.InvalidParameterException;
@@ -17,7 +20,7 @@ import java.util.concurrent.BlockingQueue;
  * GameController allows players to play a game.
  * It handles all the game logic and checks that the player is performing legal operations.
  **/
-public class GameController extends Thread {
+public class GameController extends Observable implements Runnable {
     private final Game game;
     private GameStatus gameStatus;
     private TurnStatus turnStatus;
@@ -34,8 +37,10 @@ public class GameController extends Thread {
     public GameController(Game game){
         System.err.println("GameController created");
         this.game=game;
+        turnStatus = null;
         gameStatus=GameStatus.LOBBY;
         this.messageQueue = new ArrayBlockingQueue<>(100);
+        new Thread(this).start();
     }
 
     /**
@@ -94,7 +99,7 @@ public class GameController extends Thread {
      */
     public void updateStatus() {
         if(gameStatus == GameStatus.LOBBY) {
-            if (game.getExpectedPlayers() == game.getPlayers().size()) {
+            if (game.getExpectedPlayers() == game.getPlayers().size() && game.getAvailableColor().size() == (4 - game.getExpectedPlayers())) {
                 this.game.subscribeCommonObservers();
 
                 System.err.println("ExpectedPlayers amount reached, game starts. Connected players:");
@@ -105,19 +110,22 @@ public class GameController extends Thread {
                 turnStatus = TurnStatus.PLACE;
                 gameStatus = GameStatus.GAME_CREATION;
                 game.startGame();
-                this.start();
             }
         }
         else if(gameStatus == GameStatus.GAME_CREATION) {
-             for (Player p : game.getPlayers()) {
-                 if(p.getPlacedCard(new CardLocation(0,0)) == null
+            boolean flag = true;
+            for (Player p : game.getPlayers()) {
+                if(p.getPlacedCard(new CardLocation(0,0)) == null
                     || p.getPrivateGoal() == null) {
-                     return;
-                 }
-             }
+                    flag = false;
+                    break;
+                }
+            }
 
-             System.err.println("Players placed starting cards and selected goal, first turn starts");
-             gameStatus = GameStatus.NORMAL_TURN;
+            if(flag) {
+                System.err.println("Players placed starting cards and selected goal, first turn starts");
+                gameStatus = GameStatus.NORMAL_TURN;
+            }
         }
         else if(game.isFirstPlayersTurn()) {
             if (gameStatus == GameStatus.LAST_TURN) {
@@ -125,15 +133,17 @@ public class GameController extends Thread {
                 gameStatus = GameStatus.END;
             }
             else if (gameStatus == GameStatus.NORMAL_TURN) {
+                boolean flag = true;
                 for (Player p : game.getPlayers()) {
                     if (game.getScoreBoard().getScore(p) >= 20) {
                         System.err.println(p.nickName + "reached 20 points, last turn starts");
                         this.gameStatus = GameStatus.LAST_TURN;
-                        return;
+                        flag = false;
+                        break;
                     }
                 }
 
-                if(game.emptyDecks()) {
+                if(flag && game.emptyDecks()) {
 
                     System.err.println("Decks are empty, last turn starts");
                     this.gameStatus = GameStatus.LAST_TURN;
@@ -142,6 +152,7 @@ public class GameController extends Thread {
 
         }
 
+        notifyObservers(new GameStatusUpdateMessage(gameStatus, turnStatus, game.getTurn().nickName));
     }
 
     /**
@@ -209,23 +220,25 @@ public class GameController extends Thread {
      * @param index the index of the selected goal in the available ones.
      */
     public void selectPrivateGoal(Player player, int index) {
-         if(gameStatus != GameStatus.GAME_CREATION) {
-             throw new RuntimeException("Cannot select private goal in this game status");
-         }
+        if (gameStatus != GameStatus.GAME_CREATION) {
+            throw new RuntimeException("Cannot select private goal in this game status");
+        }
 
-         if(player.getPrivateGoal() != null) {
-             throw new RuntimeException("Cannot select private goal twice");
-         }
+        if (player.getPrivateGoal() != null) {
+            throw new RuntimeException("Cannot select private goal twice");
+        }
 
-         Goal[] availableGoals = player.getAvailableGoals();
+        Goal[] availableGoals = player.getAvailableGoals();
 
-         if(index < 0 || index >= availableGoals.length) {
-             throw new RuntimeException("index out of bound");
-         }
+        if (index < 0 || index >= availableGoals.length) {
+            throw new RuntimeException("index out of bound");
+        }
 
-         player.setPrivateGoal(availableGoals[index]);
+        player.setPrivateGoal(availableGoals[index]);
 
-         updateStatus();
+
+        System.err.println(this.game.getIdGame() + ": "+player.nickName + " selected their goal");
+        updateStatus();
     }
 
     /**
@@ -254,6 +267,8 @@ public class GameController extends Thread {
 
         updateInventory(player,new CardLocation(0,0));
 
+
+        System.err.println(this.game.getIdGame() + ": "+player.nickName + " placed their starting card");
         updateStatus();
     }
 
@@ -333,6 +348,9 @@ public class GameController extends Thread {
          else {
             throw new RuntimeException("cannot place card in the provided location");
          }
+
+        System.err.println(this.game.getIdGame() + ": "+player.nickName + " placed a card");
+        updateStatus();
     }
 
     /**
@@ -416,6 +434,22 @@ public class GameController extends Thread {
                 throw new RuntimeException("There's no card to draw in the provided location");
             }
         }
+
+        System.err.println(this.game.getIdGame() + ": "+player.nickName + " picked up a card");
+        updateStatus();
+    }
+
+    public void selectColor(Player player, PlayerColor color) {
+        if(game.getAvailableColor().contains(color)) {
+            player.setColor(color);
+            game.updateAvailableColors();
+        }
+        else {
+            throw new RuntimeException("This color isn't available");
+        }
+
+        System.err.println(this.game.getIdGame() + ": "+player.nickName + " selected "+color+" as their color");
+        updateStatus();
     }
 
     /**
@@ -424,12 +458,18 @@ public class GameController extends Thread {
     @Override
     public void run() {
         GameSelector selector = GameSelector.getInstance();
+        ClientMessage message;
         while(true) {
             try {
-                this.messageQueue.take().execute(selector, this);
+                message = this.messageQueue.take();
+
+                message.execute(selector, this);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+
         }
     }
+
+
 }

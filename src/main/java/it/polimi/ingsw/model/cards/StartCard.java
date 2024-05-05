@@ -22,6 +22,7 @@ public class StartCard extends Card {
      * StartCards also has different corners on the back side, that's why
      * the constructor needs two sets of corners.
      *
+     * @param cardID the card's identifier
      * @param frontTopLeft the top-left corner on the front side of the card.
      * @param frontTopRight the top-right corner on the front side of the card.
      * @param frontBottomLeft the bottom-left corner on the front side of the card.
@@ -32,10 +33,11 @@ public class StartCard extends Card {
      * @param backBottomRight the bottom-right corner on the back side of the card.
      * @param permanentResources ItemCollection representing the set of permanent resources on the back of the card.
      */
-    public StartCard(Corner frontTopLeft, Corner frontTopRight, Corner frontBottomLeft, Corner frontBottomRight,
+    public StartCard(String cardID,
+                        Corner frontTopLeft, Corner frontTopRight, Corner frontBottomLeft, Corner frontBottomRight,
                         Corner backTopLeft, Corner backTopRight, Corner backBottomLeft, Corner backBottomRight,
                         ItemCollection permanentResources) {
-        super(frontTopLeft, frontTopRight, frontBottomLeft, frontBottomRight);
+        super(cardID, frontTopLeft, frontTopRight, frontBottomLeft, frontBottomRight);
         this.backCorners = new Corner[]{backTopLeft, backTopRight, backBottomLeft, backBottomRight};
         this.permanentResources = new ItemCollection(permanentResources);
     }

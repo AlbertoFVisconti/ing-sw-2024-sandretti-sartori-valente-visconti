@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.cliendhandlers;
 
 import it.polimi.ingsw.events.Observer;
+import it.polimi.ingsw.events.messages.MessageType;
 import it.polimi.ingsw.events.messages.server.ServerMessage;
 import it.polimi.ingsw.network.rmi.GameControllerWrapper;
 
@@ -22,12 +23,17 @@ public abstract class ClientHandler implements Observer {
 
     /**
      * Triggered when an observed object notify its subscribers.
-     * Can also be used to send messages to the client.
+     * If the update shouldn't be delivered to the client handled by this ClientHandler,
+     * the message will be ignored.
      *
      * @param message the message that needs to be delivered to the client.
      */
     @Override
     public void onUpdate(ServerMessage message) {
+        if(message.messageType == MessageType.PRIVATE_MODEL_UPDATE_MESSAGE
+                && !message.getAddresseeIdentifier().equals(this.playerIdentifier)) {
+            return;
+        }
         this.sendMessage(message);
     }
 

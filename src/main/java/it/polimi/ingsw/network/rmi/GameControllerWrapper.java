@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.rmi;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.events.messages.client.*;
+import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.utils.CardLocation;
 
 import java.rmi.RemoteException;
@@ -38,6 +39,12 @@ public class GameControllerWrapper extends UnicastRemoteObject implements Virtua
     @Override
     public void selectPrivateGoal(String playerIdentifier, int index) throws RemoteException {
         ClientMessage message = new SelectGoalMessage(playerIdentifier, index);
+        gameController.forwardMessage(message);
+    }
+
+    @Override
+    public void selectColor(String playerIdentifier, PlayerColor color) throws RemoteException {
+        ClientMessage message = new SelectColorMessage(playerIdentifier, color);
         gameController.forwardMessage(message);
     }
 }

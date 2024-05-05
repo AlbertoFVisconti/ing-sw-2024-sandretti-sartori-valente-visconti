@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.events.messages.server.JoinConfirmationMessage;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.decks.GoalDeckLoader;
 import it.polimi.ingsw.model.decks.PlayCardDeckLoader;
@@ -7,7 +8,6 @@ import it.polimi.ingsw.model.decks.StartCardDeckLoader;
 import it.polimi.ingsw.events.messages.client.ClientMessage;
 import it.polimi.ingsw.events.messages.server.ConnectionConfirmationMessage;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.rmi.GameControllerWrapper;
 import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
 
@@ -139,13 +139,13 @@ public class GameSelector extends Thread{
      * Adds a player to an existing game.
      *
      * @param playerIdentifier the identifier of the client that is joining a game
-     * @param IDGame the ID of the game that the player wants to join.
-     * @param nickname the nickname that the player has chosen
-     * @param playerColor the color that the player has chosen
+     * @param IDGame           the ID of the game that the player wants to join.
+     * @param nickname         the nickname that the player has chosen
      * @throws Exception if the parameters are invalid
      */
-    public void addPlayerToGame(String playerIdentifier ,int IDGame, String nickname, PlayerColor playerColor) throws Exception {
+    public void addPlayerToGame(String playerIdentifier ,int IDGame, String nickname) {
         ClientHandler clientHandler = this.playerIdentifierToClientHandler.get(playerIdentifier);
+
         clientHandler.setController(this.games.get(IDGame));
         GameController controller = this.games.get(IDGame).getGameController();
 
@@ -153,19 +153,20 @@ public class GameSelector extends Thread{
         this.playerIdentifierToGameController.put(clientHandler.getPlayerIdentifier(), this.games.get(IDGame).getGameController());
 
         Game game = controller.getGame();
-        if (!game.getAvailableColor().contains(playerColor)) throw new Exception("Color not available");
-        game.getAvailableColor().remove(playerColor);
-        game.addPlayer(new Player( nickname,playerColor, clientHandler));
+        game.addPlayer(new Player( nickname, clientHandler));
 
 
-        clientHandler.sendMessage(new ConnectionConfirmationMessage(clientHandler.getPlayerIdentifier()));
+        clientHandler.sendMessage(new JoinConfirmationMessage(nickname));
 
         System.err.println(nickname + " joined the game");
+
+        controller.subscribe(clientHandler);
 
         controller.updateStatus();
     }
 
     public void connectClient(ClientHandler clientHandler) {
+
         Random rand = new Random();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String t = timestamp.toString() + rand.nextInt(0, 1000000);

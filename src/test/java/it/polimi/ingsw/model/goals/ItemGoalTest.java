@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.goals;
 
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.utils.ItemCollection;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ItemGoalTest {
     @Test
     void testEvaluate1() {
-        Player player = new Player("","test1Player", PlayerColor.BLUE, null);
+        Player player = new Player("test1Player", null);
 
         // sets up the inventory of the player
         // so that they've the exact number of items described by the instructions below
@@ -80,7 +79,7 @@ class ItemGoalTest {
 
     @Test
     void testEvaluate2() {
-        Player player = new Player("","test2Player", PlayerColor.RED, null);
+        Player player = new Player("test2Player", null);
 
         // sets up the inventory of the player
         // so that they've the exact number of items described by the instructions below

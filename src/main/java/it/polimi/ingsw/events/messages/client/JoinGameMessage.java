@@ -3,7 +3,6 @@ package it.polimi.ingsw.events.messages.client;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.controller.GameSelector;
 import it.polimi.ingsw.events.messages.MessageType;
-import it.polimi.ingsw.model.player.PlayerColor;
 
 /**
  * Message that the client sends when it's trying to connect to an existing game or to create a new one.
@@ -13,7 +12,6 @@ public class JoinGameMessage extends ClientMessage {
     private final boolean creatingGame;
     private final int expectedPlayers;
     private final String nickname;
-    private final PlayerColor color;
 
 
     /**
@@ -25,15 +23,13 @@ public class JoinGameMessage extends ClientMessage {
      * @param creatingGame {@code true} if the client wants to create a new game, {@code false} otherwise
      * @param expectedPlayers if the client's creating a new game, this value represents the number of clients that will play the game
      * @param nickname the nickname of the client that is trying to join
-     * @param color the PlayerColor of the client that is trying to join
      */
-    public JoinGameMessage(String playerIdentifier, int gameID, boolean creatingGame, int expectedPlayers, String nickname, PlayerColor color) {
+    public JoinGameMessage(String playerIdentifier, int gameID, boolean creatingGame, int expectedPlayers, String nickname) {
         super(MessageType.CONNECT_JOIN_MESSAGE, playerIdentifier);
         this.gameID = gameID;
         this.creatingGame = creatingGame;
         this.expectedPlayers = expectedPlayers;
         this.nickname = nickname;
-        this.color = color;
     }
 
     /**
@@ -56,7 +52,7 @@ public class JoinGameMessage extends ClientMessage {
         }
 
         try {
-            selector.addPlayerToGame(this.getPlayerIdentifier() ,game, nickname, color);
+            selector.addPlayerToGame(this.getPlayerIdentifier() ,game, nickname);
         }
         catch (Exception e) {
             throw new RuntimeException(e);

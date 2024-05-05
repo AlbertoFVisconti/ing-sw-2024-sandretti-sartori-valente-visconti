@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.events.messages.server.PlayersListUpdateMessage;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.decks.Deck;
@@ -18,7 +19,7 @@ import java.util.*;
  * The Game class represents a game session of the Codex Naturalis game
  */
 public class Game extends Observable {
-    private int currentTurn;
+    private int currentTurn = 0;
     private final List<Player> players;
 
     private boolean isFinal;
@@ -82,17 +83,48 @@ public class Game extends Observable {
         this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE,PlayerColor.GREEN,PlayerColor.RED,PlayerColor.YELLOW));
     }
 
+    public void updateAvailableColors() {
+        this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE,PlayerColor.GREEN,PlayerColor.RED,PlayerColor.YELLOW));
+
+        for(Player p : this.players) {
+            availableColor.remove(p.getColor());
+        }
+
+        notifyPlayersListUpdate();
+    }
+
+    private void notifyPlayersListUpdate() {
+        String[] nicknames = new String[players.size()];
+        PlayerColor[] colors = new PlayerColor[players.size()];
+
+        for(int i = 0; i < players.size(); i++) {
+            nicknames[i] = players.get(i).nickName;
+            colors[i] = players.get(i).getColor();
+        }
+
+        notifyObservers(new PlayersListUpdateMessage(nicknames, colors));
+    }
+
+    public void resetPlayers() {
+        if(isStarted) throw new RuntimeException();
+        this.players.clear();
+    }
+
     /**
      * Adds a player to the game.
      * A player can only be added if the game is not started yet.
      *
      * @param player Player to add to the game.
-     * @throws Exception if the game's already started.
+     * @throws RuntimeException if the game's already started.
      */
-    public void addPlayer(Player player) throws Exception {
-        if(isStarted) throw new Exception();
+    public void addPlayer(Player player)  {
+        if(isStarted) throw new RuntimeException();
         players.add(player);
-        availableColor.remove(player.color);
+        availableColor.remove(player.getColor());
+
+        this.subscribe(player.getClientHandler());
+
+        notifyPlayersListUpdate();
     }
 
     /**
@@ -141,6 +173,11 @@ public class Game extends Observable {
     public void shufflePlayers() throws Exception {
         if (this.isStarted) throw new Exception("Game has already started");
         Collections.shuffle(this.players);
+    }
+
+    public void setCommonGoals(Goal[] goals) {
+        if(this.isStarted) throw new RuntimeException("Game has already started");
+        this.commonGoals = goals.clone();
     }
 
     /**
@@ -263,6 +300,13 @@ public class Game extends Observable {
         return visibleCards;
     }
 
+    public void resetVisibleCards(int length) {
+        if (this.isStarted) throw new RuntimeException("Game has already started");
+
+        this.visibleCards = new PlayCard[length];
+        for(int i = 0; i < length; i++) visibleCards[i] = null;
+    }
+
     /**
      * Tries to fill the empty visible cards slots.
      * First, it tries to fill each slots with its expected card type.
@@ -340,10 +384,13 @@ public class Game extends Observable {
      * Subscribes players to the decks and to the game itself.
      */
     public void subscribeCommonObservers() {
-        for(Player p : this.players) {
-            this.subscribe(p.getClientHandler());
-            this.goldCardsDeck.subscribe((p.getClientHandler()));
-            this.resourceCardsDeck.subscribe((p.getClientHandler()));
+        for(Player p1 : this.players) {
+            for(Player p2 : this.players) {
+                p1.subscribe(p2.getClientHandler());
+            }
+            //this.subscribe(p1.getClientHandler());
+            this.goldCardsDeck.subscribe((p1.getClientHandler()));
+            this.resourceCardsDeck.subscribe((p1.getClientHandler()));
         }
     }
 }

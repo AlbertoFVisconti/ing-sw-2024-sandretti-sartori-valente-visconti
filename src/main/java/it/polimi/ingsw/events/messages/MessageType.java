@@ -5,6 +5,7 @@ package it.polimi.ingsw.events.messages;
  * sent/received.
  */
 public enum MessageType {
+    PRIVATE_MODEL_UPDATE_MESSAGE,
     MODEL_UPDATE_MESSAGE,
     CHAT_MESSAGE,
 

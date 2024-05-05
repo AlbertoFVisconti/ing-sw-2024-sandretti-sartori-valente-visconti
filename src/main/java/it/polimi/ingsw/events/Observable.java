@@ -20,7 +20,7 @@ public abstract class Observable {
      * @param subscriber the new Observer that wants to observe the object
      */
     public void subscribe(Observer subscriber) {
-        this.subscribers.add(subscriber);
+        if(subscriber != null) this.subscribers.add(subscriber);
     }
 
     /**

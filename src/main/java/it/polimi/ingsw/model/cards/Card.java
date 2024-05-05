@@ -12,6 +12,7 @@ import java.util.Arrays;
  * Holds methods and parameters that helps handle and generate every card in the game.
  */
 public abstract class Card implements Drawable, Serializable {
+    private final String cardID;
     private boolean isBack=false;
     private boolean isPlaced=false;
     private int placementTurn=-1;
@@ -22,12 +23,14 @@ public abstract class Card implements Drawable, Serializable {
      * Stores the front face's corners in an array.
      * Since Card is an abstract class, this constructor is only used by subclasses.
      *
+     * @param cardID the unique ID that identifies the card
      * @param topLeft the front top-left corner of the card
      * @param topRight the front top-right corner of the card
      * @param bottomLeft the front bottom-left corner of the card
      * @param bottomRight the front bottom-right corner of the card
      */
-    protected Card(Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight) {
+    protected Card(String cardID, Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight) {
+        this.cardID = cardID;
         this.corners = new Corner[]{topLeft, topRight, bottomLeft, bottomRight};
     }
 
@@ -168,5 +171,13 @@ public abstract class Card implements Drawable, Serializable {
                 "isPlaced = " + isPlaced + "\n" +
                 "placementTurn = " + placementTurn + "\n" +
                 "frontCorners = " + Arrays.toString(corners) + "\n";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Card objCard) {
+            return objCard.cardID.equals(this.cardID);
+        }
+        else return false;
     }
 }
