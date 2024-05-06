@@ -64,9 +64,18 @@ public class GraphicalUserInterface extends UserInterface {
                     submit.setVisible(false);
                     ConfigGame.setVisible(true);
                     gui.getServerHandler().getAvailableGames();
+
+                    try {
+                        // TODO: find a better way (UserInterface.update())
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
                     if(gui.availableGames != null) {
                         for (Integer gameID : gui.availableGames) {
                             JButton joinGame = new JButton("Join game " + gameID);
+                            ConfigGame.add(joinGame);
                             joinGame.addActionListener(new ActionListener() {
                                 public void actionPerformed(ActionEvent e) {
                                     try {
