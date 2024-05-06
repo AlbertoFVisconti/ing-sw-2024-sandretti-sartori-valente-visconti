@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.decks;
 
+import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.events.Observable;
 import it.polimi.ingsw.events.messages.server.DeckUpdateMessage;
@@ -37,6 +38,7 @@ public class Deck<T extends Drawable> extends Observable {
         this.remaining = null;
         this.topOfTheStack = null;
     }
+
 
     /**
      * Allows to set the deck's identifier number.
@@ -98,4 +100,5 @@ public class Deck<T extends Drawable> extends Observable {
     public boolean isEmpty() {
         return this.topOfTheStack == null;
     }
+    public ArrayList<T> remaningCards(){return (ArrayList<T>) remaining;}
 }

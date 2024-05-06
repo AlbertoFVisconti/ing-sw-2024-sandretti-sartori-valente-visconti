@@ -8,6 +8,8 @@ import it.polimi.ingsw.model.decks.DeckLoader;
 import it.polimi.ingsw.events.Observable;
 import it.polimi.ingsw.events.messages.server.PublicGoalsUpdateMessage;
 import it.polimi.ingsw.events.messages.server.VisibleCardUpdateMessage;
+import it.polimi.ingsw.model.events.messages.saving.GameSavingMessage;
+import it.polimi.ingsw.model.events.messages.saving.PlayerSavingMessage;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
@@ -82,6 +84,25 @@ public class Game extends Observable {
         this.availableColor= new HashSet<>();
         this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE,PlayerColor.GREEN,PlayerColor.RED,PlayerColor.YELLOW));
     }
+    public Game(GameSavingMessage gsm){
+        players=null;
+        this.availableColor= new HashSet<>();
+        this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE,PlayerColor.GREEN,PlayerColor.RED,PlayerColor.YELLOW));
+        for(PlayerSavingMessage psm: gsm.getPlayers()){
+            Player p=new Player(psm);
+            players.add(p);
+            availableColor.remove(p.getColor());
+        }
+        this.expectedPlayers=gsm.getExpectedPlayers();
+        this.idGame=gsm.getGameId();
+        this.scoreBoard=gsm.getScoreBoard();
+        this.commonGoals=gsm.getPublicGoal();
+        this.goldCardsDeck=gsm.getGoldCardsDeck();
+        this.resourceCardsDeck=gsm.getResourceCardsDeck();
+        this.startCardsDeck=gsm.getStartCardsDeck();
+        this.goalsDeck=gsm.getGoalsDeck();
+    }
+
 
     public void updateAvailableColors() {
         this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE,PlayerColor.GREEN,PlayerColor.RED,PlayerColor.YELLOW));
@@ -392,5 +413,13 @@ public class Game extends Observable {
             this.goldCardsDeck.subscribe((p1.getClientHandler()));
             this.resourceCardsDeck.subscribe((p1.getClientHandler()));
         }
+    }
+
+    public Deck<StartCard> getStartCardsDeck() {
+        return startCardsDeck;
+    }
+
+    public Deck<Goal> getGoalsDeck() {
+        return goalsDeck;
     }
 }

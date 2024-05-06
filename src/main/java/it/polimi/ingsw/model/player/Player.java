@@ -5,6 +5,7 @@ import it.polimi.ingsw.events.messages.server.PlayersBoardUpdateMessage;
 import it.polimi.ingsw.events.messages.server.PlayersHandUpdateMessage;
 import it.polimi.ingsw.events.messages.server.PrivateGoalUpdateMessage;
 import it.polimi.ingsw.events.messages.server.StartCardUpdateMessage;
+import it.polimi.ingsw.model.events.messages.saving.PlayerSavingMessage;
 import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
@@ -45,6 +46,14 @@ public class Player extends Observable {
         this.board=new HashMap<>();
         this.playerCards=new PlayCard[3];
         this.inventory = new ItemCollection();
+    }
+    public Player(PlayerSavingMessage psm){
+        this.nickName=psm.getNick();
+        this.color=psm.getPlayerColor();
+        this.board= (HashMap<CardLocation, Card>) psm.getBoard();
+        this.playerCards=psm.getPlayerHand();
+        this.privateGoal=psm.getPrivateGoal();
+        this.inventory=psm.getInventory();
     }
 
     public PlayerColor getColor() {
