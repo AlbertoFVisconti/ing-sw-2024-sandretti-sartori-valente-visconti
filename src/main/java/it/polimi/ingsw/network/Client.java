@@ -16,8 +16,6 @@ public class Client {
 
     private Client(UserInterface userInterface) {
         this.userInterface = userInterface;
-
-        Scanner scanner = new Scanner(System.in);
     }
 
 
@@ -25,25 +23,29 @@ public class Client {
         userInterface.start();
     }
 
-    public static void main(String[] args) throws IOException, NotBoundException, InterruptedException {
+    public static void main(String[] args) throws IOException, NotBoundException {
         Scanner scanner = new Scanner(System.in);
 
-        int sel;
+        int selectedProtocol, selectedInterface;
         do {
             System.out.println("Select protocol (1 -> socket, 2 -> RMI): ");
-            sel = scanner.nextInt();
-        } while(sel != 1 && sel != 2);
+            selectedProtocol = scanner.nextInt();
+        } while(selectedProtocol != 1 && selectedProtocol != 2);
 
-        //UserInterface userInterface = new GraphicalUserInterface();
-        UserInterface userInterface = new TextualUserInterface(scanner);
+        do {
+            System.out.println("Select User Interface (1 -> TUI, 2 -> GUI): ");
+            selectedInterface = scanner.nextInt();
+        } while(selectedInterface != 1 && selectedInterface != 2);
+
+
+        UserInterface userInterface;
+        if(selectedInterface == 2) userInterface = new GraphicalUserInterface();
+        else userInterface = new TextualUserInterface(scanner);
 
         ServerHandler handler;
-        if(sel == 1) {
-            handler = new SocketServerHandler(userInterface, "127.0.0.1", 1235);
-        }
-        else {
-            handler = new RMIServerHandler(userInterface, "127.0.0.1", 1234);
-        }
+        if(selectedProtocol == 1) handler = new SocketServerHandler(userInterface, "127.0.0.1", 1235);
+        else handler = new RMIServerHandler(userInterface, "127.0.0.1", 1234);
+
 
         userInterface.setServerHandler(handler);
 
@@ -51,4 +53,6 @@ public class Client {
         client.run();
 
     }
+
+
 }
