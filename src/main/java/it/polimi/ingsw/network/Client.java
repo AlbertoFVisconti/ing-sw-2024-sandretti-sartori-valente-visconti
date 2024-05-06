@@ -3,6 +3,7 @@ package it.polimi.ingsw.network;
 import it.polimi.ingsw.network.serverhandlers.RMIServerHandler;
 import it.polimi.ingsw.network.serverhandlers.ServerHandler;
 import it.polimi.ingsw.network.serverhandlers.SocketServerHandler;
+import it.polimi.ingsw.view.ui.GraphicalUserInterface;
 import it.polimi.ingsw.view.ui.TextualUserInterface;
 import it.polimi.ingsw.view.ui.UserInterface;
 
@@ -33,6 +34,7 @@ public class Client {
             sel = scanner.nextInt();
         } while(sel != 1 && sel != 2);
 
+        //UserInterface userInterface = new GraphicalUserInterface();
         UserInterface userInterface = new TextualUserInterface(scanner);
 
         ServerHandler handler;
