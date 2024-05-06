@@ -1,21 +1,20 @@
-package it.polimi.ingsw.events.messages;
+package it.polimi.ingsw.model.chat;
 
 /**
  * ChatMessage represents a message sent from a player to another (or broadcast)
  */
-public class ChatMessage extends Message {
+public class ChatMessage {
     private final String text; // The text content of the message
     private final Long timestamp; // The timestamp when the message was created
     private final String senderNick; // The nickname of the message sender
 
     /**
-     * Constructs a new Message object.
+     * Constructs a new ChatMessage object.
      *
      * @param text       The text content of the message.
      * @param senderNick The nickname of the message sender.
      */
     public ChatMessage(String text, String senderNick) {
-        super(MessageType.CHAT_MESSAGE);
         this.text = text;
         this.senderNick = senderNick;
         timestamp = System.currentTimeMillis();

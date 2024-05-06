@@ -119,9 +119,11 @@ public abstract class UserInterface extends Thread implements VirtualView {
      * @param controller
      * @throws RemoteException
      */
+    @Override
     public void setController(VirtualController controller) throws RemoteException {}
 
 
+    @Override
     public void setPlayerIdentifier(String playerIdentifier) throws RemoteException {
         //System.err.println("playerIdentifier received: " + playerIdentifier);
         this.playerIdentifier = playerIdentifier;
