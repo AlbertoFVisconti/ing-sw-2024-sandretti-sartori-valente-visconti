@@ -99,4 +99,6 @@ public interface VirtualView extends Remote {
     void updatePlayersList(String[] nicknames, PlayerColor[] colors) throws RemoteException;
 
     void updateGameStatus(GameStatus gameStatus, TurnStatus turnStatus, String playersTurn) throws RemoteException;
+
+    void reportError(RuntimeException exception) throws RemoteException;
 }

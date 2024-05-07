@@ -5,7 +5,7 @@ import it.polimi.ingsw.events.messages.server.PlayersBoardUpdateMessage;
 import it.polimi.ingsw.events.messages.server.PlayersHandUpdateMessage;
 import it.polimi.ingsw.events.messages.server.PrivateGoalUpdateMessage;
 import it.polimi.ingsw.events.messages.server.StartCardUpdateMessage;
-import it.polimi.ingsw.model.events.messages.saving.PlayerSavingMessage;
+import it.polimi.ingsw.events.saving.PlayerSavingMessage;
 import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;

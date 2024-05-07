@@ -16,11 +16,16 @@ public class TextualUserInterface extends UserInterface{
     private final Scanner scanner;
 
     private String gameStatusMessage;
+    private String serverErrorMessage;
+    private String syntaxErrorMessage;
     private String lastCommand;
 
     public TextualUserInterface(Scanner scanner) {
         this.scanner = scanner;
         lastCommand = "";
+
+        serverErrorMessage = null;
+        syntaxErrorMessage = null;
 
         gameStatusMessage = """
                 Connected to the server. Use:
@@ -40,19 +45,33 @@ public class TextualUserInterface extends UserInterface{
                 command = scanner.nextLine();
             }while(command.isEmpty());
 
+            this.serverErrorMessage = null;
+            this.syntaxErrorMessage = null;
+
             executeCommand(command, true);
         }
     }
 
     private void executeCommand(String command, boolean newCommand) {
         lastCommand = "";
+        // "clearing" the console
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         if(command.startsWith("!")) {
+
             String[] tokens = command.split(" ");
 
             Player player;
+            PlayerColor color;
+            int expectedPlayers;
+            String nickname;
+            int selection;
+            int x,y;
+
             int i;
             switch (tokens[0]) {
+                default:
+                    syntaxErrorMessage = "unknown command";
+                    break;
                 case "!list":
                     lastCommand = command;
                     if(newCommand) {
@@ -68,21 +87,77 @@ public class TextualUserInterface extends UserInterface{
 
                     break;
                 case "!create":
-                    this.getServerHandler().createGame(Integer.parseInt(tokens[1]), tokens[2]);
+                    if(tokens.length != 3) {
+                        syntaxErrorMessage = "invalid num of arguments";
+                        break;
+                    }
+
+                    nickname = tokens[2];
+
+                    try {
+                        expectedPlayers = Integer.parseInt(tokens[1]);
+                    }
+                    catch (NumberFormatException e) {
+                        syntaxErrorMessage = "first argument is invalid";
+                        break;
+                    }
+
+                    if(expectedPlayers < 2 || expectedPlayers > 4) {
+                        syntaxErrorMessage = "a game cannot contain less then 2 players and more than 4";
+                        break;
+                    }
+
+
+                    this.getServerHandler().createGame(expectedPlayers, nickname);
                     break;
                 case "!join":
-                    this.getServerHandler().joinGame(Integer.parseInt(tokens[1]), tokens[2]);
+
+                    if(tokens.length != 3) {
+                        syntaxErrorMessage = "invalid num of arguments";
+                        break;
+                    }
+
+                    nickname = tokens[2];
+
+                    try {
+                        selection = Integer.parseInt(tokens[1]);
+                    }
+                    catch (NumberFormatException e) {
+                        syntaxErrorMessage = "first argument is invalid";
+                        break;
+                    }
+
+                    if(this.availableGames == null || !this.availableGames.contains(selection)) {
+                        syntaxErrorMessage = "the selected game was not found in the game list provided by the server";
+                        break;
+                    }
+
+                    this.getServerHandler().joinGame(Integer.parseInt(tokens[1]), nickname);
                     break;
                 case "!help":
                     lastCommand = command;
-                    System.out.println("WIP");
+                    syntaxErrorMessage = "WIP";
                     break;
                 case "!colors":
                     lastCommand = command;
                     System.out.println("Available colors: " + this.gameModel.getAvailableColor());
                     break;
                 case "!set_col":
-                    this.getServerHandler().selectColor(PlayerColor.valueOf(tokens[1].toUpperCase()));
+
+                    if(tokens.length != 2) {
+                        syntaxErrorMessage = "invalid num of arguments";
+                        break;
+                    }
+
+                    try {
+                        color = PlayerColor.valueOf(tokens[1].toUpperCase());
+                    }
+                    catch (IllegalArgumentException e) {
+                        syntaxErrorMessage = "invalid color";
+                        break;
+                    }
+
+                    this.getServerHandler().selectColor(color);
                     break;
                 case "!players_list":
                     lastCommand = command;
@@ -97,7 +172,21 @@ public class TextualUserInterface extends UserInterface{
                     System.out.println(this.getLocalPlayer().getStartCard());
                     break;
                 case "!place_start":
-                    this.getServerHandler().placeStartCard(Integer.parseInt(tokens[1]) == 1);
+
+                    if(tokens.length != 2) {
+                        syntaxErrorMessage = "invalid num of arguments";
+                        break;
+                    }
+
+                    try {
+                        selection = Integer.parseInt(tokens[1]);
+                    }
+                    catch (NumberFormatException e) {
+                        syntaxErrorMessage = "first argument is invalid";
+                        break;
+                    }
+
+                    this.getServerHandler().placeStartCard(selection == 1);
                     break;
                 case "!private_goals":
                     lastCommand = command;
@@ -112,6 +201,24 @@ public class TextualUserInterface extends UserInterface{
                     }
                     break;
                 case "!sel_goal":
+                    if(tokens.length != 2) {
+                        syntaxErrorMessage = "invalid num of arguments";
+                        break;
+                    }
+
+                    try {
+                        selection = Integer.parseInt(tokens[1]);
+                    }
+                    catch (NumberFormatException e) {
+                        syntaxErrorMessage = "first argument is invalid";
+                        break;
+                    }
+
+                    if(this.getLocalPlayer().getAvailableGoals().length <= selection || selection < 0) {
+                        syntaxErrorMessage = "the selected goal was not found in the list provided by the server";
+                        break;
+                    }
+
                     this.getServerHandler().selectPrivateGoal(Integer.parseInt(tokens[1]));
                     break;
                 case "!board":
@@ -129,7 +236,7 @@ public class TextualUserInterface extends UserInterface{
                     }
 
                     if(player == null) {
-                        System.out.println("player not recognized");
+                        syntaxErrorMessage = "selected player was not recognized";
                     }
                     else {
                         for(CardLocation cardLocation : player.getBoard().keySet()) {
@@ -174,7 +281,36 @@ public class TextualUserInterface extends UserInterface{
 
                     break;
                 case "!place":
-                    this.getServerHandler().placeCard(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]) == 1, new CardLocation(Integer.parseInt(tokens[3]), Integer.parseInt(tokens[4])));
+                    if(tokens.length != 5) {
+                        syntaxErrorMessage = "invalid num of arguments";
+                        break;
+                    }
+
+                    try {
+                        i = Integer.parseInt(tokens[1]);
+                        selection = Integer.parseInt(tokens[2]);
+                        x = Integer.parseInt(tokens[3]);
+                        y = Integer.parseInt(tokens[4]);
+                    }
+                    catch (NumberFormatException e) {
+                        syntaxErrorMessage = "invalid arguments";
+                        break;
+                    }
+
+                    if(this.getLocalPlayer().getPlayerCards().length <= i || i<0) {
+                        syntaxErrorMessage = "the selected card index is out of bound";
+                        break;
+                    }
+
+                    if(Math.abs(x)%2 != Math.abs(y)%2) {
+                        syntaxErrorMessage = "invalid card location";
+                        break;
+                    }
+
+
+                    this.getServerHandler().placeCard(i, selection == 1, new CardLocation(x,y));
+
+
                     break;
                 case "!decks":
                     lastCommand =command;
@@ -195,14 +331,54 @@ public class TextualUserInterface extends UserInterface{
 
                     break;
                 case "!draw":
+                    if(tokens.length != 2) {
+                        syntaxErrorMessage = "invalid num of arguments";
+                        break;
+                    }
+
+                    try {
+                        selection = Integer.parseInt(tokens[1]);
+                    }
+                    catch (NumberFormatException e) {
+                        syntaxErrorMessage = "first argument is invalid";
+                        break;
+                    }
+
+                    if(selection >= 2 || selection < 0) {
+                        syntaxErrorMessage = "the selected deck does not exist";
+                        break;
+                    }
+
                     this.getServerHandler().drawCard(Integer.parseInt(tokens[1]));
                     break;
 
                 case "!pick_up":
+                    if(tokens.length != 2) {
+                        syntaxErrorMessage = "invalid num of arguments";
+                        break;
+                    }
+
+                    try {
+                        selection = Integer.parseInt(tokens[1]);
+                    }
+                    catch (NumberFormatException e) {
+                        syntaxErrorMessage = "first argument is invalid";
+                        break;
+                    }
+
+                    if(selection >= this.gameModel.getVisibleCards().length || selection < 0) {
+                        syntaxErrorMessage = "the selected visible card does not exist";
+                        break;
+                    }
+
                     this.getServerHandler().drawCard(Integer.parseInt(tokens[1]) + 2);
                     break;
             }
         }
+
+        // displaying error messages
+        if(serverErrorMessage != null) System.out.println("\033[0;31m" + "Server Error: " + serverErrorMessage + "\033[0m");
+        if(syntaxErrorMessage != null) System.out.println("\033[0;33m" + "Syntax Error: " + syntaxErrorMessage + "\033[0m");
 
         System.out.println("\n\n");
         if(this.getLocalPlayer() != null) System.out.println("Playing as: " + getLocalPlayer().nickName);
@@ -275,5 +451,10 @@ public class TextualUserInterface extends UserInterface{
 
 
         }
+    }
+
+    @Override
+    public void reportError(RuntimeException exception) throws RemoteException {
+        this.serverErrorMessage = exception.getMessage();
     }
 }

@@ -5,10 +5,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 
 
 public class GraphicalUserInterface extends UserInterface {
 
+
+    @Override
+    public void reportError(RuntimeException exception) throws RemoteException {
+        System.err.println(exception.getMessage());
+    }
 
     public class MainFrame extends JFrame {
 

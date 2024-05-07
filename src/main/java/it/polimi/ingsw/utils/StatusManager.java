@@ -1,8 +1,8 @@
 package it.polimi.ingsw.utils;
 
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.events.messages.saving.GameSavingMessage;
-import it.polimi.ingsw.model.events.messages.saving.PlayerSavingMessage;
+import it.polimi.ingsw.events.saving.GameSavingMessage;
+import it.polimi.ingsw.events.saving.PlayerSavingMessage;
 import it.polimi.ingsw.model.player.Player;
 
 import java.io.*;

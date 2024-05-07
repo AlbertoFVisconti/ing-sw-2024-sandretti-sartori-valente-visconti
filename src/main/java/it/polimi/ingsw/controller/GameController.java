@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 import it.polimi.ingsw.events.Observable;
 import it.polimi.ingsw.events.messages.server.GameStatusUpdateMessage;
+import it.polimi.ingsw.events.messages.server.ServerErrorMessage;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.ScoreBoard;
 import it.polimi.ingsw.model.cards.Card;
@@ -10,6 +11,7 @@ import it.polimi.ingsw.events.messages.client.ClientMessage;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
+import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
 import it.polimi.ingsw.utils.CardLocation;
 
 import java.security.InvalidParameterException;
@@ -462,10 +464,18 @@ public class GameController extends Observable implements Runnable {
         while(true) {
             try {
                 message = this.messageQueue.take();
-
-                message.execute(selector, this);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
+            }
+
+            try {
+                message.execute(selector, this);
+            } catch (RuntimeException e) {
+                ClientHandler sender = selector.getPlayersClientHandler(message.getPlayerIdentifier());
+                if (sender != null) {
+                    // sender was recognized, sending back a ServerErrorMessage
+                    sender.sendMessage(new ServerErrorMessage(e));
+                }
             }
 
         }

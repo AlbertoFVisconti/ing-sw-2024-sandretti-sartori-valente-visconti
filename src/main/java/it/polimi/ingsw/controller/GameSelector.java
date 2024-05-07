@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.events.messages.server.JoinConfirmationMessage;
+import it.polimi.ingsw.events.messages.server.ServerErrorMessage;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.decks.GoalDeckLoader;
 import it.polimi.ingsw.model.decks.PlayCardDeckLoader;
@@ -26,7 +27,7 @@ import java.util.concurrent.BlockingQueue;
  * Those messages are put in a BlockingQueue and are processed asynchronously.
  */
 public class GameSelector extends Thread{
-    private final Map<Integer, GameControllerWrapper> games;
+    private final Map<Integer, GameControllerWrapper> gameControllerWrappers;
     private final Map<String, GameController> playerIdentifierToGameController;
     private final Map<String, ClientHandler> playerIdentifierToClientHandler;
     private int nextGameID =0;
@@ -50,7 +51,7 @@ public class GameSelector extends Thread{
      */
     private GameSelector(){
         this.playerIdentifierToClientHandler = new HashMap<>();
-        this.games = new HashMap<>();
+        this.gameControllerWrappers = new HashMap<>();
         this.playerIdentifierToGameController = new HashMap<>();
         this.messageQueue = new ArrayBlockingQueue<>(100);
         this.start();
@@ -104,7 +105,7 @@ public class GameSelector extends Thread{
      * @param idGame the id of the game that needs to be removed.
      */
     public void RemoveGame(int idGame){
-        games.remove(idGame);
+        gameControllerWrappers.remove(idGame);
     }
 
     /**
@@ -120,7 +121,7 @@ public class GameSelector extends Thread{
         GameController controller = new GameController(g);
         GameControllerWrapper controllerWrapper = new GameControllerWrapper(controller);
 
-        games.put(nextGameID,controllerWrapper);
+        gameControllerWrappers.put(nextGameID,controllerWrapper);
 
         return nextGameID++;
     }
@@ -132,7 +133,7 @@ public class GameSelector extends Thread{
      * @return a reference to the GameController that handles the specified game, {@code null} if there's no game with the provided GameID.
      */
     public GameController getGameController(int gameId) {
-        return this.games.get(gameId).getGameController();
+        return this.gameControllerWrappers.get(gameId).getGameController();
     }
 
     /**
@@ -145,14 +146,20 @@ public class GameSelector extends Thread{
      */
     public void addPlayerToGame(String playerIdentifier ,int IDGame, String nickname) {
         ClientHandler clientHandler = this.playerIdentifierToClientHandler.get(playerIdentifier);
+        if(clientHandler == null) throw new RuntimeException("player was not recognized");
 
-        clientHandler.setController(this.games.get(IDGame));
-        GameController controller = this.games.get(IDGame).getGameController();
+        GameControllerWrapper gameControllerWrapper = this.gameControllerWrappers.get(IDGame);
+        if(gameControllerWrapper == null) throw new RuntimeException("the selected game does not exist");
 
-
-        this.playerIdentifierToGameController.put(clientHandler.getPlayerIdentifier(), this.games.get(IDGame).getGameController());
-
+        GameController controller = gameControllerWrapper.getGameController();
         Game game = controller.getGame();
+
+        if(!isAvailable(game, nickname)) throw new RuntimeException("the selected nickname is unavailable");
+
+        clientHandler.setController(this.gameControllerWrappers.get(IDGame));
+        this.playerIdentifierToGameController.put(clientHandler.getPlayerIdentifier(), this.gameControllerWrappers.get(IDGame).getGameController());
+
+        // will throw a RuntimeException if the game's already started
         game.addPlayer(new Player( nickname, clientHandler));
 
 
@@ -161,7 +168,6 @@ public class GameSelector extends Thread{
         System.err.println(nickname + " joined the game");
 
         controller.subscribe(clientHandler);
-
         controller.updateStatus();
     }
 
@@ -224,7 +230,7 @@ public class GameSelector extends Thread{
     }
 
     public Set<Integer> getAvailableGames(){
-        return games.keySet();
+        return gameControllerWrappers.keySet();
     }
 
     /**
@@ -234,10 +240,21 @@ public class GameSelector extends Thread{
     public void run() {
         while(true) {
             System.out.println("waiting...");
+            ClientMessage message;
             try {
-                this.messageQueue.take().execute(this, null);
+                message = this.messageQueue.take();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
+            }
+
+            try {
+                message.execute(this, null);
+            }
+            catch (RuntimeException e) {
+                ClientHandler clientHandler = this.getPlayersClientHandler(message.getPlayerIdentifier());
+                if(clientHandler != null) {
+                    clientHandler.sendMessage(new ServerErrorMessage(e));
+                }
             }
         }
     }

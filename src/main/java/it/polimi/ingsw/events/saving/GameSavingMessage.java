@@ -1,12 +1,10 @@
-package it.polimi.ingsw.model.events.messages.saving;
+package it.polimi.ingsw.events.saving;
 
-import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.model.ScoreBoard;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.decks.Deck;
 import it.polimi.ingsw.model.goals.Goal;
-import it.polimi.ingsw.model.player.Player;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,7 +15,7 @@ public class GameSavingMessage implements Serializable {
     private final int gameId;
     private final Deck<PlayCard> goldCardsDeck;
     private final Deck<PlayCard> resourceCardsDeck;
-    private PlayCard[] visibleCards;
+    private final PlayCard[] visibleCards;
     private final ScoreBoard scoreBoard;
     private final Goal[] publicGoal;
     private final Deck<StartCard> startCardsDeck;

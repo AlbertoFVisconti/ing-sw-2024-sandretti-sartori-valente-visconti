@@ -9,6 +9,8 @@ public enum MessageType {
     MODEL_UPDATE_MESSAGE,
     CHAT_MESSAGE,
 
+    SERVER_ERROR_MESSAGE,
+
     PLAYER_MESSAGE,
     CONNECT_JOIN_MESSAGE
 

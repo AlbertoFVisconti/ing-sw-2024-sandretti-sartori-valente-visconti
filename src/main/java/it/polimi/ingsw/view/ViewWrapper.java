@@ -102,4 +102,9 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView{
     public void updateGameStatus(GameStatus gameStatus, TurnStatus turnStatus, String playersTurn) throws RemoteException {
         userInterface.forwardMessage(new GameStatusUpdateMessage(gameStatus, turnStatus, playersTurn));
     }
+
+    @Override
+    public void reportError(RuntimeException exception) throws RemoteException {
+        userInterface.forwardMessage(new ServerErrorMessage(exception));
+    }
 }

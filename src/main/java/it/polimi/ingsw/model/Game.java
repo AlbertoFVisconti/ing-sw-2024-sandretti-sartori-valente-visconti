@@ -8,8 +8,8 @@ import it.polimi.ingsw.model.decks.DeckLoader;
 import it.polimi.ingsw.events.Observable;
 import it.polimi.ingsw.events.messages.server.PublicGoalsUpdateMessage;
 import it.polimi.ingsw.events.messages.server.VisibleCardUpdateMessage;
-import it.polimi.ingsw.model.events.messages.saving.GameSavingMessage;
-import it.polimi.ingsw.model.events.messages.saving.PlayerSavingMessage;
+import it.polimi.ingsw.events.saving.GameSavingMessage;
+import it.polimi.ingsw.events.saving.PlayerSavingMessage;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
@@ -85,7 +85,7 @@ public class Game extends Observable {
         this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE,PlayerColor.GREEN,PlayerColor.RED,PlayerColor.YELLOW));
     }
     public Game(GameSavingMessage gsm){
-        players=null;
+        players=new ArrayList<>();
         this.availableColor= new HashSet<>();
         this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE,PlayerColor.GREEN,PlayerColor.RED,PlayerColor.YELLOW));
         for(PlayerSavingMessage psm: gsm.getPlayers()){

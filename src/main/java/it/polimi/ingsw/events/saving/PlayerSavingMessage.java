@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.events.messages.saving;
+package it.polimi.ingsw.events.saving;
 
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
@@ -14,7 +14,7 @@ public class PlayerSavingMessage implements Serializable {
     private final  String Nick;
     private final PlayerColor playerColor;
     private final Map<CardLocation, Card> board;
-    private PlayCard[] playerHand;
+    private final PlayCard[] playerHand;
     private final Goal privateGoal;
     private final ItemCollection inventory;
     /**
