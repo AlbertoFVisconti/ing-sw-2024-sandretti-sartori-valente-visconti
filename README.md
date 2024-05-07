@@ -7,7 +7,7 @@ Repo per il progetto di Ing. del software a.a. 2023/2024, gruppo GC52.
 [Model UML docs](https://onedrive.live.com/edit?id=1F421839E4C563F3!1040&resid=1F421839E4C563F3!1040&ithint=file%2cdocx&authkey=!ABCsSRtd3BrLvgE&wdo=2&cid=1f421839e4c563f3)  
 
 ## Peer Review 2
-[Peer Review 2]()  
+[Peer Review 2](https://polimi365-my.sharepoint.com/:w:/g/personal/10764503_polimi_it/Ebxap7Dv51VNpnaiZcBPYRUBCjxlwUEvyX-2WERFa5F_GQ?e=oVtpu9)  
 [Controller & Network docs](https://polimi365-my.sharepoint.com/:w:/g/personal/10764503_polimi_it/EZ1D05vwbUdOvgHmNtuxIfgB2YLrGaG1xbsS_QZ0e1ywUw?e=oxSbQM)
 
 ## Utils
