@@ -3,7 +3,7 @@ package it.polimi.ingsw.network;
 import it.polimi.ingsw.network.serverhandlers.RMIServerHandler;
 import it.polimi.ingsw.network.serverhandlers.ServerHandler;
 import it.polimi.ingsw.network.serverhandlers.SocketServerHandler;
-import it.polimi.ingsw.view.ui.GraphicalUserInterface;
+import it.polimi.ingsw.view.ui.FXGraphicalUserInterface;
 import it.polimi.ingsw.view.ui.TextualUserInterface;
 import it.polimi.ingsw.view.ui.UserInterface;
 
@@ -39,7 +39,7 @@ public class Client {
 
 
         UserInterface userInterface;
-        if(selectedInterface == 2) userInterface = new GraphicalUserInterface();
+        if(selectedInterface == 2) userInterface = new FXGraphicalUserInterface(); //userInterface = new GraphicalUserInterface();
         else userInterface = new TextualUserInterface(scanner);
 
         ServerHandler handler;
