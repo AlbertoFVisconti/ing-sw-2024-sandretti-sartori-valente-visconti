@@ -2,7 +2,6 @@ package it.polimi.ingsw.view.FXController;
 
 import it.polimi.ingsw.view.ui.FXGraphicalUserInterface;
 import it.polimi.ingsw.view.ui.UserInterface;
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +16,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.Objects;
 
 public class CreateGameController extends UserInterface {
 
@@ -61,7 +61,7 @@ public class CreateGameController extends UserInterface {
 
     @FXML
     void GoBackToLobby(ActionEvent event) throws IOException {
-        nextPageParent = FXMLLoader.load(getClass().getResource("/fxml/Lobby.fxml"));
+        nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/Lobby.fxml")));
         window = (Stage)((javafx.scene.Node) event.getSource()).getScene().getWindow();
         window.setScene(new Scene(nextPageParent));
         window.show();

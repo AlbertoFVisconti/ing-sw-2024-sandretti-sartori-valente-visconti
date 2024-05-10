@@ -5,19 +5,18 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.FXController.LobbyController">
-   <children>
-      <ImageView fx:id="codexWallpaper" fitHeight="414.0" fitWidth="613.0" layoutX="-6.0" layoutY="-7.0">
-         <image>
-            <Image url="@/image/CodexWallpaper.png" />
-         </image>
-      </ImageView>
-      <Button fx:id="CreateGameButton" layoutX="252.0" layoutY="198.0" mnemonicParsing="false" onAction="#CreateGamefx" text="Create Game" />
-      <Button fx:id="JoinGameButton" layoutX="260.0" layoutY="238.0" mnemonicParsing="false" onAction="#JoinGamefx" text="Join Game" />
-      <ImageView fx:id="codexLogo" fitHeight="150.0" fitWidth="200.0" layoutX="224.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@/image/LogoCodex.png" />
-         </image>
-      </ImageView>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="it.polimi.ingsw.view.FXController.LobbyController">
+   <ImageView fx:id="codexWallpaper" fitHeight="414.0" fitWidth="613.0" layoutX="-6.0" layoutY="-7.0">
+      <Image url="@../image/LogoCodex.png"/>
+   </ImageView>
+   <Button fx:id="CreateGameButton" layoutX="252.0" layoutY="198.0" mnemonicParsing="false" onAction="#CreateGamefx"
+           text="Create Game"/>
+   <Button fx:id="JoinGameButton" layoutX="260.0" layoutY="238.0" mnemonicParsing="false" onAction="#JoinGamefx"
+           text="Join Game"/>
+   <ImageView fx:id="codexLogo" fitHeight="150.0" fitWidth="200.0" layoutX="224.0" layoutY="21.0" pickOnBounds="true"
+              preserveRatio="true">
+      <Image url="@../image/LogoCodex.png"/>
+   </ImageView>
 </AnchorPane>

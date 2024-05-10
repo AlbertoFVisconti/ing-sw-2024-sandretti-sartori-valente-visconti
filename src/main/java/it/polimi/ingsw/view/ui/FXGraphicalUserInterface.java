@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
+import java.util.Objects;
 
 
 public class FXGraphicalUserInterface extends UserInterface {
@@ -29,7 +30,7 @@ public class FXGraphicalUserInterface extends UserInterface {
 
         //start method that loads the Lobby.fxml file
         public void start(Stage stage) throws Exception {
-            Parent root = (Parent) FXMLLoader.load(this.getClass().getResource("/fxml/Lobby.fxml"));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(this.getClass().getResource("/fxml/Lobby.fxml")));
             stage.setScene(new Scene(root));
             stage.show();
         }
