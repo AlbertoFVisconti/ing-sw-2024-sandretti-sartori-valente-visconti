@@ -22,6 +22,8 @@ public class LobbyController {
 
     @FXML
     private ImageView codexLogo;
+    @FXML
+    private Button RulesButton;
 
     @FXML
     private ImageView codexWallpaper;
@@ -42,6 +44,14 @@ public class LobbyController {
     @FXML
     void JoinGamefx(ActionEvent event) throws IOException {
         nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/JoinGame.fxml")));
+        window = (Stage)((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        window.setScene(new Scene(nextPageParent));
+        window.show();
+    }
+    //GoToRules allows the user to change Pane to RulesPage1.fxml
+    @FXML
+    void GoToRules(ActionEvent event) throws IOException {
+        nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/RulesPage1.fxml")));
         window = (Stage)((javafx.scene.Node) event.getSource()).getScene().getWindow();
         window.setScene(new Scene(nextPageParent));
         window.show();

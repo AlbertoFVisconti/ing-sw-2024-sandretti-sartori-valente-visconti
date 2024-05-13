@@ -28,10 +28,8 @@
               preserveRatio="true">
       <Image url="@../image/LogoCodex.png"/>
    </ImageView>
-   <Button fx:id="GoBackButton" layoutX="5.0" layoutY="14.0" mnemonicParsing="false" onAction="#GoBackToLobby"
-           opacity="0.0" text="Button" pickOnBounds="false"/>
    <ImageView fx:id="BackArrow" fitHeight="26.0" fitWidth="54.0" layoutX="21.0" layoutY="14.0" pickOnBounds="true"
-              preserveRatio="true">
+              preserveRatio="true" onMouseClicked='#GoBackToLobby'>
       <Image url="@../image/BackArrowButton.png"/>
    </ImageView>
 </AnchorPane>

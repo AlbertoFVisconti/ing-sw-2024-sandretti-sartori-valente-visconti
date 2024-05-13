@@ -9,7 +9,7 @@
             prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="it.polimi.ingsw.view.FXController.LobbyController">
    <ImageView fx:id="codexWallpaper" fitHeight="414.0" fitWidth="613.0" layoutX="-6.0" layoutY="-7.0">
-      <Image url="@../image/LogoCodex.png"/>
+      <Image url="@../image/CodexWallpaper.png"/>
    </ImageView>
    <Button fx:id="CreateGameButton" layoutX="252.0" layoutY="198.0" mnemonicParsing="false" onAction="#CreateGamefx"
            text="Create Game"/>
@@ -19,4 +19,7 @@
               preserveRatio="true">
       <Image url="@../image/LogoCodex.png"/>
    </ImageView>
+   <Button fx:id="RulesButton" layoutX="21.0" layoutY="350.0" mnemonicParsing="false" onAction="#GoToRules"
+           text="Rules"/>
+
 </AnchorPane>

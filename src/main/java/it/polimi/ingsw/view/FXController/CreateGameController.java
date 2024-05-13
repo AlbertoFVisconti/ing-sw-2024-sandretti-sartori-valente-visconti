@@ -12,6 +12,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -46,8 +47,6 @@ public class CreateGameController extends UserInterface {
     @FXML
     private ImageView codexWallpaper;
     private FXGraphicalUserInterface fxGraphicalUserInterface;
-    private Stage window;
-    private Parent nextPageParent;
 
     @FXML
     public void initialize() {
@@ -60,9 +59,9 @@ public class CreateGameController extends UserInterface {
     }
 
     @FXML
-    void GoBackToLobby(ActionEvent event) throws IOException {
-        nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/Lobby.fxml")));
-        window = (Stage)((javafx.scene.Node) event.getSource()).getScene().getWindow();
+    void GoBackToLobby(MouseEvent event) throws IOException {
+        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/Lobby.fxml")));
+        Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         window.setScene(new Scene(nextPageParent));
         window.show();
     }
