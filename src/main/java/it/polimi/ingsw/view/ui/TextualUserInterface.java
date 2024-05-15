@@ -447,7 +447,7 @@ public class TextualUserInterface extends UserInterface{
                 }
                 break;
             case GameStatus.END:
-
+                    gameStatusMessage = "Game ended! Results:" + this.gameModel.getScoreBoard().toString();
 
 
         }

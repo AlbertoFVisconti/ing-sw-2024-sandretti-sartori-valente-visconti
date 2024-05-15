@@ -3,6 +3,7 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.controller.TurnStatus;
 import it.polimi.ingsw.events.messages.server.*;
+import it.polimi.ingsw.model.ScoreBoard;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
@@ -106,5 +107,10 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView{
     @Override
     public void reportError(RuntimeException exception) throws RemoteException {
         userInterface.forwardMessage(new ServerErrorMessage(exception));
+    }
+
+    @Override
+    public void updateScore(ScoreBoard scoreBoard) throws RemoteException {
+        userInterface.forwardMessage(new ScoreUpdateMessage(scoreBoard));
     }
 }

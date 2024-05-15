@@ -83,6 +83,8 @@ public class Game extends Observable {
         this.expectedPlayers=expectedPlayers;
         this.availableColor= new HashSet<>();
         this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE,PlayerColor.GREEN,PlayerColor.RED,PlayerColor.YELLOW));
+
+        scoreBoard = new ScoreBoard();
     }
     public Game(GameSavingMessage gsm){
         players=new ArrayList<>();
@@ -412,6 +414,7 @@ public class Game extends Observable {
             //this.subscribe(p1.getClientHandler());
             this.goldCardsDeck.subscribe((p1.getClientHandler()));
             this.resourceCardsDeck.subscribe((p1.getClientHandler()));
+            this.scoreBoard.subscribe(p1.getClientHandler());
         }
     }
 

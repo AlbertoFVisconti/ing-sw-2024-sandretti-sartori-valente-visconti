@@ -4,6 +4,7 @@ import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.controller.TurnStatus;
 import it.polimi.ingsw.events.messages.server.ServerMessage;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.ScoreBoard;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
@@ -308,5 +309,10 @@ public abstract class UserInterface extends Thread implements VirtualView {
         this.gameStatus = gameStatus;
         this.turnStatus = turnStatus;
         this.playersTurn = playersTurn;
+    }
+
+    @Override
+    public void updateScore(ScoreBoard scoreBoard) throws RemoteException {
+        this.gameModel.getScoreBoard().copyScore(scoreBoard);
     }
 }
