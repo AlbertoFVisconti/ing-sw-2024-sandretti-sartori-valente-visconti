@@ -9,6 +9,19 @@ module it.polimi.ingsw {
     requires org.controlsfx.controls;
     requires java.desktop;
 
+    exports it.polimi.ingsw.model;
+    exports it.polimi.ingsw.model.decks;
+    exports it.polimi.ingsw.utils;
+    exports it.polimi.ingsw.model.cards;
+    exports it.polimi.ingsw.model.cards.corners;
+    exports it.polimi.ingsw.events.saving;
+    exports it.polimi.ingsw.events.messages.server;
+    exports it.polimi.ingsw.events.messages.client;
+    exports it.polimi.ingsw.controller;
+    exports it.polimi.ingsw.model.player;
+    exports it.polimi.ingsw.model.goals;
+    exports it.polimi.ingsw.network.serverhandlers;
+
     exports it.polimi.ingsw.network.rmi to java.rmi;
     exports it.polimi.ingsw.view to java.rmi;
 
