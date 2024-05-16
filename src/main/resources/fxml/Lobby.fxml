@@ -12,14 +12,14 @@
       <Image url="@../image/CodexWallpaper.png"/>
    </ImageView>
    <Button fx:id="CreateGameButton" layoutX="252.0" layoutY="198.0" mnemonicParsing="false" onAction="#CreateGamefx"
-           text="Create Game"/>
+           text="Create Game" stylesheets="@Style.css"/>
    <Button fx:id="JoinGameButton" layoutX="260.0" layoutY="238.0" mnemonicParsing="false" onAction="#JoinGamefx"
-           text="Join Game"/>
+           text="Join Game" stylesheets="@Style.css"/>
    <ImageView fx:id="codexLogo" fitHeight="150.0" fitWidth="200.0" layoutX="224.0" layoutY="21.0" pickOnBounds="true"
               preserveRatio="true">
       <Image url="@../image/LogoCodex.png"/>
    </ImageView>
    <Button fx:id="RulesButton" layoutX="21.0" layoutY="350.0" mnemonicParsing="false" onAction="#GoToRules"
-           text="Rules"/>
+           text="Rules" stylesheets="@Style.css"/>
 
 </AnchorPane>

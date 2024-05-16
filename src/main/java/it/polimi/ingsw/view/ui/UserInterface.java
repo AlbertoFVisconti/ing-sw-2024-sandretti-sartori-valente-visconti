@@ -309,4 +309,8 @@ public abstract class UserInterface extends Thread implements VirtualView {
         this.turnStatus = turnStatus;
         this.playersTurn = playersTurn;
     }
+
+    public HashSet<Integer> getAvailableGames() {
+        return availableGames;
+    }
 }

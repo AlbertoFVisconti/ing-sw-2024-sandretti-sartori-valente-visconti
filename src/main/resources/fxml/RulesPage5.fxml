@@ -12,5 +12,5 @@
     <ImageView fx:id="BackArrow" fitHeight="26.0" fitWidth="54.0" layoutX="21.0" layoutY="14.0" onMouseClicked="#GoBackToLobby" pickOnBounds="true" preserveRatio="true">
         <Image url="@../image/BackArrowButton.png" />
     </ImageView>
-    <Button fx:id="PreviousPageButton" layoutX="34.0" layoutY="392.0" mnemonicParsing="false" onAction="#PreviousPage" opacity="0.5" text="Previous" />
+    <Button fx:id="PreviousPageButton" layoutX="34.0" layoutY="392.0" mnemonicParsing="false" onAction="#PreviousPage" opacity="0.5" text="Previous" stylesheets="@Style.css"/>
 </AnchorPane>

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.FXController;
 
+import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.view.ui.FXGraphicalUserInterface;
 import it.polimi.ingsw.view.ui.UserInterface;
 import javafx.event.ActionEvent;
@@ -55,7 +56,7 @@ public class CreateGameController extends UserInterface {
 
     @FXML
     void CreateGameFX(ActionEvent event) {
-        this.getServerHandler().createGame(ExpectedPlayersComboBox.getValue(), NicknameField.getText());
+        Client.getInstance().getUserInterface().getServerHandler().createGame(ExpectedPlayersComboBox.getValue(), NicknameField.getText());
     }
 
     @FXML

@@ -1,0 +1,22 @@
+.button{
+
+    -fx-font-weight: bold;
+    -fx-background-color: #4b1616;
+    -fx-border-color: #000000;
+    -fx-border-radius: 5px; /* Bordo arrotondato */
+    -fx-background-radius: 5px; /* Background arrotondato */
+    -fx-padding: 5px; /* Padding ridotto */
+    -fx-text-fill : #b6b28d; /* Colore testo */
+}
+.choice-box{
+    -fx-font-weight: bold;
+    -fx-background-color: #4b1616;
+    -fx-border-color: #000000;
+    -fx-border-radius: 5px; /* Bordo arrotondato */
+}
+.choice-box .label {
+    -fx-text-fill: #b6b28d;
+}
+.button:hover{
+    -fx-background-color: #8a4242;
+}

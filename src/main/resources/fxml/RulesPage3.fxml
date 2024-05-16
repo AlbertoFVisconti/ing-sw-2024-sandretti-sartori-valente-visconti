@@ -15,6 +15,6 @@
                preserveRatio="true" onMouseClicked='#GoBackToLobby'>
         <Image url="@../image/BackArrowButton.png"/>
     </ImageView>
-    <Button fx:id="NextPageButton" layoutX="758.0" layoutY="392.0" minWidth="64.0" mnemonicParsing="false" onAction="#NextPage" text="Next" />
-    <Button fx:id="PreviousPageButton" layoutX="34.0" layoutY="392.0" mnemonicParsing="false" onAction="#PreviousPage" text="Previous" />
+    <Button fx:id="NextPageButton" layoutX="758.0" layoutY="392.0" minWidth="64.0" mnemonicParsing="false" onAction="#NextPage" text="Next" stylesheets="@Style.css"/>
+    <Button fx:id="PreviousPageButton" layoutX="34.0" layoutY="392.0" mnemonicParsing="false" onAction="#PreviousPage" text="Previous" stylesheets="@Style.css"/>
 </AnchorPane>

@@ -9,13 +9,26 @@ import it.polimi.ingsw.view.ui.UserInterface;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.Scanner;
 
 public class Client {
     private final UserInterface userInterface;
+    public static Client instance;
+    private ServerHandler serverHandler;
 
-    private Client(UserInterface userInterface) {
-        this.userInterface = userInterface;
+
+    private Client(int selectedInterface, int selectedProtocol, Scanner scanner, ServerHandler handler) throws NotBoundException, IOException {
+        instance = this;
+        if(selectedInterface == 2) userInterface = new FXGraphicalUserInterface();
+        else userInterface = new TextualUserInterface(scanner);
+
+        if(selectedProtocol == 1) handler = new SocketServerHandler(userInterface, "127.0.0.1", 1235);
+        else handler = new RMIServerHandler(userInterface, "127.0.0.1", 1234);
+
+        userInterface.setServerHandler(handler);
+
+
     }
 
 
@@ -39,19 +52,30 @@ public class Client {
 
 
         UserInterface userInterface;
-        if(selectedInterface == 2) userInterface = new FXGraphicalUserInterface(); //userInterface = new GraphicalUserInterface();
-        else userInterface = new TextualUserInterface(scanner);
+//        if(selectedInterface == 2) userInterface = new FXGraphicalUserInterface(); //userInterface = new GraphicalUserInterface();
+//        else userInterface = new TextualUserInterface(scanner);
 
-        ServerHandler handler;
-        if(selectedProtocol == 1) handler = new SocketServerHandler(userInterface, "127.0.0.1", 1235);
-        else handler = new RMIServerHandler(userInterface, "127.0.0.1", 1234);
+        ServerHandler handler = null;
+//        if(selectedProtocol == 1) handler = new SocketServerHandler(userInterface, "127.0.0.1", 1235);
+//        else handler = new RMIServerHandler(userInterface, "127.0.0.1", 1234);
 
 
-        userInterface.setServerHandler(handler);
+//        userInterface.setServerHandler(handler);
 
-        Client client = new Client(userInterface);
+        Client client = new Client(selectedInterface, selectedProtocol, scanner, handler);
         client.run();
 
+    }
+
+    public UserInterface getUserInterface() {
+        return userInterface;
+    }
+
+    public ServerHandler getServerHandler() {
+        return serverHandler;
+    }
+    public static Client getInstance() {
+        return instance;
     }
 
 

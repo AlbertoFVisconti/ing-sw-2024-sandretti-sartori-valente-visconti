@@ -1,16 +1,20 @@
 package it.polimi.ingsw.view.ui;
 
+import it.polimi.ingsw.network.serverhandlers.RMIServerHandler;
+import it.polimi.ingsw.network.serverhandlers.ServerHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Objects;
 
 
 public class FXGraphicalUserInterface extends UserInterface {
+
     @Override
     public void reportError(RuntimeException exception) throws RemoteException {
 
