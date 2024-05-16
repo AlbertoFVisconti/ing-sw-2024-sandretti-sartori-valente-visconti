@@ -2,6 +2,7 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.controller.TurnStatus;
+import it.polimi.ingsw.model.ScoreBoard;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
@@ -101,4 +102,6 @@ public interface VirtualView extends Remote {
     void updateGameStatus(GameStatus gameStatus, TurnStatus turnStatus, String playersTurn) throws RemoteException;
 
     void reportError(RuntimeException exception) throws RemoteException;
+
+    void updateScore(ScoreBoard scoreBoard) throws RemoteException;
 }

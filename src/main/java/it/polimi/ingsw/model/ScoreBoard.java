@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.events.Observable;
+import it.polimi.ingsw.events.messages.server.ScoreUpdateMessage;
 import it.polimi.ingsw.model.player.Player;
 
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.NoSuchElementException;
  * The ScoreBoard class represents a scoreboard that tracks players' score throughout the game.
  */
 public class ScoreBoard extends Observable {
-    private final HashMap<Player, Integer> scores;
+    private HashMap<String, Integer> scores;
 
     /**
      * Construct a new ScoreBoard object for the given list of players.
@@ -23,8 +24,18 @@ public class ScoreBoard extends Observable {
         scores = new HashMap<>();
 
         for (Player p : players) {
-            scores.put(p,0);
+            scores.put(p.nickName,0);
         }
+    }
+
+    /**
+     * Construct an empty ScoreBoard object.
+     * No operation is allowed on such object beside copyScore.
+     * This constructor is used in the client's model to set up a disposable object that will be overridden as soon as an
+     * updated scoreboard is received.
+     */
+    public ScoreBoard() {
+        this.scores = null;
     }
 
     /**
@@ -34,8 +45,8 @@ public class ScoreBoard extends Observable {
      * @return The score of the specified player.
      */
     public int getScore(Player player) {
-        if(!scores.containsKey(player)) throw new NoSuchElementException("This player is not in the scoreboard");
-        return scores.get(player);
+        if(!scores.containsKey(player.nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
+        return scores.get(player.nickName);
     }
 
     /**
@@ -46,8 +57,10 @@ public class ScoreBoard extends Observable {
      * @throws NoSuchElementException if the provided player is not in the scoreboard
      */
     public void setScore(Player player, int score) {
-        if(!scores.containsKey(player)) throw new NoSuchElementException("This player is not in the scoreboard");
-        scores.put(player,score);
+        if(!scores.containsKey(player.nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
+        scores.put(player.nickName,score);
+
+        notifyObservers(new ScoreUpdateMessage(this));
     }
 
     /**
@@ -57,16 +70,23 @@ public class ScoreBoard extends Observable {
      * @param scoreDelta the amount to add to the Player's score.
      */
     public void addScore(Player player, int scoreDelta) {
-        if(!scores.containsKey(player)) throw new NoSuchElementException("This player is not in the scoreboard");
-        scores.put(player,scores.get(player) + scoreDelta);
+        if(!scores.containsKey(player.nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
+        this.setScore(player, scores.get(player.nickName)  + scoreDelta);
+    }
+
+    public void copyScore(ScoreBoard scoreBoard) {
+        this.scores = new HashMap<>();
+        for (String nickname : scoreBoard.scores.keySet()) {
+            this.scores.put(nickname, scoreBoard.scores.get(nickname));
+        }
     }
 
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
 
-        for(Player p : this.scores.keySet()) {
-            s.append(p.nickName).append(": ").append(scores.get(p)).append("\n");
+        for(String nickname : this.scores.keySet()) {
+            s.append(nickname).append(": ").append(scores.get(nickname)).append("\n");
         }
 
         return s.toString();
