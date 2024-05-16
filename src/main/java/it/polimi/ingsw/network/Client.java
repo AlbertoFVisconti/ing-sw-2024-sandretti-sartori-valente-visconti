@@ -3,33 +3,36 @@ package it.polimi.ingsw.network;
 import it.polimi.ingsw.network.serverhandlers.RMIServerHandler;
 import it.polimi.ingsw.network.serverhandlers.ServerHandler;
 import it.polimi.ingsw.network.serverhandlers.SocketServerHandler;
+import it.polimi.ingsw.view.ViewWrapper;
 import it.polimi.ingsw.view.ui.FXGraphicalUserInterface;
 import it.polimi.ingsw.view.ui.TextualUserInterface;
 import it.polimi.ingsw.view.ui.UserInterface;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.util.Scanner;
 
 public class Client {
     private final UserInterface userInterface;
     public static Client instance;
-    private ServerHandler serverHandler;
+    private final ServerHandler serverHandler;
 
 
-    private Client(int selectedInterface, int selectedProtocol, Scanner scanner, ServerHandler handler) throws NotBoundException, IOException {
+    private Client(UserInterface userInterface, ServerHandler serverHandler) {
+        this.userInterface = userInterface;
+        this.serverHandler = serverHandler;
+
         instance = this;
-        if(selectedInterface == 2) userInterface = new FXGraphicalUserInterface();
-        else userInterface = new TextualUserInterface(scanner);
 
-        if(selectedProtocol == 1) handler = new SocketServerHandler(userInterface, "127.0.0.1", 1235);
-        else handler = new RMIServerHandler(userInterface, "127.0.0.1", 1234);
-
-        userInterface.setServerHandler(handler);
-
-
+        try {
+            serverHandler.connect();
+        } catch (Exception e) {
+            // connection to the server failed
+            System.err.println(e.getMessage());
+            System.exit(-1);
+        }
     }
+
 
 
     private void run() {
@@ -52,17 +55,15 @@ public class Client {
 
 
         UserInterface userInterface;
-//        if(selectedInterface == 2) userInterface = new FXGraphicalUserInterface(); //userInterface = new GraphicalUserInterface();
-//        else userInterface = new TextualUserInterface(scanner);
+        if(selectedInterface == 2) userInterface = new FXGraphicalUserInterface();
+        else userInterface = new TextualUserInterface(scanner);
 
-        ServerHandler handler = null;
-//        if(selectedProtocol == 1) handler = new SocketServerHandler(userInterface, "127.0.0.1", 1235);
-//        else handler = new RMIServerHandler(userInterface, "127.0.0.1", 1234);
+        ServerHandler handler;
+        if(selectedProtocol == 1) handler = new SocketServerHandler("127.0.0.1", 1235);
+        else handler = new RMIServerHandler( new ViewWrapper(userInterface), "127.0.0.1", 1234, "MainController");
 
 
-//        userInterface.setServerHandler(handler);
-
-        Client client = new Client(selectedInterface, selectedProtocol, scanner, handler);
+        Client client = new Client(userInterface, handler);
         client.run();
 
     }

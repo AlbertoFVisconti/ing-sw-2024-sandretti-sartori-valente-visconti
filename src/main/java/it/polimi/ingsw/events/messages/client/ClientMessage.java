@@ -1,9 +1,9 @@
 package it.polimi.ingsw.events.messages.client;
 
-import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.controller.GameSelector;
 import it.polimi.ingsw.events.messages.Message;
 import it.polimi.ingsw.events.messages.MessageType;
+import it.polimi.ingsw.network.rmi.VirtualController;
+import it.polimi.ingsw.network.rmi.VirtualMainController;
 
 /**
  * Abstract message that the Client sends to the Server.
@@ -11,17 +11,20 @@ import it.polimi.ingsw.events.messages.MessageType;
 
  */
 public abstract class ClientMessage extends Message {
-    private final String playerIdentifier;
+    private String playerIdentifier;
 
     /**
      * Builds a ServerMessage with a specified type.
      * Requires the player's identifier in order to recognize the player.
      *
      * @param messageType the type of the message
-     * @param playerIdentifier the player's identifier
      */
-    public ClientMessage(MessageType messageType, String playerIdentifier) {
+    public ClientMessage(MessageType messageType) {
         super(messageType);
+        this.playerIdentifier = null;
+    }
+
+    public void setPlayerIdentifier(String playerIdentifier) {
         this.playerIdentifier = playerIdentifier;
     }
 
@@ -40,5 +43,5 @@ public abstract class ClientMessage extends Message {
      * @param selector the GameSelector instance that handles the game the player's playing.
      * @param controller the GameController that handles the game the player's playing.
      */
-    public abstract void execute(GameSelector selector, GameController controller);
+    public abstract void execute(VirtualMainController selector, VirtualController controller);
 }

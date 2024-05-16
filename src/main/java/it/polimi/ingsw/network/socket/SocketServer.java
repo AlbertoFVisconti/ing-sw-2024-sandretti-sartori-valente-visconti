@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.socket;
 
-import it.polimi.ingsw.controller.GameSelector;
+import it.polimi.ingsw.controller.MainController;
 import it.polimi.ingsw.network.cliendhandlers.SocketClientHandler;
 
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class SocketServer extends Thread {
                 throw new RuntimeException(e);
             }
 
-            GameSelector.getInstance().connectClient(new SocketClientHandler(clientSocket));
+            MainController.getInstance().connectClient(new SocketClientHandler(clientSocket));
         }
 
     }

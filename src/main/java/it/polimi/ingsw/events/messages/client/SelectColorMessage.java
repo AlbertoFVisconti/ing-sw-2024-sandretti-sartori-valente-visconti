@@ -1,11 +1,11 @@
 package it.polimi.ingsw.events.messages.client;
 
-
-import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.controller.GameSelector;
 import it.polimi.ingsw.events.messages.MessageType;
-import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
+import it.polimi.ingsw.network.rmi.VirtualController;
+import it.polimi.ingsw.network.rmi.VirtualMainController;
+
+import java.rmi.RemoteException;
 
 public class SelectColorMessage extends ClientMessage {
     private final PlayerColor color;
@@ -14,16 +14,18 @@ public class SelectColorMessage extends ClientMessage {
      * Builds a ServerMessage with a specified type.
      * Requires the player's identifier in order to recognize the player.
      *
-     * @param playerIdentifier the player's identifier
      */
-    public SelectColorMessage(String playerIdentifier, PlayerColor color) {
-        super(MessageType.PLAYER_MESSAGE, playerIdentifier);
+    public SelectColorMessage(PlayerColor color) {
+        super(MessageType.PLAYER_MESSAGE);
         this.color = color;
     }
 
     @Override
-    public void execute(GameSelector selector, GameController controller) {
-        Player player = selector.getPlayer(this.getPlayerIdentifier());
-        controller.selectColor(player, color);
+    public void execute(VirtualMainController selector, VirtualController controller) {
+        try {
+            controller.selectColor(this.getPlayerIdentifier(), color);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

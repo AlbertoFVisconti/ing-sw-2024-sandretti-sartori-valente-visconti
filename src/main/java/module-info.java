@@ -22,11 +22,11 @@ module it.polimi.ingsw {
     exports it.polimi.ingsw.model.goals;
     exports it.polimi.ingsw.network.serverhandlers;
 
-    exports it.polimi.ingsw.network.rmi to java.rmi;
     exports it.polimi.ingsw.view to java.rmi;
 
     opens it.polimi.ingsw.view.ui to javafx.fxml;
     opens it.polimi.ingsw.view.FXController to javafx.fxml;
 
     exports it.polimi.ingsw.view.ui;
+    exports it.polimi.ingsw.network.rmi;
 }

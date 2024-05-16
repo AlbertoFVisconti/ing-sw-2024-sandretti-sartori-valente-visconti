@@ -1,9 +1,10 @@
 package it.polimi.ingsw.events.messages.client;
 
-import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.controller.GameSelector;
 import it.polimi.ingsw.events.messages.MessageType;
-import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.network.rmi.VirtualController;
+import it.polimi.ingsw.network.rmi.VirtualMainController;
+
+import java.rmi.RemoteException;
 
 /**
  * Message that the Client sends to require to select one of the available private goals
@@ -14,11 +15,10 @@ public class SelectGoalMessage extends ClientMessage {
     /**
      * Builds the message. Requires the player's identifier to recognise who is sending the message.
      *
-     * @param playerIdentifier the player's identifier
      * @param index the index that represent the chosen private goal among the available ones
      */
-    public SelectGoalMessage(String playerIdentifier, int index) {
-        super(MessageType.PLAYER_MESSAGE, playerIdentifier);
+    public SelectGoalMessage(int index) {
+        super(MessageType.PLAYER_MESSAGE);
         this.index = index;
     }
 
@@ -29,8 +29,11 @@ public class SelectGoalMessage extends ClientMessage {
      * @param controller the GameController that handles the game the player's playing.
      */
     @Override
-    public void execute(GameSelector selector, GameController controller) {
-        Player player = selector.getPlayer(this.getPlayerIdentifier());
-        controller.selectPrivateGoal(player, index);
+    public void execute(VirtualMainController selector, VirtualController controller) {
+        try {
+            controller.selectPrivateGoal(this.getPlayerIdentifier(), index);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

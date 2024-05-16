@@ -1,6 +1,10 @@
 package it.polimi.ingsw.view.ui;
 
 
+import it.polimi.ingsw.events.messages.client.GameListRequestMessage;
+import it.polimi.ingsw.events.messages.client.JoinGameMessage;
+import it.polimi.ingsw.network.Client;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +20,7 @@ public class GraphicalUserInterface extends UserInterface {
         System.err.println(exception.getMessage());
     }
 
-    public class MainFrame extends JFrame {
+    public static class MainFrame extends JFrame {
 
         private JButton creategame = new JButton("Create game");
         private Integer[] expectedplayersarray = {2, 3, 4};
@@ -57,7 +61,7 @@ public class GraphicalUserInterface extends UserInterface {
                         public void actionPerformed(ActionEvent e) {
                             JLabel created = new JLabel("Game created! Waiting for players to join");
                             ConfigGame.add(created);
-                            gui.getServerHandler().createGame((int) expectedplayers.getSelectedItem(), nickname.getText());
+                            Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(-1, true, (int)expectedplayers.getSelectedItem(), nickname.getText()));
                             submit.setEnabled(false);
                         }
                     });
@@ -69,7 +73,7 @@ public class GraphicalUserInterface extends UserInterface {
                     expectedplayers.setVisible(false);
                     submit.setVisible(false);
                     ConfigGame.setVisible(true);
-                    gui.getServerHandler().getAvailableGames();
+                    Client.getInstance().getServerHandler().sendMessage(new GameListRequestMessage());
 
                     try {
                         // TODO: find a better way (UserInterface.update())
@@ -85,7 +89,7 @@ public class GraphicalUserInterface extends UserInterface {
                             joinGame.addActionListener(new ActionListener() {
                                 public void actionPerformed(ActionEvent e) {
                                     try {
-                                        gui.getServerHandler().joinGame(gameID, nickname.getText());
+                                        Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(gameID, false , 0, nickname.getText()));
                                     } catch (Exception ex) {
                                         ex.printStackTrace();
                                     }

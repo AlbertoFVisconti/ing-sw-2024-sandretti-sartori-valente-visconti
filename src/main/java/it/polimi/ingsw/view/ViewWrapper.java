@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.PlayerColor;
+import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.network.serverhandlers.RMIServerHandler;
 import it.polimi.ingsw.network.serverhandlers.ServerHandler;
@@ -20,6 +21,10 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Set;
 
+/**
+ * Client-side remote object that receive Remote Method Invocations from the Server
+ * and "transform" them into messages that will be processed by the actual View (UserInterface) asynchronously.
+ */
 public class ViewWrapper extends UnicastRemoteObject implements VirtualView{
     UserInterface userInterface;
 
@@ -34,7 +39,7 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView{
 
     @Override
     public void setController(VirtualController controller) throws RemoteException {
-        ServerHandler serverHandler = userInterface.getServerHandler();
+        ServerHandler serverHandler = Client.getInstance().getServerHandler();
         if(serverHandler instanceof RMIServerHandler)
             ((RMIServerHandler) serverHandler).setController(controller);
     }

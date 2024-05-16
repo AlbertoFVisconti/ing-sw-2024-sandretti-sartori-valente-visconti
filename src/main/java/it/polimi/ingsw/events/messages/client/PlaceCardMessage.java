@@ -1,10 +1,11 @@
 package it.polimi.ingsw.events.messages.client;
 
-import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.controller.GameSelector;
 import it.polimi.ingsw.events.messages.MessageType;
-import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.network.rmi.VirtualController;
+import it.polimi.ingsw.network.rmi.VirtualMainController;
 import it.polimi.ingsw.utils.CardLocation;
+
+import java.rmi.RemoteException;
 
 /**
  * Message that the Client sends to require to place a cards on its board
@@ -17,13 +18,12 @@ public class PlaceCardMessage extends ClientMessage {
     /**
      * Builds the message. Requires the player's identifier to recognise who is sending the message.
      *
-     * @param playerIdentifier the player's identifier.
      * @param index the index that represents the card that the client want to place.
      * @param onBackSide {@code true} if the cards needs to placed with the back side up, {@code false} otherwise.
      * @param location the location where the card needs to be placed.
      */
-    public PlaceCardMessage(String playerIdentifier, int index, boolean onBackSide, CardLocation location) {
-        super(MessageType.PLAYER_MESSAGE, playerIdentifier);
+    public PlaceCardMessage(int index, boolean onBackSide, CardLocation location) {
+        super(MessageType.PLAYER_MESSAGE);
         this.index = index;
         this.onBackSide = onBackSide;
         this.location = location;
@@ -36,8 +36,11 @@ public class PlaceCardMessage extends ClientMessage {
      * @param controller the GameController that handles the game the player's playing.
      */
     @Override
-    public void execute(GameSelector selector, GameController controller) {
-        Player player = selector.getPlayer(this.getPlayerIdentifier());
-        controller.placeCard(player, index, onBackSide, location);
+    public void execute(VirtualMainController selector, VirtualController controller) {
+        try {
+            controller.placeCard(this.getPlayerIdentifier(), index, onBackSide, location);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

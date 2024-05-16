@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.FXController;
+import it.polimi.ingsw.events.messages.client.GameListRequestMessage;
+import it.polimi.ingsw.events.messages.client.JoinGameMessage;
 import it.polimi.ingsw.network.Client;
-import it.polimi.ingsw.view.ui.FXGraphicalUserInterface;
 import it.polimi.ingsw.view.ui.UserInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,7 +12,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.util.FXPermission;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -46,12 +46,12 @@ public class JoinGameController extends UserInterface{
     }
     @FXML
     public void JoinGameX(ActionEvent actionEvent) {
-        Client.getInstance().getUserInterface().getServerHandler().joinGame(selectGame.getValue(), nicknameField.getText());
+        Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(selectGame.getValue(), false, 0, nicknameField.getText()));
     }
     @FXML
     public void initialize() {
         UserInterface gui= Client.getInstance().getUserInterface();
-        Client.getInstance().getUserInterface().getServerHandler().getAvailableGames();
+        Client.getInstance().getServerHandler().sendMessage(new GameListRequestMessage());
         try {
             // TODO: find a better way (UserInterface.update())
             Thread.sleep(2000);

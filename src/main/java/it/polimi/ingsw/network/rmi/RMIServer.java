@@ -1,7 +1,5 @@
 package it.polimi.ingsw.network.rmi;
 
-import it.polimi.ingsw.controller.MainController;
-
 import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -11,7 +9,7 @@ public class RMIServer {
     //private static final String GAME_CONTROLLER_OBJECT_NAME = "GameController";
     public static void setup(int registryPort) throws RemoteException, AlreadyBoundException {
 
-        MainController mainController = new MainController();
+        MainControllerWrapper mainController = new MainControllerWrapper();
         //GameControllerWrapper gameControllerWrapper = new GameControllerWrapper();
 
         Registry registry = LocateRegistry.createRegistry(registryPort);

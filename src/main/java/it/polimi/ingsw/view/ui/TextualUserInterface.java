@@ -3,10 +3,12 @@ package it.polimi.ingsw.view.ui;
 
 import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.controller.TurnStatus;
+import it.polimi.ingsw.events.messages.client.*;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
+import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.utils.CardLocation;
 
 import java.rmi.RemoteException;
@@ -75,7 +77,7 @@ public class TextualUserInterface extends UserInterface{
                 case "!list":
                     lastCommand = command;
                     if(newCommand) {
-                        this.getServerHandler().getAvailableGames();
+                        Client.getInstance().getServerHandler().sendMessage(new GameListRequestMessage());
                     }
 
                     System.out.println("Available games:\n");
@@ -108,7 +110,7 @@ public class TextualUserInterface extends UserInterface{
                     }
 
 
-                    this.getServerHandler().createGame(expectedPlayers, nickname);
+                    Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(-1, true, expectedPlayers, nickname));
                     break;
                 case "!join":
 
@@ -132,7 +134,7 @@ public class TextualUserInterface extends UserInterface{
                         break;
                     }
 
-                    this.getServerHandler().joinGame(Integer.parseInt(tokens[1]), nickname);
+                    Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(selection, false, 0, nickname));
                     break;
                 case "!help":
                     lastCommand = command;
@@ -157,7 +159,7 @@ public class TextualUserInterface extends UserInterface{
                         break;
                     }
 
-                    this.getServerHandler().selectColor(color);
+                    Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(color));
                     break;
                 case "!players_list":
                     lastCommand = command;
@@ -186,7 +188,7 @@ public class TextualUserInterface extends UserInterface{
                         break;
                     }
 
-                    this.getServerHandler().placeStartCard(selection == 1);
+                    Client.getInstance().getServerHandler().sendMessage(new PlaceStartCardMessage(selection == 1));
                     break;
                 case "!private_goals":
                     lastCommand = command;
@@ -219,7 +221,7 @@ public class TextualUserInterface extends UserInterface{
                         break;
                     }
 
-                    this.getServerHandler().selectPrivateGoal(Integer.parseInt(tokens[1]));
+                    Client.getInstance().getServerHandler().sendMessage(new SelectGoalMessage(selection));
                     break;
                 case "!board":
                     lastCommand = command;
@@ -308,7 +310,7 @@ public class TextualUserInterface extends UserInterface{
                     }
 
 
-                    this.getServerHandler().placeCard(i, selection == 1, new CardLocation(x,y));
+                    Client.getInstance().getServerHandler().sendMessage(new PlaceCardMessage(i, selection==1, new CardLocation(x,y)));
 
 
                     break;
@@ -349,7 +351,7 @@ public class TextualUserInterface extends UserInterface{
                         break;
                     }
 
-                    this.getServerHandler().drawCard(Integer.parseInt(tokens[1]));
+                    Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(selection));
                     break;
 
                 case "!pick_up":
@@ -371,7 +373,7 @@ public class TextualUserInterface extends UserInterface{
                         break;
                     }
 
-                    this.getServerHandler().drawCard(Integer.parseInt(tokens[1]) + 2);
+                    Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(selection+2));
                     break;
             }
         }

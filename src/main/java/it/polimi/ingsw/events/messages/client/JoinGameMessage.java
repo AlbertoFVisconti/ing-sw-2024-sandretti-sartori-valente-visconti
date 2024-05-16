@@ -1,8 +1,10 @@
 package it.polimi.ingsw.events.messages.client;
 
-import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.controller.GameSelector;
 import it.polimi.ingsw.events.messages.MessageType;
+import it.polimi.ingsw.network.rmi.VirtualController;
+import it.polimi.ingsw.network.rmi.VirtualMainController;
+
+import java.rmi.RemoteException;
 
 /**
  * Message that the client sends when it's trying to connect to an existing game or to create a new one.
@@ -24,8 +26,8 @@ public class JoinGameMessage extends ClientMessage {
      * @param expectedPlayers if the client's creating a new game, this value represents the number of clients that will play the game
      * @param nickname the nickname of the client that is trying to join
      */
-    public JoinGameMessage(String playerIdentifier, int gameID, boolean creatingGame, int expectedPlayers, String nickname) {
-        super(MessageType.CONNECT_JOIN_MESSAGE, playerIdentifier);
+    public JoinGameMessage(int gameID, boolean creatingGame, int expectedPlayers, String nickname) {
+        super(MessageType.CONNECT_JOIN_MESSAGE);
         this.gameID = gameID;
         this.creatingGame = creatingGame;
         this.expectedPlayers = expectedPlayers;
@@ -39,23 +41,21 @@ public class JoinGameMessage extends ClientMessage {
      * @param controller the GameController that handles the game the player's playing. Which should be null, because the client isn't playing yet.
      */
     @Override
-    public void execute(GameSelector selector, GameController controller) {
-
-        int game = gameID;
-        if(creatingGame) {
+    public void execute(VirtualMainController selector, VirtualController controller) {
+        if(this.creatingGame) {
             try {
-                game = selector.createGame(expectedPlayers);
+                selector.createGame(this.getPlayerIdentifier(), expectedPlayers, nickname);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
             }
-            catch (Exception e) {
+        }
+        else {
+            try {
+                selector.joinGame(this.getPlayerIdentifier(), gameID, nickname);
+            } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
         }
 
-        try {
-            selector.addPlayerToGame(this.getPlayerIdentifier() ,game, nickname);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

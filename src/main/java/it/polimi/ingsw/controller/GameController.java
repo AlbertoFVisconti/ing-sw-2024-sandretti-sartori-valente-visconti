@@ -12,9 +12,11 @@ import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
+import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.utils.CardLocation;
 
 import java.security.InvalidParameterException;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -22,7 +24,7 @@ import java.util.concurrent.BlockingQueue;
  * GameController allows players to play a game.
  * It handles all the game logic and checks that the player is performing legal operations.
  **/
-public class GameController extends Observable implements Runnable {
+public class GameController extends Observable implements VirtualController, Runnable {
     private final Game game;
     private GameStatus gameStatus;
     private TurnStatus turnStatus;
@@ -133,6 +135,8 @@ public class GameController extends Observable implements Runnable {
             if (gameStatus == GameStatus.LAST_TURN) {
                 System.err.println("GAME FINISHED");
                 gameStatus = GameStatus.END;
+
+                this.evaluateGoals();
             }
             else if (gameStatus == GameStatus.NORMAL_TURN) {
                 boolean flag = true;
@@ -218,10 +222,12 @@ public class GameController extends Observable implements Runnable {
      * This operation is only valid if the game is in GAME_CREATION status, if the
      * player exists and if they haven't already selected their private goal.
      *
-     * @param player the player who is selecting the private goal.
+     * @param playerIdentifier the identifier of the player who is selecting the private goal.
      * @param index the index of the selected goal in the available ones.
      */
-    public void selectPrivateGoal(Player player, int index) {
+    @Override
+    public void selectPrivateGoal(String playerIdentifier, int index) {
+        Player player = this.getPlayer(playerIdentifier);
         if (gameStatus != GameStatus.GAME_CREATION) {
             throw new RuntimeException("Cannot select private goal in this game status");
         }
@@ -249,10 +255,12 @@ public class GameController extends Observable implements Runnable {
      * This operation is only valid if the game is in NORMAL_TURN status or in LAST_TURN status,
      * if the player exists and if they haven't already placed their starting card.
      *
-     * @param player the player who is placing the starting card.
+     * @param playerIdentifier the identifier of the player who is placing the starting card.
      * @param onBackSide {@code true} if the starting card needs to be placed with the back side up, {@code false} otherwise.
      */
-    public void placeStartCard(Player player, boolean onBackSide) {
+    public void placeStartCard(String playerIdentifier, boolean onBackSide) {
+        Player player = this.getPlayer(playerIdentifier);
+
         if(gameStatus != GameStatus.GAME_CREATION) {
             throw new RuntimeException("Cannot place starting card in this game status");
         }
@@ -311,13 +319,16 @@ public class GameController extends Observable implements Runnable {
      * This operation is only valid if the game is in NORMAL_TURN status or in LAST_TURN status,
      * if the player exists, if it's their turn and if they haven't already placed a card in the current turn.
      *
-     * @param player the player who is placing the card.
+     * @param playerIdentifier the identifier of the player who is placing the card.
      * @param index the index of the card in the player's hand that needs to be placed.
      * @param onBackSide {@code true} if the starting card needs to be placed with the back side up, {@code false} otherwise.
      * @param location the CardLocation where the card needs to be placed in the player's board.
      */
-    public void placeCard(Player player, int index, boolean onBackSide, CardLocation location) {
-         if (!player.getClientHandler().getPlayerIdentifier().equals(game.getTurn().getClientHandler().getPlayerIdentifier())) {
+    @Override
+    public void placeCard(String playerIdentifier, int index, boolean onBackSide, CardLocation location) {
+        Player player = this.getPlayer(playerIdentifier);
+
+        if (!player.getClientHandler().getPlayerIdentifier().equals(game.getTurn().getClientHandler().getPlayerIdentifier())) {
              throw new RuntimeException("it is not this player's turn");
          }
          if(this.gameStatus != GameStatus.NORMAL_TURN && this.gameStatus != GameStatus.LAST_TURN) {
@@ -361,10 +372,12 @@ public class GameController extends Observable implements Runnable {
      * This operation is only valid if the game is in NORMAL_TURN status,
      * if the player exists, if it's their turn and if they have already placed a card in the current turn.
      *
-     * @param player the player who is drawing.
+     * @param playerIdentifier the identifier of player who is drawing.
      * @param index the index of the cards that the player wants to pick up.
      */
-    public void drawCard(Player player, int index) {
+    @Override
+    public void drawCard(String playerIdentifier, int index) {
+        Player player = this.getPlayer(playerIdentifier);
         if (!player.getClientHandler().getPlayerIdentifier().equals(game.getTurn().getClientHandler().getPlayerIdentifier())) {
             throw new RuntimeException("it is not this player's turn");
         }
@@ -441,7 +454,19 @@ public class GameController extends Observable implements Runnable {
         updateStatus();
     }
 
-    public void selectColor(Player player, PlayerColor color) {
+    /**
+     * Allows to a player to select their color.
+     * <p>
+     * This operation is only valid if the game is in GAME_CREATION status,
+     * if the player exists and if the selected color is available
+     *
+     * @param playerIdentifier
+     * @param color
+     */
+    @Override
+    public void selectColor(String playerIdentifier, PlayerColor color) {
+        Player player = this.getPlayer(playerIdentifier);
+
         if(game.getAvailableColor().contains(color)) {
             player.setColor(color);
             game.updateAvailableColors();
@@ -459,7 +484,7 @@ public class GameController extends Observable implements Runnable {
      */
     @Override
     public void run() {
-        GameSelector selector = GameSelector.getInstance();
+        MainController selector = MainController.getInstance();
         ClientMessage message;
         while(true) {
             try {
@@ -482,4 +507,9 @@ public class GameController extends Observable implements Runnable {
     }
 
 
+    private Player getPlayer(String playerIdentifier) {
+        Player p = MainController.getInstance().getPlayer(playerIdentifier);
+        if (p == null) throw new NoSuchElementException("unknown player");
+        return p;
+    }
 }

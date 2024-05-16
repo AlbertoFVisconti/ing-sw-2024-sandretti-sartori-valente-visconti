@@ -17,7 +17,7 @@ import java.rmi.RemoteException;
 import java.util.Set;
 
 /**
- *
+ * Remote Interface that allows to define standard methods to update a player's view.
  */
 public interface VirtualView extends Remote {
 
@@ -93,15 +93,60 @@ public interface VirtualView extends Remote {
      */
     void placeCardOnPlayersBoard(String playerNickName, Card card, CardLocation location) throws RemoteException;
 
+    /**
+     * Allows the server to hand the player the available games list.
+     *
+     * @param availableGames a set of integer, each integer represents the ID of an available game
+     * @throws RemoteException in case of error with the remote communication
+     */
     void updateGameList(Set<Integer> availableGames) throws RemoteException;
 
+    /**
+     * Allows the server to confirm that the client (whose view this is) successfully joined
+     * the game with a certain nickname.
+     *
+     * @param nickname the nickname that the clients chose when they joined the game.
+     * @throws RemoteException in case of error with the remote communication.
+     */
     void confirmJoin(String nickname) throws RemoteException;
 
+    /**
+     * Allows the server to provide an updated version of the players list with nicknames and colors.
+     * <p>
+     * An update can be triggered by a player joining, a player selecting/changing their color and by the game
+     * starting (shuffling).
+     *
+     * @param nicknames the array of nicknames of the players in the game.
+     * @param colors the array of colors of the players in the game.
+     * @throws RemoteException in case of error with the remote communication.
+     */
     void updatePlayersList(String[] nicknames, PlayerColor[] colors) throws RemoteException;
 
+    /**
+     * Allows the server to inform the client when the game's status changes.
+     *
+     * @param gameStatus the current game phase
+     * @param turnStatus the current turn status (either DRAW or PLACE)
+     * @param playersTurn the nickname of the player that needs to play.
+     * @throws RemoteException in case of error with the remote communication
+     */
     void updateGameStatus(GameStatus gameStatus, TurnStatus turnStatus, String playersTurn) throws RemoteException;
 
+    /**
+     * When an exception is raised on the Server when processing a Client's request,
+     * if the client is recognized, this method interface allows to send the raised exception to the
+     * client.
+     *
+     * @param exception a RuntimeException containing the error that needs to be reported.
+     * @throws RemoteException in case of error with the remote communication.
+     */
     void reportError(RuntimeException exception) throws RemoteException;
 
+    /**
+     * Allows the server to provide an updated scoreboard to the client.
+     *
+     * @param scoreBoard the updated scoreboard
+     * @throws RemoteException in case of error with the remote communication.
+     */
     void updateScore(ScoreBoard scoreBoard) throws RemoteException;
 }

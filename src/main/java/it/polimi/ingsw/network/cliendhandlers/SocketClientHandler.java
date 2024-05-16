@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.cliendhandlers;
 
 import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.controller.GameSelector;
+import it.polimi.ingsw.controller.MainController;
 import it.polimi.ingsw.events.messages.MessageType;
 import it.polimi.ingsw.events.messages.client.ClientMessage;
 import it.polimi.ingsw.events.messages.server.ServerMessage;
@@ -44,7 +44,7 @@ public class SocketClientHandler extends ClientHandler {
                     }
 
                     if(message.messageType == MessageType.CONNECT_JOIN_MESSAGE) {
-                        GameSelector.getInstance().forwardMessage(message);
+                        MainController.getInstance().forwardMessage(message);
                     }
                     else {
                         gameController.forwardMessage(message);

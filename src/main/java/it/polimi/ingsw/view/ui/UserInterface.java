@@ -14,6 +14,7 @@ import it.polimi.ingsw.model.decks.VirtualDeckLoader;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
+import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.network.serverhandlers.ServerHandler;
 import it.polimi.ingsw.utils.CardLocation;
@@ -28,7 +29,6 @@ import java.util.concurrent.BlockingQueue;
 public abstract class UserInterface extends Thread implements VirtualView {
     private ServerHandler serverHandler;
 
-    private String playerIdentifier = null;
 
     protected final Game gameModel;
     private Player localPlayer;
@@ -75,13 +75,6 @@ public abstract class UserInterface extends Thread implements VirtualView {
         ).start();
     }
 
-    public void setServerHandler(ServerHandler serverHandler) {
-        this.serverHandler = serverHandler;
-    }
-    public ServerHandler getServerHandler() {
-        return serverHandler;
-    }
-
     public Player getLocalPlayer() {
         return localPlayer;
     }
@@ -109,9 +102,6 @@ public abstract class UserInterface extends Thread implements VirtualView {
 
     abstract protected void update();
 
-    public String getPlayerIdentifier() {
-        return playerIdentifier;
-    }
 
 
     /**
@@ -127,7 +117,7 @@ public abstract class UserInterface extends Thread implements VirtualView {
     @Override
     public void setPlayerIdentifier(String playerIdentifier) throws RemoteException {
         //System.err.println("playerIdentifier received: " + playerIdentifier);
-        this.playerIdentifier = playerIdentifier;
+        Client.getInstance().getServerHandler().setPlayerIdentifier(playerIdentifier);
     }
 
     @Override

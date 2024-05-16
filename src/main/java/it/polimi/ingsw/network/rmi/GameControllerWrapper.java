@@ -20,31 +20,36 @@ public class GameControllerWrapper extends UnicastRemoteObject implements Virtua
 
     @Override
     public void placeCard(String playerIdentifier, int index, boolean onBackSide ,CardLocation location) throws RemoteException {
-        ClientMessage message = new PlaceCardMessage(playerIdentifier, index, onBackSide, location);
+        ClientMessage message = new PlaceCardMessage(index, onBackSide, location);
+        message.setPlayerIdentifier(playerIdentifier);
         gameController.forwardMessage(message);
     }
 
     @Override
     public void drawCard(String playerIdentifier, int index) throws RemoteException {
-        ClientMessage message = new DrawCardMessage(playerIdentifier, index);
+        ClientMessage message = new DrawCardMessage(index);
+        message.setPlayerIdentifier(playerIdentifier);
         gameController.forwardMessage(message);
     }
 
     @Override
     public void placeStartCard(String playerIdentifier, boolean onBackSide) throws RemoteException {
-        ClientMessage message = new PlaceStartCardMessage(playerIdentifier, onBackSide);
+        ClientMessage message = new PlaceStartCardMessage(onBackSide);
+        message.setPlayerIdentifier(playerIdentifier);
         gameController.forwardMessage(message);
     }
 
     @Override
     public void selectPrivateGoal(String playerIdentifier, int index) throws RemoteException {
-        ClientMessage message = new SelectGoalMessage(playerIdentifier, index);
+        ClientMessage message = new SelectGoalMessage(index);
+        message.setPlayerIdentifier(playerIdentifier);
         gameController.forwardMessage(message);
     }
 
     @Override
     public void selectColor(String playerIdentifier, PlayerColor color) throws RemoteException {
-        ClientMessage message = new SelectColorMessage(playerIdentifier, color);
+        ClientMessage message = new SelectColorMessage(color);
+        message.setPlayerIdentifier(playerIdentifier);
         gameController.forwardMessage(message);
     }
 }
