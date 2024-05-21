@@ -45,8 +45,12 @@ public class JoinGameController extends UserInterface{
         window.show();
     }
     @FXML
-    public void JoinGameX(ActionEvent actionEvent) {
+    public void JoinGameX(ActionEvent event) throws IOException {
         Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(selectGame.getValue(), false, 0, nicknameField.getText()));
+        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/SelectColor.fxml")));
+        Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        window.setScene(new Scene(nextPageParent));
+        window.show();
     }
     @FXML
     public void initialize() {

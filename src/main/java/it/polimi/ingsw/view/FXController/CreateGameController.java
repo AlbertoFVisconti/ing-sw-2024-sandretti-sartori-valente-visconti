@@ -56,8 +56,12 @@ public class CreateGameController extends UserInterface {
     }
 
     @FXML
-    void CreateGameFX(ActionEvent event) {
+    void CreateGameFX(ActionEvent event) throws IOException {
         Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(0, true, ExpectedPlayersComboBox.getValue(), NicknameField.getText()));
+        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/SelectColor.fxml")));
+        Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        window.setScene(new Scene(nextPageParent));
+        window.show();
     }
 
     @FXML

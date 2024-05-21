@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.FXController.ColorController">
+   <ImageView fx:id="codexWallpaper" fitHeight="414.0" fitWidth="613.0" layoutX="-6.0" layoutY="-7.0">
+      <Image url="@../image/CodexWallpaper.png" />
+   </ImageView>
+   <ImageView fx:id="blue" fitHeight="100.0" fitWidth="100.0" layoutX="101.0" layoutY="181.0" pickOnBounds="true" preserveRatio="true" onMouseClicked='#SelectBlue'>
+      <image>
+         <Image url="@../image/Blue.png" />
+      </image>
+   </ImageView>
+   <ImageView fx:id="red" fitHeight="100.0" fitWidth="100.0" layoutX="201.0" layoutY="181.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#SelectRed">
+      <image>
+         <Image url="@../image/Red.png" />
+      </image>
+   </ImageView>
+   <ImageView fx:id="yellow" fitHeight="100.0" fitWidth="100.0" layoutX="301.0" layoutY="181.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#SelectYellow">
+      <image>
+         <Image url="@../image/Yellow.png" />
+      </image>
+   </ImageView>
+   <ImageView fx:id="green" fitHeight="100.0" fitWidth="100.0" layoutX="401.0" layoutY="181.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#SelectGreen">
+      <image>
+         <Image url="@../image/Green.png" />
+      </image>
+   </ImageView>
+   <Label layoutX="217.0" layoutY="107.0" text="Select Color:">
+      <font>
+         <Font name="Bangla MN" size="24.0" />
+      </font>
+   </Label>
+
+</AnchorPane>

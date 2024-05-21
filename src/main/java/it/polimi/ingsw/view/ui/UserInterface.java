@@ -23,6 +23,7 @@ import it.polimi.ingsw.view.VirtualView;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -308,5 +309,8 @@ public abstract class UserInterface extends Thread implements VirtualView {
 
     public HashSet<Integer> getAvailableGames() {
         return availableGames;
+    }
+    public Set<PlayerColor> getAvailableColors() {
+        return gameModel.getAvailableColor();
     }
 }
