@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.ui;
+package it.polimi.ingsw.view.ui.tui;
 
 
 import it.polimi.ingsw.controller.GameStatus;
@@ -10,11 +10,12 @@ import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.utils.CardLocation;
+import it.polimi.ingsw.view.ui.UserInterface;
 
 import java.rmi.RemoteException;
 import java.util.*;
 
-public class TextualUserInterface extends UserInterface{
+public class TextualUserInterface extends UserInterface {
     private final Scanner scanner;
 
     private String gameStatusMessage;
@@ -172,6 +173,10 @@ public class TextualUserInterface extends UserInterface{
                     lastCommand = command;
                     System.out.println("Your starting card:\n");
                     System.out.println(this.getLocalPlayer().getStartCard());
+                    System.out.println("\tFront:");
+                    Printer.printCard(this.getLocalPlayer().getStartCard(), false);
+                    System.out.println("\tBack");
+                    Printer.printCard(this.getLocalPlayer().getStartCard(), true);
                     break;
                 case "!place_start":
 
@@ -389,7 +394,7 @@ public class TextualUserInterface extends UserInterface{
     }
 
     @Override
-    protected void update() {
+    public void update() {
         executeCommand(lastCommand, false);
     }
 

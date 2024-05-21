@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.FXController;
+package it.polimi.ingsw.view.ui.gui.FXController;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

@@ -1,5 +1,6 @@
-package it.polimi.ingsw.view.ui;
+package it.polimi.ingsw.view.ui.gui;
 
+import it.polimi.ingsw.view.ui.UserInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,7 +20,7 @@ public class FXGraphicalUserInterface extends UserInterface {
     }
 
     @Override
-    protected void update() {
+    public void update() {
         if(currentInterface != null) currentInterface.update();
     }
 

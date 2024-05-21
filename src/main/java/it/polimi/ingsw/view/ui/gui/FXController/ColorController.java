@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.FXController;
+package it.polimi.ingsw.view.ui.gui.FXController;
 
 import it.polimi.ingsw.events.messages.client.SelectColorMessage;
 import it.polimi.ingsw.model.player.PlayerColor;

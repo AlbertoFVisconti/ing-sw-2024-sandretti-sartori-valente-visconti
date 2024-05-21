@@ -4,8 +4,8 @@ import it.polimi.ingsw.network.serverhandlers.RMIServerHandler;
 import it.polimi.ingsw.network.serverhandlers.ServerHandler;
 import it.polimi.ingsw.network.serverhandlers.SocketServerHandler;
 import it.polimi.ingsw.view.ViewWrapper;
-import it.polimi.ingsw.view.ui.FXGraphicalUserInterface;
-import it.polimi.ingsw.view.ui.TextualUserInterface;
+import it.polimi.ingsw.view.ui.gui.FXGraphicalUserInterface;
+import it.polimi.ingsw.view.ui.tui.TextualUserInterface;
 import it.polimi.ingsw.view.ui.UserInterface;
 
 import java.io.IOException;

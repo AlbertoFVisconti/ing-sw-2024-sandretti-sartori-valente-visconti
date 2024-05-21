@@ -1,9 +1,10 @@
-package it.polimi.ingsw.view.ui;
+package it.polimi.ingsw.view.ui.gui;
 
 
 import it.polimi.ingsw.events.messages.client.GameListRequestMessage;
 import it.polimi.ingsw.events.messages.client.JoinGameMessage;
 import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.view.ui.UserInterface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -116,7 +117,7 @@ public class GraphicalUserInterface extends UserInterface {
 
 
     @Override
-    protected void update() {
+    public void update() {
 
     }
 }

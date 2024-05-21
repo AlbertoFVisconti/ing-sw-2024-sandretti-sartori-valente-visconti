@@ -100,7 +100,7 @@ public abstract class UserInterface extends Thread implements VirtualView {
     }
 
 
-    abstract protected void update();
+    public abstract void update();
 
 
     @Override

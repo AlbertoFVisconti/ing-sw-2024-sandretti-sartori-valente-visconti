@@ -25,8 +25,12 @@ module it.polimi.ingsw {
     exports it.polimi.ingsw.view to java.rmi;
 
     opens it.polimi.ingsw.view.ui to javafx.fxml;
-    opens it.polimi.ingsw.view.FXController to javafx.fxml;
+    opens it.polimi.ingsw.view.ui.gui.FXController to javafx.fxml;
 
     exports it.polimi.ingsw.view.ui;
     exports it.polimi.ingsw.network.rmi;
+    exports it.polimi.ingsw.view.ui.tui;
+    opens it.polimi.ingsw.view.ui.tui to javafx.fxml;
+    exports it.polimi.ingsw.view.ui.gui;
+    opens it.polimi.ingsw.view.ui.gui to javafx.fxml;
 }

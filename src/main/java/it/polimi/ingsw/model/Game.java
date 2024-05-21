@@ -210,6 +210,8 @@ public class Game extends Observable {
     public void shufflePlayers() {
         if (this.isStarted) throw new RuntimeException("Game has already started");
         Collections.shuffle(this.players);
+
+        notifyPlayersListUpdate();
     }
 
     public void setCommonGoals(Goal[] goals) {
@@ -236,6 +238,7 @@ public class Game extends Observable {
         if(isStarted) return;
 
         this.scoreBoard = new ScoreBoard(players);
+        this.subscribeCommonObservers();
 
         // Draws the common goals
         this.setCommonGoals( new Goal[]{
@@ -244,6 +247,7 @@ public class Game extends Observable {
         });
 
         // Draws the visible cards
+        this.visibleCards = new PlayCard[4];
         refillVisibleCards();
 
 
@@ -264,8 +268,6 @@ public class Game extends Observable {
             player.setAvailableGoals(availableGoals);
 
         }
-
-        this.subscribeCommonObservers();
 
         this.currentTurn = 0;
         this.isFinal = false;

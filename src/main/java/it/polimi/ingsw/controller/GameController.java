@@ -163,68 +163,73 @@ public class GameController extends Observable implements VirtualController, Run
      * After the last player placed their last card, the game comes to an end.
      * Thus, the Game is put in END status.
      */
-    public synchronized void updateStatus() {
-        if(gameStatus == GameStatus.LOBBY) {
-            if (game.getExpectedPlayers() == game.getPlayers().size() && game.getAvailableColor().size() == (4 - game.getExpectedPlayers())) {
+    public void updateStatus() {
+        boolean triggerEvaluation = false;
+        synchronized (this) {
+            if (gameStatus == GameStatus.LOBBY) {
+                if (game.getExpectedPlayers() == game.getPlayers().size() && game.getAvailableColor().size() == (4 - game.getExpectedPlayers())) {
 
-                System.err.println("ExpectedPlayers amount reached, game starts. Connected players:");
-                for(Player p : game.getPlayers()) {
-                    System.err.println("\t" + p.nickName);
+                    System.err.println("ExpectedPlayers amount reached, game starts. Connected players:");
+                    for (Player p : game.getPlayers()) {
+                        System.err.println("\t" + p.nickName);
+                    }
+
+                    this.connectedPlayers = game.getPlayers().size();
+                    gameStatus = GameStatus.GAME_CREATION;
+
+                    game.shufflePlayers();
+
+                    game.startGame();
+
+                    this.turnStatus = TurnStatus.PLACE;
                 }
-
-                this.connectedPlayers = game.getPlayers().size();
-                gameStatus = GameStatus.GAME_CREATION;
-
-                game.shufflePlayers();
-
-
-                game.startGame();
-                advanceTurn();
-            }
-        }
-        else if(gameStatus == GameStatus.GAME_CREATION) {
-            boolean flag = true;
-            for (Player p : game.getPlayers()) {
-                if(p.getPlacedCard(new CardLocation(0,0)) == null
-                    || p.getPrivateGoal() == null) {
-                    flag = false;
-                    break;
-                }
-            }
-
-            if(flag) {
-                System.err.println("Players placed starting cards and selected goal, first turn starts");
-                gameStatus = GameStatus.NORMAL_TURN;
-            }
-        }
-        else if(game.isFirstPlayersTurn()) {
-            if (gameStatus == GameStatus.LAST_TURN) {
-                System.err.println("GAME FINISHED");
-                gameStatus = GameStatus.END;
-
-                this.evaluateGoals();
-            }
-            else if (gameStatus == GameStatus.NORMAL_TURN) {
+            } else if (gameStatus == GameStatus.GAME_CREATION) {
                 boolean flag = true;
                 for (Player p : game.getPlayers()) {
-                    if (game.getScoreBoard().getScore(p) >= 20) {
-                        System.err.println(p.nickName + "reached 20 points, last turn starts");
-                        this.gameStatus = GameStatus.LAST_TURN;
+                    if (p.getPlacedCard(new CardLocation(0, 0)) == null
+                            || p.getPrivateGoal() == null) {
                         flag = false;
                         break;
                     }
                 }
 
-                if(flag && game.emptyDecks()) {
+                if (flag) {
+                    System.err.println("Players placed starting cards and selected goal, first turn starts");
+                    gameStatus = GameStatus.NORMAL_TURN;
+                }
+            } else if (game.isFirstPlayersTurn()) {
+                if (gameStatus == GameStatus.LAST_TURN) {
+                    System.err.println("GAME FINISHED");
+                    gameStatus = GameStatus.END;
 
-                    System.err.println("Decks are empty, last turn starts");
-                    this.gameStatus = GameStatus.LAST_TURN;
+                    triggerEvaluation = true;
+
+                } else if (gameStatus == GameStatus.NORMAL_TURN) {
+                    boolean flag = true;
+                    for (Player p : game.getPlayers()) {
+                        if (game.getScoreBoard().getScore(p) >= 20) {
+                            System.err.println(p.nickName + "reached 20 points, last turn starts");
+                            this.gameStatus = GameStatus.LAST_TURN;
+                            flag = false;
+                            break;
+                        }
+                    }
+
+                    if (flag && game.emptyDecks()) {
+
+                        System.err.println("Decks are empty, last turn starts");
+                        this.gameStatus = GameStatus.LAST_TURN;
+                    }
+
+                    if (gameStatus == GameStatus.LAST_TURN) game.setFinalRound();
                 }
 
-                if(gameStatus == GameStatus.LAST_TURN) game.setFinalRound();
             }
-
         }
+
+        if(triggerEvaluation) this.evaluateGoals();
+
+        System.out.println("update status");
 
         notifyObservers(new GameStatusUpdateMessage(gameStatus, turnStatus, game.getTurn().nickName));
     }
