@@ -42,4 +42,13 @@ public interface VirtualMainController extends Remote {
     void getAvailableGames(String playerIdentifier) throws RemoteException;
 
     void connect(VirtualView view) throws RemoteException;
+
+    /**
+     * Allows the server to send a ping message to the client.
+     *
+     * @param playerIdentifier the identifier of the player who sending the ping message.
+     * @param isAnswer {@code true} if the server is answering to a previous ping message, {@code false} if the server is checking on the client.
+     * @throws RemoteException in case of error with the remote communication.
+     */
+    void ping(String playerIdentifier, boolean isAnswer) throws RemoteException;
 }

@@ -2,6 +2,8 @@ package it.polimi.ingsw.view.ui;
 
 import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.controller.TurnStatus;
+import it.polimi.ingsw.events.messages.MessageType;
+import it.polimi.ingsw.events.messages.client.ClientToServerPingMessage;
 import it.polimi.ingsw.events.messages.server.ServerMessage;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.ScoreBoard;
@@ -16,7 +18,6 @@ import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.network.rmi.VirtualController;
-import it.polimi.ingsw.network.serverhandlers.ServerHandler;
 import it.polimi.ingsw.utils.CardLocation;
 import it.polimi.ingsw.view.VirtualView;
 
@@ -28,9 +29,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public abstract class UserInterface extends Thread implements VirtualView {
-    private ServerHandler serverHandler;
-
-
     protected final Game gameModel;
     private Player localPlayer;
 
@@ -69,8 +67,9 @@ public abstract class UserInterface extends Thread implements VirtualView {
                         }
 
                         message.updateView(this);
-                        this.update();
-
+                        if(message.messageType != MessageType.PING_MESSAGE) {
+                            this.update();
+                        }
                     }
                 }
         ).start();
@@ -104,13 +103,6 @@ public abstract class UserInterface extends Thread implements VirtualView {
     abstract protected void update();
 
 
-
-    /**
-     * The setController call shouldn't reach this class under any circumstance.
-     *
-     * @param controller
-     * @throws RemoteException
-     */
     @Override
     public void setController(VirtualController controller) throws RemoteException {}
 
@@ -305,6 +297,13 @@ public abstract class UserInterface extends Thread implements VirtualView {
     @Override
     public void updateScore(ScoreBoard scoreBoard) throws RemoteException {
         this.gameModel.getScoreBoard().copyScore(scoreBoard);
+    }
+
+    @Override
+    public void ping(boolean isAnswer) throws RemoteException {
+        if(!isAnswer) Client.getInstance().getServerHandler().sendMessage(new ClientToServerPingMessage(true));
+
+        // TODO handle server "disconnection"
     }
 
     public HashSet<Integer> getAvailableGames() {

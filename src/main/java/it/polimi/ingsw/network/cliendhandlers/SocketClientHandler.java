@@ -17,7 +17,6 @@ import java.net.Socket;
  * the server through TCP sockets. It also receives and dispatches messages from the client.
  */
 public class SocketClientHandler extends ClientHandler {
-    private Socket socket;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
 
@@ -29,7 +28,8 @@ public class SocketClientHandler extends ClientHandler {
      * @param socket the client's socket used to receive and send messages.
      */
     public SocketClientHandler(Socket socket) {
-        this.socket = socket;
+        super();
+
         this.setSocket(socket);
 
         new Thread(
@@ -40,10 +40,12 @@ public class SocketClientHandler extends ClientHandler {
                     try {
                         message = (ClientMessage) inputStream.readObject();
                     } catch (IOException | ClassNotFoundException e) {
-                        throw new RuntimeException(e);
+                        this.forceDisconnection();
+                        break;
                     }
 
-                    if(message.messageType == MessageType.CONNECT_JOIN_MESSAGE) {
+                    if(message.messageType == MessageType.CONNECT_JOIN_MESSAGE ||
+                        message.messageType == MessageType.PING_MESSAGE) {
                         MainController.getInstance().forwardMessage(message);
                     }
                     else {
@@ -61,7 +63,6 @@ public class SocketClientHandler extends ClientHandler {
      * @param socket the new client's socket
      */
     public void setSocket(Socket socket) {
-        this.socket = socket;
         try {
             this.outputStream = new ObjectOutputStream(socket.getOutputStream());
             this.inputStream = new ObjectInputStream(socket.getInputStream());
@@ -71,11 +72,13 @@ public class SocketClientHandler extends ClientHandler {
     }
 
     @Override
-    public void sendMessage(ServerMessage message) {
+    public synchronized void sendMessage(ServerMessage message) {
         try {
             outputStream.writeObject(message);
+            outputStream.reset();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+
+            this.forceDisconnection();
         }
     }
 
@@ -88,7 +91,7 @@ public class SocketClientHandler extends ClientHandler {
      * @param gameControllerWrapper the GameControllerWrapper object that contains a reference to the game the client is playing.
      */
     @Override
-    public void setController(GameControllerWrapper gameControllerWrapper) {
+    public void linkController(GameControllerWrapper gameControllerWrapper) {
         this.gameController = gameControllerWrapper.getGameController();
     }
 }

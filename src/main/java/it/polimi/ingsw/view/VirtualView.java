@@ -149,4 +149,12 @@ public interface VirtualView extends Remote {
      * @throws RemoteException in case of error with the remote communication.
      */
     void updateScore(ScoreBoard scoreBoard) throws RemoteException;
+
+    /**
+     * Allows the server to send a ping message to the client.
+     *
+     * @param isAnswer {@code true} if the server is answering to a previous ping message, {@code false} if the server is checking on the client.
+     * @throws RemoteException in case of error with the remote communication.
+     */
+    void ping(boolean isAnswer) throws RemoteException;
 }

@@ -12,7 +12,8 @@ public enum MessageType {
     SERVER_ERROR_MESSAGE,
 
     PLAYER_MESSAGE,
-    CONNECT_JOIN_MESSAGE
+    CONNECT_JOIN_MESSAGE,
 
 
+    PING_MESSAGE
 }

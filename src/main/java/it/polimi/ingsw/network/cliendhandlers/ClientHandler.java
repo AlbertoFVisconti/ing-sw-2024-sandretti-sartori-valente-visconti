@@ -1,9 +1,16 @@
 package it.polimi.ingsw.network.cliendhandlers;
 
+import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.controller.MainController;
 import it.polimi.ingsw.events.Observer;
 import it.polimi.ingsw.events.messages.MessageType;
 import it.polimi.ingsw.events.messages.server.ServerMessage;
+import it.polimi.ingsw.events.messages.server.ServerToClientPingMessage;
 import it.polimi.ingsw.network.rmi.GameControllerWrapper;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Generic client handler object.
@@ -11,7 +18,62 @@ import it.polimi.ingsw.network.rmi.GameControllerWrapper;
  * to the client.
  */
 public abstract class ClientHandler implements Observer {
+    public static final long PING_MESSAGE_THRESHOLD = 2000;
+    public static final long DISCONNECTION_THRESHOLD = 10000;
+    public static final long DEFINITIVE_DISCONNECTION_THRESHOLD = 30000;
+    private long lastPingTime;
+    private long lastMessageTime;
+
+    private boolean isDisconnected;
+    private long disconnectionTime;
+
     private String playerIdentifier;
+
+    private GameController gameController = null;
+
+    private final Thread disconnectionChecker;
+    ScheduledExecutorService disconnectionCheckerExecutor;
+
+    protected ClientHandler() {
+        this.disconnectionChecker = new Thread(
+                () -> {
+
+                    if(!isDisconnected) {
+                        long currTime = System.currentTimeMillis();
+
+                        if (currTime >= (lastMessageTime + PING_MESSAGE_THRESHOLD)) {
+                            if(currTime >= (lastMessageTime + DISCONNECTION_THRESHOLD)) {
+                                // client is now considered disconnected
+                                this.forceDisconnection();
+
+                                this.disconnectionCheckerExecutor.close();
+                            }
+                            else if (currTime >= (lastPingTime + PING_MESSAGE_THRESHOLD)) {
+                                // send new ping message
+                                this.sendMessage(new ServerToClientPingMessage(false));
+                            }
+                        }
+
+                    }
+                    else {
+                        this.disconnectionCheckerExecutor.close();
+                    }
+                }
+        );
+
+        this.connectionSetup();
+    }
+
+    private void connectionSetup() {
+        this.lastMessageTime = System.currentTimeMillis();
+        this.lastPingTime = this.lastMessageTime;
+
+        this.disconnectionTime = -1;
+        this.isDisconnected = false;
+
+        disconnectionCheckerExecutor = Executors.newSingleThreadScheduledExecutor();
+        disconnectionCheckerExecutor.scheduleAtFixedRate(this.disconnectionChecker, 0, 100, TimeUnit.MILLISECONDS);
+    }
 
     public String getPlayerIdentifier() {
         return playerIdentifier;
@@ -39,12 +101,49 @@ public abstract class ClientHandler implements Observer {
 
     public abstract void sendMessage(ServerMessage message);
 
+
+    final public void setController(GameControllerWrapper gameControllerWrapper) {
+        this.gameController = gameControllerWrapper.getGameController();
+        this.linkController(gameControllerWrapper);
+    }
+
     /**
      * Allows to link the client handler to the game the client is playing.
      *
      * @param gameControllerWrapper the GameControllerWrapper object that contains a reference to the game the client is playing.
      */
-    public abstract void setController(GameControllerWrapper gameControllerWrapper);
+    public abstract void linkController(GameControllerWrapper gameControllerWrapper);
 
+    final public long getTimeSinceDisconnection() {
+        if(!this.isDisconnected) return 0;
+        return System.currentTimeMillis() - this.disconnectionTime;
+    }
 
+    protected void forceDisconnection() {
+        this.isDisconnected = true;
+        this.disconnectionTime = System.currentTimeMillis();
+        if(gameController != null) {
+            gameController.handleDisconnection(this);
+        }
+    }
+
+    public boolean isDisconnected() {
+        return isDisconnected;
+    }
+
+    final public synchronized void messageReceived() {
+        if(this.isDisconnected) {
+            // a client that was previously "lost" came back online
+            this.connectionSetup();
+
+            if(gameController != null) {
+                String nickname = MainController.getInstance().getPlayer(this.getPlayerIdentifier()).nickName;
+                this.gameController.handleReconnection(nickname, this);
+            }
+        }
+        else {
+            this.lastMessageTime = System.currentTimeMillis();
+            this.lastPingTime = this.lastMessageTime;
+        }
+    }
 }

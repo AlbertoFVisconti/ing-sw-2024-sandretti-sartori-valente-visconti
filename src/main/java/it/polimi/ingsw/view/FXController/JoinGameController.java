@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.FXController;
 import it.polimi.ingsw.events.messages.client.GameListRequestMessage;
 import it.polimi.ingsw.events.messages.client.JoinGameMessage;
 import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.view.ui.FXGraphicalUserInterface;
 import it.polimi.ingsw.view.ui.UserInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -54,15 +55,23 @@ public class JoinGameController extends UserInterface{
     }
     @FXML
     public void initialize() {
-        UserInterface gui= Client.getInstance().getUserInterface();
+        FXGraphicalUserInterface.currentInterface = this;
         Client.getInstance().getServerHandler().sendMessage(new GameListRequestMessage());
-        try {
-            // TODO: find a better way (UserInterface.update())
-            Thread.sleep(2000);
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
-        }
-        HashSet<Integer> availableGames= gui.getAvailableGames();
+    }
+    public void RefreshGame(ActionEvent actionEvent) {
+        Client.getInstance().getServerHandler().sendMessage(new GameListRequestMessage());
+    }
+
+    @Override
+    public void reportError(RuntimeException exception) throws RemoteException {
+
+    }
+
+    @Override
+    protected void update() {
+        selectGame.getItems().removeAll();
+
+        HashSet<Integer> availableGames= Client.getInstance().getUserInterface().getAvailableGames();
         if(availableGames!=null){
             for (Integer gameID : availableGames) {
                 selectGame.getItems().add(gameID);
@@ -75,20 +84,6 @@ public class JoinGameController extends UserInterface{
             noGamesAvailable.setVisible(true);
 
         }
-    }
-    public void RefreshGame(ActionEvent actionEvent) {
-        selectGame.getItems().removeAll();
-        this.initialize();
-    }
-
-    @Override
-    public void reportError(RuntimeException exception) throws RemoteException {
-
-    }
-
-    @Override
-    protected void update() {
-
     }
 
 

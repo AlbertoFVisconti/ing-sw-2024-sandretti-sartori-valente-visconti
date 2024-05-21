@@ -118,4 +118,9 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView{
     public void updateScore(ScoreBoard scoreBoard) throws RemoteException {
         userInterface.forwardMessage(new ScoreUpdateMessage(scoreBoard));
     }
+
+    @Override
+    public void ping(boolean isAnswer) throws RemoteException {
+        userInterface.forwardMessage(new ServerToClientPingMessage(isAnswer));
+    }
 }

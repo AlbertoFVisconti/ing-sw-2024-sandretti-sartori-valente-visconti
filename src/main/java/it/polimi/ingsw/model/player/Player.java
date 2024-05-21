@@ -31,7 +31,7 @@ public class Player extends Observable {
 
     private final HashMap<CardLocation, Card> board;
     private final ItemCollection inventory;
-    private boolean disconnected;
+
     /**
      * Constructs a new Player object.
      *
@@ -283,21 +283,7 @@ public class Player extends Observable {
      * @return {@code true} if the player has disconnected, {@code false} otherwise
      */
     public boolean hasDisconnected() {
-        return this.disconnected;
-    }
-
-    /**
-     * Sets the player has disconnected
-     */
-    public void disconnect(){
-        this.disconnected = true;
-    }
-
-    /**
-     * Sets the player has connected again.
-     */
-    public void reconnect(){
-        this.disconnected = false;
+        return this.clientHandler.isDisconnected();
     }
 
     /**

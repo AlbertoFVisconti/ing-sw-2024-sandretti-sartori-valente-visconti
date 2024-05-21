@@ -20,7 +20,9 @@ public abstract class Observable {
      * @param subscriber the new Observer that wants to observe the object
      */
     public void subscribe(Observer subscriber) {
-        if(subscriber != null) this.subscribers.add(subscriber);
+        synchronized (subscribers) {
+            if (subscriber != null) this.subscribers.add(subscriber);
+        }
     }
 
     /**
@@ -29,7 +31,9 @@ public abstract class Observable {
      * @param subscriber the Observer that wants to unsubscribe from the object
      */
     public void unsubscribe(Observer subscriber) {
-        this.subscribers.remove(subscriber);
+        synchronized (subscribers) {
+            this.subscribers.remove(subscriber);
+        }
     }
 
     /**
@@ -38,8 +42,10 @@ public abstract class Observable {
      * @param updateMessage a ServerMessage that contains information regarding the update.
      */
     protected void notifyObservers(ServerMessage updateMessage) {
-        for(Observer observer : subscribers) {
-            observer.onUpdate(updateMessage);
+        synchronized (subscribers) {
+            for (Observer observer : subscribers) {
+                observer.onUpdate(updateMessage);
+            }
         }
     }
 }

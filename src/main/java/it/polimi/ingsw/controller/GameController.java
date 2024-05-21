@@ -16,7 +16,6 @@ import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.utils.CardLocation;
 
 import java.security.InvalidParameterException;
-import java.util.NoSuchElementException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -25,11 +24,15 @@ import java.util.concurrent.BlockingQueue;
  * It handles all the game logic and checks that the player is performing legal operations.
  **/
 public class GameController extends Observable implements VirtualController, Runnable {
+    private static final int MINIMUM_PLAYER_TO_RUN_GAME = 2;
     private final Game game;
     private GameStatus gameStatus;
     private TurnStatus turnStatus;
 
+    private int connectedPlayers;
+
     private final BlockingQueue<ClientMessage> messageQueue;
+    private boolean paused;
 
     /**
      * Constructs a GameController that handles the provided game.
@@ -40,11 +43,23 @@ public class GameController extends Observable implements VirtualController, Run
      **/
     public GameController(Game game){
         System.err.println("GameController created");
+        this.paused = false;
         this.game=game;
         turnStatus = null;
         gameStatus=GameStatus.LOBBY;
         this.messageQueue = new ArrayBlockingQueue<>(100);
         new Thread(this).start();
+    }
+
+    public void addNewPlayer(String nickname, ClientHandler clientHandler) {
+        synchronized (this) {
+            if (this.gameStatus != GameStatus.LOBBY) {
+                throw new UnsupportedOperationException("Cannot add a new player to a running game");
+            }
+            else {
+                game.addPlayer(new Player(nickname, clientHandler));
+            }
+        }
     }
 
     /**
@@ -66,15 +81,6 @@ public class GameController extends Observable implements VirtualController, Run
     }
 
     /**
-     * Retrieves a reference to the Game that the controller is handling.
-     *
-     * @return the Game the controller is handling.
-     */
-    public Game getGame() {
-        return game;
-    }
-
-    /**
      * Put a message for this Game in a blocking queue.
      * Messages are elaborated asynchronously on another thread.
      *
@@ -85,6 +91,62 @@ public class GameController extends Observable implements VirtualController, Run
             this.messageQueue.put(message);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void handleDisconnection(ClientHandler clientHandler) {
+        Player player = this.getPlayer(clientHandler.getPlayerIdentifier());
+
+        if(this.game.getPlayers().contains(player)) {
+            System.err.println(player.nickName + " has disconnected");
+
+            this.unsubscribe(clientHandler);
+            this.game.unsubscribe(clientHandler);
+            this.game.unsubscribeFromCommonObservable(clientHandler);
+
+            if(gameStatus == GameStatus.LOBBY) {
+                game.removePlayer(player);
+            }
+            else {
+                this.connectedPlayers--;
+
+                if(this.connectedPlayers < GameController.MINIMUM_PLAYER_TO_RUN_GAME) {
+                    this.paused = true;
+                }
+            }
+
+        }
+    }
+
+    public void handleReconnection(String nickname, ClientHandler clientHandler) {
+        Player connectingPlayer = null;
+        for(Player player : game.getPlayers()) {
+            if(player.nickName.equals(nickname)) {
+                connectingPlayer = player;
+                break;
+            }
+        }
+
+        if(connectingPlayer == null) {
+            throw new RuntimeException("Reconnection failed: unknown player");
+        }
+        if(!connectingPlayer.hasDisconnected()) {
+            throw new RuntimeException("Reconnection failed: this player is already connected");
+        }
+
+        System.err.println(nickname + " rejoined the game");
+        this.subscribe(clientHandler);
+        this.game.subscribe(clientHandler);
+        this.game.subscribeCommonObservers(clientHandler);
+
+        this.connectedPlayers++;
+
+        if(this.paused && this.connectedPlayers >= GameController.MINIMUM_PLAYER_TO_RUN_GAME) {
+            this.paused = false;
+
+            if(game.getTurn().hasDisconnected()) {
+                advanceTurn();
+            }
         }
     }
 
@@ -101,19 +163,23 @@ public class GameController extends Observable implements VirtualController, Run
      * After the last player placed their last card, the game comes to an end.
      * Thus, the Game is put in END status.
      */
-    public void updateStatus() {
+    public synchronized void updateStatus() {
         if(gameStatus == GameStatus.LOBBY) {
             if (game.getExpectedPlayers() == game.getPlayers().size() && game.getAvailableColor().size() == (4 - game.getExpectedPlayers())) {
-                this.game.subscribeCommonObservers();
 
                 System.err.println("ExpectedPlayers amount reached, game starts. Connected players:");
                 for(Player p : game.getPlayers()) {
                     System.err.println("\t" + p.nickName);
                 }
 
-                turnStatus = TurnStatus.PLACE;
+                this.connectedPlayers = game.getPlayers().size();
                 gameStatus = GameStatus.GAME_CREATION;
+
+                game.shufflePlayers();
+
+
                 game.startGame();
+                advanceTurn();
             }
         }
         else if(gameStatus == GameStatus.GAME_CREATION) {
@@ -154,11 +220,44 @@ public class GameController extends Observable implements VirtualController, Run
                     System.err.println("Decks are empty, last turn starts");
                     this.gameStatus = GameStatus.LAST_TURN;
                 }
+
+                if(gameStatus == GameStatus.LAST_TURN) game.setFinalRound();
             }
 
         }
 
         notifyObservers(new GameStatusUpdateMessage(gameStatus, turnStatus, game.getTurn().nickName));
+    }
+
+    private void advanceTurn() {
+        boolean canCurrPlayerPlay,isItFirstPlayersTurn,newRoundStarted;
+
+        synchronized (this) {
+            isItFirstPlayersTurn = this.game.isFirstPlayersTurn() || (turnStatus == null);
+
+            if (this.turnStatus == null) {
+                this.turnStatus = TurnStatus.PLACE;
+            } else if (this.turnStatus == TurnStatus.PLACE) {
+                this.turnStatus = TurnStatus.DRAW;
+            } else {
+                this.turnStatus = TurnStatus.PLACE;
+
+                this.game.nextTurn();
+
+            }
+
+            canCurrPlayerPlay = !this.paused && this.game.getTurn().hasDisconnected();
+            newRoundStarted = !isItFirstPlayersTurn && this.game.isFirstPlayersTurn();
+        }
+
+        if(canCurrPlayerPlay) {
+            if(newRoundStarted) this.updateStatus();
+            this.advanceTurn();
+        }
+        else {
+            this.updateStatus();
+        }
+
     }
 
     /**
@@ -169,7 +268,7 @@ public class GameController extends Observable implements VirtualController, Run
      * @param player the player whose board needs to be checked.
      * @return {@code true} if the location is valid and a card can be placed, {@code false} otherwise.
      */
-    private static boolean isLocationValid(CardLocation location, Player player){
+    private synchronized boolean isLocationValid(CardLocation location, Player player){
         if (player.getPlacedCard(location) != null) return false;
 
 
@@ -200,7 +299,7 @@ public class GameController extends Observable implements VirtualController, Run
      * Runs evaluations for all goals (both public and private goals).
      * Updates each player's scoring with the result of the evaluations.
      */
-    public void evaluateGoals() {
+    public synchronized void evaluateGoals() {
          if(gameStatus != GameStatus.END) {
              throw new RuntimeException("The game's still running");
          }
@@ -228,21 +327,25 @@ public class GameController extends Observable implements VirtualController, Run
     @Override
     public void selectPrivateGoal(String playerIdentifier, int index) {
         Player player = this.getPlayer(playerIdentifier);
-        if (gameStatus != GameStatus.GAME_CREATION) {
-            throw new RuntimeException("Cannot select private goal in this game status");
+        if(player == null) throw new RuntimeException("Unknown Player");
+
+        synchronized (this) {
+            if (gameStatus != GameStatus.GAME_CREATION) {
+                throw new RuntimeException("Cannot select private goal in this game status");
+            }
+
+            if (player.getPrivateGoal() != null) {
+                throw new RuntimeException("Cannot select private goal twice");
+            }
+
+            Goal[] availableGoals = player.getAvailableGoals();
+
+            if (index < 0 || index >= availableGoals.length) {
+                throw new RuntimeException("index out of bound");
+            }
+
+            player.setPrivateGoal(availableGoals[index]);
         }
-
-        if (player.getPrivateGoal() != null) {
-            throw new RuntimeException("Cannot select private goal twice");
-        }
-
-        Goal[] availableGoals = player.getAvailableGoals();
-
-        if (index < 0 || index >= availableGoals.length) {
-            throw new RuntimeException("index out of bound");
-        }
-
-        player.setPrivateGoal(availableGoals[index]);
 
 
         System.err.println(this.game.getIdGame() + ": "+player.nickName + " selected their goal");
@@ -260,19 +363,22 @@ public class GameController extends Observable implements VirtualController, Run
      */
     public void placeStartCard(String playerIdentifier, boolean onBackSide) {
         Player player = this.getPlayer(playerIdentifier);
+        if(player == null) throw new RuntimeException("Unknown Player");
 
-        if(gameStatus != GameStatus.GAME_CREATION) {
-            throw new RuntimeException("Cannot place starting card in this game status");
-        }
+        synchronized (this) {
+            if (gameStatus != GameStatus.GAME_CREATION) {
+                throw new RuntimeException("Cannot place starting card in this game status");
+            }
 
-        if(player.getPlacedCard(new CardLocation(0,0)) != null) {
-            throw new RuntimeException("starting card already placed");
-        }
+            if (player.getPlacedCard(new CardLocation(0, 0)) != null) {
+                throw new RuntimeException("starting card already placed");
+            }
 
-        try {
-            player.placeStartingCard(onBackSide);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            try {
+                player.placeStartingCard(onBackSide);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
 
         updateInventory(player,new CardLocation(0,0));
@@ -288,7 +394,7 @@ public class GameController extends Observable implements VirtualController, Run
      * @param player the player whose inventory needs to be updated.
      * @param location the location where the placement occurred.
      */
-    private static void updateInventory(Player player, CardLocation location) {
+    private synchronized void updateInventory(Player player, CardLocation location) {
         Card placedCard = player.getPlacedCard(location);
         player.addItems(placedCard.collectItems());
 
@@ -326,41 +432,38 @@ public class GameController extends Observable implements VirtualController, Run
      */
     @Override
     public void placeCard(String playerIdentifier, int index, boolean onBackSide, CardLocation location) {
-        Player player = this.getPlayer(playerIdentifier);
+        Player player = turnCheck(playerIdentifier);
 
-        if (!player.getClientHandler().getPlayerIdentifier().equals(game.getTurn().getClientHandler().getPlayerIdentifier())) {
-             throw new RuntimeException("it is not this player's turn");
-         }
-         if(this.gameStatus != GameStatus.NORMAL_TURN && this.gameStatus != GameStatus.LAST_TURN) {
-             throw new RuntimeException("Game's not running (finished or never started");
-         }
-         if(this.turnStatus != TurnStatus.PLACE) {
-             throw new RuntimeException("Placement already occurred, player's expected to draw a card");
-         }
-
-         if(isLocationValid(location, player)) {
-            try {
-                player.placeCard(index, onBackSide, location);
-
-                updateInventory(player, location);
-
-                game.getScoreBoard().addScore(player,
-
-                        // it is safe to assume that the card that was just placed is a PlayCard
-                        // since it is certain to come from the player's hand
-                        ((PlayCard)player.getPlacedCard(location)).getScoringStrategy().evaluate(player, location)
-                );
-
-                // Card successfully placed
-                this.turnStatus = TurnStatus.DRAW;
-            } catch (InvalidParameterException e) {
-                // Invalid index
-                throw new RuntimeException(e);
+        synchronized (this) {
+            if (this.turnStatus != TurnStatus.PLACE) {
+                throw new RuntimeException("Placement already occurred, player's expected to draw a card");
             }
-         }
-         else {
-            throw new RuntimeException("cannot place card in the provided location");
-         }
+
+            if (isLocationValid(location, player)) {
+                try {
+                    player.placeCard(index, onBackSide, location);
+
+                    updateInventory(player, location);
+
+                    game.getScoreBoard().addScore(player,
+
+                            // it is safe to assume that the card that was just placed is a PlayCard
+                            // since it is certain to come from the player's hand
+                            ((PlayCard) player.getPlacedCard(location)).getScoringStrategy().evaluate(player, location)
+                    );
+
+
+                } catch (InvalidParameterException e) {
+                    // Invalid index
+                    throw new RuntimeException(e);
+                }
+            } else {
+                throw new RuntimeException("cannot place card in the provided location");
+            }
+        }
+
+        // Card successfully placed
+        advanceTurn();
 
         System.err.println(this.game.getIdGame() + ": "+player.nickName + " placed a card");
         updateStatus();
@@ -377,81 +480,87 @@ public class GameController extends Observable implements VirtualController, Run
      */
     @Override
     public void drawCard(String playerIdentifier, int index) {
-        Player player = this.getPlayer(playerIdentifier);
-        if (!player.getClientHandler().getPlayerIdentifier().equals(game.getTurn().getClientHandler().getPlayerIdentifier())) {
-            throw new RuntimeException("it is not this player's turn");
-        }
-        if(this.gameStatus != GameStatus.NORMAL_TURN && this.gameStatus != GameStatus.LAST_TURN) {
-            throw new RuntimeException("Game's not running (finished or never started");
-        }
-        if (this.turnStatus != TurnStatus.DRAW) {
-            throw new RuntimeException("the player must place a card before they can draw");
-        }
+        Player player = turnCheck(playerIdentifier);
 
-        if (index < 0 || index > 5) {
-            throw new RuntimeException("index out of range");
-        }
-
-        if (index == 0) {
-            // drawing from resource card deck
-            Deck<PlayCard> deck = game.getResourceCardsDeck();
-            if (deck.isEmpty()) {
-                throw new RuntimeException("Deck's empty");
+        synchronized (this) {
+            if (this.turnStatus != TurnStatus.DRAW) {
+                throw new RuntimeException("the player must place a card before they can draw");
             }
 
-            try {
-                player.addPlayerCard(deck.draw());
-                // card successfully drawn
-                game.nextTurn();
-                updateStatus();
-                this.turnStatus = TurnStatus.PLACE;
-
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        } else if (index == 1) {
-            // drawing from gold card deck
-            Deck<PlayCard> deck = game.getGoldCardsDeck();
-            if (deck.isEmpty()) {
-                throw new RuntimeException("Deck's empty");
+            if (index < 0 || index > 5) {
+                throw new RuntimeException("index out of range");
             }
 
-            try {
-                player.addPlayerCard(deck.draw());
-                // card successfully drawn
-                game.nextTurn();
-                updateStatus();
-                this.turnStatus = TurnStatus.PLACE;
+            if (index == 0) {
+                // drawing from resource card deck
+                Deck<PlayCard> deck = game.getResourceCardsDeck();
+                if (deck.isEmpty()) {
+                    throw new RuntimeException("Deck's empty");
+                }
 
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            // drawing one of the visible cards
-
-            index = index - 2;
-
-            PlayCard[] visibleCards = game.getVisibleCards();
-
-            if (visibleCards[index] != null) {
                 try {
-                    player.addPlayerCard(visibleCards[index]);
-                    // card drawn successfully
-                    visibleCards[index] = null;
-                    game.refillVisibleCards();
-                    game.nextTurn();
-                    updateStatus();
-                    this.turnStatus = TurnStatus.PLACE;
+                    player.addPlayerCard(deck.draw());
+
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            } else if (index == 1) {
+                // drawing from gold card deck
+                Deck<PlayCard> deck = game.getGoldCardsDeck();
+                if (deck.isEmpty()) {
+                    throw new RuntimeException("Deck's empty");
+                }
+
+                try {
+                    player.addPlayerCard(deck.draw());
+
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             } else {
-                throw new RuntimeException("There's no card to draw in the provided location");
+                // drawing one of the visible cards
+
+                index = index - 2;
+
+                PlayCard[] visibleCards = game.getVisibleCards();
+
+                if (visibleCards[index] != null) {
+                    try {
+                        player.addPlayerCard(visibleCards[index]);
+                        // card drawn successfully
+                        visibleCards[index] = null;
+                        game.refillVisibleCards();
+
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    throw new RuntimeException("There's no card to draw in the provided location");
+                }
             }
         }
 
+        // card successfully drawn
+        advanceTurn();
+
         System.err.println(this.game.getIdGame() + ": "+player.nickName + " picked up a card");
-        updateStatus();
+    }
+
+    private Player turnCheck(String playerIdentifier) {
+        if(paused) throw new RuntimeException("this game is currently paused");
+
+        Player player = this.getPlayer(playerIdentifier);
+        if(player == null) throw new RuntimeException("Unknown Player");
+
+        synchronized (this) {
+            if (!player.getClientHandler().getPlayerIdentifier().equals(game.getTurn().getClientHandler().getPlayerIdentifier())) {
+                throw new RuntimeException("it is not this player's turn");
+            }
+            if (this.gameStatus != GameStatus.NORMAL_TURN && this.gameStatus != GameStatus.LAST_TURN) {
+                throw new RuntimeException("Game's not running (finished or never started");
+            }
+            return player;
+        }
     }
 
     /**
@@ -460,19 +569,22 @@ public class GameController extends Observable implements VirtualController, Run
      * This operation is only valid if the game is in GAME_CREATION status,
      * if the player exists and if the selected color is available
      *
-     * @param playerIdentifier
-     * @param color
+     * @param playerIdentifier the identifier of the player who is selecting a color
+     * @param color the color selected by the player
      */
     @Override
     public void selectColor(String playerIdentifier, PlayerColor color) {
         Player player = this.getPlayer(playerIdentifier);
+        if(player == null) throw new RuntimeException("Unknown Player");
 
+        synchronized (this) {
         if(game.getAvailableColor().contains(color)) {
             player.setColor(color);
             game.updateAvailableColors();
         }
         else {
             throw new RuntimeException("This color isn't available");
+        }
         }
 
         System.err.println(this.game.getIdGame() + ": "+player.nickName + " selected "+color+" as their color");
@@ -486,30 +598,44 @@ public class GameController extends Observable implements VirtualController, Run
     public void run() {
         MainController selector = MainController.getInstance();
         ClientMessage message;
-        while(true) {
+        while(this.gameStatus != GameStatus.END) {
             try {
                 message = this.messageQueue.take();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
 
+            ClientHandler sender = selector.getPlayersClientHandler(message.getPlayerIdentifier());
+
             try {
                 message.execute(selector, this);
+                if(sender != null) sender.messageReceived();
             } catch (RuntimeException e) {
-                ClientHandler sender = selector.getPlayersClientHandler(message.getPlayerIdentifier());
+
                 if (sender != null) {
                     // sender was recognized, sending back a ServerErrorMessage
                     sender.sendMessage(new ServerErrorMessage(e));
                 }
             }
-
         }
     }
 
 
-    private Player getPlayer(String playerIdentifier) {
-        Player p = MainController.getInstance().getPlayer(playerIdentifier);
-        if (p == null) throw new NoSuchElementException("unknown player");
-        return p;
+    public synchronized Player getPlayer(String playerIdentifier) {
+        for(Player p : this.game.getPlayers()) {
+            if(p.getClientHandler().getPlayerIdentifier().equals(playerIdentifier)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public synchronized boolean isNicknameAvailable(String nickname) {
+        for(Player p : this.game.getPlayers()) {
+            if(p.nickName.equalsIgnoreCase(nickname)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -1,10 +1,7 @@
 package it.polimi.ingsw.network.rmi;
 
 import it.polimi.ingsw.controller.MainController;
-import it.polimi.ingsw.events.messages.client.ClientMessage;
-import it.polimi.ingsw.events.messages.client.GameListRequestMessage;
-import it.polimi.ingsw.events.messages.client.JoinGameMessage;
-import it.polimi.ingsw.events.messages.client.RMIConnectionPseudoMessage;
+import it.polimi.ingsw.events.messages.client.*;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
@@ -73,6 +70,13 @@ public class MainControllerWrapper extends UnicastRemoteObject implements Virtua
     @Override
     public void connect(VirtualView view) throws RemoteException {
         ClientMessage message = new RMIConnectionPseudoMessage(view);
+        mainController.forwardMessage(message);
+    }
+
+    @Override
+    public void ping(String playerIdentifier, boolean isAnswer) throws RemoteException {
+        ClientMessage message = new ClientToServerPingMessage(isAnswer);
+        message.setPlayerIdentifier(playerIdentifier);
         mainController.forwardMessage(message);
     }
 }

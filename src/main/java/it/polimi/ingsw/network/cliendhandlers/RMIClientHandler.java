@@ -20,6 +20,7 @@ public class RMIClientHandler extends ClientHandler {
      * @param view the Client's View (possibly a remote object)
      */
     public RMIClientHandler(VirtualView view) {
+        super();
         this.view = view;
     }
 
@@ -34,7 +35,12 @@ public class RMIClientHandler extends ClientHandler {
 
     @Override
     public void sendMessage(ServerMessage message) {
-        message.updateView(view);
+        try {
+            message.updateView(view);
+        }
+        catch (RuntimeException e) {
+            this.forceDisconnection();
+        }
     }
 
     /**
@@ -43,11 +49,11 @@ public class RMIClientHandler extends ClientHandler {
      * @param gameControllerWrapper the GameControllerWrapper object that contains a reference to the game the client is playing.
      */
     @Override
-    public void setController(GameControllerWrapper gameControllerWrapper) {
+    public void linkController(GameControllerWrapper gameControllerWrapper) {
         try {
             view.setController(gameControllerWrapper);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            this.forceDisconnection();
         }
     }
 }

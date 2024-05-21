@@ -13,6 +13,7 @@ import it.polimi.ingsw.events.saving.PlayerSavingMessage;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
+import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
 
 import java.io.IOException;
 import java.util.*;
@@ -141,13 +142,26 @@ public class Game extends Observable {
      * @throws RuntimeException if the game's already started.
      */
     public void addPlayer(Player player)  {
-        if(isStarted) throw new RuntimeException();
+        if(isStarted) throw new RuntimeException("Cannot add a new player to a started game");
+
+        if(this.expectedPlayers != -1 && players.size() >= this.expectedPlayers) throw new RuntimeException("Game's full");
+
         players.add(player);
         availableColor.remove(player.getColor());
 
         this.subscribe(player.getClientHandler());
 
         notifyPlayersListUpdate();
+    }
+
+
+    public void removePlayer(Player player) {
+        if(isStarted) throw new RuntimeException();
+        this.players.remove(player);
+
+        if(player.getColor() != null) {
+            this.availableColor.add(player.getColor());
+        }
     }
 
     /**
@@ -162,20 +176,20 @@ public class Game extends Observable {
     /**
      * Advances the game to the next turn
      *
-     * @throws Exception if the game has not started yet.
+     * @throws RuntimeException if the game has not started yet.
      */
-    public void nextTurn() throws Exception {
-        if(!isStarted) throw new Exception();
+    public void nextTurn() {
+        if(!isStarted) throw new RuntimeException("The game has not been started yet");
         currentTurn = (currentTurn+1)%players.size();
     }
 
     /**
      * Sets the game to the final round
      *
-     * @throws Exception if the game has not started yet.
+     * @throws RuntimeException if the game has not started yet.
      */
-    public void setFinalRound() throws Exception {
-        if(!isStarted) throw new Exception();
+    public void setFinalRound() {
+        if(!isStarted) throw new RuntimeException("the game has not been started yet");
         this.isFinal = true;
     }
 
@@ -191,16 +205,18 @@ public class Game extends Observable {
     /**
      * Shuffles the players' turn order.
      *
-     * @throws Exception if the game has already started
+     * @throws RuntimeException if the game has already started
      */
-    public void shufflePlayers() throws Exception {
-        if (this.isStarted) throw new Exception("Game has already started");
+    public void shufflePlayers() {
+        if (this.isStarted) throw new RuntimeException("Game has already started");
         Collections.shuffle(this.players);
     }
 
     public void setCommonGoals(Goal[] goals) {
         if(this.isStarted) throw new RuntimeException("Game has already started");
         this.commonGoals = goals.clone();
+
+        this.notifyObservers(new PublicGoalsUpdateMessage(commonGoals));
     }
 
     /**
@@ -219,25 +235,16 @@ public class Game extends Observable {
     public void startGame() {
         if(isStarted) return;
 
+        this.scoreBoard = new ScoreBoard(players);
+
         // Draws the common goals
-        this.commonGoals = new Goal[]{
+        this.setCommonGoals( new Goal[]{
                 this.goalsDeck.draw(),
                 this.goalsDeck.draw()
-        };
-
-        this.notifyObservers(new PublicGoalsUpdateMessage(commonGoals));
+        });
 
         // Draws the visible cards
-        this.visibleCards = new PlayCard[]{
-                this.resourceCardsDeck.draw(),
-                this.resourceCardsDeck.draw(),
-                this.goldCardsDeck.draw(),
-                this.goldCardsDeck.draw()
-        };
-
-        for(int i = 0; i < visibleCards.length; i++) {
-            this.notifyObservers(new VisibleCardUpdateMessage(visibleCards[i], i));
-        }
+        refillVisibleCards();
 
 
         for(Player player : this.players) {
@@ -258,8 +265,7 @@ public class Game extends Observable {
 
         }
 
-        // initialize the scoreboard with the current set of players
-        this.scoreBoard = new ScoreBoard(players);
+        this.subscribeCommonObservers();
 
         this.currentTurn = 0;
         this.isFinal = false;
@@ -411,11 +417,31 @@ public class Game extends Observable {
             for(Player p2 : this.players) {
                 p1.subscribe(p2.getClientHandler());
             }
-            //this.subscribe(p1.getClientHandler());
+
             this.goldCardsDeck.subscribe((p1.getClientHandler()));
             this.resourceCardsDeck.subscribe((p1.getClientHandler()));
             this.scoreBoard.subscribe(p1.getClientHandler());
         }
+    }
+
+    public void subscribeCommonObservers(ClientHandler clientHandler) {
+        for(Player p1 : this.players) {
+            p1.subscribe(clientHandler);
+        }
+
+        this.goldCardsDeck.subscribe(clientHandler);
+        this.resourceCardsDeck.subscribe(clientHandler);
+        this.scoreBoard.subscribe(clientHandler);
+    }
+
+    public void unsubscribeFromCommonObservable(ClientHandler clientHandler) {
+        for(Player p1 : this.players) {
+            p1.unsubscribe(clientHandler);
+        }
+        this.goldCardsDeck.subscribe(clientHandler);
+        this.resourceCardsDeck.subscribe(clientHandler);
+        this.scoreBoard.subscribe(clientHandler);
+
     }
 
     public Deck<StartCard> getStartCardsDeck() {
@@ -425,4 +451,7 @@ public class Game extends Observable {
     public Deck<Goal> getGoalsDeck() {
         return goalsDeck;
     }
+
+
+
 }

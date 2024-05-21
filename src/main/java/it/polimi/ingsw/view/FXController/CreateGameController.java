@@ -52,6 +52,7 @@ public class CreateGameController extends UserInterface {
 
     @FXML
     public void initialize() {
+        FXGraphicalUserInterface.currentInterface = this;
         ExpectedPlayersComboBox.getItems().addAll(expectedplayersarray);
     }
 
