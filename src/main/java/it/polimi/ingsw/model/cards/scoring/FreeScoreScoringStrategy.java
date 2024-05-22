@@ -35,6 +35,6 @@ public class FreeScoreScoringStrategy implements ScoringStrategy {
 
     @Override
     public String toString() {
-        return this.freeScore + " points upon placement";
+        return this.freeScore + " pt";
     }
 }

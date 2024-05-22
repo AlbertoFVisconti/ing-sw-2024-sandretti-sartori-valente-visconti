@@ -32,6 +32,8 @@ public class Player extends Observable {
     private final HashMap<CardLocation, Card> board;
     private final ItemCollection inventory;
 
+    private int turnCounter;
+
     /**
      * Constructs a new Player object.
      *
@@ -46,6 +48,8 @@ public class Player extends Observable {
         this.board=new HashMap<>();
         this.playerCards=new PlayCard[3];
         this.inventory = new ItemCollection();
+
+        this.turnCounter = 1;
     }
     public Player(PlayerSavingMessage psm){
         this.nickName=psm.getNick();
@@ -144,7 +148,7 @@ public class Player extends Observable {
                 playerCards[index].flip();
             }
 
-            playerCards[index].place(-1 /*TODO*/);
+            playerCards[index].place(this.turnCounter++);
             board.put(location,playerCards[index]);
             playerCards[index]=null;
         }

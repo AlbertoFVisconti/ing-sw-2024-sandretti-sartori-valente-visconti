@@ -81,6 +81,10 @@ public class StartCard extends Card {
         return super.collectItems();
     }
 
+    public ItemCollection getPermanentResources() {
+        return new ItemCollection(this.permanentResources);
+    }
+
     /**
      * @return {@code mull}
      */

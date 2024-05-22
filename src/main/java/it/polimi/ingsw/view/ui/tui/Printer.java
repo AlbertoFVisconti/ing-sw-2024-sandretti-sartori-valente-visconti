@@ -1,14 +1,19 @@
 package it.polimi.ingsw.view.ui.tui;
 
 import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.PlayCard;
+import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
 
 import java.util.HashMap;
+import java.util.List;
 
 final class Printer {
+    private final static int DEFAULT_CARD_WIDTH = 27;
+    private final static int DEFAULT_CARD_HEIGHT = 11;
+
     private final static HashMap<Corner, String[]> cornerToStringsMap;
-    private final static HashMap<Corner, String> cornerToColorMap;
-    public static final String COLOR_RESET = "\u001B[0m";
+    private final static HashMap<Corner, TextColor> cornerToColorMap;
 
     static {
         cornerToStringsMap = new HashMap<>();
@@ -89,124 +94,305 @@ final class Printer {
 
         cornerToColorMap.put(
                 Corner.ANIMAL,
-                "\u001B[36m"
+                TextColor.CYAN
         );
         cornerToColorMap.put(
                 Corner.PLANT,
-                "\u001B[32m"
+                TextColor.GREEN
         );
         cornerToColorMap.put(
                 Corner.FUNGUS,
-                "\u001B[31m"
+                TextColor.RED
         );
         cornerToColorMap.put(
                 Corner.INSECT,
-                "\u001B[35m"
+                TextColor.PURPLE
         );
         cornerToColorMap.put(
                 Corner.INK,
-                "\u001B[33m"
+                TextColor.YELLOW
         );
         cornerToColorMap.put(
                 Corner.FEATHER,
-                "\u001B[33m"
+                TextColor.YELLOW
         );
         cornerToColorMap.put(
                 Corner.SCROLL,
-                "\u001B[33m"
+                TextColor.YELLOW
         );
         cornerToColorMap.put(
                 Corner.EMPTY,
-                "\u001B[33m"
+                TextColor.WHITE
         );
         cornerToColorMap.put(
                 null,
-                "\u001B[33m"
+                TextColor.WHITE
         );
 
     }
 
+    private static Canvas getCardCanvas(Card card) {
+        Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH, DEFAULT_CARD_HEIGHT);
+
+        // setting the card frame
+        for(int i = 1; i < DEFAULT_CARD_WIDTH-1; i++) {
+            canvas.putChar('_', i, 0);
+            canvas.putChar('_', i, DEFAULT_CARD_HEIGHT-1);
+        }
+
+        for(int i = 1; i < DEFAULT_CARD_HEIGHT; i++) {
+            canvas.putChar('|', 0,i);
+            canvas.putChar('|', DEFAULT_CARD_WIDTH-1,i);
+        }
+
+        Corner ctl, ctr, cbl, cbr;
+        ctl = card.getTopLeftCorner();
+        ctr = card.getTopRightCorner();
+        cbl = card.getBottomLeftCorner();
+        cbr = card.getBottomRightCorner();
+
+        if(ctl != null) {
+            canvas.putString("_____", 1,4);
+        }
+        if(ctr != null) {
+            canvas.putString("_____", DEFAULT_CARD_WIDTH-6,4);
+        }
+        if(cbl != null) {
+            canvas.putString("_____", 1,DEFAULT_CARD_HEIGHT-5);
+        }
+        if(cbr != null) {
+            canvas.putString("_____", DEFAULT_CARD_WIDTH-6,DEFAULT_CARD_HEIGHT-5);
+        }
+
+
+        if(ctl != null) {
+            for(int i = 0; i < 4 ;i++) {
+                canvas.putChar('|', 6, 1+i);
+            }
+            canvas.setTextColor(cornerToColorMap.get(ctl));
+            canvas.putStringMatrix(cornerToStringsMap.get(ctl), 1,1);
+            canvas.resetColor();
+        }
+
+        if(ctr != null) {
+            for(int i = 0; i < 4 ;i++) {
+                canvas.putChar('|', DEFAULT_CARD_WIDTH-7, 1+i);
+            }
+            canvas.setTextColor(cornerToColorMap.get(ctr));
+            canvas.putStringMatrix(cornerToStringsMap.get(ctr), DEFAULT_CARD_WIDTH-6,1);
+            canvas.resetColor();
+        }
+
+        if(cbl != null) {
+            for(int i = 0; i < 4 ;i++) {
+                canvas.putChar('|', 6, DEFAULT_CARD_HEIGHT-i-1);
+            }
+            canvas.setTextColor(cornerToColorMap.get(cbl));
+            canvas.putStringMatrix(cornerToStringsMap.get(cbl), 1,DEFAULT_CARD_HEIGHT-3-1);
+            canvas.resetColor();
+        }
+
+        if(cbr != null) {
+            for(int i = 0; i < 4 ;i++) {
+                canvas.putChar('|', DEFAULT_CARD_WIDTH-7, DEFAULT_CARD_HEIGHT-i-1);
+            }
+            canvas.setTextColor(cornerToColorMap.get(cbr));
+            canvas.putStringMatrix(cornerToStringsMap.get(cbr), DEFAULT_CARD_WIDTH-6,DEFAULT_CARD_HEIGHT-3-1);
+            canvas.resetColor();
+        }
+
+        if (card instanceof StartCard && card.isOnBackSide()) {
+            StartCard startCard = (StartCard)card;
+
+            int i = 0;
+            List<Corner> corners = startCard.getPermanentResources().toList();
+            int rows= (corners.size()/2 + corners.size()%2);
+            for(Corner corner : corners) {
+                canvas.setTextColor(cornerToColorMap.get(corner));
+                canvas.putStringMatrix(cornerToStringsMap.get(corner), DEFAULT_CARD_WIDTH/2 - 5 + 6*(i%2),DEFAULT_CARD_HEIGHT/2 - (3*rows + Math.max(0, rows-1))/2 + 4*(i/2));
+                canvas.resetColor();
+                i++;
+            }
+        }
+        else if (card instanceof PlayCard) {
+            PlayCard playCard = (PlayCard)card;
+
+            if(playCard.isOnBackSide()) {
+                canvas.setTextColor(cornerToColorMap.get(playCard.getType().getCorner()));
+                canvas.putStringMatrix(cornerToStringsMap.get(playCard.getType().getCorner()), DEFAULT_CARD_WIDTH/2 - 2, DEFAULT_CARD_HEIGHT/2 - 1);
+                canvas.resetColor();
+            }
+            else {
+                String scoring = playCard.getScoringStrategy().toString();
+
+                canvas.putString(scoring, DEFAULT_CARD_WIDTH/2 - scoring.length()/2 + scoring.length()%2, 1);
+
+                List<Corner> constraints = playCard.getConstraint().toList();
+                for(int i = 0; i < constraints.size(); i++) {
+                    canvas.setTextColor(cornerToColorMap.get(constraints.get(i)));
+                    canvas.putChar(constraints.get(i).toString().charAt(0), DEFAULT_CARD_WIDTH/2 - constraints.size()/2 + constraints.size()%2 + i , DEFAULT_CARD_HEIGHT-2);
+                    canvas.resetColor();
+                }
+
+            }
+        }
+
+
+        return canvas;
+    }
+
     public static void printCard(Card card, boolean onBackSide) {
         if(onBackSide ^ card.isOnBackSide()) card.flip();
+        System.out.println(getCardCanvas(card));
+    }
 
-        System.out.println(" ________________________ ");
+    public static void printHand(PlayCard[] cards) {
+        final int SPACING_BETWEEN_CARDS = 2;
+        Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH * cards.length + SPACING_BETWEEN_CARDS*(cards.length-1) + 2, 2 + DEFAULT_CARD_HEIGHT*2 + 3);
 
-        Corner cl, cr;
-        cl = card.getTopLeftCorner();
-        cr = card.getTopRightCorner();
+        canvas.putString("Front:", 0,0);
+        canvas.putString("Back:", 0,2 + DEFAULT_CARD_HEIGHT + 1);
+        for(int i = 0; i < cards.length; i++) {
+            canvas.putString("Card n°" + i, (DEFAULT_CARD_WIDTH + SPACING_BETWEEN_CARDS) * i + DEFAULT_CARD_WIDTH/2 - 4, 0);
 
-        String line;
+            if(cards[i].isOnBackSide()) cards[i].flip();
+            canvas.putCanvas(getCardCanvas(cards[i]), (DEFAULT_CARD_WIDTH + SPACING_BETWEEN_CARDS) * i, 2);
 
-
-        for(int i = 0; i < 3; i++) {
-            line = "|";
-            line += cornerToColorMap.get(cl);
-            line += cornerToStringsMap.get(cl)[i];
-            line += COLOR_RESET;
-            if(cl!=null) line += "|";
-            else line += " ";
-            line += "            ";
-
-            if(cr!=null) line += "|";
-            else line += " ";
-            line += cornerToColorMap.get(cr);
-            line += cornerToStringsMap.get(cr)[i];
-            line += COLOR_RESET;
-            line += "|";
-
-            System.out.println(line);
+            cards[i].flip();
+            canvas.putCanvas(getCardCanvas(cards[i]), (DEFAULT_CARD_WIDTH + SPACING_BETWEEN_CARDS) * i, 2 + DEFAULT_CARD_HEIGHT + 3);
         }
 
-        if(cl != null) {
-            line = "|_____|            ";
-        }
-        else {
-            line = "|                  ";
+        System.out.println(canvas);
+    }
+
+
+    private static class Canvas {
+        char[][] content;
+        TextColor[][] contentColor;
+        private final int width;
+        private final int height;
+
+        private TextColor currentColor;
+
+        private Canvas(int width, int height) {
+            currentColor = TextColor.WHITE;
+
+            this.width = width;
+            this.height = height;
+
+            this.content = new char[height][width];
+            this.contentColor = new TextColor[height][width];
+            for(int i = 0; i < height; i++) {
+                for(int j = 0; j < width; j++) {
+                    content[i][j] = ' ';
+                    contentColor[i][j] = currentColor;
+                }
+            }
+
         }
 
-        if(cr != null) {
-            line += "|_____|";
+        public void setTextColor(TextColor color) {
+            this.currentColor= color;
         }
-        else {
-            line += "      |";
-        }
-        System.out.println(line);
-
-        cl = card.getBottomLeftCorner();
-        cr = card.getBottomRightCorner();
-
-        for(int i = 0; i < 3; i++) {
-            line = "|";
-            line += cornerToColorMap.get(cl);
-            line += cornerToStringsMap.get(cl)[i];
-            line += COLOR_RESET;
-            if(cl!=null) line += "|";
-            else line += " ";
-            line += "            ";
-
-            if(cr!=null) line += "|";
-            else line += " ";
-            line += cornerToColorMap.get(cr);
-            line += cornerToStringsMap.get(cr)[i];
-            line += COLOR_RESET;
-            line += "|";
-
-            System.out.println(line);
+        public void resetColor() {
+            this.currentColor = TextColor.WHITE;
         }
 
-        if(cl != null) {
-            line = "|_____|____________";
-        }
-        else {
-            line = "|__________________";
+        public void putChar(char c, int x, int y) {
+            if(x < 0 || y < 0 || x >= width || y >= height) {
+                throw new ArrayIndexOutOfBoundsException();
+            }
+
+            this.content[y][x] =  c;
+            this.contentColor[y][x] = this.currentColor;
         }
 
-        if(cr != null) {
-            line += "|_____|";
+        public void putString(String string, int x, int y) {
+            if(x < 0 || y < 0 || x >= width || y >= height || string.length() + x > width) {
+                throw new ArrayIndexOutOfBoundsException();
+            }
+
+            for(Character stringChar : string.toCharArray()) {
+                this.content[y][x] =  stringChar;
+                this.contentColor[y][x] = this.currentColor;
+                x++;
+            }
         }
-        else {
-            line += "______|";
+
+        public void putStringMatrix(String[] strings, int x, int y) {
+            if(strings.length == 0) return;
+            if(x < 0 || y < 0 || x >= width || y >= height || strings[0].length() + x > width || strings.length +y > height) {
+                throw new ArrayIndexOutOfBoundsException();
+            }
+
+            int sx = x;
+            for(String string : strings) {
+                x = sx;
+                for(Character stringChar : string.toCharArray()) {
+                    this.content[y][x] =  stringChar;
+                    this.contentColor[y][x] = this.currentColor;
+                    x++;
+                }
+                y++;
+            }
         }
-        System.out.println(line);
+
+        public void putCanvas(Canvas canvas, int x, int y) {
+            if(x < 0 || y < 0 || x >= width || y >= height || canvas.getWidth() + x > width || canvas.getHeight() + y > height) {
+                throw new ArrayIndexOutOfBoundsException();
+            }
+
+            for(int i = 0; i < canvas.height; i++) {
+                for(int j = 0; j < canvas.width; j++) {
+                    content[y+i][x+j] = canvas.content[i][j];
+                    this.contentColor[y+i][x+j] = canvas.contentColor[i][j];
+                }
+            }
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder stringBuilder = new StringBuilder();
+            TextColor color = TextColor.WHITE;
+            for(int i = 0; i < height; i++) {
+                for(int j = 0; j < width; j++) {
+                    if(contentColor[i][j] != color) {
+                        color = contentColor[i][j];
+                        stringBuilder.append(color.getCode());
+                    }
+                    stringBuilder.append(content[i][j]);
+                }
+                stringBuilder.append("\n");
+            }
+            stringBuilder.append(TextColor.WHITE.getCode());
+            return stringBuilder.toString();
+        }
+    }
+
+    private enum TextColor{
+        CYAN("\u001B[36m"),
+        GREEN("\u001B[32m"),
+        RED("\u001B[31m"),
+        PURPLE("\u001B[35m"),
+        YELLOW("\u001B[33m"),
+        WHITE("\u001B[0m");
+
+        final String code;
+
+        TextColor(String colorString) {
+            code = colorString;
+        }
+
+        public String getCode() {
+            return code;
+        }
     }
 }

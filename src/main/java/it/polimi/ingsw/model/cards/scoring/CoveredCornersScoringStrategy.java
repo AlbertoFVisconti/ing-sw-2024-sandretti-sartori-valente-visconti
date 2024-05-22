@@ -41,6 +41,6 @@ public class CoveredCornersScoringStrategy implements ScoringStrategy {
 
     @Override
     public String toString() {
-        return this.scorePerCoveredCorner + " points per covered corner";
+        return this.scorePerCoveredCorner + " x corner";
     }
 }

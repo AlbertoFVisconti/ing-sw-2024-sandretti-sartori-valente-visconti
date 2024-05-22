@@ -274,16 +274,7 @@ public class TextualUserInterface extends UserInterface {
                         System.out.println("player not recognized");
                     }
                     else {
-                        i = 0;
-                        for(PlayCard card : player.getPlayerCards()) {
-                            System.out.println(player.nickName+"'s card n°" + i + ":");
-
-                            System.out.println(card);
-
-                            System.out.println("\n\n");
-
-                            i++;
-                        }
+                        Printer.printHand(player.getPlayerCards());
                     }
 
                     break;

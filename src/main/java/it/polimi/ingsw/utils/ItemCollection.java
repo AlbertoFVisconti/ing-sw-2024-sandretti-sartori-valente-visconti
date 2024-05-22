@@ -3,7 +3,9 @@ package it.polimi.ingsw.utils;
 import it.polimi.ingsw.model.cards.corners.Corner;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -219,6 +221,18 @@ public class ItemCollection implements Serializable {
         if (corner == null) throw new NullPointerException();
         if (corner == Corner.EMPTY) throw new NoSuchElementException();
         return this.content.get(corner);
+    }
+
+    public List<Corner> toList() {
+        List<Corner> result = new ArrayList<>();
+
+        for(Corner corner : this.content.keySet()) {
+            for(int i = 0; i < this.content.get(corner); i++) {
+                result.add(corner);
+            }
+        }
+
+        return result;
     }
 
     @Override
