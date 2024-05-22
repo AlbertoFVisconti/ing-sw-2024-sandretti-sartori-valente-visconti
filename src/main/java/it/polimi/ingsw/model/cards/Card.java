@@ -57,6 +57,14 @@ public abstract class Card implements Drawable, Serializable {
         this.placementTurn = currentTurn;
     }
 
+    public int getPlacementTurn() {
+        return placementTurn;
+    }
+
+    public String getCardID() {
+        return cardID;
+    }
+
     /**
      * Checks if the current card (this) was placed on a later turn than the given card's.
      * Both cards need to be placed in order to use this method.

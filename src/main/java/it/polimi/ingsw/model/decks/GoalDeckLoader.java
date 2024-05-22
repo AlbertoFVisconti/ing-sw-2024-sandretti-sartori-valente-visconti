@@ -26,6 +26,12 @@ public class GoalDeckLoader extends DeckLoader<Goal>{
         super(filename);
     }
 
+    @Override
+    protected Goal duplicateElement(Goal element) {
+        // goal are immutable: no need to actually duplicate the element
+        return element;
+    }
+
     /**
      * Loads the goals deck's contents from the provided file. This method must be implemented
      * by subclasses to specify how the deck's content is loaded

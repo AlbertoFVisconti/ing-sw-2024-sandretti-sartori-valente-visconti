@@ -100,6 +100,10 @@ public class PlayCard extends Card {
                 new FreeScoreScoringStrategy(scoreUponPlacement));
     }
 
+    public PlayCard getCopy() {
+        return new PlayCard(this.getCardID(), super.getTopLeftCorner(), super.getTopRightCorner(), super.getBottomLeftCorner(), super.getBottomRightCorner(), this.getType(), this.isGold, new ItemCollection(this.constraint),this.scoringStrategy);
+    }
+
     /**
      * Retrieves the placement constraint.
      *

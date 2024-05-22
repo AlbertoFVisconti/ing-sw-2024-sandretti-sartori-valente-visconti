@@ -4,9 +4,12 @@ import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
+import it.polimi.ingsw.model.decks.Deck;
+import it.polimi.ingsw.utils.CardLocation;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 final class Printer {
     private final static int DEFAULT_CARD_WIDTH = 27;
@@ -131,8 +134,31 @@ final class Printer {
 
     }
 
+    private static Canvas getPlayCardDeckCanvas(Deck<PlayCard> deck) {
+        Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH, DEFAULT_CARD_HEIGHT);
+        if(deck == null) return canvas;
+
+        // setting the deck frame
+        for(int i = 1; i < DEFAULT_CARD_WIDTH-1; i++) {
+            canvas.putChar('_', i, 0);
+            canvas.putChar('_', i, DEFAULT_CARD_HEIGHT-1);
+        }
+
+        for(int i = 1; i < DEFAULT_CARD_HEIGHT; i++) {
+            canvas.putChar('|', 0,i);
+            canvas.putChar('|', DEFAULT_CARD_WIDTH-1,i);
+        }
+
+        canvas.setTextColor(cornerToColorMap.get(deck.getTopOfTheStack().getCorner()));
+        canvas.putStringMatrix(cornerToStringsMap.get(deck.getTopOfTheStack().getCorner()), DEFAULT_CARD_WIDTH/2 - 2, DEFAULT_CARD_HEIGHT/2 - 1);
+        canvas.resetColor();
+
+        return canvas;
+    }
+
     private static Canvas getCardCanvas(Card card) {
         Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH, DEFAULT_CARD_HEIGHT);
+        if(card == null) return canvas;
 
         // setting the card frame
         for(int i = 1; i < DEFAULT_CARD_WIDTH-1; i++) {
@@ -201,8 +227,7 @@ final class Printer {
             canvas.resetColor();
         }
 
-        if (card instanceof StartCard && card.isOnBackSide()) {
-            StartCard startCard = (StartCard)card;
+        if (card instanceof StartCard startCard && card.isOnBackSide()) {
 
             int i = 0;
             List<Corner> corners = startCard.getPermanentResources().toList();
@@ -214,8 +239,7 @@ final class Printer {
                 i++;
             }
         }
-        else if (card instanceof PlayCard) {
-            PlayCard playCard = (PlayCard)card;
+        else if (card instanceof PlayCard playCard) {
 
             if(playCard.isOnBackSide()) {
                 canvas.setTextColor(cornerToColorMap.get(playCard.getType().getCorner()));
@@ -265,6 +289,67 @@ final class Printer {
         System.out.println(canvas);
     }
 
+    public static void printBoard(Map<CardLocation, Card> board) {
+        HashMap<Integer, CardLocation> t = new HashMap<>();
+
+        int left = 0;
+        int right = 0;
+        int top = 0;
+        int bottom = 0;
+
+        for(CardLocation cardLocation : board.keySet()) {
+            t.put(board.get(cardLocation).getPlacementTurn(), cardLocation);
+
+            if(cardLocation.x < left) left = cardLocation.x;
+            if(cardLocation.x > right) right = cardLocation.x;
+            if(cardLocation.y < bottom) bottom = cardLocation.y;
+            if(cardLocation.y > top) top = cardLocation.y;
+        }
+
+        int dx = right-left;
+        int dy = top-bottom;
+
+        Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH+dx * (DEFAULT_CARD_WIDTH-7), DEFAULT_CARD_HEIGHT+dy*(DEFAULT_CARD_HEIGHT-5));
+
+        int i = 0;
+
+        while(t.get(i) != null) {
+            int x,y;
+            x = t.get(i).x - left;
+            y = top - t.get(i).y;
+
+            canvas.putCanvas(
+                    getCardCanvas(board.get(t.get(i))),
+                    x * (DEFAULT_CARD_WIDTH-7),
+                    y * (DEFAULT_CARD_HEIGHT-5)
+            );
+
+            i++;
+        }
+
+        System.out.println(canvas);
+    }
+
+    public static void printDrawableCards(Deck<PlayCard> resourceDeck, Deck<PlayCard> goldDeck, PlayCard[] visibleCards) {
+        if(visibleCards.length != 4) throw new RuntimeException("unexpected amount of visible cards");
+
+        Canvas canvas = new Canvas(3*DEFAULT_CARD_WIDTH + 5 + 2, 2 + DEFAULT_CARD_HEIGHT*2 + 3);
+
+        canvas.putString("Deck n°0 (resource):", 0,1);
+        canvas.putCanvas(getPlayCardDeckCanvas(resourceDeck), 0, 2);
+
+        canvas.putString("Deck n°1 (gold)", 0,2 + DEFAULT_CARD_HEIGHT + 2);
+        canvas.putCanvas(getPlayCardDeckCanvas(resourceDeck), 0, 2 + DEFAULT_CARD_HEIGHT + 3);
+
+
+        for(int i = 0; i < visibleCards.length; i++) {
+            canvas.putString("Card n°" + i, DEFAULT_CARD_WIDTH+5 + (DEFAULT_CARD_WIDTH + 2) * (i%2) + DEFAULT_CARD_WIDTH/2 - 4, 1 + (DEFAULT_CARD_HEIGHT+3)*(i/2));
+
+            canvas.putCanvas(getCardCanvas(visibleCards[i]), DEFAULT_CARD_WIDTH+5+(DEFAULT_CARD_WIDTH + 2) * (i%2), 2 + (DEFAULT_CARD_HEIGHT+3)*(i/2));
+        }
+
+        System.out.println(canvas);
+    }
 
     private static class Canvas {
         char[][] content;

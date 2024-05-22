@@ -4,7 +4,6 @@ package it.polimi.ingsw.view.ui.tui;
 import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.controller.TurnStatus;
 import it.polimi.ingsw.events.messages.client.*;
-import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
@@ -246,13 +245,7 @@ public class TextualUserInterface extends UserInterface {
                         syntaxErrorMessage = "selected player was not recognized";
                     }
                     else {
-                        for(CardLocation cardLocation : player.getBoard().keySet()) {
-                            System.out.println("Card in " + cardLocation + ":");
-
-                            System.out.println(player.getPlacedCard(cardLocation));
-
-                            System.out.println("\n\n");
-                        }
+                        Printer.printBoard(player.getBoard());
                     }
 
                     break;
@@ -310,22 +303,9 @@ public class TextualUserInterface extends UserInterface {
 
 
                     break;
-                case "!decks":
+                case "!drawable":
                     lastCommand =command;
-                    System.out.println("Decks:");
-                    System.out.println("\tResource: " + this.gameModel.getResourceCardsDeck().getTopOfTheStack());
-                    System.out.println("\tGolden: " + this.gameModel.getGoldCardsDeck().getTopOfTheStack());
-
-                    break;
-                case "!visible_cards":
-                    lastCommand = command;
-
-                    i = 0;
-                    for(PlayCard card : gameModel.getVisibleCards()) {
-                        System.out.println("Visible cards n°"+i+":");
-                        System.out.println(card);
-                        System.out.println();
-                    }
+                    Printer.printDrawableCards(gameModel.getResourceCardsDeck(), gameModel.getGoldCardsDeck(), gameModel.getVisibleCards());
 
                     break;
                 case "!draw":
@@ -428,8 +408,7 @@ public class TextualUserInterface extends UserInterface {
                         gameStatusMessage = gameStatusMessage + "pick up a card. Use:\n" +
                                 "\t- !board [playername]        to print the board [of the specified player]\n" +
                                 "\t- !hand [playername]         to print the hand [of the specified player]\n" +
-                                "\t- !decks                     to print info about the decks\n" +
-                                "\t- !visible_cards             to print the visible cards\n" +
+                                "\t- !drawable                  to print info about the decks and visible cards\n" +
                                 "\t- !draw deck_id              to draw from the specified deck\n" +
                                 "\t- !pick_up card_num          to pick up the specified visible card\n" +
                                 "\t- !help                      to get the list of commands";
@@ -439,8 +418,7 @@ public class TextualUserInterface extends UserInterface {
                     gameStatusMessage = "It's "+playersTurn+ "'s turn to "+ (turnStatus == TurnStatus.PLACE ? "place a card" : "pick up a card") +". Use:\n" +
                             "\t- !board [playername]        to print the board [of the specified player]\n" +
                             "\t- !hand [playername]         to print the hand [of the specified player]\n" +
-                            "\t- !decks                     to print info about the decks\n" +
-                            "\t- !visible_cards             to print the visible cards\n" +
+                            "\t- !drawable                  to print info about the decks and visible cards\n" +
                             "\t- !help                      to get the list of commands";
                 }
                 break;

@@ -4,6 +4,7 @@ import it.polimi.ingsw.events.Observable;
 import it.polimi.ingsw.events.messages.server.ScoreUpdateMessage;
 import it.polimi.ingsw.model.player.Player;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -11,7 +12,7 @@ import java.util.NoSuchElementException;
 /**
  * The ScoreBoard class represents a scoreboard that tracks players' score throughout the game.
  */
-public class ScoreBoard extends Observable {
+public class ScoreBoard extends Observable implements Serializable {
     private HashMap<String, Integer> scores;
 
     /**

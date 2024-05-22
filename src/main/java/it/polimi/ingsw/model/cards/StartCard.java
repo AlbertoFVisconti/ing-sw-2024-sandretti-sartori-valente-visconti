@@ -99,4 +99,8 @@ public class StartCard extends Card {
                 "backCorners = " + Arrays.toString(backCorners) + "\n" +
                 "permanentResources = " + permanentResources.toString();
     }
+
+    public StartCard getCopy() {
+        return new StartCard(this.getCardID(), super.getTopLeftCorner(), super.getTopRightCorner(), super.getBottomLeftCorner(), super.getBottomRightCorner(), this.backCorners[0],this.backCorners[1],this.backCorners[2],this.backCorners[3], new ItemCollection(this.permanentResources));
+    }
 }
