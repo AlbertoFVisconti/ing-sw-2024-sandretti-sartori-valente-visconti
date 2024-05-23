@@ -20,39 +20,60 @@ public class GameSavingMessage implements Serializable {
     private final Goal[] publicGoal;
     private final Deck<StartCard> startCardsDeck;
     private final Deck<Goal> goalsDeck;
+
     public GameSavingMessage(int expectedPlayers, ArrayList<PlayerSavingMessage> players, int gameId,
                              Deck<PlayCard> goldCardsDeck, Deck<PlayCard> resourceCardsDeck,
                              PlayCard[] visibleCards, ScoreBoard scoreBoard, Goal[] publicGoal,
-                             Deck<StartCard> startCardsDeck, Deck<Goal> goalsDeck){
+                             Deck<StartCard> startCardsDeck, Deck<Goal> goalsDeck) {
         this.expectedPlayers = expectedPlayers;
         this.players = players;
         this.gameId = gameId;
         this.scoreBoard = scoreBoard;
         this.publicGoal = publicGoal;
-        this.goldCardsDeck=goldCardsDeck;
-        this.resourceCardsDeck=resourceCardsDeck;
-        this.visibleCards= visibleCards;
-        this.startCardsDeck=startCardsDeck;
-        this.goalsDeck=goalsDeck;
+        this.goldCardsDeck = goldCardsDeck;
+        this.resourceCardsDeck = resourceCardsDeck;
+        this.visibleCards = visibleCards;
+        this.startCardsDeck = startCardsDeck;
+        this.goalsDeck = goalsDeck;
     }
 
-    public int getExpectedPlayers() {return expectedPlayers;}
+    public int getExpectedPlayers() {
+        return expectedPlayers;
+    }
 
-    public ArrayList<PlayerSavingMessage> getPlayers() {return players;}
+    public ArrayList<PlayerSavingMessage> getPlayers() {
+        return players;
+    }
 
-    public int getGameId() {return gameId;}
+    public int getGameId() {
+        return gameId;
+    }
 
-    public ScoreBoard getScoreBoard() {return scoreBoard;}
+    public ScoreBoard getScoreBoard() {
+        return scoreBoard;
+    }
 
-    public Goal[] getPublicGoal() {return publicGoal;}
+    public Goal[] getPublicGoal() {
+        return publicGoal;
+    }
 
-    public Deck<PlayCard> getGoldCardsDeck() {return goldCardsDeck;}
+    public Deck<PlayCard> getGoldCardsDeck() {
+        return goldCardsDeck;
+    }
 
-    public Deck<PlayCard> getResourceCardsDeck() {return resourceCardsDeck;}
+    public Deck<PlayCard> getResourceCardsDeck() {
+        return resourceCardsDeck;
+    }
 
-    public PlayCard[] getVisibleCards() {return visibleCards;}
+    public PlayCard[] getVisibleCards() {
+        return visibleCards;
+    }
 
-    public Deck<Goal> getGoalsDeck() {return goalsDeck;}
+    public Deck<Goal> getGoalsDeck() {
+        return goalsDeck;
+    }
 
-    public Deck<StartCard> getStartCardsDeck() {return startCardsDeck;}
+    public Deck<StartCard> getStartCardsDeck() {
+        return startCardsDeck;
+    }
 }

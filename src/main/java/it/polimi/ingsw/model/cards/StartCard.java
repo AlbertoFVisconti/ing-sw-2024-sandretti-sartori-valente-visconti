@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.cards;
 
+import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.utils.ItemCollection;
-import it.polimi.ingsw.model.cards.corners.Corner;
 
 import java.util.Arrays;
 
@@ -22,21 +22,21 @@ public class StartCard extends Card {
      * StartCards also has different corners on the back side, that's why
      * the constructor needs two sets of corners.
      *
-     * @param cardID the card's identifier
-     * @param frontTopLeft the top-left corner on the front side of the card.
-     * @param frontTopRight the top-right corner on the front side of the card.
-     * @param frontBottomLeft the bottom-left corner on the front side of the card.
-     * @param frontBottomRight the bottom-right corner on the front side of the card.
-     * @param backTopLeft the top-left corner on the back side of the card.
-     * @param backTopRight the top-right corner on the back side of the card.
-     * @param backBottomLeft the bottom-left corner on the back side of the card.
-     * @param backBottomRight the bottom-right corner on the back side of the card.
+     * @param cardID             the card's identifier
+     * @param frontTopLeft       the top-left corner on the front side of the card.
+     * @param frontTopRight      the top-right corner on the front side of the card.
+     * @param frontBottomLeft    the bottom-left corner on the front side of the card.
+     * @param frontBottomRight   the bottom-right corner on the front side of the card.
+     * @param backTopLeft        the top-left corner on the back side of the card.
+     * @param backTopRight       the top-right corner on the back side of the card.
+     * @param backBottomLeft     the bottom-left corner on the back side of the card.
+     * @param backBottomRight    the bottom-right corner on the back side of the card.
      * @param permanentResources ItemCollection representing the set of permanent resources on the back of the card.
      */
     public StartCard(String cardID,
-                        Corner frontTopLeft, Corner frontTopRight, Corner frontBottomLeft, Corner frontBottomRight,
-                        Corner backTopLeft, Corner backTopRight, Corner backBottomLeft, Corner backBottomRight,
-                        ItemCollection permanentResources) {
+                     Corner frontTopLeft, Corner frontTopRight, Corner frontBottomLeft, Corner frontBottomRight,
+                     Corner backTopLeft, Corner backTopRight, Corner backBottomLeft, Corner backBottomRight,
+                     ItemCollection permanentResources) {
         super(cardID, frontTopLeft, frontTopRight, frontBottomLeft, frontBottomRight);
         this.backCorners = new Corner[]{backTopLeft, backTopRight, backBottomLeft, backBottomRight};
         this.permanentResources = new ItemCollection(permanentResources);
@@ -75,7 +75,7 @@ public class StartCard extends Card {
      */
     @Override
     public ItemCollection collectItems() {
-        if(isOnBackSide()) {
+        if (isOnBackSide()) {
             return new ItemCollection(permanentResources);
         }
         return super.collectItems();
@@ -101,6 +101,6 @@ public class StartCard extends Card {
     }
 
     public StartCard getCopy() {
-        return new StartCard(this.getCardID(), super.getTopLeftCorner(), super.getTopRightCorner(), super.getBottomLeftCorner(), super.getBottomRightCorner(), this.backCorners[0],this.backCorners[1],this.backCorners[2],this.backCorners[3], new ItemCollection(this.permanentResources));
+        return new StartCard(this.getCardID(), super.getTopLeftCorner(), super.getTopRightCorner(), super.getBottomLeftCorner(), super.getBottomRightCorner(), this.backCorners[0], this.backCorners[1], this.backCorners[2], this.backCorners[3], new ItemCollection(this.permanentResources));
     }
 }

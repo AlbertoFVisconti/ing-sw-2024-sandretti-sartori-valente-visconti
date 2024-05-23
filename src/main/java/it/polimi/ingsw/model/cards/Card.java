@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.cards;
 
+import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.decks.Drawable;
 import it.polimi.ingsw.utils.ItemCollection;
-import it.polimi.ingsw.model.cards.corners.Corner;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -13,9 +13,9 @@ import java.util.Arrays;
  */
 public abstract class Card implements Drawable, Serializable {
     private final String cardID;
-    private boolean isBack=false;
-    private boolean isPlaced=false;
-    private int placementTurn=-1;
+    private boolean isBack = false;
+    private boolean isPlaced = false;
+    private int placementTurn = -1;
 
     private final Corner[] corners;
 
@@ -23,10 +23,10 @@ public abstract class Card implements Drawable, Serializable {
      * Stores the front face's corners in an array.
      * Since Card is an abstract class, this constructor is only used by subclasses.
      *
-     * @param cardID the unique ID that identifies the card
-     * @param topLeft the front top-left corner of the card
-     * @param topRight the front top-right corner of the card
-     * @param bottomLeft the front bottom-left corner of the card
+     * @param cardID      the unique ID that identifies the card
+     * @param topLeft     the front top-left corner of the card
+     * @param topRight    the front top-right corner of the card
+     * @param bottomLeft  the front bottom-left corner of the card
      * @param bottomRight the front bottom-right corner of the card
      */
     protected Card(String cardID, Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight) {
@@ -39,8 +39,8 @@ public abstract class Card implements Drawable, Serializable {
      *
      * @throws UnsupportedOperationException if the card was placed beforehand.
      */
-    public void flip()  {
-        if(isPlaced) throw new UnsupportedOperationException("can't flip a placed card");
+    public void flip() {
+        if (isPlaced) throw new UnsupportedOperationException("can't flip a placed card");
         this.isBack = !this.isBack;
     }
 
@@ -74,7 +74,8 @@ public abstract class Card implements Drawable, Serializable {
      * @throws UnsupportedOperationException if one of the cards is not placed.
      */
     public boolean placedAfter(Card card) {
-        if (!card.isPlaced || !this.isPlaced) throw new UnsupportedOperationException("cannot check placement order if one of the cards isn't placed");
+        if (!card.isPlaced || !this.isPlaced)
+            throw new UnsupportedOperationException("cannot check placement order if one of the cards isn't placed");
         return this.placementTurn > card.placementTurn;
     }
 
@@ -183,9 +184,8 @@ public abstract class Card implements Drawable, Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Card objCard) {
+        if (obj instanceof Card objCard) {
             return objCard.cardID.equals(this.cardID);
-        }
-        else return false;
+        } else return false;
     }
 }

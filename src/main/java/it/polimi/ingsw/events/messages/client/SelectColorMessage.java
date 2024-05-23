@@ -13,7 +13,6 @@ public class SelectColorMessage extends ClientMessage {
     /**
      * Builds a ServerMessage with a specified type.
      * Requires the player's identifier in order to recognize the player.
-     *
      */
     public SelectColorMessage(PlayerColor color) {
         super(MessageType.PLAYER_MESSAGE);

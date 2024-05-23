@@ -25,7 +25,7 @@ public class SelectGoalMessage extends ClientMessage {
     /**
      * Tries to select the private goal.
      *
-     * @param selector the GameSelector instance that handles the game the player's playing.
+     * @param selector   the GameSelector instance that handles the game the player's playing.
      * @param controller the GameController that handles the game the player's playing.
      */
     @Override

@@ -1,4 +1,5 @@
 package it.polimi.ingsw.model.chat;
+
 import it.polimi.ingsw.events.Observable;
 import it.polimi.ingsw.events.messages.server.ServerChatMsgMessage;
 import it.polimi.ingsw.model.player.Player;
@@ -17,7 +18,6 @@ public class Chat extends Observable {
 
     /**
      * Constructs a Chat object.
-     *
      */
     public Chat() {
         messages = new HashMap<>();
@@ -27,14 +27,15 @@ public class Chat extends Observable {
     /**
      * Retrieves the list of messages between two players.
      *
-     * @param nick1  the first player's nickname
+     * @param nick1 the first player's nickname
      * @param nick2 the second player's nickname
      * @return the list of messages between the two players (or the public chat, if either of the two players is null)
      * @throws NoSuchElementException if the pair of players is not found in the
      *                                messages map
      */
     public List<ChatMessage> getMessagesChat(String nick1, String nick2) {
-        if(nick1 == null || nick2 == null) return Collections.unmodifiableList(this.messages.get(new HashSet<String>()));
+        if (nick1 == null || nick2 == null)
+            return Collections.unmodifiableList(this.messages.get(new HashSet<String>()));
 
         HashSet<String> playersSet = new HashSet<>(Arrays.asList(nick1, nick2));
         if (!messages.containsKey(playersSet))
@@ -45,20 +46,19 @@ public class Chat extends Observable {
     /**
      * Sends a message from one player to another.
      *
-     * @param sender  the player sending the message
-     * @param receiver  the player receiving the message
+     * @param sender       the player sending the message
+     * @param receiver     the player receiving the message
      * @param message_text the text of the message
      * @throws NoSuchElementException if the pair of players is not found in the
      *                                messages map
      */
     public void sendMessage(Player sender, Player receiver, String message_text) {
-        if(sender == null) throw new RuntimeException("No sender provided");
+        if (sender == null) throw new RuntimeException("No sender provided");
         HashSet<String> playersSet;
 
-        if(receiver != null) {
+        if (receiver != null) {
             playersSet = new HashSet<>(Arrays.asList(sender.nickName, receiver.nickName));
-        }
-        else {
+        } else {
             playersSet = new HashSet<>();
         }
 
@@ -68,13 +68,12 @@ public class Chat extends Observable {
         ChatMessage message = new ChatMessage(message_text, sender.nickName, (receiver != null ? receiver.nickName : null));
         messages.get(playersSet).add(message);
 
-        if(receiver == null) {
+        if (receiver == null) {
             // all players (sender included) will receive the update
             this.notifyObservers(new ServerChatMsgMessage(message));
-        }
-        else {
+        } else {
             ClientHandler receiverHandler = receiver.getClientHandler();
-            if(receiverHandler != null) {
+            if (receiverHandler != null) {
                 this.notifyObservers(new ServerChatMsgMessage(receiverHandler.getPlayerIdentifier(), message));
             }
 
@@ -93,12 +92,12 @@ public class Chat extends Observable {
      * If either of the provided nicknames is null, the message will be considered public.
      *
      * @param message the ChatMessage that contains the message information
-     * @param nick1 the nickname of the first player
-     * @param nick2 the nickname of the second player
+     * @param nick1   the nickname of the first player
+     * @param nick2   the nickname of the second player
      */
-    public void appendMessage( ChatMessage message, String nick1, String nick2) {
+    public void appendMessage(ChatMessage message, String nick1, String nick2) {
         HashSet<String> playersSet;
-        if(nick1 == null || nick2 == null) playersSet = new HashSet<>();
+        if (nick1 == null || nick2 == null) playersSet = new HashSet<>();
         else playersSet = new HashSet<>(Arrays.asList(nick1, nick2));
 
         if (!messages.containsKey(playersSet))

@@ -7,10 +7,11 @@ import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
 
-public class GameStatusUpdateMessage extends ServerMessage{
+public class GameStatusUpdateMessage extends ServerMessage {
     private final GameStatus gameStatus;
     private final TurnStatus turnStatus;
     private final String playersTurn;
+
     public GameStatusUpdateMessage(GameStatus gameStatus, TurnStatus turnStatus, String playersTurn) {
         super(MessageType.MODEL_UPDATE_MESSAGE);
         this.gameStatus = gameStatus;

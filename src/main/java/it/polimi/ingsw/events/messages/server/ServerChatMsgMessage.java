@@ -6,12 +6,12 @@ import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
 
-public class ServerChatMsgMessage extends ServerMessage{
+public class ServerChatMsgMessage extends ServerMessage {
     private final ChatMessage chatMessage;
     private final boolean isPrivate;
 
     public ServerChatMsgMessage(String addresseeIdentifier, ChatMessage chatMessage) {
-        super(( addresseeIdentifier == null ? MessageType.MODEL_UPDATE_MESSAGE : MessageType.PRIVATE_MODEL_UPDATE_MESSAGE), addresseeIdentifier);
+        super((addresseeIdentifier == null ? MessageType.MODEL_UPDATE_MESSAGE : MessageType.PRIVATE_MODEL_UPDATE_MESSAGE), addresseeIdentifier);
         this.chatMessage = chatMessage;
 
         this.isPrivate = addresseeIdentifier != null;

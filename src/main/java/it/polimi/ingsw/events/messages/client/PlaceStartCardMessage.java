@@ -25,7 +25,7 @@ public class PlaceStartCardMessage extends ClientMessage {
     /**
      * Tries to place the starting card.
      *
-     * @param selector the GameSelector instance that handles the game the player's playing.
+     * @param selector   the GameSelector instance that handles the game the player's playing.
      * @param controller the GameController that handles the game the player's playing.
      */
     @Override

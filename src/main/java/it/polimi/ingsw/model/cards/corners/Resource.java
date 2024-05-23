@@ -7,6 +7,7 @@ public enum Resource {
     INSECT(Corner.INSECT);
 
     private final Corner equivalentCorner;
+
     Resource(Corner equivalentCorner) {
         this.equivalentCorner = equivalentCorner;
     }

@@ -6,14 +6,14 @@ import it.polimi.ingsw.events.messages.server.PlayersHandUpdateMessage;
 import it.polimi.ingsw.events.messages.server.PrivateGoalUpdateMessage;
 import it.polimi.ingsw.events.messages.server.StartCardUpdateMessage;
 import it.polimi.ingsw.events.saving.PlayerSavingMessage;
-import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.goals.Goal;
-import it.polimi.ingsw.utils.CardLocation;
 import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
+import it.polimi.ingsw.utils.CardLocation;
+import it.polimi.ingsw.utils.ItemCollection;
 
 import java.security.InvalidParameterException;
 import java.util.Collections;
@@ -37,27 +37,28 @@ public class Player extends Observable {
     /**
      * Constructs a new Player object.
      *
-     * @param name String containing the player's nickname
+     * @param name          String containing the player's nickname
      * @param clientHandler player's client handler
      */
     public Player(String name, ClientHandler clientHandler) {
-        this.nickName=name;
+        this.nickName = name;
         this.clientHandler = clientHandler;
-        this.startCard=null;
+        this.startCard = null;
         this.color = null;
-        this.board=new HashMap<>();
-        this.playerCards=new PlayCard[3];
+        this.board = new HashMap<>();
+        this.playerCards = new PlayCard[3];
         this.inventory = new ItemCollection();
 
         this.turnCounter = 1;
     }
-    public Player(PlayerSavingMessage psm){
-        this.nickName=psm.getNick();
-        this.color=psm.getPlayerColor();
-        this.board= (HashMap<CardLocation, Card>) psm.getBoard();
-        this.playerCards=psm.getPlayerHand();
-        this.privateGoal=psm.getPrivateGoal();
-        this.inventory=psm.getInventory();
+
+    public Player(PlayerSavingMessage psm) {
+        this.nickName = psm.getNick();
+        this.color = psm.getPlayerColor();
+        this.board = (HashMap<CardLocation, Card>) psm.getBoard();
+        this.playerCards = psm.getPlayerHand();
+        this.privateGoal = psm.getPrivateGoal();
+        this.inventory = psm.getInventory();
     }
 
     public PlayerColor getColor() {
@@ -74,10 +75,10 @@ public class Player extends Observable {
      * @param clientHandler the new player's ClientHandler.
      */
     public void setClientHandler(ClientHandler clientHandler) {
-        if(this.clientHandler != null)
+        if (this.clientHandler != null)
             this.unsubscribe(this.clientHandler);
         this.clientHandler = clientHandler;
-        if(this.clientHandler != null)
+        if (this.clientHandler != null)
             this.subscribe(this.clientHandler);
     }
 
@@ -99,24 +100,24 @@ public class Player extends Observable {
     public void setStartCard(StartCard startCard) {
         this.startCard = startCard;
 
-        if(clientHandler != null)
-            this.notifyObservers(new StartCardUpdateMessage(this.clientHandler.getPlayerIdentifier(),startCard));
+        if (clientHandler != null)
+            this.notifyObservers(new StartCardUpdateMessage(this.clientHandler.getPlayerIdentifier(), startCard));
     }
 
     /**
      * Allows to add a card to the "hand" of the player.
      *
-     * @param card the card you want to be placed
+     * @param card  the card you want to be placed
      * @param index the index you want the card to be placed (0<=index<=2)
      * @throws InvalidParameterException throws InvalidParamException if the card is null, the index is too big or there already is a card at that index
      */
     public void setPlayerCard(PlayCard card, int index) throws InvalidParameterException {
-        if (index<0||index>2) throw new InvalidParameterException("cannot place a card here");
-        else if(card==null) throw new InvalidParameterException("please select a card first");
-        else playerCards[index]=card;
+        if (index < 0 || index > 2) throw new InvalidParameterException("cannot place a card here");
+        else if (card == null) throw new InvalidParameterException("please select a card first");
+        else playerCards[index] = card;
 
-        if(clientHandler != null)
-            this.notifyObservers(new PlayersHandUpdateMessage(this.nickName,card, index));
+        if (clientHandler != null)
+            this.notifyObservers(new PlayersHandUpdateMessage(this.nickName, card, index));
     }
 
     /**
@@ -128,7 +129,7 @@ public class Player extends Observable {
     public void setAvailableGoals(Goal[] availableGoals) {
         this.availableGoals = availableGoals.clone();
 
-        if(clientHandler != null)
+        if (clientHandler != null)
             this.notifyObservers(new PrivateGoalUpdateMessage(this.clientHandler.getPlayerIdentifier(), availableGoals.clone()));
     }
 
@@ -141,19 +142,19 @@ public class Player extends Observable {
      * @throws InvalidParameterException if there already is a card in the selected location or index is too big
      * @throws InvalidParameterException if there already is a card in the selected location or index is too big
      */
-    public void placeCard(int index, boolean onBackSide, CardLocation location) throws InvalidParameterException{
-        if (this.getPlacedCard(location)!=null|| index>2) throw new InvalidParameterException();
+    public void placeCard(int index, boolean onBackSide, CardLocation location) throws InvalidParameterException {
+        if (this.getPlacedCard(location) != null || index > 2) throw new InvalidParameterException();
         else {
-            if(playerCards[index].isOnBackSide() != onBackSide) {
+            if (playerCards[index].isOnBackSide() != onBackSide) {
                 playerCards[index].flip();
             }
 
             playerCards[index].place(this.turnCounter++);
-            board.put(location,playerCards[index]);
-            playerCards[index]=null;
+            board.put(location, playerCards[index]);
+            playerCards[index] = null;
         }
 
-        if(clientHandler != null)
+        if (clientHandler != null)
             this.notifyObservers(new PlayersBoardUpdateMessage(this.nickName, board.get(location), location));
     }
 
@@ -162,22 +163,21 @@ public class Player extends Observable {
      * The orientation of the cards is also required
      *
      * @param onBackside {@code true} if the card should show the back side, {@code false} otherwise
-     *
      * @throws Exception if the players has no StartCard to place
      */
-    public void placeStartingCard(boolean onBackside) throws Exception{
-        if (startCard==null) throw new Exception("no start card found");
+    public void placeStartingCard(boolean onBackside) throws Exception {
+        if (startCard == null) throw new Exception("no start card found");
 
-        if(startCard.isOnBackSide() != onBackside) startCard.flip();
+        if (startCard.isOnBackSide() != onBackside) startCard.flip();
 
         // before we put the card in the board, we make it immutable to prevent later changes
         startCard.place(0);
 
-        board.put(new CardLocation(0,0),startCard);
-        startCard=null;
+        board.put(new CardLocation(0, 0), startCard);
+        startCard = null;
 
-        if(clientHandler != null)
-            this.notifyObservers(new PlayersBoardUpdateMessage(this.nickName,board.get(new CardLocation(0,0)), new CardLocation(0,0)));
+        if (clientHandler != null)
+            this.notifyObservers(new PlayersBoardUpdateMessage(this.nickName, board.get(new CardLocation(0, 0)), new CardLocation(0, 0)));
     }
 
     /**
@@ -197,8 +197,8 @@ public class Player extends Observable {
     public void setPrivateGoal(Goal privateGoal) {
         this.privateGoal = privateGoal;
 
-        if(clientHandler != null)
-            this.notifyObservers(new PrivateGoalUpdateMessage(this.clientHandler.getPlayerIdentifier(),privateGoal));
+        if (clientHandler != null)
+            this.notifyObservers(new PrivateGoalUpdateMessage(this.clientHandler.getPlayerIdentifier(), privateGoal));
     }
 
     /**
@@ -297,12 +297,12 @@ public class Player extends Observable {
      * @throws Exception if the player's hand is full, so there's no room for a new card.
      */
     public void addPlayerCard(PlayCard card) throws Exception {
-        for(int i = 0; i < playerCards.length; i++) {
-            if(playerCards[i] == null) {
+        for (int i = 0; i < playerCards.length; i++) {
+            if (playerCards[i] == null) {
                 playerCards[i] = card;
 
-                if(clientHandler != null)
-                    this.notifyObservers(new PlayersHandUpdateMessage(this.nickName,card, i));
+                if (clientHandler != null)
+                    this.notifyObservers(new PlayersHandUpdateMessage(this.nickName, card, i));
                 return;
             }
         }

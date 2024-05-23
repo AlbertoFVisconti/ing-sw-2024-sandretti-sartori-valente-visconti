@@ -37,8 +37,7 @@ public class RMIClientHandler extends ClientHandler {
     public void sendMessage(ServerMessage message) {
         try {
             message.updateView(view);
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             this.forceDisconnection();
         }
     }

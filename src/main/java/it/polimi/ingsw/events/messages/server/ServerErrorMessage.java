@@ -5,9 +5,10 @@ import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
 
-public class ServerErrorMessage extends ServerMessage{
+public class ServerErrorMessage extends ServerMessage {
     private final RuntimeException exception;
-public ServerErrorMessage(RuntimeException exception) {
+
+    public ServerErrorMessage(RuntimeException exception) {
         super(MessageType.SERVER_ERROR_MESSAGE);
         this.exception = exception;
     }

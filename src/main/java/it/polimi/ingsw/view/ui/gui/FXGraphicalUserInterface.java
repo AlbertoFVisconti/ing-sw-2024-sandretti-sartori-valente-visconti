@@ -21,7 +21,7 @@ public class FXGraphicalUserInterface extends UserInterface {
 
     @Override
     public void update() {
-        if(currentInterface != null) currentInterface.update();
+        if (currentInterface != null) currentInterface.update();
     }
 
     //run method that launches the GUI
@@ -29,7 +29,7 @@ public class FXGraphicalUserInterface extends UserInterface {
         Application.launch(GUI.class);
     }
 
-     public static class GUI extends Application{
+    public static class GUI extends Application {
 
         //start method that loads the Lobby.fxml file
         public void start(Stage stage) throws Exception {
@@ -39,7 +39,7 @@ public class FXGraphicalUserInterface extends UserInterface {
         }
 
         public static void main(String[] args) {
-           launch(args);
+            launch(args);
         }
     }
 }

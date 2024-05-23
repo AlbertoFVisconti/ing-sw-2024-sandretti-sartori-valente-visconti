@@ -19,7 +19,7 @@ public class PrivateGoalUpdateMessage extends ServerMessage {
      *
      * @param goals an array of goal objects.
      */
-    public PrivateGoalUpdateMessage(String addresseeIdentifier,  Goal[] goals) {
+    public PrivateGoalUpdateMessage(String addresseeIdentifier, Goal[] goals) {
         super(MessageType.PRIVATE_MODEL_UPDATE_MESSAGE, addresseeIdentifier);
         this.goals = goals;
         definitive = false;
@@ -43,7 +43,7 @@ public class PrivateGoalUpdateMessage extends ServerMessage {
      *
      * @param goal a goal object representing the player's definitive private goal.
      */
-    public PrivateGoalUpdateMessage(String addresseeIdentifier,Goal goal) {
+    public PrivateGoalUpdateMessage(String addresseeIdentifier, Goal goal) {
         super(MessageType.PRIVATE_MODEL_UPDATE_MESSAGE, addresseeIdentifier);
         this.goals = new Goal[]{goal};
         definitive = true;
@@ -69,14 +69,13 @@ public class PrivateGoalUpdateMessage extends ServerMessage {
      */
     @Override
     public void updateView(VirtualView view) {
-        if(definitive) {
+        if (definitive) {
             try {
                 view.setDefinitivePrivateGoal(goals[0]);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
-        }
-        else {
+        } else {
             try {
                 view.setAvailablePrivateGoals(goals);
             } catch (RemoteException e) {

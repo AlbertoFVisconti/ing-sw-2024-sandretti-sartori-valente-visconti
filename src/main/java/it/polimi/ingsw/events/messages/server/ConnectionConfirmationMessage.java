@@ -32,7 +32,7 @@ public class ConnectionConfirmationMessage extends ServerMessage {
         try {
             view.setPlayerIdentifier(playerIdentifier);
         } catch (
-        RemoteException e) {
+                RemoteException e) {
             throw new RuntimeException(e);
         }
     }

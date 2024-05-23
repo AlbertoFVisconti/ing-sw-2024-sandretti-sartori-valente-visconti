@@ -17,6 +17,7 @@ public class RulesPage5Controller {
     @FXML
     private Button GoBackButton;
     private ImageView RulesPage1;
+
     @FXML
     void GoBackToLobby(MouseEvent event) throws IOException {
         Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/Lobby.fxml")));
@@ -24,6 +25,7 @@ public class RulesPage5Controller {
         window.setScene(new Scene(nextPageParent));
         window.show();
     }
+
     @FXML
     void PreviousPage(ActionEvent event) throws IOException {
         Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/RulesPage4.fxml")));

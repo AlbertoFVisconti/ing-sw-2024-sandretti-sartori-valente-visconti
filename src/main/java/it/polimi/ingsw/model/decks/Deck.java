@@ -1,9 +1,8 @@
 package it.polimi.ingsw.model.decks;
 
-import it.polimi.ingsw.model.cards.PlayCard;
-import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.events.Observable;
 import it.polimi.ingsw.events.messages.server.DeckUpdateMessage;
+import it.polimi.ingsw.model.cards.corners.Resource;
 
 import java.util.ArrayList;
 import java.util.EmptyStackException;
@@ -26,7 +25,7 @@ public class Deck<T extends Drawable> extends Observable {
      *
      * @param content a list of elements representing the deck's content
      */
-    Deck(List<T> content)  {
+    Deck(List<T> content) {
         this.remaining = new ArrayList<>(content);
         this.topOfTheStack = next();
     }
@@ -57,7 +56,7 @@ public class Deck<T extends Drawable> extends Observable {
      * @return an element taken at random from the deck's content (top of the stack excluded)
      */
     private T next() {
-        if(remaining.isEmpty()) return null;
+        if (remaining.isEmpty()) return null;
 
         int selectedIndex = (int) (Math.random() * remaining.size());
         return remaining.remove(selectedIndex); // remove returns the removed element
@@ -72,7 +71,7 @@ public class Deck<T extends Drawable> extends Observable {
     public T draw() {
         T drawnElement = topOfTheStack;
         topOfTheStack = next();
-        if(drawnElement == null) throw new EmptyStackException();
+        if (drawnElement == null) throw new EmptyStackException();
 
         this.notifyObservers(new DeckUpdateMessage(this.getTopOfTheStack(), deckIdentifier));
 
@@ -100,5 +99,8 @@ public class Deck<T extends Drawable> extends Observable {
     public boolean isEmpty() {
         return this.topOfTheStack == null;
     }
-    public ArrayList<T> remaningCards(){return (ArrayList<T>) remaining;}
+
+    public ArrayList<T> remaningCards() {
+        return (ArrayList<T>) remaining;
+    }
 }

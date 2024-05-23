@@ -17,7 +17,8 @@ public class CardLocation implements Serializable {
      * @throws IllegalArgumentException if the provided coordinates are not valid
      */
     public CardLocation(int x, int y) {
-        if((Math.abs(x)%2) != (Math.abs(y)%2)) throw new IllegalArgumentException("Card location invalid: card location's coordinates should be both even or bot odd");
+        if ((Math.abs(x) % 2) != (Math.abs(y) % 2))
+            throw new IllegalArgumentException("Card location invalid: card location's coordinates should be both even or bot odd");
         this.x = x;
         this.y = y;
     }
@@ -69,7 +70,7 @@ public class CardLocation implements Serializable {
      * @return a new CardLocation object representing the subtraction from the current one of the given deltas
      */
     public CardLocation sub(int dx, int dy) {
-        return add(-dx,-dy);
+        return add(-dx, -dy);
     }
 
     /**
@@ -78,7 +79,7 @@ public class CardLocation implements Serializable {
      * @return the location of the top-left neighbour
      */
     public CardLocation topLeftNeighbour() {
-        return this.add(-1,1);
+        return this.add(-1, 1);
     }
 
     /**
@@ -87,7 +88,7 @@ public class CardLocation implements Serializable {
      * @return the location of the top-right neighbour
      */
     public CardLocation topRightNeighbour() {
-        return this.add(1,1);
+        return this.add(1, 1);
     }
 
     /**
@@ -96,7 +97,7 @@ public class CardLocation implements Serializable {
      * @return the location of the bottom-left neighbour
      */
     public CardLocation bottomLeftNeighbour() {
-        return this.add(-1,-1);
+        return this.add(-1, -1);
     }
 
     /**
@@ -105,12 +106,12 @@ public class CardLocation implements Serializable {
      * @return the location of the bottom-right neighbour
      */
     public CardLocation bottomRightNeighbour() {
-        return this.add(1,-1);
+        return this.add(1, -1);
     }
 
     @Override
     public String toString() {
-        return "{"+x+","+y+"}";
+        return "{" + x + "," + y + "}";
     }
 
     @Override
@@ -123,6 +124,6 @@ public class CardLocation implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(x,y);
+        return Objects.hash(x, y);
     }
 }

@@ -25,7 +25,7 @@ public class ScoreBoard extends Observable implements Serializable {
         scores = new HashMap<>();
 
         for (Player p : players) {
-            scores.put(p.nickName,0);
+            scores.put(p.nickName, 0);
         }
     }
 
@@ -46,7 +46,7 @@ public class ScoreBoard extends Observable implements Serializable {
      * @return The score of the specified player.
      */
     public int getScore(String nickName) {
-        if(!scores.containsKey(nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
+        if (!scores.containsKey(nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
         return scores.get(nickName);
     }
 
@@ -54,12 +54,12 @@ public class ScoreBoard extends Observable implements Serializable {
      * Sets the score for the specified player in the scoreboard.
      *
      * @param nickName the nickname of the Player whose score needs to be set.
-     * @param score the new score to set for the player.
+     * @param score    the new score to set for the player.
      * @throws NoSuchElementException if the provided player is not in the scoreboard
      */
     public void setScore(String nickName, int score) {
-        if(!scores.containsKey(nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
-        scores.put(nickName,score);
+        if (!scores.containsKey(nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
+        scores.put(nickName, score);
 
         notifyObservers(new ScoreUpdateMessage(this));
     }
@@ -67,12 +67,12 @@ public class ScoreBoard extends Observable implements Serializable {
     /**
      * Increases the score of a player in the scoreboard by a specified amount.
      *
-     * @param nickName the nickname of the Player whose score needs to be updated
+     * @param nickName   the nickname of the Player whose score needs to be updated
      * @param scoreDelta the amount to add to the Player's score.
      */
     public void addScore(String nickName, int scoreDelta) {
-        if(!scores.containsKey(nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
-        this.setScore(nickName, scores.get(nickName)  + scoreDelta);
+        if (!scores.containsKey(nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
+        this.setScore(nickName, scores.get(nickName) + scoreDelta);
     }
 
     public void copyScore(ScoreBoard scoreBoard) {
@@ -86,7 +86,7 @@ public class ScoreBoard extends Observable implements Serializable {
     public String toString() {
         StringBuilder s = new StringBuilder();
 
-        for(String nickname : this.scores.keySet()) {
+        for (String nickname : this.scores.keySet()) {
             s.append(nickname).append(": ").append(scores.get(nickname)).append("\n");
         }
 

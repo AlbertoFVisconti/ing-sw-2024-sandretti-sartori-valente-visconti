@@ -24,8 +24,9 @@ import it.polimi.ingsw.view.VirtualView;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -40,6 +41,7 @@ public abstract class UserInterface extends Thread implements VirtualView {
     private String playersTurn;
 
     private final BlockingQueue<ServerMessage> messageQueue;
+
     public UserInterface() {
         messageQueue = new ArrayBlockingQueue<>(100);
 
@@ -60,7 +62,7 @@ public abstract class UserInterface extends Thread implements VirtualView {
                 () -> {
                     ServerMessage message;
 
-                    while(true) {
+                    while (true) {
                         try {
                             message = messageQueue.take();
                         } catch (InterruptedException e) {
@@ -68,7 +70,7 @@ public abstract class UserInterface extends Thread implements VirtualView {
                         }
 
                         message.updateView(this);
-                        if(message.messageType != MessageType.PING_MESSAGE) {
+                        if (message.messageType != MessageType.PING_MESSAGE) {
                             this.update();
                         }
                     }
@@ -105,7 +107,8 @@ public abstract class UserInterface extends Thread implements VirtualView {
 
 
     @Override
-    public void setController(VirtualController controller) throws RemoteException {}
+    public void setController(VirtualController controller) throws RemoteException {
+    }
 
 
     @Override
@@ -156,8 +159,8 @@ public abstract class UserInterface extends Thread implements VirtualView {
         //System.err.println(card);
         //System.err.println();
 
-        for(Player p : gameModel.getPlayers()) {
-            if(p.nickName.equals(playerNickname)) {
+        for (Player p : gameModel.getPlayers()) {
+            if (p.nickName.equals(playerNickname)) {
                 p.setPlayerCard(card, index);
                 break;
             }
@@ -171,20 +174,18 @@ public abstract class UserInterface extends Thread implements VirtualView {
         //System.err.println();
 
         PlayCard[] visibleCards = gameModel.getVisibleCards();
-        if(visibleCards == null) {
-            gameModel.resetVisibleCards(index+1);
+        if (visibleCards == null) {
+            gameModel.resetVisibleCards(index + 1);
             PlayCard[] newVisibleCards = gameModel.getVisibleCards();
             newVisibleCards[index] = card;
-        }
-        else if(index >= visibleCards.length) {
+        } else if (index >= visibleCards.length) {
             visibleCards = visibleCards.clone();
-            gameModel.resetVisibleCards(index+1);
+            gameModel.resetVisibleCards(index + 1);
             PlayCard[] newVisibleCards = gameModel.getVisibleCards();
 
             System.arraycopy(visibleCards, 0, newVisibleCards, 0, visibleCards.length);
             newVisibleCards[index] = card;
-        }
-        else {
+        } else {
             visibleCards[index] = card;
         }
     }
@@ -197,11 +198,10 @@ public abstract class UserInterface extends Thread implements VirtualView {
         //System.err.println();
 
         VirtualDeck<PlayCard> deck;
-        if(index == 0) {
-            deck = (VirtualDeck<PlayCard>)gameModel.getResourceCardsDeck();
-        }
-        else {
-            deck = (VirtualDeck<PlayCard>)gameModel.getGoldCardsDeck();
+        if (index == 0) {
+            deck = (VirtualDeck<PlayCard>) gameModel.getResourceCardsDeck();
+        } else {
+            deck = (VirtualDeck<PlayCard>) gameModel.getGoldCardsDeck();
         }
 
         deck.setTopOfTheStack(resource);
@@ -213,17 +213,16 @@ public abstract class UserInterface extends Thread implements VirtualView {
         //System.err.println(card);
         //System.err.println();
 
-        for(Player p : gameModel.getPlayers()) {
-            if(p.nickName.equals(playerNickname)) {
-                if(location.equals(new CardLocation(0,0))) {
+        for (Player p : gameModel.getPlayers()) {
+            if (p.nickName.equals(playerNickname)) {
+                if (location.equals(new CardLocation(0, 0))) {
                     try {
-                        p.setStartCard((StartCard)card);
+                        p.setStartCard((StartCard) card);
                         p.placeStartingCard(card.isOnBackSide());
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-                }
-                else {
+                } else {
                     int i = 0;
                     for (PlayCard c : p.getPlayerCards()) {
                         if (c.equals(card)) {
@@ -274,11 +273,11 @@ public abstract class UserInterface extends Thread implements VirtualView {
 
         gameModel.resetPlayers();
 
-        for(int i = 0; i < nicknames.length; i++) {
+        for (int i = 0; i < nicknames.length; i++) {
             gameModel.addPlayer(new Player(nicknames[i], null));
             gameModel.getPlayers().get(i).setColor(colors[i]);
 
-            if(localPlayer != null && nicknames[i].equals(localPlayer.nickName)) {
+            if (localPlayer != null && nicknames[i].equals(localPlayer.nickName)) {
 
                 this.localPlayer = gameModel.getPlayers().get(i);
             }
@@ -290,7 +289,7 @@ public abstract class UserInterface extends Thread implements VirtualView {
 
     @Override
     public void updateGameStatus(GameStatus gameStatus, TurnStatus turnStatus, String playersTurn) throws RemoteException {
-        if(this.gameStatus != GameStatus.GAME_CREATION && gameStatus == GameStatus.GAME_CREATION) {
+        if (this.gameStatus != GameStatus.GAME_CREATION && gameStatus == GameStatus.GAME_CREATION) {
             // NOTE: more or less same to assume that the GAME_CREATION update message won't
             // be received before joining messages
             this.gameModel.setupScoreBoard();
@@ -308,30 +307,29 @@ public abstract class UserInterface extends Thread implements VirtualView {
 
     @Override
     public void ping(boolean isAnswer) throws RemoteException {
-        if(!isAnswer) Client.getInstance().getServerHandler().sendMessage(new ClientToServerPingMessage(true));
+        if (!isAnswer) Client.getInstance().getServerHandler().sendMessage(new ClientToServerPingMessage(true));
 
         // TODO handle server "disconnection"
     }
 
     @Override
     public void receiveMessage(ChatMessage chatMessage, boolean isPrivate) throws RemoteException {
-        if(isPrivate) {
+        if (isPrivate) {
             String remoteNickname;
-            if(chatMessage.getSenderNick().equals(this.localPlayer.nickName)) {
+            if (chatMessage.getSenderNick().equals(this.localPlayer.nickName)) {
                 remoteNickname = chatMessage.getReceiverNick();
-            }
-            else {
+            } else {
                 remoteNickname = chatMessage.getSenderNick();
             }
 
             this.gameModel.getChat().appendMessage(chatMessage, remoteNickname, this.localPlayer.nickName);
-        }
-        else this.gameModel.getChat().appendMessage(chatMessage, null, null);
+        } else this.gameModel.getChat().appendMessage(chatMessage, null, null);
     }
 
     public HashSet<Integer> getAvailableGames() {
         return availableGames;
     }
+
     public Set<PlayerColor> getAvailableColors() {
         return gameModel.getAvailableColor();
     }

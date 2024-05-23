@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.decks;
 
-import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.cards.corners.Resource;
@@ -8,6 +7,7 @@ import it.polimi.ingsw.model.cards.scoring.CoveredCornersScoringStrategy;
 import it.polimi.ingsw.model.cards.scoring.FreeScoreScoringStrategy;
 import it.polimi.ingsw.model.cards.scoring.ItemCountScoringStrategy;
 import it.polimi.ingsw.model.cards.scoring.ScoringStrategy;
+import it.polimi.ingsw.utils.ItemCollection;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * The PlayCardDeckLoader class allows to create objects to load standard game's PlayCards from files.
  */
-public class PlayCardDeckLoader extends DeckLoader<PlayCard>{
+public class PlayCardDeckLoader extends DeckLoader<PlayCard> {
     /**
      * Build a new PlayCardDeckLoader that operates on the file whose name is provided.
      *
@@ -60,21 +60,21 @@ public class PlayCardDeckLoader extends DeckLoader<PlayCard>{
                     bottomRight = null;
 
             String cornerString = json.getString("tl_corner");
-            if(!cornerString.equals("HIDDEN")) topLeft = Corner.valueOf(cornerString);
+            if (!cornerString.equals("HIDDEN")) topLeft = Corner.valueOf(cornerString);
 
             cornerString = json.getString("tr_corner");
-            if(!cornerString.equals("HIDDEN"))topRight = Corner.valueOf(cornerString);
+            if (!cornerString.equals("HIDDEN")) topRight = Corner.valueOf(cornerString);
 
             cornerString = json.getString("bl_corner");
-            if(!cornerString.equals("HIDDEN"))bottomLeft = Corner.valueOf(cornerString);
+            if (!cornerString.equals("HIDDEN")) bottomLeft = Corner.valueOf(cornerString);
 
             cornerString = json.getString("br_corner");
-            if(!cornerString.equals("HIDDEN"))bottomRight = Corner.valueOf(cornerString);
+            if (!cornerString.equals("HIDDEN")) bottomRight = Corner.valueOf(cornerString);
 
-            if(isGoldCard) {
+            if (isGoldCard) {
                 ScoringStrategy scoringStrategy = null;
 
-                switch(json.getString("scoring_strategy")) {
+                switch (json.getString("scoring_strategy")) {
                     case "item_count":
                         try {
                             scoringStrategy = new ItemCountScoringStrategy(
@@ -100,7 +100,7 @@ public class PlayCardDeckLoader extends DeckLoader<PlayCard>{
                 JSONArray constraintArray = json.getJSONArray("constraint");
                 ItemCollection constraint = new ItemCollection();
 
-                for(int j = 0; j < constraintArray.length(); j++) {
+                for (int j = 0; j < constraintArray.length(); j++) {
                     JSONObject constraintObject = constraintArray.getJSONObject(j);
                     constraint.add(
                             Corner.valueOf(constraintObject.getString("item")),
@@ -108,13 +108,12 @@ public class PlayCardDeckLoader extends DeckLoader<PlayCard>{
                     );
                 }
 
-                cards.add(PlayCard.generateGoldCard("golden_card_"+i,topLeft, topRight, bottomLeft, bottomRight, type, constraint, scoringStrategy));
+                cards.add(PlayCard.generateGoldCard("golden_card_" + i, topLeft, topRight, bottomLeft, bottomRight, type, constraint, scoringStrategy));
 
-            }
-            else {
+            } else {
                 int score = json.getInt("free_score");
 
-                cards.add(PlayCard.generateResourceCard("resrouce_card_"+i,topLeft, topRight, bottomLeft, bottomRight, type, score));
+                cards.add(PlayCard.generateResourceCard("resrouce_card_" + i, topLeft, topRight, bottomLeft, bottomRight, type, score));
             }
         }
 

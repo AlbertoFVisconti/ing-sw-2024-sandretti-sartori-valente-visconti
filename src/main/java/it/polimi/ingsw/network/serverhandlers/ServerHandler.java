@@ -2,7 +2,7 @@ package it.polimi.ingsw.network.serverhandlers;
 
 import it.polimi.ingsw.events.messages.client.ClientMessage;
 
-public abstract class ServerHandler  {
+public abstract class ServerHandler {
     private String playerIdentifier;
 
     public final void setPlayerIdentifier(String playerIdentifier) {

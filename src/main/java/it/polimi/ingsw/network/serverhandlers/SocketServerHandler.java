@@ -2,7 +2,7 @@ package it.polimi.ingsw.network.serverhandlers;
 
 
 import it.polimi.ingsw.events.messages.Message;
-import it.polimi.ingsw.events.messages.client.*;
+import it.polimi.ingsw.events.messages.client.ClientMessage;
 import it.polimi.ingsw.events.messages.server.ServerMessage;
 import it.polimi.ingsw.network.Client;
 
@@ -11,7 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class SocketServerHandler extends ServerHandler implements Runnable   {
+public class SocketServerHandler extends ServerHandler implements Runnable {
     private Socket socket;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
@@ -47,14 +47,14 @@ public class SocketServerHandler extends ServerHandler implements Runnable   {
     public void run() {
         Message message;
 
-        while(true) {
+        while (true) {
             try {
                 message = (Message) inputStream.readObject();
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
 
-            Client.getInstance().getUserInterface().forwardMessage((ServerMessage)message);
+            Client.getInstance().getUserInterface().forwardMessage((ServerMessage) message);
         }
     }
 }

@@ -15,8 +15,8 @@ import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.network.serverhandlers.RMIServerHandler;
 import it.polimi.ingsw.network.serverhandlers.ServerHandler;
-import it.polimi.ingsw.view.ui.UserInterface;
 import it.polimi.ingsw.utils.CardLocation;
+import it.polimi.ingsw.view.ui.UserInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -26,7 +26,7 @@ import java.util.Set;
  * Client-side remote object that receive Remote Method Invocations from the Server
  * and "transform" them into messages that will be processed by the actual View (UserInterface) asynchronously.
  */
-public class ViewWrapper extends UnicastRemoteObject implements VirtualView{
+public class ViewWrapper extends UnicastRemoteObject implements VirtualView {
     UserInterface userInterface;
 
     public UserInterface getUserInterface() {
@@ -41,7 +41,7 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView{
     @Override
     public void setController(VirtualController controller) throws RemoteException {
         ServerHandler serverHandler = Client.getInstance().getServerHandler();
-        if(serverHandler instanceof RMIServerHandler)
+        if (serverHandler instanceof RMIServerHandler)
             ((RMIServerHandler) serverHandler).setController(controller);
     }
 
@@ -127,6 +127,6 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView{
 
     @Override
     public void receiveMessage(ChatMessage chatMessage, boolean isPrivate) throws RemoteException {
-        userInterface.forwardMessage(new ServerChatMsgMessage( chatMessage, isPrivate));
+        userInterface.forwardMessage(new ServerChatMsgMessage(chatMessage, isPrivate));
     }
 }

@@ -33,27 +33,26 @@ public class SocketClientHandler extends ClientHandler {
         this.setSocket(socket);
 
         new Thread(
-            () -> {
-                ClientMessage message;
+                () -> {
+                    ClientMessage message;
 
-                while(true) {
-                    try {
-                        message = (ClientMessage) inputStream.readObject();
-                    } catch (IOException | ClassNotFoundException e) {
-                        this.forceDisconnection();
-                        break;
-                    }
+                    while (true) {
+                        try {
+                            message = (ClientMessage) inputStream.readObject();
+                        } catch (IOException | ClassNotFoundException e) {
+                            this.forceDisconnection();
+                            break;
+                        }
 
-                    if(message.messageType == MessageType.CONNECT_JOIN_MESSAGE ||
-                        message.messageType == MessageType.PING_MESSAGE) {
-                        MainController.getInstance().forwardMessage(message);
-                    }
-                    else {
-                        gameController.forwardMessage(message);
-                    }
+                        if (message.messageType == MessageType.CONNECT_JOIN_MESSAGE ||
+                                message.messageType == MessageType.PING_MESSAGE) {
+                            MainController.getInstance().forwardMessage(message);
+                        } else {
+                            gameController.forwardMessage(message);
+                        }
 
+                    }
                 }
-            }
         ).start();
     }
 

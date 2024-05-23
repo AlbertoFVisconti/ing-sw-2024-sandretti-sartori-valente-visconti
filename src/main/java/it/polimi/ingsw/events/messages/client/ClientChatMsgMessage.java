@@ -6,14 +6,14 @@ import it.polimi.ingsw.network.rmi.VirtualMainController;
 
 import java.rmi.RemoteException;
 
-public class ClientChatMsgMessage extends ClientMessage{
+public class ClientChatMsgMessage extends ClientMessage {
     private final String message;
     private final String addressee;
 
     /**
      * Builds a ClientChatMsgMessage with a specific addressee
      *
-     * @param message the message that needs to be sent
+     * @param message   the message that needs to be sent
      * @param addressee the nickname of the player who needs to receive this message
      */
     public ClientChatMsgMessage(String message, String addressee) {
@@ -35,10 +35,10 @@ public class ClientChatMsgMessage extends ClientMessage{
 
     @Override
     public void execute(VirtualMainController selector, VirtualController controller) {
-        if(controller == null) throw new RuntimeException("Client game matching failed");
+        if (controller == null) throw new RuntimeException("Client game matching failed");
 
         try {
-            controller.sendChatMsg(this.getPlayerIdentifier(),this.message, this.addressee);
+            controller.sendChatMsg(this.getPlayerIdentifier(), this.message, this.addressee);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

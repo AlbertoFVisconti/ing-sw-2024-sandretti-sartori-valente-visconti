@@ -7,7 +7,7 @@ import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.utils.CardLocation;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PatternGoalTest {
 
@@ -55,14 +55,14 @@ class PatternGoalTest {
 
         // creates a board that has 21 ANIMAL cards one on top of the other
         // each ANIMAL card also has an INSECT card as its top-left neighbour
-        for(int i = 0; i < 21; i++) {
+        for (int i = 0; i < 21; i++) {
             PlayCard c1 = PlayCard.generateResourceCard("", Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.ANIMAL, 2);
             PlayCard c2 = PlayCard.generateResourceCard("", Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.INSECT, 2);
 
-            p.setPlayerCard(c1,0);
-            p.placeCard(0, false, new CardLocation(0,-i*2));
-            p.setPlayerCard(c2,0);
-            p.placeCard(0, false, new CardLocation(-1,1+-i*2));
+            p.setPlayerCard(c1, 0);
+            p.placeCard(0, false, new CardLocation(0, -i * 2));
+            p.setPlayerCard(c2, 0);
+            p.placeCard(0, false, new CardLocation(-1, 1 + -i * 2));
 
         }
 
@@ -134,48 +134,48 @@ class PatternGoalTest {
         // the (private) method PatternGoal.splitInConnectedGroups(...)
 
         // creates the first column with 21 ANIMAL cards (+21 INSECTs)
-        for(int i = 0; i < 21; i++) {
+        for (int i = 0; i < 21; i++) {
             PlayCard c1 = PlayCard.generateResourceCard("", Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.ANIMAL, 2);
             PlayCard c2 = PlayCard.generateResourceCard("", Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.INSECT, 2);
 
-            p.setPlayerCard(c1,0);
-            p.placeCard(0, false, new CardLocation(0,-i*2));
-            p.setPlayerCard(c2,0);
-            p.placeCard(0, false, new CardLocation(-1,1+-i*2));
+            p.setPlayerCard(c1, 0);
+            p.placeCard(0, false, new CardLocation(0, -i * 2));
+            p.setPlayerCard(c2, 0);
+            p.placeCard(0, false, new CardLocation(-1, 1 + -i * 2));
         }
 
         // creates the second column with 24 ANIMAL cards (+24 INSECTs)
-        for(int i = 0; i < 24; i++) {
+        for (int i = 0; i < 24; i++) {
             PlayCard c1 = PlayCard.generateResourceCard("", Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.ANIMAL, 2);
             PlayCard c2 = PlayCard.generateResourceCard("", Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.INSECT, 2);
 
-            p.setPlayerCard(c1,0);
-            p.placeCard(0, false, new CardLocation(10,-i*2));
-            p.setPlayerCard(c2,0);
-            p.placeCard(0, false, new CardLocation(9,1+-i*2));
+            p.setPlayerCard(c1, 0);
+            p.placeCard(0, false, new CardLocation(10, -i * 2));
+            p.setPlayerCard(c2, 0);
+            p.placeCard(0, false, new CardLocation(9, 1 + -i * 2));
 
         }
 
         // creates the third column with 12 ANIMAL cards (+12 INSECTs)
-        for(int i = 0; i < 12; i++) {
+        for (int i = 0; i < 12; i++) {
             PlayCard c1 = PlayCard.generateResourceCard("", Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.ANIMAL, 2);
             PlayCard c2 = PlayCard.generateResourceCard("", Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.INSECT, 2);
 
-            p.setPlayerCard(c1,0);
-            p.placeCard(0, false, new CardLocation(20,-i*2));
-            p.setPlayerCard(c2,0);
-            p.placeCard(0, false, new CardLocation(19,1+-i*2));
+            p.setPlayerCard(c1, 0);
+            p.placeCard(0, false, new CardLocation(20, -i * 2));
+            p.setPlayerCard(c2, 0);
+            p.placeCard(0, false, new CardLocation(19, 1 + -i * 2));
 
         }
         // creates the forth column with 29 ANIMAL cards (+29 INSECTs)
-        for(int i = 0; i < 29; i++) {
+        for (int i = 0; i < 29; i++) {
             PlayCard c1 = PlayCard.generateResourceCard("", Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.ANIMAL, 2);
             PlayCard c2 = PlayCard.generateResourceCard("", Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Corner.EMPTY, Resource.INSECT, 2);
 
-            p.setPlayerCard(c1,0);
-            p.placeCard(0, false, new CardLocation(30,-i*2));
-            p.setPlayerCard(c2,0);
-            p.placeCard(0, false, new CardLocation(29,1+-i*2));
+            p.setPlayerCard(c1, 0);
+            p.placeCard(0, false, new CardLocation(30, -i * 2));
+            p.setPlayerCard(c2, 0);
+            p.placeCard(0, false, new CardLocation(29, 1 + -i * 2));
 
         }
 

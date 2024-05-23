@@ -9,16 +9,16 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
- *  ItemCollection is class that allows to store information about amounts of items.
- *  With item we intend every object of the Corner enum class, except {@code Corner.EMPTY}, which represents
- *  the concept of "missing item", counting this kind of Corner is not useful nor reasonable for this application.
- *  The class allows the user to perform set operations with ItemCollection and Corner types.
- *  Storing capabilities become particularly useful when dealing with players' inventories or
- *  cards' resource constraint and when moving amounts of items around (collecting resources from placed cards for instance).
- *  Set operations allow goals and scoring evaluation methods to become simple to write, read and understand.
- *  <p>
- *  Example:
- *  <pre>{@code
+ * ItemCollection is class that allows to store information about amounts of items.
+ * With item we intend every object of the Corner enum class, except {@code Corner.EMPTY}, which represents
+ * the concept of "missing item", counting this kind of Corner is not useful nor reasonable for this application.
+ * The class allows the user to perform set operations with ItemCollection and Corner types.
+ * Storing capabilities become particularly useful when dealing with players' inventories or
+ * cards' resource constraint and when moving amounts of items around (collecting resources from placed cards for instance).
+ * Set operations allow goals and scoring evaluation methods to become simple to write, read and understand.
+ * <p>
+ * Example:
+ * <pre>{@code
  *  // Creating a new empty ItemCollection
  *  ItemCollection collection = new ItemCollection();
  *
@@ -44,14 +44,14 @@ public class ItemCollection implements Serializable {
      */
     public ItemCollection() {
         content = new EnumMap<>(Corner.class);
-        content.put(Corner.PLANT,0);
-        content.put(Corner.ANIMAL,0);
-        content.put(Corner.FUNGUS,0);
-        content.put(Corner.INSECT,0);
+        content.put(Corner.PLANT, 0);
+        content.put(Corner.ANIMAL, 0);
+        content.put(Corner.FUNGUS, 0);
+        content.put(Corner.INSECT, 0);
 
-        content.put(Corner.FEATHER,0);
-        content.put(Corner.INK,0);
-        content.put(Corner.SCROLL,0);
+        content.put(Corner.FEATHER, 0);
+        content.put(Corner.INK, 0);
+        content.put(Corner.SCROLL, 0);
     }
 
     /**
@@ -73,8 +73,8 @@ public class ItemCollection implements Serializable {
      * @return this ItemCollection after the operation
      */
     public ItemCollection add(ItemCollection itemCollection) {
-        for(Corner cornerType : content.keySet()) {
-            this.content.put(cornerType, content.get(cornerType)+itemCollection.content.get(cornerType));
+        for (Corner cornerType : content.keySet()) {
+            this.content.put(cornerType, content.get(cornerType) + itemCollection.content.get(cornerType));
         }
         return this;
     }
@@ -99,8 +99,9 @@ public class ItemCollection implements Serializable {
      * @return this ItemCollection after the operation
      */
     public ItemCollection add(Corner corner, int amount) {
-        if(corner == Corner.EMPTY || corner == null) return this;
-        if(this.count(corner) + amount < 0) throw new ArithmeticException("sub(Corner): itemCollection cannot have negative amounts");
+        if (corner == Corner.EMPTY || corner == null) return this;
+        if (this.count(corner) + amount < 0)
+            throw new ArithmeticException("sub(Corner): itemCollection cannot have negative amounts");
 
         this.content.put(corner, content.get(corner) + amount);
 
@@ -115,9 +116,10 @@ public class ItemCollection implements Serializable {
      * @return this ItemCollection after the operation
      */
     public ItemCollection sub(ItemCollection itemCollection) {
-        if(!itemCollection.isSubSetOf(this)) throw new ArithmeticException("sub(ItemCollection): itemCollection cannot have negative amounts");
-        for(Corner cornerType : content.keySet()) {
-            this.content.put(cornerType, content.get(cornerType)-itemCollection.content.get(cornerType));
+        if (!itemCollection.isSubSetOf(this))
+            throw new ArithmeticException("sub(ItemCollection): itemCollection cannot have negative amounts");
+        for (Corner cornerType : content.keySet()) {
+            this.content.put(cornerType, content.get(cornerType) - itemCollection.content.get(cornerType));
         }
         return this;
     }
@@ -151,13 +153,12 @@ public class ItemCollection implements Serializable {
      * Basically, it checks if, for every item, the amount in the current ItemCollection are always
      * less than or equal to the amount in the given ItemCollection.
      *
-     *
      * @param itemCollection the ItemCollection to compare the current one against
      * @return {@code true} if this ItemCollection is a subset of given one, {@code false} otherwise
      */
     public boolean isSubSetOf(ItemCollection itemCollection) {
-        for(Corner cornerType : content.keySet()) {
-            if(itemCollection.content.get(cornerType) < this.content.get(cornerType)) {
+        for (Corner cornerType : content.keySet()) {
+            if (itemCollection.content.get(cornerType) < this.content.get(cornerType)) {
                 return false;
             }
         }
@@ -182,20 +183,20 @@ public class ItemCollection implements Serializable {
      */
     public int divide(ItemCollection itemCollection) {
         int worstRatio = -1,
-            amountInDivisor,
-            amountInDividend,
-            currentItemRatio;
+                amountInDivisor,
+                amountInDividend,
+                currentItemRatio;
 
-        for(Corner cornerType : content.keySet()) {
+        for (Corner cornerType : content.keySet()) {
             amountInDivisor = itemCollection.content.get(cornerType);
 
             // if amountInDivisor == 0, this cornerType does not affect the final result: any check is unnecessary
-            if(amountInDivisor != 0) {
+            if (amountInDivisor != 0) {
                 // the divisor contains at least an item of this cornerType: I need to compute the ratio
                 amountInDividend = this.content.get(cornerType);
-                currentItemRatio = amountInDividend /amountInDivisor;
+                currentItemRatio = amountInDividend / amountInDivisor;
 
-                if( currentItemRatio < worstRatio || worstRatio == -1) {
+                if (currentItemRatio < worstRatio || worstRatio == -1) {
                     // currentItemRatio is the worst so far (could also mean that it's the first valid currentItemRatio)
                     worstRatio = currentItemRatio;
                 }
@@ -203,7 +204,8 @@ public class ItemCollection implements Serializable {
         }
 
         // worst == -1 means that the condition amountInDivisor != 0 was always false: the divisor (itemCollection) is empty
-        if (worstRatio == -1) throw new ArithmeticException("cannot perform division with an empty ItemCollection as divisor");
+        if (worstRatio == -1)
+            throw new ArithmeticException("cannot perform division with an empty ItemCollection as divisor");
 
         // the worst ratio, if it exists, is the final result: the divisor (itemCollection) is contained worstRatio times in the dividend (this)
         return worstRatio;
@@ -214,7 +216,7 @@ public class ItemCollection implements Serializable {
      *
      * @param corner Corner whose item we want to know the amount stored
      * @return the amount of the specified Corner's Item in this ItemCollection
-     * @throws NullPointerException if the specified Corner is null
+     * @throws NullPointerException   if the specified Corner is null
      * @throws NoSuchElementException if the specified Corner is {@code Corner.EMPTY} thus a "missing item"
      */
     public int count(Corner corner) {
@@ -226,8 +228,8 @@ public class ItemCollection implements Serializable {
     public List<Corner> toList() {
         List<Corner> result = new ArrayList<>();
 
-        for(Corner corner : this.content.keySet()) {
-            for(int i = 0; i < this.content.get(corner); i++) {
+        for (Corner corner : this.content.keySet()) {
+            for (int i = 0; i < this.content.get(corner); i++) {
                 result.add(corner);
             }
         }

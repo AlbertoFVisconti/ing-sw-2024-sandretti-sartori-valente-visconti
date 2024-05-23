@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GameListMessage extends ServerMessage{
+public class GameListMessage extends ServerMessage {
     private final HashSet<Integer> availableGames;
 
     public GameListMessage(Set<Integer> availableGames) {

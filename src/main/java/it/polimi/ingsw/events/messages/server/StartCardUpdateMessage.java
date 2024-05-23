@@ -16,6 +16,7 @@ public class StartCardUpdateMessage extends ServerMessage {
      * Builds the message
      * Warning! using this constructor the message will never be delivered to a client.
      * This constructor is intended for communication withing the client's classes.
+     *
      * @param card the StartCard object that represents the player's starting card.
      */
     public StartCardUpdateMessage(StartCard card) {

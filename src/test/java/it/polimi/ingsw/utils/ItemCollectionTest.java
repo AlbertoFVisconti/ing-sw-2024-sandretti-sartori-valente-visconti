@@ -3,7 +3,6 @@ package it.polimi.ingsw.utils;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import org.junit.jupiter.api.Test;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ItemCollectionTest {

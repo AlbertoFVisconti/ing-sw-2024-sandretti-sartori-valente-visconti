@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.goals;
 
-import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.utils.ItemCollection;
 
 /**
  * Represents a goal based on collecting specific items.
@@ -30,7 +30,7 @@ public class ItemGoal extends Goal {
      */
     @Override
     public int evaluate(Player player) {
-        return scorePerSet* player.getInventory().divide(this.items);
+        return scorePerSet * player.getInventory().divide(this.items);
     }
 
     @Override

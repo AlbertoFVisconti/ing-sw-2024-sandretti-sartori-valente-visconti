@@ -1,7 +1,7 @@
 package it.polimi.ingsw.events.messages.server;
 
-import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.events.messages.MessageType;
+import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
@@ -16,7 +16,7 @@ public class DeckUpdateMessage extends ServerMessage {
     /**
      * Builds the message.
      *
-     * @param resourceOnTop the resource that is on top of the deck.
+     * @param resourceOnTop  the resource that is on top of the deck.
      * @param deckIdentifier the identifier of the deck that needs to be updated.
      */
     public DeckUpdateMessage(Resource resourceOnTop, int deckIdentifier) {

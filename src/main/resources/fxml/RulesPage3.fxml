@@ -4,7 +4,6 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="432.0"
             prefWidth="860.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="it.polimi.ingsw.view.ui.gui.FXController.RulesPage3Controller">
@@ -15,6 +14,8 @@
                preserveRatio="true" onMouseClicked='#GoBackToLobby'>
         <Image url="@../image/BackArrowButton.png"/>
     </ImageView>
-    <Button fx:id="NextPageButton" layoutX="758.0" layoutY="392.0" minWidth="64.0" mnemonicParsing="false" onAction="#NextPage" text="Next" stylesheets="@Style.css"/>
-    <Button fx:id="PreviousPageButton" layoutX="34.0" layoutY="392.0" mnemonicParsing="false" onAction="#PreviousPage" text="Previous" stylesheets="@Style.css"/>
+    <Button fx:id="NextPageButton" layoutX="758.0" layoutY="392.0" minWidth="64.0" mnemonicParsing="false"
+            onAction="#NextPage" text="Next" stylesheets="@Style.css"/>
+    <Button fx:id="PreviousPageButton" layoutX="34.0" layoutY="392.0" mnemonicParsing="false" onAction="#PreviousPage"
+            text="Previous" stylesheets="@Style.css"/>
 </AnchorPane>

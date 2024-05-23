@@ -14,21 +14,22 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GameTest {
     /**
      * StartedGameTest checks if when number of expected players is reached,
-     * the GameStatus is not LOBBY**/
+     * the GameStatus is not LOBBY
+     **/
     @Test
     void StartedGameTest() throws Exception {
         //create players
-        Player p1=new Player("pippo1", null);
-        Player p2= new Player("pippo2", null);
+        Player p1 = new Player("pippo1", null);
+        Player p2 = new Player("pippo2", null);
         //initialize parameters for game
-        int id=1;
-        int expectedPlayers=2;
-        GoalDeckLoader goalDeckLoader= new GoalDeckLoader("src/main/resources/json/goals.json");
-        PlayCardDeckLoader resourceCardDeckLoader= new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");
-        PlayCardDeckLoader goldCardDeckLoader= new PlayCardDeckLoader("src/main/resources/json/cards/goldcards.json");
-        StartCardDeckLoader startCardDeckLoader= new StartCardDeckLoader("src/main/resources/json/cards/startcards.json");
+        int id = 1;
+        int expectedPlayers = 2;
+        GoalDeckLoader goalDeckLoader = new GoalDeckLoader("src/main/resources/json/goals.json");
+        PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");
+        PlayCardDeckLoader goldCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/goldcards.json");
+        StartCardDeckLoader startCardDeckLoader = new StartCardDeckLoader("src/main/resources/json/cards/startcards.json");
         //create game
-        Game g=new Game(goldCardDeckLoader,resourceCardDeckLoader,startCardDeckLoader,goalDeckLoader, id,expectedPlayers );
+        Game g = new Game(goldCardDeckLoader, resourceCardDeckLoader, startCardDeckLoader, goalDeckLoader, id, expectedPlayers);
         //add players
         g.addPlayer(p1);
         g.addPlayer(p2);
@@ -45,13 +46,13 @@ public class GameTest {
         assertTrue(g.isFirstPlayersTurn());
         assertFalse(g.isFinalRound());
 
-        assertEquals(id,g.getIdGame());
+        assertEquals(id, g.getIdGame());
 
         // Decks shouldn't be empty
         assertFalse(g.getGoldCardsDeck().isEmpty());
         assertFalse(g.getResourceCardsDeck().isEmpty());
 
-        for(Player p : g.getPlayers()) {
+        for (Player p : g.getPlayers()) {
             if (!Objects.equals(p.nickName, p1.nickName) && !Objects.equals(p.nickName, p2.nickName)) {
                 fail();
             }
@@ -79,55 +80,58 @@ public class GameTest {
     }
 
     /**
-     * nextTurnTest checks if nextTurn() method works without issues**/
+     * nextTurnTest checks if nextTurn() method works without issues
+     **/
     @Test
     void nextTurnTest() throws Exception {
         //create players
-        Player p1=new Player("pippo1", null);
-        Player p2= new Player("pippo2", null);
+        Player p1 = new Player("pippo1", null);
+        Player p2 = new Player("pippo2", null);
         //initialize parameters for game
-        int id=1;
-        int expectedPlayers=2;
-        GoalDeckLoader goalDeckLoader= new GoalDeckLoader("src/main/resources/json/goals.json");
-        PlayCardDeckLoader resourceCardDeckLoader= new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");
-        PlayCardDeckLoader goldCardDeckLoader= new PlayCardDeckLoader("src/main/resources/json/cards/goldcards.json");
-        StartCardDeckLoader startCardDeckLoader= new StartCardDeckLoader("src/main/resources/json/cards/startcards.json");
+        int id = 1;
+        int expectedPlayers = 2;
+        GoalDeckLoader goalDeckLoader = new GoalDeckLoader("src/main/resources/json/goals.json");
+        PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");
+        PlayCardDeckLoader goldCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/goldcards.json");
+        StartCardDeckLoader startCardDeckLoader = new StartCardDeckLoader("src/main/resources/json/cards/startcards.json");
         //create game
-        Game g=new Game(goldCardDeckLoader,resourceCardDeckLoader,startCardDeckLoader,goalDeckLoader, id,expectedPlayers );
+        Game g = new Game(goldCardDeckLoader, resourceCardDeckLoader, startCardDeckLoader, goalDeckLoader, id, expectedPlayers);
         //add players
         g.addPlayer(p1);
         g.addPlayer(p2);
 
         g.startGame();
-        Player t1=g.getTurn();
+        Player t1 = g.getTurn();
         g.nextTurn();
-        Player t2=g.getTurn();
+        Player t2 = g.getTurn();
         assertNotEquals(t1, t2);
         g.nextTurn();
-        Player t3=g.getTurn();
+        Player t3 = g.getTurn();
         assertEquals(t1, t3);
     }
+
     /**
-     * RefillVisibleCardTest checks if the Visible Cards are correctly replaced after a player draws one of them**/
+     * RefillVisibleCardTest checks if the Visible Cards are correctly replaced after a player draws one of them
+     **/
     @Test
     void RefillVisibleCardTest() throws Exception {
         //create players
-        Player p1=new Player( "pippo1", null);
-        Player p2= new Player( "pippo2", null);
+        Player p1 = new Player("pippo1", null);
+        Player p2 = new Player("pippo2", null);
         //initialize parameters for game
-        int id=1;
-        int expectedPlayers=2;
-        GoalDeckLoader goalDeckLoader= new GoalDeckLoader("src/main/resources/json/goals.json");
-        PlayCardDeckLoader resourceCardDeckLoader= new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");
-        PlayCardDeckLoader goldCardDeckLoader= new PlayCardDeckLoader("src/main/resources/json/cards/goldcards.json");
-        StartCardDeckLoader startCardDeckLoader= new StartCardDeckLoader("src/main/resources/json/cards/startcards.json");
+        int id = 1;
+        int expectedPlayers = 2;
+        GoalDeckLoader goalDeckLoader = new GoalDeckLoader("src/main/resources/json/goals.json");
+        PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");
+        PlayCardDeckLoader goldCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/goldcards.json");
+        StartCardDeckLoader startCardDeckLoader = new StartCardDeckLoader("src/main/resources/json/cards/startcards.json");
         //create game
-        Game g=new Game(goldCardDeckLoader,resourceCardDeckLoader,startCardDeckLoader,goalDeckLoader, id,expectedPlayers );
+        Game g = new Game(goldCardDeckLoader, resourceCardDeckLoader, startCardDeckLoader, goalDeckLoader, id, expectedPlayers);
         //add players
         g.addPlayer(p1);
         g.addPlayer(p2);
         g.startGame();
-        g.getVisibleCards()[3]=null;
+        g.getVisibleCards()[3] = null;
         g.refillVisibleCards();
         assertNotEquals(null, g.getVisibleCards()[3]);
         assertTrue(g.getVisibleCards()[3].isGold() && g.getVisibleCards()[2].isGold());

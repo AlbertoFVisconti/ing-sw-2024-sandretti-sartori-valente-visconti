@@ -19,8 +19,8 @@ public class PlayersBoardUpdateMessage extends ServerMessage {
      * Builds the message.
      *
      * @param playerNickname the nickname of the player whose board has changed.
-     * @param placedCard the card that was placed on the board.
-     * @param location the location where the card was placed.
+     * @param placedCard     the card that was placed on the board.
+     * @param location       the location where the card was placed.
      */
     public PlayersBoardUpdateMessage(String playerNickname, Card placedCard, CardLocation location) {
         super(MessageType.MODEL_UPDATE_MESSAGE);

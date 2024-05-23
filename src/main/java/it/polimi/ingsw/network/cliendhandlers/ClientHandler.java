@@ -38,24 +38,22 @@ public abstract class ClientHandler implements Observer {
         this.disconnectionChecker = new Thread(
                 () -> {
 
-                    if(!isDisconnected) {
+                    if (!isDisconnected) {
                         long currTime = System.currentTimeMillis();
 
                         if (currTime >= (lastMessageTime + PING_MESSAGE_THRESHOLD)) {
-                            if(currTime >= (lastMessageTime + DISCONNECTION_THRESHOLD)) {
+                            if (currTime >= (lastMessageTime + DISCONNECTION_THRESHOLD)) {
                                 // client is now considered disconnected
                                 this.forceDisconnection();
 
                                 this.disconnectionCheckerExecutor.close();
-                            }
-                            else if (currTime >= (lastPingTime + PING_MESSAGE_THRESHOLD)) {
+                            } else if (currTime >= (lastPingTime + PING_MESSAGE_THRESHOLD)) {
                                 // send new ping message
                                 this.sendMessage(new ServerToClientPingMessage(false));
                             }
                         }
 
-                    }
-                    else {
+                    } else {
                         this.disconnectionCheckerExecutor.close();
                     }
                 }
@@ -92,7 +90,7 @@ public abstract class ClientHandler implements Observer {
      */
     @Override
     public void onUpdate(ServerMessage message) {
-        if(message.messageType == MessageType.PRIVATE_MODEL_UPDATE_MESSAGE
+        if (message.messageType == MessageType.PRIVATE_MODEL_UPDATE_MESSAGE
                 && !message.getAddresseeIdentifier().equals(this.playerIdentifier)) {
             return;
         }
@@ -115,14 +113,14 @@ public abstract class ClientHandler implements Observer {
     public abstract void linkController(GameControllerWrapper gameControllerWrapper);
 
     final public long getTimeSinceDisconnection() {
-        if(!this.isDisconnected) return 0;
+        if (!this.isDisconnected) return 0;
         return System.currentTimeMillis() - this.disconnectionTime;
     }
 
     protected void forceDisconnection() {
         this.isDisconnected = true;
         this.disconnectionTime = System.currentTimeMillis();
-        if(gameController != null) {
+        if (gameController != null) {
             gameController.handleDisconnection(this);
         }
     }
@@ -132,16 +130,15 @@ public abstract class ClientHandler implements Observer {
     }
 
     final public synchronized void messageReceived() {
-        if(this.isDisconnected) {
+        if (this.isDisconnected) {
             // a client that was previously "lost" came back online
             this.connectionSetup();
 
-            if(gameController != null) {
+            if (gameController != null) {
                 String nickname = MainController.getInstance().getPlayer(this.getPlayerIdentifier()).nickName;
                 this.gameController.handleReconnection(nickname, this);
             }
-        }
-        else {
+        } else {
             this.lastMessageTime = System.currentTimeMillis();
             this.lastPingTime = this.lastMessageTime;
         }

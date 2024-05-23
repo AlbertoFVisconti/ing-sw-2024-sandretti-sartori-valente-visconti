@@ -20,7 +20,7 @@ public class ItemCountScoringStrategy implements ScoringStrategy {
      * @throws Exception if the provided Corner is null or empty (thus contains no item).
      */
     public ItemCountScoringStrategy(Corner itemType, int scorePerItem) throws Exception {
-        if(itemType == null || itemType == Corner.EMPTY) throw new Exception("itemType must be a valid item");
+        if (itemType == null || itemType == Corner.EMPTY) throw new Exception("itemType must be a valid item");
 
         this.itemToCount = itemType;
         this.scorePerItem = scorePerItem;
@@ -30,13 +30,13 @@ public class ItemCountScoringStrategy implements ScoringStrategy {
      * Computes the score obtained by the player when placing a card using the ItemCountScoringStrategy.
      * This strategy awards score based on the number of the specified item present in the player's inventory.
      *
-     * @param player         the Player who is placing the card.
+     * @param player          the Player who is placing the card.
      * @param placingLocation the location on the game board where the card is being placed (not used in this strategy).
      * @return the score obtained by the player upon placement.
      */
     @Override
     public int evaluate(Player player, CardLocation placingLocation) {
-        return scorePerItem*player.getInventory().count(itemToCount);
+        return scorePerItem * player.getInventory().count(itemToCount);
     }
 
     @Override

@@ -21,10 +21,10 @@ public class JoinGameMessage extends ClientMessage {
      * This message requires a ClientHandler to be effective, because that needs to be linked to be player and to the game,
      * in order to forward updates and accept messages from the client.
      *
-     * @param gameID the identifier of the game the client's trying to join (if needed)
-     * @param creatingGame {@code true} if the client wants to create a new game, {@code false} otherwise
+     * @param gameID          the identifier of the game the client's trying to join (if needed)
+     * @param creatingGame    {@code true} if the client wants to create a new game, {@code false} otherwise
      * @param expectedPlayers if the client's creating a new game, this value represents the number of clients that will play the game
-     * @param nickname the nickname of the client that is trying to join
+     * @param nickname        the nickname of the client that is trying to join
      */
     public JoinGameMessage(int gameID, boolean creatingGame, int expectedPlayers, String nickname) {
         super(MessageType.CONNECT_JOIN_MESSAGE);
@@ -37,19 +37,18 @@ public class JoinGameMessage extends ClientMessage {
     /**
      * Tries to add the player to the game (or to create a new game)
      *
-     * @param selector the GameSelector instance that handles the game the player's playing.
+     * @param selector   the GameSelector instance that handles the game the player's playing.
      * @param controller the GameController that handles the game the player's playing. Which should be null, because the client isn't playing yet.
      */
     @Override
     public void execute(VirtualMainController selector, VirtualController controller) {
-        if(this.creatingGame) {
+        if (this.creatingGame) {
             try {
                 selector.createGame(this.getPlayerIdentifier(), expectedPlayers, nickname);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
-        }
-        else {
+        } else {
             try {
                 selector.joinGame(this.getPlayerIdentifier(), gameID, nickname);
             } catch (RemoteException e) {

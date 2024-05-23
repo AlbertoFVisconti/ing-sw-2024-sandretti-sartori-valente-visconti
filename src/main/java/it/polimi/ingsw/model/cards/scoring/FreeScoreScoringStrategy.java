@@ -24,7 +24,7 @@ public class FreeScoreScoringStrategy implements ScoringStrategy {
      * Computes the score obtained by the player when placing a card using the FreeScoreScoringStrategy.
      * This strategy awards a fixed score regardless of the placement location.
      *
-     * @param player         the Player who is placing the card.
+     * @param player          the Player who is placing the card.
      * @param placingLocation the location on the game board where the card is being placed.
      * @return the score obtained to the player upon placement.
      */

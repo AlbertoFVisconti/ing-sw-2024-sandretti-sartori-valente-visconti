@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.utils.ItemCollection;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ItemGoalTest {
     @Test
@@ -19,12 +19,12 @@ class ItemGoalTest {
         // ItemCollectionTest's tests passing prove that much
         // These instructions don't look very "handy", but this kind of operation
         // is never actually needed in the game logic, thus this is just for testing purpose
-        player.addItems(new ItemCollection().add(Corner.FUNGUS,  100));
-        player.addItems(new ItemCollection().add(Corner.PLANT,   200));
-        player.addItems(new ItemCollection().add(Corner.ANIMAL,  300));
-        player.addItems(new ItemCollection().add(Corner.INSECT,  10));
-        player.addItems(new ItemCollection().add(Corner.SCROLL,  100));
-        player.addItems(new ItemCollection().add(Corner.INK,     123));
+        player.addItems(new ItemCollection().add(Corner.FUNGUS, 100));
+        player.addItems(new ItemCollection().add(Corner.PLANT, 200));
+        player.addItems(new ItemCollection().add(Corner.ANIMAL, 300));
+        player.addItems(new ItemCollection().add(Corner.INSECT, 10));
+        player.addItems(new ItemCollection().add(Corner.SCROLL, 100));
+        player.addItems(new ItemCollection().add(Corner.INK, 123));
         player.addItems(new ItemCollection().add(Corner.FEATHER, 10));
 
 
@@ -90,11 +90,11 @@ class ItemGoalTest {
         // is never actually needed in the game logic, thus this is just for testing purpose
 
         // player.addItems(new ItemCollection().add(Corner.FUNGUS,  0));        redundant: the player has 0 FUNGI
-        player.addItems(new ItemCollection().add(Corner.PLANT,   3));
-        player.addItems(new ItemCollection().add(Corner.ANIMAL,  5));
-        player.addItems(new ItemCollection().add(Corner.INSECT,  2));
-        player.addItems(new ItemCollection().add(Corner.SCROLL,  3));
-        player.addItems(new ItemCollection().add(Corner.INK,     13));
+        player.addItems(new ItemCollection().add(Corner.PLANT, 3));
+        player.addItems(new ItemCollection().add(Corner.ANIMAL, 5));
+        player.addItems(new ItemCollection().add(Corner.INSECT, 2));
+        player.addItems(new ItemCollection().add(Corner.SCROLL, 3));
+        player.addItems(new ItemCollection().add(Corner.INK, 13));
         player.addItems(new ItemCollection().add(Corner.FEATHER, 1000));
 
 

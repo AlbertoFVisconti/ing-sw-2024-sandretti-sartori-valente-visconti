@@ -6,7 +6,7 @@ import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
 
-public class ScoreUpdateMessage extends ServerMessage{
+public class ScoreUpdateMessage extends ServerMessage {
     private final ScoreBoard scoreBoard;
 
     public ScoreUpdateMessage(ScoreBoard scoreBoard) {

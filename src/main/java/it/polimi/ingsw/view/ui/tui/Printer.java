@@ -26,7 +26,7 @@ final class Printer {
 
         cornerToStringsMap.put(
                 Corner.ANIMAL,
-                new String[] {
+                new String[]{
                         "/|_|\\",
                         "\\   /",
                         " \\_/ "
@@ -34,7 +34,7 @@ final class Printer {
         );
         cornerToStringsMap.put(
                 Corner.FUNGUS,
-                new String[] {
+                new String[]{
                         " ___ ",
                         "/   \\",
                         " |_| "
@@ -42,7 +42,7 @@ final class Printer {
         );
         cornerToStringsMap.put(
                 Corner.PLANT,
-                new String[] {
+                new String[]{
                         "  ^  ",
                         "_/|\\_",
                         "\\   /"
@@ -59,9 +59,9 @@ final class Printer {
         cornerToStringsMap.put(
                 Corner.INK,
                 new String[]{
-                       " ___ ",
-                       " | | ",
-                       "[___]"
+                        " ___ ",
+                        " | | ",
+                        "[___]"
                 }
         );
         cornerToStringsMap.put(
@@ -138,21 +138,21 @@ final class Printer {
 
     private static Canvas getPlayCardDeckCanvas(Deck<PlayCard> deck) {
         Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH, DEFAULT_CARD_HEIGHT);
-        if(deck == null) return canvas;
+        if (deck == null) return canvas;
 
         // setting the deck frame
-        for(int i = 1; i < DEFAULT_CARD_WIDTH-1; i++) {
+        for (int i = 1; i < DEFAULT_CARD_WIDTH - 1; i++) {
             canvas.putChar('_', i, 0);
-            canvas.putChar('_', i, DEFAULT_CARD_HEIGHT-1);
+            canvas.putChar('_', i, DEFAULT_CARD_HEIGHT - 1);
         }
 
-        for(int i = 1; i < DEFAULT_CARD_HEIGHT; i++) {
-            canvas.putChar('|', 0,i);
-            canvas.putChar('|', DEFAULT_CARD_WIDTH-1,i);
+        for (int i = 1; i < DEFAULT_CARD_HEIGHT; i++) {
+            canvas.putChar('|', 0, i);
+            canvas.putChar('|', DEFAULT_CARD_WIDTH - 1, i);
         }
 
         canvas.setTextColor(cornerToColorMap.get(deck.getTopOfTheStack().getCorner()));
-        canvas.putStringMatrix(cornerToStringsMap.get(deck.getTopOfTheStack().getCorner()), DEFAULT_CARD_WIDTH/2 - 2, DEFAULT_CARD_HEIGHT/2 - 1);
+        canvas.putStringMatrix(cornerToStringsMap.get(deck.getTopOfTheStack().getCorner()), DEFAULT_CARD_WIDTH / 2 - 2, DEFAULT_CARD_HEIGHT / 2 - 1);
         canvas.resetColor();
 
         return canvas;
@@ -160,17 +160,17 @@ final class Printer {
 
     private static Canvas getCardCanvas(Card card) {
         Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH, DEFAULT_CARD_HEIGHT);
-        if(card == null) return canvas;
+        if (card == null) return canvas;
 
         // setting the card frame
-        for(int i = 1; i < DEFAULT_CARD_WIDTH-1; i++) {
+        for (int i = 1; i < DEFAULT_CARD_WIDTH - 1; i++) {
             canvas.putChar('_', i, 0);
-            canvas.putChar('_', i, DEFAULT_CARD_HEIGHT-1);
+            canvas.putChar('_', i, DEFAULT_CARD_HEIGHT - 1);
         }
 
-        for(int i = 1; i < DEFAULT_CARD_HEIGHT; i++) {
-            canvas.putChar('|', 0,i);
-            canvas.putChar('|', DEFAULT_CARD_WIDTH-1,i);
+        for (int i = 1; i < DEFAULT_CARD_HEIGHT; i++) {
+            canvas.putChar('|', 0, i);
+            canvas.putChar('|', DEFAULT_CARD_WIDTH - 1, i);
         }
 
         Corner ctl, ctr, cbl, cbr;
@@ -179,53 +179,53 @@ final class Printer {
         cbl = card.getBottomLeftCorner();
         cbr = card.getBottomRightCorner();
 
-        if(ctl != null) {
-            canvas.putString("_____", 1,4);
+        if (ctl != null) {
+            canvas.putString("_____", 1, 4);
         }
-        if(ctr != null) {
-            canvas.putString("_____", DEFAULT_CARD_WIDTH-6,4);
+        if (ctr != null) {
+            canvas.putString("_____", DEFAULT_CARD_WIDTH - 6, 4);
         }
-        if(cbl != null) {
-            canvas.putString("_____", 1,DEFAULT_CARD_HEIGHT-5);
+        if (cbl != null) {
+            canvas.putString("_____", 1, DEFAULT_CARD_HEIGHT - 5);
         }
-        if(cbr != null) {
-            canvas.putString("_____", DEFAULT_CARD_WIDTH-6,DEFAULT_CARD_HEIGHT-5);
+        if (cbr != null) {
+            canvas.putString("_____", DEFAULT_CARD_WIDTH - 6, DEFAULT_CARD_HEIGHT - 5);
         }
 
 
-        if(ctl != null) {
-            for(int i = 0; i < 4 ;i++) {
-                canvas.putChar('|', 6, 1+i);
+        if (ctl != null) {
+            for (int i = 0; i < 4; i++) {
+                canvas.putChar('|', 6, 1 + i);
             }
             canvas.setTextColor(cornerToColorMap.get(ctl));
-            canvas.putStringMatrix(cornerToStringsMap.get(ctl), 1,1);
+            canvas.putStringMatrix(cornerToStringsMap.get(ctl), 1, 1);
             canvas.resetColor();
         }
 
-        if(ctr != null) {
-            for(int i = 0; i < 4 ;i++) {
-                canvas.putChar('|', DEFAULT_CARD_WIDTH-7, 1+i);
+        if (ctr != null) {
+            for (int i = 0; i < 4; i++) {
+                canvas.putChar('|', DEFAULT_CARD_WIDTH - 7, 1 + i);
             }
             canvas.setTextColor(cornerToColorMap.get(ctr));
-            canvas.putStringMatrix(cornerToStringsMap.get(ctr), DEFAULT_CARD_WIDTH-6,1);
+            canvas.putStringMatrix(cornerToStringsMap.get(ctr), DEFAULT_CARD_WIDTH - 6, 1);
             canvas.resetColor();
         }
 
-        if(cbl != null) {
-            for(int i = 0; i < 4 ;i++) {
-                canvas.putChar('|', 6, DEFAULT_CARD_HEIGHT-i-1);
+        if (cbl != null) {
+            for (int i = 0; i < 4; i++) {
+                canvas.putChar('|', 6, DEFAULT_CARD_HEIGHT - i - 1);
             }
             canvas.setTextColor(cornerToColorMap.get(cbl));
-            canvas.putStringMatrix(cornerToStringsMap.get(cbl), 1,DEFAULT_CARD_HEIGHT-3-1);
+            canvas.putStringMatrix(cornerToStringsMap.get(cbl), 1, DEFAULT_CARD_HEIGHT - 3 - 1);
             canvas.resetColor();
         }
 
-        if(cbr != null) {
-            for(int i = 0; i < 4 ;i++) {
-                canvas.putChar('|', DEFAULT_CARD_WIDTH-7, DEFAULT_CARD_HEIGHT-i-1);
+        if (cbr != null) {
+            for (int i = 0; i < 4; i++) {
+                canvas.putChar('|', DEFAULT_CARD_WIDTH - 7, DEFAULT_CARD_HEIGHT - i - 1);
             }
             canvas.setTextColor(cornerToColorMap.get(cbr));
-            canvas.putStringMatrix(cornerToStringsMap.get(cbr), DEFAULT_CARD_WIDTH-6,DEFAULT_CARD_HEIGHT-3-1);
+            canvas.putStringMatrix(cornerToStringsMap.get(cbr), DEFAULT_CARD_WIDTH - 6, DEFAULT_CARD_HEIGHT - 3 - 1);
             canvas.resetColor();
         }
 
@@ -233,30 +233,28 @@ final class Printer {
 
             int i = 0;
             List<Corner> corners = startCard.getPermanentResources().toList();
-            int rows= (corners.size()/2 + corners.size()%2);
-            for(Corner corner : corners) {
+            int rows = (corners.size() / 2 + corners.size() % 2);
+            for (Corner corner : corners) {
                 canvas.setTextColor(cornerToColorMap.get(corner));
-                canvas.putStringMatrix(cornerToStringsMap.get(corner), DEFAULT_CARD_WIDTH/2 - 5 + 6*(i%2),DEFAULT_CARD_HEIGHT/2 - (3*rows + Math.max(0, rows-1))/2 + 4*(i/2));
+                canvas.putStringMatrix(cornerToStringsMap.get(corner), DEFAULT_CARD_WIDTH / 2 - 5 + 6 * (i % 2), DEFAULT_CARD_HEIGHT / 2 - (3 * rows + Math.max(0, rows - 1)) / 2 + 4 * (i / 2));
                 canvas.resetColor();
                 i++;
             }
-        }
-        else if (card instanceof PlayCard playCard) {
+        } else if (card instanceof PlayCard playCard) {
 
-            if(playCard.isOnBackSide()) {
+            if (playCard.isOnBackSide()) {
                 canvas.setTextColor(cornerToColorMap.get(playCard.getType().getCorner()));
-                canvas.putStringMatrix(cornerToStringsMap.get(playCard.getType().getCorner()), DEFAULT_CARD_WIDTH/2 - 2, DEFAULT_CARD_HEIGHT/2 - 1);
+                canvas.putStringMatrix(cornerToStringsMap.get(playCard.getType().getCorner()), DEFAULT_CARD_WIDTH / 2 - 2, DEFAULT_CARD_HEIGHT / 2 - 1);
                 canvas.resetColor();
-            }
-            else {
+            } else {
                 String scoring = playCard.getScoringStrategy().toString();
 
-                canvas.putString(scoring, DEFAULT_CARD_WIDTH/2 - scoring.length()/2 + scoring.length()%2, 1);
+                canvas.putString(scoring, DEFAULT_CARD_WIDTH / 2 - scoring.length() / 2 + scoring.length() % 2, 1);
 
                 List<Corner> constraints = playCard.getConstraint().toList();
-                for(int i = 0; i < constraints.size(); i++) {
+                for (int i = 0; i < constraints.size(); i++) {
                     canvas.setTextColor(cornerToColorMap.get(constraints.get(i)));
-                    canvas.putChar(constraints.get(i).toString().charAt(0), DEFAULT_CARD_WIDTH/2 - constraints.size()/2 + constraints.size()%2 + i , DEFAULT_CARD_HEIGHT-2);
+                    canvas.putChar(constraints.get(i).toString().charAt(0), DEFAULT_CARD_WIDTH / 2 - constraints.size() / 2 + constraints.size() % 2 + i, DEFAULT_CARD_HEIGHT - 2);
                     canvas.resetColor();
                 }
 
@@ -268,20 +266,20 @@ final class Printer {
     }
 
     public static void printCard(Card card, boolean onBackSide) {
-        if(onBackSide ^ card.isOnBackSide()) card.flip();
+        if (onBackSide ^ card.isOnBackSide()) card.flip();
         System.out.println(getCardCanvas(card));
     }
 
     public static void printHand(PlayCard[] cards) {
         final int SPACING_BETWEEN_CARDS = 2;
-        Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH * cards.length + SPACING_BETWEEN_CARDS*(cards.length-1) + 2, 2 + DEFAULT_CARD_HEIGHT*2 + 3);
+        Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH * cards.length + SPACING_BETWEEN_CARDS * (cards.length - 1) + 2, 2 + DEFAULT_CARD_HEIGHT * 2 + 3);
 
-        canvas.putString("Front:", 0,0);
-        canvas.putString("Back:", 0,2 + DEFAULT_CARD_HEIGHT + 1);
-        for(int i = 0; i < cards.length; i++) {
-            canvas.putString("Card n°" + i, (DEFAULT_CARD_WIDTH + SPACING_BETWEEN_CARDS) * i + DEFAULT_CARD_WIDTH/2 - 4, 0);
+        canvas.putString("Front:", 0, 0);
+        canvas.putString("Back:", 0, 2 + DEFAULT_CARD_HEIGHT + 1);
+        for (int i = 0; i < cards.length; i++) {
+            canvas.putString("Card n°" + i, (DEFAULT_CARD_WIDTH + SPACING_BETWEEN_CARDS) * i + DEFAULT_CARD_WIDTH / 2 - 4, 0);
 
-            if(cards[i].isOnBackSide()) cards[i].flip();
+            if (cards[i].isOnBackSide()) cards[i].flip();
             canvas.putCanvas(getCardCanvas(cards[i]), (DEFAULT_CARD_WIDTH + SPACING_BETWEEN_CARDS) * i, 2);
 
             cards[i].flip();
@@ -299,31 +297,31 @@ final class Printer {
         int top = 0;
         int bottom = 0;
 
-        for(CardLocation cardLocation : board.keySet()) {
+        for (CardLocation cardLocation : board.keySet()) {
             t.put(board.get(cardLocation).getPlacementTurn(), cardLocation);
 
-            if(cardLocation.x < left) left = cardLocation.x;
-            if(cardLocation.x > right) right = cardLocation.x;
-            if(cardLocation.y < bottom) bottom = cardLocation.y;
-            if(cardLocation.y > top) top = cardLocation.y;
+            if (cardLocation.x < left) left = cardLocation.x;
+            if (cardLocation.x > right) right = cardLocation.x;
+            if (cardLocation.y < bottom) bottom = cardLocation.y;
+            if (cardLocation.y > top) top = cardLocation.y;
         }
 
-        int dx = right-left;
-        int dy = top-bottom;
+        int dx = right - left;
+        int dy = top - bottom;
 
-        Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH+dx * (DEFAULT_CARD_WIDTH-7), DEFAULT_CARD_HEIGHT+dy*(DEFAULT_CARD_HEIGHT-5));
+        Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH + dx * (DEFAULT_CARD_WIDTH - 7), DEFAULT_CARD_HEIGHT + dy * (DEFAULT_CARD_HEIGHT - 5));
 
         int i = 0;
 
-        while(t.get(i) != null) {
-            int x,y;
+        while (t.get(i) != null) {
+            int x, y;
             x = t.get(i).x - left;
             y = top - t.get(i).y;
 
             canvas.putCanvas(
                     getCardCanvas(board.get(t.get(i))),
-                    x * (DEFAULT_CARD_WIDTH-7),
-                    y * (DEFAULT_CARD_HEIGHT-5)
+                    x * (DEFAULT_CARD_WIDTH - 7),
+                    y * (DEFAULT_CARD_HEIGHT - 5)
             );
 
             i++;
@@ -333,34 +331,34 @@ final class Printer {
     }
 
     public static void printDrawableCards(Deck<PlayCard> resourceDeck, Deck<PlayCard> goldDeck, PlayCard[] visibleCards) {
-        if(visibleCards.length != 4) throw new RuntimeException("unexpected amount of visible cards");
+        if (visibleCards.length != 4) throw new RuntimeException("unexpected amount of visible cards");
 
-        Canvas canvas = new Canvas(3*DEFAULT_CARD_WIDTH + 5 + 2, 2 + DEFAULT_CARD_HEIGHT*2 + 3);
+        Canvas canvas = new Canvas(3 * DEFAULT_CARD_WIDTH + 5 + 2, 2 + DEFAULT_CARD_HEIGHT * 2 + 3);
 
-        canvas.putString("Deck n°0 (resource):", 0,1);
+        canvas.putString("Deck n°0 (resource):", 0, 1);
         canvas.putCanvas(getPlayCardDeckCanvas(resourceDeck), 0, 2);
 
-        canvas.putString("Deck n°1 (gold)", 0,2 + DEFAULT_CARD_HEIGHT + 2);
+        canvas.putString("Deck n°1 (gold)", 0, 2 + DEFAULT_CARD_HEIGHT + 2);
         canvas.putCanvas(getPlayCardDeckCanvas(goldDeck), 0, 2 + DEFAULT_CARD_HEIGHT + 3);
 
 
-        for(int i = 0; i < visibleCards.length; i++) {
-            canvas.putString("Card n°" + i, DEFAULT_CARD_WIDTH+5 + (DEFAULT_CARD_WIDTH + 2) * (i%2) + DEFAULT_CARD_WIDTH/2 - 4, 1 + (DEFAULT_CARD_HEIGHT+3)*(i/2));
+        for (int i = 0; i < visibleCards.length; i++) {
+            canvas.putString("Card n°" + i, DEFAULT_CARD_WIDTH + 5 + (DEFAULT_CARD_WIDTH + 2) * (i % 2) + DEFAULT_CARD_WIDTH / 2 - 4, 1 + (DEFAULT_CARD_HEIGHT + 3) * (i / 2));
 
-            canvas.putCanvas(getCardCanvas(visibleCards[i]), DEFAULT_CARD_WIDTH+5+(DEFAULT_CARD_WIDTH + 2) * (i%2), 2 + (DEFAULT_CARD_HEIGHT+3)*(i/2));
+            canvas.putCanvas(getCardCanvas(visibleCards[i]), DEFAULT_CARD_WIDTH + 5 + (DEFAULT_CARD_WIDTH + 2) * (i % 2), 2 + (DEFAULT_CARD_HEIGHT + 3) * (i / 2));
         }
 
         System.out.println(canvas);
     }
 
     public static void printScoreBoard(ScoreBoard scoreBoard, List<Player> players) {
-        if(scoreBoard == null || players == null) return;
+        if (scoreBoard == null || players == null) return;
         ArrayList<String> nicknames = new ArrayList<>();
 
         int lmax = 0;
-        for(Player p : players) {
+        for (Player p : players) {
             nicknames.add(p.nickName);
-            if(lmax < p.nickName.length()) lmax = p.nickName.length();
+            if (lmax < p.nickName.length()) lmax = p.nickName.length();
         }
 
 
@@ -373,12 +371,12 @@ final class Printer {
         // no need to check if the "Score:" string fits since 9 is enough anyway
         Canvas canvas = new Canvas(9 + lmax, nicknames.size() + 1);
 
-        canvas.putString("Score:", 0,0);
+        canvas.putString("Score:", 0, 0);
         int i = 1;
-        for(String nick : nicknames) {
+        for (String nick : nicknames) {
             StringBuilder score = new StringBuilder(Integer.toString(scoreBoard.getScore(nick)));
 
-            while(score.length() < 4) {
+            while (score.length() < 4) {
                 score.insert(0, ' ');
             }
 
@@ -386,7 +384,7 @@ final class Printer {
             score.append(' ');
             score.append(nick);
 
-            canvas.putString(score.toString(), 4 ,i++);
+            canvas.putString(score.toString(), 4, i++);
         }
 
         System.out.println(canvas);
@@ -396,7 +394,7 @@ final class Printer {
         List<ChatMessage> messages = chat.getMessagesChat(localNickname, remoteNickname);
 
         System.out.println("Messages:");
-        for(ChatMessage msg : messages) {
+        for (ChatMessage msg : messages) {
             System.out.println("\t" + msg.getSenderNick() + ": " + msg.getText());
         }
     }
@@ -417,8 +415,8 @@ final class Printer {
 
             this.content = new char[height][width];
             this.contentColor = new TextColor[height][width];
-            for(int i = 0; i < height; i++) {
-                for(int j = 0; j < width; j++) {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
                     content[i][j] = ' ';
                     contentColor[i][j] = currentColor;
                 }
@@ -427,44 +425,45 @@ final class Printer {
         }
 
         public void setTextColor(TextColor color) {
-            this.currentColor= color;
+            this.currentColor = color;
         }
+
         public void resetColor() {
             this.currentColor = TextColor.WHITE;
         }
 
         public void putChar(char c, int x, int y) {
-            if(x < 0 || y < 0 || x >= width || y >= height) {
+            if (x < 0 || y < 0 || x >= width || y >= height) {
                 throw new ArrayIndexOutOfBoundsException();
             }
 
-            this.content[y][x] =  c;
+            this.content[y][x] = c;
             this.contentColor[y][x] = this.currentColor;
         }
 
         public void putString(String string, int x, int y) {
-            if(x < 0 || y < 0 || x >= width || y >= height || string.length() + x > width) {
+            if (x < 0 || y < 0 || x >= width || y >= height || string.length() + x > width) {
                 throw new ArrayIndexOutOfBoundsException();
             }
 
-            for(Character stringChar : string.toCharArray()) {
-                this.content[y][x] =  stringChar;
+            for (Character stringChar : string.toCharArray()) {
+                this.content[y][x] = stringChar;
                 this.contentColor[y][x] = this.currentColor;
                 x++;
             }
         }
 
         public void putStringMatrix(String[] strings, int x, int y) {
-            if(strings.length == 0) return;
-            if(x < 0 || y < 0 || x >= width || y >= height || strings[0].length() + x > width || strings.length +y > height) {
+            if (strings.length == 0) return;
+            if (x < 0 || y < 0 || x >= width || y >= height || strings[0].length() + x > width || strings.length + y > height) {
                 throw new ArrayIndexOutOfBoundsException();
             }
 
             int sx = x;
-            for(String string : strings) {
+            for (String string : strings) {
                 x = sx;
-                for(Character stringChar : string.toCharArray()) {
-                    this.content[y][x] =  stringChar;
+                for (Character stringChar : string.toCharArray()) {
+                    this.content[y][x] = stringChar;
                     this.contentColor[y][x] = this.currentColor;
                     x++;
                 }
@@ -473,14 +472,14 @@ final class Printer {
         }
 
         public void putCanvas(Canvas canvas, int x, int y) {
-            if(x < 0 || y < 0 || x >= width || y >= height || canvas.getWidth() + x > width || canvas.getHeight() + y > height) {
+            if (x < 0 || y < 0 || x >= width || y >= height || canvas.getWidth() + x > width || canvas.getHeight() + y > height) {
                 throw new ArrayIndexOutOfBoundsException();
             }
 
-            for(int i = 0; i < canvas.height; i++) {
-                for(int j = 0; j < canvas.width; j++) {
-                    content[y+i][x+j] = canvas.content[i][j];
-                    this.contentColor[y+i][x+j] = canvas.contentColor[i][j];
+            for (int i = 0; i < canvas.height; i++) {
+                for (int j = 0; j < canvas.width; j++) {
+                    content[y + i][x + j] = canvas.content[i][j];
+                    this.contentColor[y + i][x + j] = canvas.contentColor[i][j];
                 }
             }
         }
@@ -497,9 +496,9 @@ final class Printer {
         public String toString() {
             StringBuilder stringBuilder = new StringBuilder();
             TextColor color = TextColor.WHITE;
-            for(int i = 0; i < height; i++) {
-                for(int j = 0; j < width; j++) {
-                    if(contentColor[i][j] != color) {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    if (contentColor[i][j] != color) {
                         color = contentColor[i][j];
                         stringBuilder.append(color.getCode());
                     }
@@ -512,7 +511,7 @@ final class Printer {
         }
     }
 
-    private enum TextColor{
+    private enum TextColor {
         CYAN("\u001B[36m"),
         GREEN("\u001B[32m"),
         RED("\u001B[31m"),
