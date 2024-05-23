@@ -54,17 +54,9 @@ public abstract class DeckLoader<T extends Drawable> {
             this.loadedContent = this.load();
         }
 
-        ArrayList<T> newDeckContent = new ArrayList<>();
-
-        for (T element : this.loadedContent) {
-            newDeckContent.add(this.duplicateElement(element));
-        }
-
-        return new ArrayList<>(newDeckContent);
+        return new ArrayList<>(loadedContent);
 
     }
-
-    protected abstract T duplicateElement(T element);
 
     /**
      * Loads the deck's contents from the provided file. This method must be implemented

@@ -6,7 +6,7 @@ import it.polimi.ingsw.events.messages.server.PlayersHandUpdateMessage;
 import it.polimi.ingsw.events.messages.server.PrivateGoalUpdateMessage;
 import it.polimi.ingsw.events.messages.server.StartCardUpdateMessage;
 import it.polimi.ingsw.events.saving.PlayerSavingMessage;
-import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
@@ -29,7 +29,7 @@ public class Player extends Observable {
     private Goal privateGoal;
     private Goal[] availableGoals;
 
-    private final HashMap<CardLocation, Card> board;
+    private final HashMap<CardLocation, CardSlot> board;
     private final ItemCollection inventory;
 
     private int turnCounter;
@@ -55,7 +55,7 @@ public class Player extends Observable {
     public Player(PlayerSavingMessage psm) {
         this.nickName = psm.getNick();
         this.color = psm.getPlayerColor();
-        this.board = (HashMap<CardLocation, Card>) psm.getBoard();
+        this.board = (HashMap<CardLocation, CardSlot>) psm.getBoard();
         this.playerCards = psm.getPlayerHand();
         this.privateGoal = psm.getPrivateGoal();
         this.inventory = psm.getInventory();
@@ -143,14 +143,11 @@ public class Player extends Observable {
      * @throws InvalidParameterException if there already is a card in the selected location or index is too big
      */
     public void placeCard(int index, boolean onBackSide, CardLocation location) throws InvalidParameterException {
-        if (this.getPlacedCard(location) != null || index > 2) throw new InvalidParameterException();
+        if (this.getPlacedCardSlot(location) != null || index > 2) throw new InvalidParameterException();
         else {
-            if (playerCards[index].isOnBackSide() != onBackSide) {
-                playerCards[index].flip();
-            }
+            CardSlot cardSlot = new CardSlot(playerCards[index], onBackSide, this.turnCounter++);
 
-            playerCards[index].place(this.turnCounter++);
-            board.put(location, playerCards[index]);
+            board.put(location, cardSlot);
             playerCards[index] = null;
         }
 
@@ -168,12 +165,7 @@ public class Player extends Observable {
     public void placeStartingCard(boolean onBackside) throws Exception {
         if (startCard == null) throw new Exception("no start card found");
 
-        if (startCard.isOnBackSide() != onBackside) startCard.flip();
-
-        // before we put the card in the board, we make it immutable to prevent later changes
-        startCard.place(0);
-
-        board.put(new CardLocation(0, 0), startCard);
+        board.put(new CardLocation(0, 0), new CardSlot(startCard, onBackside, 0));
         startCard = null;
 
         if (clientHandler != null)
@@ -208,9 +200,9 @@ public class Player extends Observable {
      * There's no problem since the card il placed, thus immutable (un-flippable).
      *
      * @param cardLocation CardLocation representing the location to get the card from
-     * @return a reference to the card in the desired location, {@code null} if there's no card
+     * @return a reference to the CardSlot in the desired location, {@code null} if there's no card
      */
-    public Card getPlacedCard(CardLocation cardLocation) {
+    public CardSlot getPlacedCardSlot(CardLocation cardLocation) {
         return this.board.get(cardLocation);
     }
 
@@ -224,7 +216,7 @@ public class Player extends Observable {
      *
      * @return an unmodifiable view of the board
      */
-    public Map<CardLocation, Card> getBoard() {
+    public Map<CardLocation, CardSlot> getBoard() {
         return Collections.unmodifiableMap(board);
     }
 

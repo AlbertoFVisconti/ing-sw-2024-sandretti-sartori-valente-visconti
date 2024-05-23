@@ -28,12 +28,6 @@ public class PlayCardDeckLoader extends DeckLoader<PlayCard> {
         super(filename);
     }
 
-    @Override
-    protected PlayCard duplicateElement(PlayCard element) {
-        return element.getCopy();
-    }
-
-
     /**
      * Loads the PlayCard deck's contents from the provided file. This method must be implemented
      * by subclasses to specify how the deck's content is loaded

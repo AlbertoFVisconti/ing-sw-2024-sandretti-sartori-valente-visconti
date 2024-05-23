@@ -438,18 +438,24 @@ public class TextualUserInterface extends UserInterface {
             case GameStatus.LOBBY:
                 gameStatusMessage = """
                         Successfully connected to the game. You need to select a color. Use:
-                        \t- !colors                get a list of the available colors
-                        \t- !set_col color_id      to try to select the color
-                        \t- !players_list          to print the list of connected players
-                        \t- !help                  to get the list of commands""";
+                        \t- !colors                         get a list of the available colors
+                        \t- !set_col color_id               to try to select the color
+                        \t- !players_list                   to print the list of connected players
+                        \t- !chat [player]                  to open one of the chats (empty for public chat)
+                        \t- !msg message                    to send a public message
+                        \t- !private_msg player message     to send a private message
+                        \t- !help                           to get the list of commands""";
                 break;
             case GameStatus.GAME_CREATION:
-                gameStatusMessage = "Game started, you need to " + (this.getLocalPlayer().getPlacedCard(new CardLocation(0, 0)) == null ? "place starting and " : "") + (this.getLocalPlayer().getPrivateGoal() == null ? "select private goal and" : "") + " wait for others to complete this step. Use:\n" +
+                gameStatusMessage = "Game started, you need to " + (this.getLocalPlayer().getPlacedCardSlot(new CardLocation(0, 0)) == null ? "place starting and " : "") + (this.getLocalPlayer().getPrivateGoal() == null ? "select private goal and" : "") + " wait for others to complete this step. Use:\n" +
                         "\t- !starting              to print information about the starting card\n" +
                         "\t- !place_start [side]    to place the start card (0->front, 1->back)\n" +
                         "\t- !private_goals         to print the available private goals\n" +
                         "\t- !sel_goal [goal_id]    to select the private goal\n" +
                         "\t- |score                 to print the scoreboard\n" +
+                        "\t- !chat [player]                  to open one of the chats (empty for public chat)\n"+
+                        "\t- !msg message                    to send a public message\n"+
+                        "\t- !private_msg player message     to send a private message\n"+
                         "\t- !help                  to get the list of commands";
                 break;
             case GameStatus.NORMAL_TURN:
@@ -462,6 +468,9 @@ public class TextualUserInterface extends UserInterface {
                                 "\t- !hand [playername]         to print the hand [of the specified player]\n" +
                                 "\t- !place card_num side x y   to place the card\n" +
                                 "\t- |score                 to print the scoreboard\n" +
+                                "\t- !chat [player]                  to open one of the chats (empty for public chat)\n"+
+                                "\t- !msg message                    to send a public message\n"+
+                                "\t- !private_msg player message     to send a private message\n"+
                                 "\t- !help                      to get the list of commands";
                     } else {
                         gameStatusMessage = gameStatusMessage + "pick up a card. Use:\n" +
@@ -471,6 +480,9 @@ public class TextualUserInterface extends UserInterface {
                                 "\t- !draw deck_id              to draw from the specified deck\n" +
                                 "\t- !pick_up card_num          to pick up the specified visible card\n" +
                                 "\t- |score                 to print the scoreboard\n" +
+                                "\t- !chat [player]                  to open one of the chats (empty for public chat)\n"+
+                                "\t- !msg message                    to send a public message\n"+
+                                "\t- !private_msg player message     to send a private message\n"+
                                 "\t- !help                      to get the list of commands";
                     }
                 } else {
@@ -479,6 +491,9 @@ public class TextualUserInterface extends UserInterface {
                             "\t- !hand [playername]         to print the hand [of the specified player]\n" +
                             "\t- !drawable                  to print info about the decks and visible cards\n" +
                             "\t- |score                 to print the scoreboard\n" +
+                            "\t- !chat [player]                  to open one of the chats (empty for public chat)\n"+
+                            "\t- !msg message                    to send a public message\n"+
+                            "\t- !private_msg player message     to send a private message\n"+
                             "\t- !help                      to get the list of commands";
                 }
                 break;

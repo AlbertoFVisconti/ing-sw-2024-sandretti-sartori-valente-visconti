@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.goals;
 
 import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.player.Player;
@@ -52,12 +53,12 @@ public class PatternGoal extends Goal {
      */
     @Override
     public int evaluate(Player player) {
-        Map<CardLocation, Card> board = player.getBoard();
+        Map<CardLocation, CardSlot> board = player.getBoard();
 
         List<GraphNode> matches = new ArrayList<>();
 
         for (CardLocation p : board.keySet()) {
-            Card c = board.get(p);
+            Card c = board.get(p).card();
 
             if (c instanceof PlayCard && ((PlayCard) c).getType().equals(pattern[pivot.y][pivot.x])) {
                 // the card at location p is compatible with the pattern's pivot, I check if there's a match
@@ -213,9 +214,7 @@ public class PatternGoal extends Goal {
 
         @Override
         public String toString() {
-            return matchStartingCard.toString() + " {" + conflictingNodes.stream().map((GraphNode n) -> {
-                return n.matchStartingCard.toString();
-            }).reduce("", String::concat) + "}";
+            return matchStartingCard.toString() + " {" + conflictingNodes.stream().map((GraphNode n) -> n.matchStartingCard.toString()).reduce("", String::concat) + "}";
         }
     }
 
@@ -228,16 +227,16 @@ public class PatternGoal extends Goal {
      * @param startingCandidateCell the top-left cell of the candidate match
      * @return {@code true} if the pattern is found, {@code false} otherwise
      */
-    private boolean isMatch(Map<CardLocation, Card> board, CardLocation startingCandidateCell) {
+    private boolean isMatch(Map<CardLocation, CardSlot> board, CardLocation startingCandidateCell) {
         for (int i = 0; i < pattern.length; i++) {
             for (int j = 0; j < pattern[0].length; j++) {
                 if (pattern[i][j] != null) {
-                    Card c = board.get(startingCandidateCell.add(j, -i * 2 - j));
+                    CardSlot slot = board.get(startingCandidateCell.add(j, -i * 2 - j));
 
-                    if (c == null) {
+                    if (slot == null) {
                         return false;
                     }
-                    if ((c instanceof PlayCard) && !((PlayCard) c).getType().equals(pattern[i][j])) {
+                    if ((slot.card() instanceof PlayCard) && !((PlayCard) slot.card()).getType().equals(pattern[i][j])) {
                         return false;
                     }
                 }

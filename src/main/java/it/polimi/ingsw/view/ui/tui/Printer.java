@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.ui.tui;
 
 import it.polimi.ingsw.model.ScoreBoard;
 import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
@@ -136,20 +137,32 @@ final class Printer {
 
     }
 
-    private static Canvas getPlayCardDeckCanvas(Deck<PlayCard> deck) {
+    private static Canvas getCardFrame() {
         Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH, DEFAULT_CARD_HEIGHT);
-        if (deck == null) return canvas;
 
         // setting the deck frame
+
+        canvas.putChar('╭', 0,0);
+        canvas.putChar('╮', DEFAULT_CARD_WIDTH-1,0);
+        canvas.putChar('╰', 0,DEFAULT_CARD_HEIGHT-1);
+        canvas.putChar('╯', DEFAULT_CARD_WIDTH-1,DEFAULT_CARD_HEIGHT-1);
+
         for (int i = 1; i < DEFAULT_CARD_WIDTH - 1; i++) {
-            canvas.putChar('_', i, 0);
-            canvas.putChar('_', i, DEFAULT_CARD_HEIGHT - 1);
+            canvas.putChar('─', i, 0);
+            canvas.putChar('─', i, DEFAULT_CARD_HEIGHT - 1);
         }
 
-        for (int i = 1; i < DEFAULT_CARD_HEIGHT; i++) {
-            canvas.putChar('|', 0, i);
-            canvas.putChar('|', DEFAULT_CARD_WIDTH - 1, i);
+        for (int i = 1; i < DEFAULT_CARD_HEIGHT -1; i++) {
+            canvas.putChar('│', 0, i);
+            canvas.putChar('│', DEFAULT_CARD_WIDTH - 1, i);
         }
+
+        return canvas;
+    }
+
+    private static Canvas getPlayCardDeckCanvas(Deck<PlayCard> deck) {
+        if(deck == null) return new Canvas(0,0);
+        Canvas canvas = getCardFrame();
 
         canvas.setTextColor(cornerToColorMap.get(deck.getTopOfTheStack().getCorner()));
         canvas.putStringMatrix(cornerToStringsMap.get(deck.getTopOfTheStack().getCorner()), DEFAULT_CARD_WIDTH / 2 - 2, DEFAULT_CARD_HEIGHT / 2 - 1);
@@ -158,78 +171,81 @@ final class Printer {
         return canvas;
     }
 
-    private static Canvas getCardCanvas(Card card) {
-        Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH, DEFAULT_CARD_HEIGHT);
-        if (card == null) return canvas;
+    private static Canvas getCardCanvas(Card card, boolean onBackSide) {
+        if (card == null) return new Canvas(0,0);
 
-        // setting the card frame
-        for (int i = 1; i < DEFAULT_CARD_WIDTH - 1; i++) {
-            canvas.putChar('_', i, 0);
-            canvas.putChar('_', i, DEFAULT_CARD_HEIGHT - 1);
-        }
+        Canvas canvas = getCardFrame();
 
-        for (int i = 1; i < DEFAULT_CARD_HEIGHT; i++) {
-            canvas.putChar('|', 0, i);
-            canvas.putChar('|', DEFAULT_CARD_WIDTH - 1, i);
-        }
 
         Corner ctl, ctr, cbl, cbr;
-        ctl = card.getTopLeftCorner();
-        ctr = card.getTopRightCorner();
-        cbl = card.getBottomLeftCorner();
-        cbr = card.getBottomRightCorner();
+        ctl = card.getTopLeftCorner(onBackSide);
+        ctr = card.getTopRightCorner(onBackSide);
+        cbl = card.getBottomLeftCorner(onBackSide);
+        cbr = card.getBottomRightCorner(onBackSide);
 
         if (ctl != null) {
-            canvas.putString("_____", 1, 4);
+            canvas.putString("─────", 1, 4);
         }
         if (ctr != null) {
-            canvas.putString("_____", DEFAULT_CARD_WIDTH - 6, 4);
+            canvas.putString("─────", DEFAULT_CARD_WIDTH - 6, 4);
         }
         if (cbl != null) {
-            canvas.putString("_____", 1, DEFAULT_CARD_HEIGHT - 5);
+            canvas.putString("─────", 1, DEFAULT_CARD_HEIGHT - 5);
         }
         if (cbr != null) {
-            canvas.putString("_____", DEFAULT_CARD_WIDTH - 6, DEFAULT_CARD_HEIGHT - 5);
+            canvas.putString("─────", DEFAULT_CARD_WIDTH - 6, DEFAULT_CARD_HEIGHT - 5);
         }
 
 
         if (ctl != null) {
-            for (int i = 0; i < 4; i++) {
-                canvas.putChar('|', 6, 1 + i);
+            for (int i = 0; i < 3; i++) {
+                canvas.putChar('│', 6, 1 + i);
             }
+            canvas.putChar('╯', 6, 4);
+            canvas.putChar('┬', 6, 0);
+
             canvas.setTextColor(cornerToColorMap.get(ctl));
             canvas.putStringMatrix(cornerToStringsMap.get(ctl), 1, 1);
             canvas.resetColor();
         }
 
         if (ctr != null) {
-            for (int i = 0; i < 4; i++) {
-                canvas.putChar('|', DEFAULT_CARD_WIDTH - 7, 1 + i);
+            for (int i = 0; i < 3; i++) {
+                canvas.putChar('│', DEFAULT_CARD_WIDTH - 7, 1 + i);
             }
+            canvas.putChar('╰', DEFAULT_CARD_WIDTH-7, 4);
+            canvas.putChar('┬', DEFAULT_CARD_WIDTH-7, 0);
+
             canvas.setTextColor(cornerToColorMap.get(ctr));
             canvas.putStringMatrix(cornerToStringsMap.get(ctr), DEFAULT_CARD_WIDTH - 6, 1);
             canvas.resetColor();
         }
 
         if (cbl != null) {
-            for (int i = 0; i < 4; i++) {
-                canvas.putChar('|', 6, DEFAULT_CARD_HEIGHT - i - 1);
+            for (int i = 1; i < 4; i++) {
+                canvas.putChar('│', 6, DEFAULT_CARD_HEIGHT - i - 1);
             }
+            canvas.putChar('╮', 6, DEFAULT_CARD_HEIGHT -5);
+            canvas.putChar('┴', 6, DEFAULT_CARD_HEIGHT -1);
+
             canvas.setTextColor(cornerToColorMap.get(cbl));
             canvas.putStringMatrix(cornerToStringsMap.get(cbl), 1, DEFAULT_CARD_HEIGHT - 3 - 1);
             canvas.resetColor();
         }
 
         if (cbr != null) {
-            for (int i = 0; i < 4; i++) {
-                canvas.putChar('|', DEFAULT_CARD_WIDTH - 7, DEFAULT_CARD_HEIGHT - i - 1);
+            for (int i = 1; i < 4; i++) {
+                canvas.putChar('│', DEFAULT_CARD_WIDTH - 7, DEFAULT_CARD_HEIGHT - i - 1);
             }
+            canvas.putChar('╭', DEFAULT_CARD_WIDTH-7, DEFAULT_CARD_HEIGHT -5);
+            canvas.putChar('┴', DEFAULT_CARD_WIDTH-7, DEFAULT_CARD_HEIGHT -1);
+
             canvas.setTextColor(cornerToColorMap.get(cbr));
             canvas.putStringMatrix(cornerToStringsMap.get(cbr), DEFAULT_CARD_WIDTH - 6, DEFAULT_CARD_HEIGHT - 3 - 1);
             canvas.resetColor();
         }
 
-        if (card instanceof StartCard startCard && card.isOnBackSide()) {
+        if (card instanceof StartCard startCard && onBackSide) {
 
             int i = 0;
             List<Corner> corners = startCard.getPermanentResources().toList();
@@ -242,7 +258,7 @@ final class Printer {
             }
         } else if (card instanceof PlayCard playCard) {
 
-            if (playCard.isOnBackSide()) {
+            if (onBackSide) {
                 canvas.setTextColor(cornerToColorMap.get(playCard.getType().getCorner()));
                 canvas.putStringMatrix(cornerToStringsMap.get(playCard.getType().getCorner()), DEFAULT_CARD_WIDTH / 2 - 2, DEFAULT_CARD_HEIGHT / 2 - 1);
                 canvas.resetColor();
@@ -266,8 +282,7 @@ final class Printer {
     }
 
     public static void printCard(Card card, boolean onBackSide) {
-        if (onBackSide ^ card.isOnBackSide()) card.flip();
-        System.out.println(getCardCanvas(card));
+        System.out.println(getCardCanvas(card, onBackSide));
     }
 
     public static void printHand(PlayCard[] cards) {
@@ -279,17 +294,15 @@ final class Printer {
         for (int i = 0; i < cards.length; i++) {
             canvas.putString("Card n°" + i, (DEFAULT_CARD_WIDTH + SPACING_BETWEEN_CARDS) * i + DEFAULT_CARD_WIDTH / 2 - 4, 0);
 
-            if (cards[i].isOnBackSide()) cards[i].flip();
-            canvas.putCanvas(getCardCanvas(cards[i]), (DEFAULT_CARD_WIDTH + SPACING_BETWEEN_CARDS) * i, 2);
+            canvas.putCanvas(getCardCanvas(cards[i], false), (DEFAULT_CARD_WIDTH + SPACING_BETWEEN_CARDS) * i, 2);
 
-            cards[i].flip();
-            canvas.putCanvas(getCardCanvas(cards[i]), (DEFAULT_CARD_WIDTH + SPACING_BETWEEN_CARDS) * i, 2 + DEFAULT_CARD_HEIGHT + 3);
+            canvas.putCanvas(getCardCanvas(cards[i], true), (DEFAULT_CARD_WIDTH + SPACING_BETWEEN_CARDS) * i, 2 + DEFAULT_CARD_HEIGHT + 3);
         }
 
         System.out.println(canvas);
     }
 
-    public static void printBoard(Map<CardLocation, Card> board) {
+    public static void printBoard(Map<CardLocation, CardSlot> board) {
         HashMap<Integer, CardLocation> t = new HashMap<>();
 
         int left = 0;
@@ -298,7 +311,7 @@ final class Printer {
         int bottom = 0;
 
         for (CardLocation cardLocation : board.keySet()) {
-            t.put(board.get(cardLocation).getPlacementTurn(), cardLocation);
+            t.put(board.get(cardLocation).placementTurn(), cardLocation);
 
             if (cardLocation.x < left) left = cardLocation.x;
             if (cardLocation.x > right) right = cardLocation.x;
@@ -319,7 +332,7 @@ final class Printer {
             y = top - t.get(i).y;
 
             canvas.putCanvas(
-                    getCardCanvas(board.get(t.get(i))),
+                    getCardCanvas(board.get(t.get(i)).card(), board.get(t.get(i)).onBackSide()),
                     x * (DEFAULT_CARD_WIDTH - 7),
                     y * (DEFAULT_CARD_HEIGHT - 5)
             );
@@ -345,7 +358,7 @@ final class Printer {
         for (int i = 0; i < visibleCards.length; i++) {
             canvas.putString("Card n°" + i, DEFAULT_CARD_WIDTH + 5 + (DEFAULT_CARD_WIDTH + 2) * (i % 2) + DEFAULT_CARD_WIDTH / 2 - 4, 1 + (DEFAULT_CARD_HEIGHT + 3) * (i / 2));
 
-            canvas.putCanvas(getCardCanvas(visibleCards[i]), DEFAULT_CARD_WIDTH + 5 + (DEFAULT_CARD_WIDTH + 2) * (i % 2), 2 + (DEFAULT_CARD_HEIGHT + 3) * (i / 2));
+            canvas.putCanvas(getCardCanvas(visibleCards[i], false), DEFAULT_CARD_WIDTH + 5 + (DEFAULT_CARD_WIDTH + 2) * (i % 2), 2 + (DEFAULT_CARD_HEIGHT + 3) * (i / 2));
         }
 
         System.out.println(canvas);

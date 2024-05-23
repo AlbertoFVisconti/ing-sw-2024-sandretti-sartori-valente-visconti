@@ -1,7 +1,7 @@
 package it.polimi.ingsw.events.messages.server;
 
 import it.polimi.ingsw.events.messages.MessageType;
-import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.utils.CardLocation;
 import it.polimi.ingsw.view.VirtualView;
 
@@ -12,20 +12,20 @@ import java.rmi.RemoteException;
  */
 public class PlayersBoardUpdateMessage extends ServerMessage {
     private final String nickname;
-    private final Card placedCard;
+    private final CardSlot placedCardSlot;
     private final CardLocation location;
 
     /**
      * Builds the message.
      *
      * @param playerNickname the nickname of the player whose board has changed.
-     * @param placedCard     the card that was placed on the board.
+     * @param placedCardSlot the cardSlot that contains the card that was place on the board.
      * @param location       the location where the card was placed.
      */
-    public PlayersBoardUpdateMessage(String playerNickname, Card placedCard, CardLocation location) {
+    public PlayersBoardUpdateMessage(String playerNickname, CardSlot placedCardSlot, CardLocation location) {
         super(MessageType.MODEL_UPDATE_MESSAGE);
         this.nickname = playerNickname;
-        this.placedCard = placedCard;
+        this.placedCardSlot = placedCardSlot;
         this.location = location;
     }
 
@@ -38,7 +38,7 @@ public class PlayersBoardUpdateMessage extends ServerMessage {
     @Override
     public void updateView(VirtualView view) {
         try {
-            view.placeCardOnPlayersBoard(nickname, placedCard, location);
+            view.placeCardOnPlayersBoard(nickname, placedCardSlot, location);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

@@ -24,11 +24,6 @@ public class StartCardDeckLoader extends DeckLoader<StartCard> {
         super(filename);
     }
 
-    @Override
-    protected StartCard duplicateElement(StartCard element) {
-        return element.getCopy();
-    }
-
     /**
      * Loads the StartCard deck's contents from the provided file. This method must be implemented
      * by subclasses to specify how the deck's content is loaded

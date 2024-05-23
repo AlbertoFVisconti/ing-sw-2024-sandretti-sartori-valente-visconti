@@ -6,7 +6,7 @@ import it.polimi.ingsw.events.messages.server.GameStatusUpdateMessage;
 import it.polimi.ingsw.events.messages.server.ServerErrorMessage;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.ScoreBoard;
-import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.decks.Deck;
 import it.polimi.ingsw.model.goals.Goal;
@@ -192,7 +192,7 @@ public class GameController extends Observable implements VirtualController, Run
             } else if (gameStatus == GameStatus.GAME_CREATION) {
                 boolean flag = true;
                 for (Player p : game.getPlayers()) {
-                    if (p.getPlacedCard(new CardLocation(0, 0)) == null
+                    if (p.getPlacedCardSlot(new CardLocation(0, 0)) == null
                             || p.getPrivateGoal() == null) {
                         flag = false;
                         break;
@@ -279,30 +279,30 @@ public class GameController extends Observable implements VirtualController, Run
      * @return {@code true} if the location is valid and a card can be placed, {@code false} otherwise.
      */
     private synchronized boolean isLocationValid(CardLocation location, Player player) {
-        if (player.getPlacedCard(location) != null) return false;
+        if (player.getPlacedCardSlot(location) != null) return false;
 
 
-        if (player.getPlacedCard(location.topRightNeighbour()) != null &&
-                (player.getPlacedCard(location.topRightNeighbour()).getBottomLeftCorner() == null)) {
+        if (player.getPlacedCardSlot(location.topRightNeighbour()) != null &&
+                (player.getPlacedCardSlot(location.topRightNeighbour()).getBottomLeftCorner() == null)) {
             return false;
         }
-        if (player.getPlacedCard(location.topLeftNeighbour()) != null &&
-                (player.getPlacedCard(location.topLeftNeighbour()).getBottomRightCorner() == null)) {
+        if (player.getPlacedCardSlot(location.topLeftNeighbour()) != null &&
+                (player.getPlacedCardSlot(location.topLeftNeighbour()).getBottomRightCorner() == null)) {
             return false;
         }
-        if (player.getPlacedCard(location.bottomRightNeighbour()) != null &&
-                (player.getPlacedCard(location.bottomRightNeighbour()).getTopLeftCorner() == null)) {
+        if (player.getPlacedCardSlot(location.bottomRightNeighbour()) != null &&
+                (player.getPlacedCardSlot(location.bottomRightNeighbour()).getTopLeftCorner() == null)) {
             return false;
         }
-        if (player.getPlacedCard(location.bottomLeftNeighbour()) != null &&
-                (player.getPlacedCard(location.bottomLeftNeighbour()).getTopRightCorner() == null)) {
+        if (player.getPlacedCardSlot(location.bottomLeftNeighbour()) != null &&
+                (player.getPlacedCardSlot(location.bottomLeftNeighbour()).getTopRightCorner() == null)) {
             return false;
         }
 
-        return player.getPlacedCard(location.topRightNeighbour()) != null
-                || player.getPlacedCard(location.topLeftNeighbour()) != null
-                || player.getPlacedCard(location.bottomRightNeighbour()) != null
-                || player.getPlacedCard(location.bottomLeftNeighbour()) != null;
+        return player.getPlacedCardSlot(location.topRightNeighbour()) != null
+                || player.getPlacedCardSlot(location.topLeftNeighbour()) != null
+                || player.getPlacedCardSlot(location.bottomRightNeighbour()) != null
+                || player.getPlacedCardSlot(location.bottomLeftNeighbour()) != null;
     }
 
     /**
@@ -380,7 +380,7 @@ public class GameController extends Observable implements VirtualController, Run
                 throw new RuntimeException("Cannot place starting card in this game status");
             }
 
-            if (player.getPlacedCard(new CardLocation(0, 0)) != null) {
+            if (player.getPlacedCardSlot(new CardLocation(0, 0)) != null) {
                 throw new RuntimeException("starting card already placed");
             }
 
@@ -405,25 +405,25 @@ public class GameController extends Observable implements VirtualController, Run
      * @param location the location where the placement occurred.
      */
     private synchronized void updateInventory(Player player, CardLocation location) {
-        Card placedCard = player.getPlacedCard(location);
+        CardSlot placedCard = player.getPlacedCardSlot(location);
         player.addItems(placedCard.collectItems());
 
-        Card t = player.getPlacedCard(location.topLeftNeighbour());
+        CardSlot t = player.getPlacedCardSlot(location.topLeftNeighbour());
         if (t != null) {
             player.removeItem(t.getBottomRightCorner());
         }
 
-        t = player.getPlacedCard(location.topRightNeighbour());
+        t = player.getPlacedCardSlot(location.topRightNeighbour());
         if (t != null) {
             player.removeItem(t.getBottomLeftCorner());
         }
 
-        t = player.getPlacedCard(location.bottomLeftNeighbour());
+        t = player.getPlacedCardSlot(location.bottomLeftNeighbour());
         if (t != null) {
             player.removeItem(t.getTopRightCorner());
         }
 
-        t = player.getPlacedCard(location.bottomRightNeighbour());
+        t = player.getPlacedCardSlot(location.bottomRightNeighbour());
         if (t != null) {
             player.removeItem(t.getTopLeftCorner());
         }
@@ -449,27 +449,44 @@ public class GameController extends Observable implements VirtualController, Run
                 throw new RuntimeException("Placement already occurred, player's expected to draw a card");
             }
 
-            if (isLocationValid(location, player)) {
-                try {
-                    player.placeCard(index, onBackSide, location);
+            if (!isLocationValid(location, player)) {
+                throw new RuntimeException("cannot place card in the provided location");
+            }
 
-                    updateInventory(player, location);
+            if(index < 0 || index >= player.getPlayerCards().length) {
+                throw new RuntimeException("Card index's out of bound");
+            }
 
+            PlayCard card = player.getPlayerCards()[index];
+            if(card == null) {
+                throw new RuntimeException("there's no card in the specified slot");
+            }
+
+            if(!onBackSide && !card.getConstraint().isSubSetOf(player.getInventory())) {
+                throw new RuntimeException("Card constraint aren't met");
+            }
+
+            try {
+                player.placeCard(index, onBackSide, location);
+
+                updateInventory(player, location);
+
+                if(onBackSide) {
                     game.getScoreBoard().addScore(player.nickName,
 
                             // it is safe to assume that the card that was just placed is a PlayCard
                             // since it is certain to come from the player's hand
-                            ((PlayCard) player.getPlacedCard(location)).getScoringStrategy().evaluate(player, location)
+                            ((PlayCard) player.getPlacedCardSlot(location).card()).getScoringStrategy().evaluate(player, location)
                     );
-
-
-                } catch (InvalidParameterException e) {
-                    // Invalid index
-                    throw new RuntimeException(e);
                 }
-            } else {
-                throw new RuntimeException("cannot place card in the provided location");
+
+
+
+            } catch (InvalidParameterException e) {
+                // Invalid index
+                throw new RuntimeException(e);
             }
+
         }
 
         // Card successfully placed

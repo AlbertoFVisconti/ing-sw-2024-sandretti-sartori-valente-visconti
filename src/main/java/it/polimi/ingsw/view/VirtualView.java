@@ -3,7 +3,7 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.controller.TurnStatus;
 import it.polimi.ingsw.model.ScoreBoard;
-import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Resource;
@@ -89,10 +89,10 @@ public interface VirtualView extends Remote {
      * Allows the server to inform the player that a card was placed on a board.
      *
      * @param playerNickName the nickname of the player whose board needs to be updated.
-     * @param card           the StartCard object representing the player starting card.
+     * @param cardSlot       the CardSlot that contains the card that was placed.
      * @throws RemoteException in case of error with the remote communication
      */
-    void placeCardOnPlayersBoard(String playerNickName, Card card, CardLocation location) throws RemoteException;
+    void placeCardOnPlayersBoard(String playerNickName, CardSlot cardSlot, CardLocation location) throws RemoteException;
 
     /**
      * Allows the server to hand the player the available games list.

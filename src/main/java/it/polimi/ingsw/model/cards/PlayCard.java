@@ -12,12 +12,12 @@ import it.polimi.ingsw.utils.ItemCollection;
  * (The StartCard is never actually "played", the player just choose the side)
  */
 public class PlayCard extends Card {
-    final ItemCollection constraint;
+    private final ItemCollection constraint;
 
-    final ScoringStrategy scoringStrategy;
+    private final ScoringStrategy scoringStrategy;
 
-    final Resource type;
-    protected boolean isGold;
+    private final Resource type;
+    protected final boolean isGold;
 
     /**
      * Constructs a PlayCard object with specified corners, placement constraint and scoring strategy.
@@ -100,10 +100,6 @@ public class PlayCard extends Card {
                 new FreeScoreScoringStrategy(scoreUponPlacement));
     }
 
-    public PlayCard getCopy() {
-        return new PlayCard(this.getCardID(), super.getTopLeftCorner(), super.getTopRightCorner(), super.getBottomLeftCorner(), super.getBottomRightCorner(), this.getType(), this.isGold, new ItemCollection(this.constraint), this.scoringStrategy);
-    }
-
     /**
      * Retrieves the placement constraint.
      *
@@ -131,40 +127,16 @@ public class PlayCard extends Card {
         return type;
     }
 
-    /**
-     * Retrieves the corner at the specified index in the shown side of the card.
-     * This method is intended for internal usage in order to avoid code repetition.
-     * <p>
-     * Because of how Gold and Resource cards work, if the back side's up, then the result
-     * is always an empty corner.
-     * Otherwise, Card.getCorner method will be invoked to return the corner.
-     *
-     * @param index the index of the desired corner.
-     * @return the corner at the specified index in the shown side of the card.
-     */
     @Override
-    protected Corner getCorner(int index) {
-        if (!this.isOnBackSide())
-            return super.getCorner(index);
-
+    protected Corner getBackCorner(int index) {
         return Corner.EMPTY;
     }
 
-    /**
-     * Retrieves all the items the player has obtained by placing this card on the current side.
-     * <p>
-     * If the card's the front side up, the Card.collectItems will be called.
-     * Otherwise, the collected items are just represented by the permanent resource on the back.
-     *
-     * @return ItemCollection containing the items in the shown side's corner.
-     */
     @Override
-    public ItemCollection collectItems() {
-        if (isOnBackSide()) {
-            return new ItemCollection().add(this.type.getCorner());
-        }
-        return super.collectItems();
+    protected ItemCollection collectBackItems() {
+        return new ItemCollection().add(this.getType().getCorner());
     }
+
 
     /**
      * Allows decks to ask for the resource on the back of the card.

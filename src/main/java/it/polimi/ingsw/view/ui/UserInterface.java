@@ -7,7 +7,7 @@ import it.polimi.ingsw.events.messages.client.ClientToServerPingMessage;
 import it.polimi.ingsw.events.messages.server.ServerMessage;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.ScoreBoard;
-import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Resource;
@@ -208,24 +208,24 @@ public abstract class UserInterface extends Thread implements VirtualView {
     }
 
     @Override
-    public void placeCardOnPlayersBoard(String playerNickname, Card card, CardLocation location) throws RemoteException {
-        //System.err.println(playerNickname+" placed a card in " + location);
-        //System.err.println(card);
+    public void placeCardOnPlayersBoard(String playerNickname, CardSlot cardSlot, CardLocation location) throws RemoteException {
+        //System.err.println(playerNickname+" placed a cardSlot in " + location);
+        //System.err.println(cardSlot);
         //System.err.println();
 
         for (Player p : gameModel.getPlayers()) {
             if (p.nickName.equals(playerNickname)) {
                 if (location.equals(new CardLocation(0, 0))) {
                     try {
-                        p.setStartCard((StartCard) card);
-                        p.placeStartingCard(card.isOnBackSide());
+                        p.setStartCard((StartCard) cardSlot.card());
+                        p.placeStartingCard(cardSlot.onBackSide());
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 } else {
                     int i = 0;
                     for (PlayCard c : p.getPlayerCards()) {
-                        if (c.equals(card)) {
+                        if (c.equals(cardSlot.card())) {
                             break;
                         }
                         i++;
@@ -234,7 +234,7 @@ public abstract class UserInterface extends Thread implements VirtualView {
                     if (i == p.getPlayerCards().length)
                         throw new RuntimeException("Card not found in player's hand in local model");
 
-                    p.placeCard(i, card.isOnBackSide(), location);
+                    p.placeCard(i, cardSlot.onBackSide(), location);
 
                 }
                 break;

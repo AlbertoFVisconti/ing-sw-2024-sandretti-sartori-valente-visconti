@@ -20,11 +20,6 @@ public class VirtualDeckLoader<T extends Drawable> extends DeckLoader<T> {
         return new VirtualDeck<>();
     }
 
-    @Override
-    protected T duplicateElement(T element) {
-        return null;
-    }
-
     /**
      * VirtualDecks have no content. There's nothing to load.
      *

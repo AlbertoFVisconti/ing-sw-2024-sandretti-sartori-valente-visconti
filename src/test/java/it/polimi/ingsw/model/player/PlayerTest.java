@@ -28,7 +28,7 @@ public class PlayerTest {
         CardLocation x = new CardLocation(1, 1);
         player.placeCard(0, false, x);
         assertNull(player.getPlayerCards()[0]);
-        assertEquals(player.getPlacedCard(x), card1);
+        assertEquals(player.getPlacedCardSlot(x).card(), card1);
     }
 }
 

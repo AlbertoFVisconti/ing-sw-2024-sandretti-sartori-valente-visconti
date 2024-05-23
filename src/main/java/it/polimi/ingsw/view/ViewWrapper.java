@@ -4,7 +4,7 @@ import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.controller.TurnStatus;
 import it.polimi.ingsw.events.messages.server.*;
 import it.polimi.ingsw.model.ScoreBoard;
-import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Resource;
@@ -86,8 +86,8 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView {
     }
 
     @Override
-    public void placeCardOnPlayersBoard(String playerNickName, Card card, CardLocation location) throws RemoteException {
-        userInterface.forwardMessage(new PlayersBoardUpdateMessage(playerNickName, card, location));
+    public void placeCardOnPlayersBoard(String playerNickName, CardSlot cardSlot, CardLocation location) throws RemoteException {
+        userInterface.forwardMessage(new PlayersBoardUpdateMessage(playerNickName, cardSlot, location));
     }
 
     @Override
