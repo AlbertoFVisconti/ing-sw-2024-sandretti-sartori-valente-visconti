@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.events.messages.server.PlayersListUpdateMessage;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
+import it.polimi.ingsw.model.chat.Chat;
 import it.polimi.ingsw.model.decks.Deck;
 import it.polimi.ingsw.model.decks.DeckLoader;
 import it.polimi.ingsw.events.Observable;
@@ -41,6 +42,8 @@ public class Game extends Observable {
     private final int idGame;
     private final int expectedPlayers;
     private final Set<PlayerColor> availableColor;
+
+    private final Chat chat;
 
     /**
      * Constructs a new Game object, initializing the game components.
@@ -86,6 +89,8 @@ public class Game extends Observable {
         this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE,PlayerColor.GREEN,PlayerColor.RED,PlayerColor.YELLOW));
 
         scoreBoard = new ScoreBoard();
+
+        this.chat = new Chat();
     }
     public Game(GameSavingMessage gsm){
         players=new ArrayList<>();
@@ -104,6 +109,8 @@ public class Game extends Observable {
         this.resourceCardsDeck=gsm.getResourceCardsDeck();
         this.startCardsDeck=gsm.getStartCardsDeck();
         this.goalsDeck=gsm.getGoalsDeck();
+        // TODO: this.chat = gsm.getChat();
+        this.chat = new Chat();
     }
 
 
@@ -214,6 +221,10 @@ public class Game extends Observable {
         notifyPlayersListUpdate();
     }
 
+    public Chat getChat() {
+        return chat;
+    }
+
     public void setCommonGoals(Goal[] goals) {
         if(this.isStarted) throw new RuntimeException("Game has already started");
         this.commonGoals = goals.clone();
@@ -228,6 +239,16 @@ public class Game extends Observable {
      */
     public Goal[] getCommonGoals() {
         return this.commonGoals.clone();
+    }
+
+    /**
+     * Create the ScoreBoard for the game with the players currently connected.
+     * This method shouldn't be used on the server, since it is intended for the client to create a
+     * "default" scoreboard before it receive an updated one from the server.
+     */
+    public void setupScoreBoard() {
+        if(isStarted) throw new UnsupportedOperationException("setupScoreBoard shouldn't be used after a game starts");
+        this.scoreBoard = new ScoreBoard(players);
     }
 
     /**

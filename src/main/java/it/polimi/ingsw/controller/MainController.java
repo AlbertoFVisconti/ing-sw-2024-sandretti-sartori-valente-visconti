@@ -169,7 +169,7 @@ public class MainController extends Thread implements VirtualMainController {
 
         if(controller == null) return null;
 
-        return controller.getPlayer(playerIdentifier);
+        return controller.getPlayerByPlayerIdentifier(playerIdentifier);
     }
 
     /**

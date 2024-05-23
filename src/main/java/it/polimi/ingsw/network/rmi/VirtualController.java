@@ -88,4 +88,6 @@ public interface VirtualController extends Remote {
     void selectPrivateGoal(String playerIdentifier, int index) throws RemoteException;
 
     void selectColor(String playerIdentifier,PlayerColor color) throws RemoteException;
+
+    void sendChatMsg(String playerIdentifier, String message, String addressee) throws RemoteException;
 }

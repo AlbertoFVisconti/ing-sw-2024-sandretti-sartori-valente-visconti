@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Resource;
+import it.polimi.ingsw.model.chat.ChatMessage;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.Client;
@@ -122,5 +123,10 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView{
     @Override
     public void ping(boolean isAnswer) throws RemoteException {
         userInterface.forwardMessage(new ServerToClientPingMessage(isAnswer));
+    }
+
+    @Override
+    public void receiveMessage(ChatMessage chatMessage, boolean isPrivate) throws RemoteException {
+        userInterface.forwardMessage(new ServerChatMsgMessage( chatMessage, isPrivate));
     }
 }

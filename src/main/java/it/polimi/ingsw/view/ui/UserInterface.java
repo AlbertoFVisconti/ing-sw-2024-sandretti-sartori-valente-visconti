@@ -11,6 +11,7 @@ import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Resource;
+import it.polimi.ingsw.model.chat.ChatMessage;
 import it.polimi.ingsw.model.decks.VirtualDeck;
 import it.polimi.ingsw.model.decks.VirtualDeckLoader;
 import it.polimi.ingsw.model.goals.Goal;
@@ -289,6 +290,12 @@ public abstract class UserInterface extends Thread implements VirtualView {
 
     @Override
     public void updateGameStatus(GameStatus gameStatus, TurnStatus turnStatus, String playersTurn) throws RemoteException {
+        if(this.gameStatus != GameStatus.GAME_CREATION && gameStatus == GameStatus.GAME_CREATION) {
+            // NOTE: more or less same to assume that the GAME_CREATION update message won't
+            // be received before joining messages
+            this.gameModel.setupScoreBoard();
+        }
+
         this.gameStatus = gameStatus;
         this.turnStatus = turnStatus;
         this.playersTurn = playersTurn;
@@ -304,6 +311,22 @@ public abstract class UserInterface extends Thread implements VirtualView {
         if(!isAnswer) Client.getInstance().getServerHandler().sendMessage(new ClientToServerPingMessage(true));
 
         // TODO handle server "disconnection"
+    }
+
+    @Override
+    public void receiveMessage(ChatMessage chatMessage, boolean isPrivate) throws RemoteException {
+        if(isPrivate) {
+            String remoteNickname;
+            if(chatMessage.getSenderNick().equals(this.localPlayer.nickName)) {
+                remoteNickname = chatMessage.getReceiverNick();
+            }
+            else {
+                remoteNickname = chatMessage.getSenderNick();
+            }
+
+            this.gameModel.getChat().appendMessage(chatMessage, remoteNickname, this.localPlayer.nickName);
+        }
+        else this.gameModel.getChat().appendMessage(chatMessage, null, null);
     }
 
     public HashSet<Integer> getAvailableGames() {

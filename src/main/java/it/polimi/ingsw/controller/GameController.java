@@ -15,6 +15,7 @@ import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.utils.CardLocation;
 
+import java.rmi.RemoteException;
 import java.security.InvalidParameterException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -59,6 +60,8 @@ public class GameController extends Observable implements VirtualController, Run
             else {
                 game.addPlayer(new Player(nickname, clientHandler));
             }
+
+            this.game.getChat().subscribe(clientHandler);
         }
     }
 
@@ -95,7 +98,7 @@ public class GameController extends Observable implements VirtualController, Run
     }
 
     public void handleDisconnection(ClientHandler clientHandler) {
-        Player player = this.getPlayer(clientHandler.getPlayerIdentifier());
+        Player player = this.getPlayerByPlayerIdentifier(clientHandler.getPlayerIdentifier());
 
         if(this.game.getPlayers().contains(player)) {
             System.err.println(player.nickName + " has disconnected");
@@ -103,6 +106,8 @@ public class GameController extends Observable implements VirtualController, Run
             this.unsubscribe(clientHandler);
             this.game.unsubscribe(clientHandler);
             this.game.unsubscribeFromCommonObservable(clientHandler);
+
+            this.game.getChat().unsubscribe(clientHandler);
 
             if(gameStatus == GameStatus.LOBBY) {
                 game.removePlayer(player);
@@ -122,6 +127,8 @@ public class GameController extends Observable implements VirtualController, Run
         Player connectingPlayer = null;
         for(Player player : game.getPlayers()) {
             if(player.nickName.equals(nickname)) {
+                this.game.getChat().subscribe(clientHandler);
+                // TODO: send game saves to client
                 connectingPlayer = player;
                 break;
             }
@@ -207,7 +214,7 @@ public class GameController extends Observable implements VirtualController, Run
                 } else if (gameStatus == GameStatus.NORMAL_TURN) {
                     boolean flag = true;
                     for (Player p : game.getPlayers()) {
-                        if (game.getScoreBoard().getScore(p) >= 20) {
+                        if (game.getScoreBoard().getScore(p.nickName) >= 20) {
                             System.err.println(p.nickName + "reached 20 points, last turn starts");
                             this.gameStatus = GameStatus.LAST_TURN;
                             flag = false;
@@ -313,9 +320,9 @@ public class GameController extends Observable implements VirtualController, Run
 
          for(Player p : game.getPlayers()) {
              for(Goal g: game.getCommonGoals()) {
-                 scoreBoard.addScore(p, g.evaluate(p));
+                 scoreBoard.addScore(p.nickName, g.evaluate(p));
              }
-             scoreBoard.addScore(p, p.getPrivateGoal().evaluate(p));
+             scoreBoard.addScore(p.nickName, p.getPrivateGoal().evaluate(p));
          }
     }
 
@@ -331,7 +338,7 @@ public class GameController extends Observable implements VirtualController, Run
      */
     @Override
     public void selectPrivateGoal(String playerIdentifier, int index) {
-        Player player = this.getPlayer(playerIdentifier);
+        Player player = this.getPlayerByPlayerIdentifier(playerIdentifier);
         if(player == null) throw new RuntimeException("Unknown Player");
 
         synchronized (this) {
@@ -367,7 +374,7 @@ public class GameController extends Observable implements VirtualController, Run
      * @param onBackSide {@code true} if the starting card needs to be placed with the back side up, {@code false} otherwise.
      */
     public void placeStartCard(String playerIdentifier, boolean onBackSide) {
-        Player player = this.getPlayer(playerIdentifier);
+        Player player = this.getPlayerByPlayerIdentifier(playerIdentifier);
         if(player == null) throw new RuntimeException("Unknown Player");
 
         synchronized (this) {
@@ -450,7 +457,7 @@ public class GameController extends Observable implements VirtualController, Run
 
                     updateInventory(player, location);
 
-                    game.getScoreBoard().addScore(player,
+                    game.getScoreBoard().addScore(player.nickName,
 
                             // it is safe to assume that the card that was just placed is a PlayCard
                             // since it is certain to come from the player's hand
@@ -554,7 +561,7 @@ public class GameController extends Observable implements VirtualController, Run
     private Player turnCheck(String playerIdentifier) {
         if(paused) throw new RuntimeException("this game is currently paused");
 
-        Player player = this.getPlayer(playerIdentifier);
+        Player player = this.getPlayerByPlayerIdentifier(playerIdentifier);
         if(player == null) throw new RuntimeException("Unknown Player");
 
         synchronized (this) {
@@ -579,7 +586,7 @@ public class GameController extends Observable implements VirtualController, Run
      */
     @Override
     public void selectColor(String playerIdentifier, PlayerColor color) {
-        Player player = this.getPlayer(playerIdentifier);
+        Player player = this.getPlayerByPlayerIdentifier(playerIdentifier);
         if(player == null) throw new RuntimeException("Unknown Player");
 
         synchronized (this) {
@@ -594,6 +601,27 @@ public class GameController extends Observable implements VirtualController, Run
 
         System.err.println(this.game.getIdGame() + ": "+player.nickName + " selected "+color+" as their color");
         updateStatus();
+    }
+
+    @Override
+    public void sendChatMsg(String playerIdentifier, String message, String addressee) throws RemoteException {
+        Player senderPlayer = this.getPlayerByPlayerIdentifier(playerIdentifier);
+        if(senderPlayer == null) throw new RuntimeException("chat msg fail: unknown sender");
+
+        Player addresseePlayer;
+        if(addressee == null){
+            // public message
+            addresseePlayer = null;
+        }
+        else {
+            // private message
+            addresseePlayer = this.getPlayerByNickname(addressee);
+            if(addresseePlayer == null) throw new RuntimeException("chat msg fail: unknown addressee");
+        }
+
+        synchronized (this) {
+            this.game.getChat().sendMessage(senderPlayer, addresseePlayer, message);
+        }
     }
 
     /**
@@ -626,7 +654,7 @@ public class GameController extends Observable implements VirtualController, Run
     }
 
 
-    public synchronized Player getPlayer(String playerIdentifier) {
+    public synchronized Player getPlayerByPlayerIdentifier(String playerIdentifier) {
         for(Player p : this.game.getPlayers()) {
             if(p.getClientHandler().getPlayerIdentifier().equals(playerIdentifier)) {
                 return p;
@@ -634,6 +662,16 @@ public class GameController extends Observable implements VirtualController, Run
         }
         return null;
     }
+
+    public synchronized Player getPlayerByNickname(String nickname) {
+        for(Player p : this.game.getPlayers()) {
+            if(p.nickName.equals(nickname)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
 
     public synchronized boolean isNicknameAvailable(String nickname) {
         for(Player p : this.game.getPlayers()) {

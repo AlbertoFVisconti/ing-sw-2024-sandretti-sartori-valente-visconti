@@ -52,4 +52,11 @@ public class GameControllerWrapper extends UnicastRemoteObject implements Virtua
         message.setPlayerIdentifier(playerIdentifier);
         gameController.forwardMessage(message);
     }
+
+    @Override
+    public void sendChatMsg(String playerIdentifier, String message, String addressee) throws RemoteException {
+        ClientMessage clientMessage = new ClientChatMsgMessage(message, addressee);
+        clientMessage.setPlayerIdentifier(playerIdentifier);
+        gameController.forwardMessage(clientMessage);
+    }
 }

@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Resource;
+import it.polimi.ingsw.model.chat.ChatMessage;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.rmi.VirtualController;
@@ -157,4 +158,6 @@ public interface VirtualView extends Remote {
      * @throws RemoteException in case of error with the remote communication.
      */
     void ping(boolean isAnswer) throws RemoteException;
+
+    void receiveMessage(ChatMessage chatMessage, boolean isPrivate) throws RemoteException;
 }

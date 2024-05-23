@@ -69,10 +69,73 @@ public class TextualUserInterface extends UserInterface {
             int selection;
             int x,y;
 
+            StringBuilder msgText;
+
             int i;
             switch (tokens[0]) {
                 default:
                     syntaxErrorMessage = "unknown command";
+                    break;
+                case "!private_msg":
+                    if(tokens.length < 3) {
+                        syntaxErrorMessage = "invalid num of arguments";
+                        break;
+                    }
+
+                    player = null;
+                    for(Player p : gameModel.getPlayers()) {
+                        if (p.nickName.equals(tokens[1])) {
+                            player = p;
+                            break;
+                        }
+                    }
+
+                    if(player == null) {
+                        syntaxErrorMessage = "selected player was not recognized";
+                        break;
+                    }
+
+                    msgText = new StringBuilder();
+                    for(int h = 2; h < tokens.length; h++) {
+                        msgText.append(tokens[h]);
+                        if(h<tokens.length-1) msgText.append(' ');
+                    }
+
+                    Client.getInstance().getServerHandler().sendMessage(new ClientChatMsgMessage(msgText.toString(), player.nickName));
+                    break;
+
+                case "!msg":
+                    if(tokens.length < 2) {
+                        syntaxErrorMessage = "invalid num of arguments";
+                        break;
+                    }
+
+                    msgText = new StringBuilder();
+                    for(int h = 1; h < tokens.length; h++) {
+                        msgText.append(tokens[h]);
+                        if(h<tokens.length-1) msgText.append(' ');
+                    }
+
+                    Client.getInstance().getServerHandler().sendMessage(new ClientChatMsgMessage(msgText.toString()));
+
+
+
+                    break;
+
+                case "!chat":
+                    if(this.getLocalPlayer() == null) {
+                        syntaxErrorMessage = "you must join a game to chat with other players";
+                        break;
+                    }
+                    lastCommand = command;
+
+                    nickname = null;
+                    if(tokens.length != 1) {
+                        nickname = tokens[1];
+                    }
+
+                    Printer.printChat(gameModel.getChat(), this.getLocalPlayer().nickName, nickname);
+
                     break;
                 case "!list":
                     lastCommand = command;
@@ -271,6 +334,10 @@ public class TextualUserInterface extends UserInterface {
                     }
 
                     break;
+                case "!score":
+                    Printer.printScoreBoard(gameModel.getScoreBoard(), gameModel.getPlayers());
+                    break;
+
                 case "!place":
                     if(tokens.length != 5) {
                         syntaxErrorMessage = "invalid num of arguments";
@@ -391,6 +458,7 @@ public class TextualUserInterface extends UserInterface {
                         "\t- !place_start [side]    to place the start card (0->front, 1->back)\n" +
                         "\t- !private_goals         to print the available private goals\n" +
                         "\t- !sel_goal [goal_id]    to select the private goal\n" +
+                        "\t- |score                 to print the scoreboard\n" +
                         "\t- !help                  to get the list of commands";
                 break;
             case GameStatus.NORMAL_TURN:
@@ -402,6 +470,7 @@ public class TextualUserInterface extends UserInterface {
                                 "\t- !board [playername]        to print the board [of the specified player]\n" +
                                 "\t- !hand [playername]         to print the hand [of the specified player]\n" +
                                 "\t- !place card_num side x y   to place the card\n" +
+                                "\t- |score                 to print the scoreboard\n" +
                                 "\t- !help                      to get the list of commands";
                     }
                     else {
@@ -411,6 +480,7 @@ public class TextualUserInterface extends UserInterface {
                                 "\t- !drawable                  to print info about the decks and visible cards\n" +
                                 "\t- !draw deck_id              to draw from the specified deck\n" +
                                 "\t- !pick_up card_num          to pick up the specified visible card\n" +
+                                "\t- |score                 to print the scoreboard\n" +
                                 "\t- !help                      to get the list of commands";
                     }
                 }
@@ -419,6 +489,7 @@ public class TextualUserInterface extends UserInterface {
                             "\t- !board [playername]        to print the board [of the specified player]\n" +
                             "\t- !hand [playername]         to print the hand [of the specified player]\n" +
                             "\t- !drawable                  to print info about the decks and visible cards\n" +
+                            "\t- |score                 to print the scoreboard\n" +
                             "\t- !help                      to get the list of commands";
                 }
                 break;

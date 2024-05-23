@@ -42,24 +42,24 @@ public class ScoreBoard extends Observable implements Serializable {
     /**
      * Retrieves the score of the specified player from the scoreboard.
      *
-     * @param player the Player whose score is to be retrieved
+     * @param nickName the nickname of the Player whose score is to be retrieved
      * @return The score of the specified player.
      */
-    public int getScore(Player player) {
-        if(!scores.containsKey(player.nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
-        return scores.get(player.nickName);
+    public int getScore(String nickName) {
+        if(!scores.containsKey(nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
+        return scores.get(nickName);
     }
 
     /**
      * Sets the score for the specified player in the scoreboard.
      *
-     * @param player the Player whose score needs to be set.
+     * @param nickName the nickname of the Player whose score needs to be set.
      * @param score the new score to set for the player.
      * @throws NoSuchElementException if the provided player is not in the scoreboard
      */
-    public void setScore(Player player, int score) {
-        if(!scores.containsKey(player.nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
-        scores.put(player.nickName,score);
+    public void setScore(String nickName, int score) {
+        if(!scores.containsKey(nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
+        scores.put(nickName,score);
 
         notifyObservers(new ScoreUpdateMessage(this));
     }
@@ -67,12 +67,12 @@ public class ScoreBoard extends Observable implements Serializable {
     /**
      * Increases the score of a player in the scoreboard by a specified amount.
      *
-     * @param player the Player whose score needs to be updated
+     * @param nickName the nickname of the Player whose score needs to be updated
      * @param scoreDelta the amount to add to the Player's score.
      */
-    public void addScore(Player player, int scoreDelta) {
-        if(!scores.containsKey(player.nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
-        this.setScore(player, scores.get(player.nickName)  + scoreDelta);
+    public void addScore(String nickName, int scoreDelta) {
+        if(!scores.containsKey(nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
+        this.setScore(nickName, scores.get(nickName)  + scoreDelta);
     }
 
     public void copyScore(ScoreBoard scoreBoard) {

@@ -1,15 +1,17 @@
 package it.polimi.ingsw.view.ui.tui;
 
+import it.polimi.ingsw.model.ScoreBoard;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
+import it.polimi.ingsw.model.chat.Chat;
+import it.polimi.ingsw.model.chat.ChatMessage;
 import it.polimi.ingsw.model.decks.Deck;
+import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.utils.CardLocation;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 final class Printer {
     private final static int DEFAULT_CARD_WIDTH = 27;
@@ -339,7 +341,7 @@ final class Printer {
         canvas.putCanvas(getPlayCardDeckCanvas(resourceDeck), 0, 2);
 
         canvas.putString("Deck n°1 (gold)", 0,2 + DEFAULT_CARD_HEIGHT + 2);
-        canvas.putCanvas(getPlayCardDeckCanvas(resourceDeck), 0, 2 + DEFAULT_CARD_HEIGHT + 3);
+        canvas.putCanvas(getPlayCardDeckCanvas(goldDeck), 0, 2 + DEFAULT_CARD_HEIGHT + 3);
 
 
         for(int i = 0; i < visibleCards.length; i++) {
@@ -349,6 +351,54 @@ final class Printer {
         }
 
         System.out.println(canvas);
+    }
+
+    public static void printScoreBoard(ScoreBoard scoreBoard, List<Player> players) {
+        if(scoreBoard == null || players == null) return;
+        ArrayList<String> nicknames = new ArrayList<>();
+
+        int lmax = 0;
+        for(Player p : players) {
+            nicknames.add(p.nickName);
+            if(lmax < p.nickName.length()) lmax = p.nickName.length();
+        }
+
+
+        nicknames.sort(
+                Comparator.comparingInt(scoreBoard::getScore)
+        );
+
+
+        // width = 4 (indentation) + 4 (score) + 1 (space) + lmax (longest nickname)
+        // no need to check if the "Score:" string fits since 9 is enough anyway
+        Canvas canvas = new Canvas(9 + lmax, nicknames.size() + 1);
+
+        canvas.putString("Score:", 0,0);
+        int i = 1;
+        for(String nick : nicknames) {
+            StringBuilder score = new StringBuilder(Integer.toString(scoreBoard.getScore(nick)));
+
+            while(score.length() < 4) {
+                score.insert(0, ' ');
+            }
+
+            // space
+            score.append(' ');
+            score.append(nick);
+
+            canvas.putString(score.toString(), 4 ,i++);
+        }
+
+        System.out.println(canvas);
+    }
+
+    public static void printChat(Chat chat, String localNickname, String remoteNickname) {
+        List<ChatMessage> messages = chat.getMessagesChat(localNickname, remoteNickname);
+
+        System.out.println("Messages:");
+        for(ChatMessage msg : messages) {
+            System.out.println("\t" + msg.getSenderNick() + ": " + msg.getText());
+        }
     }
 
     private static class Canvas {
