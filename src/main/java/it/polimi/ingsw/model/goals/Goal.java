@@ -13,6 +13,7 @@ import java.io.Serializable;
  * certain conditions.
  */
 public abstract class Goal implements Drawable, Serializable {
+    String path;
     /**
      * Evaluates the score the player achieved based on certain conditions on their board or inventory.
      *
@@ -27,5 +28,8 @@ public abstract class Goal implements Drawable, Serializable {
     @Override
     public Resource getCardResourceType() {
         return null;
+    }
+    public String getPath(){
+        return path;
     }
 }

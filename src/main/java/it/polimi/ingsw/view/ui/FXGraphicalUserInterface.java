@@ -13,6 +13,7 @@ import java.util.Objects;
 public class FXGraphicalUserInterface extends UserInterface {
     public static UserInterface currentInterface = null;
 
+
     @Override
     public void reportError(RuntimeException exception) throws RemoteException {
 

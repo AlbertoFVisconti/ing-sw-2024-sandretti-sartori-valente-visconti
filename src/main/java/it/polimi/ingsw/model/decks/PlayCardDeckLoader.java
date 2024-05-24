@@ -103,13 +103,13 @@ public class PlayCardDeckLoader extends DeckLoader<PlayCard>{
                     );
                 }
 
-                cards.add(PlayCard.generateGoldCard("golden_card_"+i,topLeft, topRight, bottomLeft, bottomRight, type, constraint, scoringStrategy));
+                cards.add(PlayCard.generateGoldCard("golden_card_"+i, "@../image/golden_card" + i +"f.png", "@../image/golden_card" + i +"b.png", topLeft, topRight, bottomLeft, bottomRight, type, constraint, scoringStrategy));
 
             }
             else {
                 int score = json.getInt("free_score");
 
-                cards.add(PlayCard.generateResourceCard("resrouce_card_"+i,topLeft, topRight, bottomLeft, bottomRight, type, score));
+                cards.add(PlayCard.generateResourceCard("resrouce_card_"+i, "@../image/resource_card" + i +"f.png", "@../image/resource_card" + i +"b.png", topLeft, topRight, bottomLeft, bottomRight, type, score));
             }
         }
 
