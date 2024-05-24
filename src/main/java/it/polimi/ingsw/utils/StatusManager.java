@@ -1,9 +1,9 @@
 package it.polimi.ingsw.utils;
 
-import it.polimi.ingsw.events.saving.GameSavingMessage;
-import it.polimi.ingsw.events.saving.PlayerSavingMessage;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.saving.GameSaving;
+import it.polimi.ingsw.model.saving.PlayerSaving;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -12,19 +12,19 @@ public class StatusManager {
 
     public void saveGame(Game game) throws IOException {
         String filename = game.getIdGame() + ".ser";
-        ArrayList<PlayerSavingMessage> playerSavingMessageArray = new ArrayList<>();
+        ArrayList<PlayerSaving> playerSavingArray = new ArrayList<>();
         for (Player p : game.getPlayers()) {
-            PlayerSavingMessage playerSavingMessage = new PlayerSavingMessage(p.getNickname(), p.getColor(),
+            PlayerSaving playerSaving = new PlayerSaving(p.getNickname(), p.getColor(),
                     p.getBoard(), p.getPlayerCards(), p.getPrivateGoal(), p.getInventory());
-            playerSavingMessageArray.add(playerSavingMessage);
+            playerSavingArray.add(playerSaving);
         }
-        GameSavingMessage gameSavingMessage = new GameSavingMessage(game.getExpectedPlayers(), playerSavingMessageArray,
+        GameSaving gameSaving = new GameSaving(game.getExpectedPlayers(), playerSavingArray,
                 game.getIdGame(), game.getGoldCardsDeck(), game.getResourceCardsDeck(), game.getVisibleCards(),
                 game.getScoreBoard(), game.getCommonGoals(), game.getStartCardsDeck(), game.getGoalsDeck());
 
         FileOutputStream file = new FileOutputStream(filename);
         ObjectOutputStream out = new ObjectOutputStream(file);
-        out.writeObject(gameSavingMessage);
+        out.writeObject(gameSaving);
         out.close();
         file.close();
 
@@ -33,7 +33,7 @@ public class StatusManager {
     public Game restoreGame(String gameName) throws IOException, ClassNotFoundException {
         FileInputStream fileInputStream = new FileInputStream(gameName);
         ObjectInputStream in = new ObjectInputStream(fileInputStream);
-        GameSavingMessage resotredGameMessage = (GameSavingMessage) in.readObject();
+        GameSaving resotredGameMessage = (GameSaving) in.readObject();
         Game g = new Game(resotredGameMessage);
         in.close();
         fileInputStream.close();

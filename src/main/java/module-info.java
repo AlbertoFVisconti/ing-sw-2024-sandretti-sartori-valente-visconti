@@ -14,7 +14,7 @@ module it.polimi.ingsw {
     exports it.polimi.ingsw.utils;
     exports it.polimi.ingsw.model.cards;
     exports it.polimi.ingsw.model.cards.corners;
-    exports it.polimi.ingsw.events.saving;
+    exports it.polimi.ingsw.model.saving;
     exports it.polimi.ingsw.events.messages.server;
     exports it.polimi.ingsw.events.messages.client;
     exports it.polimi.ingsw.controller;

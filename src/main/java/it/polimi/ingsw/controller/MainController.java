@@ -1,7 +1,10 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.events.messages.client.ClientMessage;
-import it.polimi.ingsw.events.messages.server.*;
+import it.polimi.ingsw.events.messages.server.ConnectionConfirmationMessage;
+import it.polimi.ingsw.events.messages.server.GameListMessage;
+import it.polimi.ingsw.events.messages.server.ServerErrorMessage;
+import it.polimi.ingsw.events.messages.server.ServerToClientPingMessage;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.decks.GoalDeckLoader;
 import it.polimi.ingsw.model.decks.PlayCardDeckLoader;
@@ -227,7 +230,7 @@ public class MainController extends Thread implements VirtualMainController {
 
                 controller.addNewPlayer(nickname, clientHandler);
             } else {
-                controller.handleReconnection(nickname, clientHandler);
+                controller.handleReconnection(nickname, clientHandler, gameControllerWrapper);
             }
         }
 
@@ -237,8 +240,6 @@ public class MainController extends Thread implements VirtualMainController {
         synchronized (playerIdentifierToGameController) {
             this.playerIdentifierToGameController.put(clientHandler.getPlayerIdentifier(), controller);
         }
-
-        clientHandler.sendMessage(new JoinConfirmationMessage(nickname));
 
         System.err.println(nickname + " joined the game");
     }

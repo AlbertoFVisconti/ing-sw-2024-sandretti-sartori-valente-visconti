@@ -57,7 +57,7 @@ public abstract class Card implements Drawable, Serializable {
     protected abstract Corner getBackCorner(int index);
 
     private Corner getCorner(int index, boolean onBackSide) {
-        if(onBackSide) return this.getBackCorner(index);
+        if (onBackSide) return this.getBackCorner(index);
         else return this.getFrontCorner(index);
     }
 
@@ -121,7 +121,7 @@ public abstract class Card implements Drawable, Serializable {
      * @return ItemCollection containing the items in the card's front side's corner.
      */
     public ItemCollection collectItems(boolean onBackSide) {
-        if(onBackSide) return collectBackItems();
+        if (onBackSide) return collectBackItems();
         else return collectFrontItems();
     }
 

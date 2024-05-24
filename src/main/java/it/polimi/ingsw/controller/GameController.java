@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.events.Observable;
 import it.polimi.ingsw.events.messages.client.ClientMessage;
 import it.polimi.ingsw.events.messages.server.GameStatusUpdateMessage;
+import it.polimi.ingsw.events.messages.server.JoinConfirmationMessage;
 import it.polimi.ingsw.events.messages.server.ServerErrorMessage;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.ScoreBoard;
@@ -12,7 +13,9 @@ import it.polimi.ingsw.model.decks.Deck;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
+import it.polimi.ingsw.model.saving.ClientGameSaving;
 import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
+import it.polimi.ingsw.network.rmi.GameControllerWrapper;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.utils.CardLocation;
 
@@ -62,6 +65,8 @@ public class GameController extends Observable implements VirtualController, Run
             }
 
             this.game.getChat().subscribe(clientHandler);
+
+            clientHandler.sendMessage(new JoinConfirmationMessage(nickname));
         }
     }
 
@@ -122,28 +127,39 @@ public class GameController extends Observable implements VirtualController, Run
         }
     }
 
-    public void handleReconnection(String nickname, ClientHandler clientHandler) {
+    public void handleReconnection(String nickname, ClientHandler clientHandler, GameControllerWrapper gameControllerWrapper) {
         Player connectingPlayer = null;
-        for (Player player : game.getPlayers()) {
-            if (player.nickName.equals(nickname)) {
-                this.game.getChat().subscribe(clientHandler);
-                // TODO: send game saves to client
-                connectingPlayer = player;
-                break;
+        ClientGameSaving saving;
+
+        synchronized (this) {
+            for (Player player : game.getPlayers()) {
+                if (player.nickName.equals(nickname)) {
+                    connectingPlayer = player;
+                    break;
+                }
             }
-        }
 
-        if (connectingPlayer == null) {
-            throw new RuntimeException("Reconnection failed: unknown player");
-        }
-        if (!connectingPlayer.hasDisconnected()) {
-            throw new RuntimeException("Reconnection failed: this player is already connected");
-        }
+            if (connectingPlayer == null) {
+                throw new RuntimeException("Reconnection failed: unknown player");
+            }
+            if (!connectingPlayer.hasDisconnected()) {
+                throw new RuntimeException("Reconnection failed: this player is already connected");
+            }
 
-        System.err.println(nickname + " rejoined the game");
-        this.subscribe(clientHandler);
-        this.game.subscribe(clientHandler);
-        this.game.subscribeCommonObservers(clientHandler);
+            if (gameControllerWrapper != null) clientHandler.setController(gameControllerWrapper);
+
+
+            System.err.println(nickname + " rejoined the game");
+
+            this.game.getChat().subscribe(clientHandler);
+            connectingPlayer.setClientHandler(clientHandler);
+
+            this.game.subscribe(clientHandler);
+            this.game.subscribeCommonObservers(clientHandler);
+
+            saving = this.game.getClientSaving(nickname);
+        }
+        clientHandler.sendMessage(new JoinConfirmationMessage(nickname, saving));
 
         this.connectedPlayers++;
 
@@ -152,7 +168,11 @@ public class GameController extends Observable implements VirtualController, Run
 
             if (game.getTurn().hasDisconnected()) {
                 advanceTurn();
+            } else {
+                this.updateStatus();
             }
+        } else {
+            this.updateStatus();
         }
     }
 
@@ -453,16 +473,16 @@ public class GameController extends Observable implements VirtualController, Run
                 throw new RuntimeException("cannot place card in the provided location");
             }
 
-            if(index < 0 || index >= player.getPlayerCards().length) {
+            if (index < 0 || index >= player.getPlayerCards().length) {
                 throw new RuntimeException("Card index's out of bound");
             }
 
             PlayCard card = player.getPlayerCards()[index];
-            if(card == null) {
+            if (card == null) {
                 throw new RuntimeException("there's no card in the specified slot");
             }
 
-            if(!onBackSide && !card.getConstraint().isSubSetOf(player.getInventory())) {
+            if (!onBackSide && !card.getConstraint().isSubSetOf(player.getInventory())) {
                 throw new RuntimeException("Card constraint aren't met");
             }
 
@@ -471,7 +491,7 @@ public class GameController extends Observable implements VirtualController, Run
 
                 updateInventory(player, location);
 
-                if(onBackSide) {
+                if (!onBackSide) {
                     game.getScoreBoard().addScore(player.nickName,
 
                             // it is safe to assume that the card that was just placed is a PlayCard
@@ -479,8 +499,6 @@ public class GameController extends Observable implements VirtualController, Run
                             ((PlayCard) player.getPlacedCardSlot(location).card()).getScoringStrategy().evaluate(player, location)
                     );
                 }
-
-
 
             } catch (InvalidParameterException e) {
                 // Invalid index

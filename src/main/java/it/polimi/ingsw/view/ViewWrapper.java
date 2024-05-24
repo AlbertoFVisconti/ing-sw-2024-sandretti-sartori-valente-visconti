@@ -11,6 +11,7 @@ import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.chat.ChatMessage;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.PlayerColor;
+import it.polimi.ingsw.model.saving.ClientGameSaving;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.network.serverhandlers.RMIServerHandler;
@@ -96,8 +97,8 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView {
     }
 
     @Override
-    public void confirmJoin(String nickname) throws RemoteException {
-        userInterface.forwardMessage(new JoinConfirmationMessage(nickname));
+    public void confirmJoin(String nickname, ClientGameSaving savings) throws RemoteException {
+        userInterface.forwardMessage(new JoinConfirmationMessage(nickname, savings));
     }
 
     @Override

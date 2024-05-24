@@ -5,12 +5,13 @@ import it.polimi.ingsw.events.messages.server.PlayersBoardUpdateMessage;
 import it.polimi.ingsw.events.messages.server.PlayersHandUpdateMessage;
 import it.polimi.ingsw.events.messages.server.PrivateGoalUpdateMessage;
 import it.polimi.ingsw.events.messages.server.StartCardUpdateMessage;
-import it.polimi.ingsw.events.saving.PlayerSavingMessage;
 import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.goals.Goal;
+import it.polimi.ingsw.model.saving.ClientPlayerSaving;
+import it.polimi.ingsw.model.saving.PlayerSaving;
 import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
 import it.polimi.ingsw.utils.CardLocation;
 import it.polimi.ingsw.utils.ItemCollection;
@@ -52,13 +53,25 @@ public class Player extends Observable {
         this.turnCounter = 1;
     }
 
-    public Player(PlayerSavingMessage psm) {
+    public Player(PlayerSaving psm) {
         this.nickName = psm.getNick();
         this.color = psm.getPlayerColor();
         this.board = (HashMap<CardLocation, CardSlot>) psm.getBoard();
         this.playerCards = psm.getPlayerHand();
         this.privateGoal = psm.getPrivateGoal();
         this.inventory = psm.getInventory();
+
+        this.turnCounter = this.board.size();
+    }
+
+    public PlayerSaving getSaving() {
+        return new PlayerSaving(nickName, color, this.board, playerCards, privateGoal, inventory);
+    }
+
+    public ClientPlayerSaving getClientSaving(String clientNickname) {
+        if (clientNickname.equals(this.nickName))
+            return new ClientPlayerSaving(nickName, color, this.board, playerCards, privateGoal, inventory);
+        else return new ClientPlayerSaving(nickName, color, board, playerCards, null, inventory);
     }
 
     public PlayerColor getColor() {
@@ -75,11 +88,7 @@ public class Player extends Observable {
      * @param clientHandler the new player's ClientHandler.
      */
     public void setClientHandler(ClientHandler clientHandler) {
-        if (this.clientHandler != null)
-            this.unsubscribe(this.clientHandler);
         this.clientHandler = clientHandler;
-        if (this.clientHandler != null)
-            this.subscribe(this.clientHandler);
     }
 
     /**

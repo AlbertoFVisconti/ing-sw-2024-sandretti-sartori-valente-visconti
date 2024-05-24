@@ -1,4 +1,4 @@
-package it.polimi.ingsw.events.saving;
+package it.polimi.ingsw.model.saving;
 
 import it.polimi.ingsw.model.ScoreBoard;
 import it.polimi.ingsw.model.cards.PlayCard;
@@ -9,9 +9,9 @@ import it.polimi.ingsw.model.goals.Goal;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class GameSavingMessage implements Serializable {
+public class GameSaving implements Serializable {
     private final int expectedPlayers;
-    private final ArrayList<PlayerSavingMessage> players;
+    private final ArrayList<PlayerSaving> players;
     private final int gameId;
     private final Deck<PlayCard> goldCardsDeck;
     private final Deck<PlayCard> resourceCardsDeck;
@@ -21,10 +21,10 @@ public class GameSavingMessage implements Serializable {
     private final Deck<StartCard> startCardsDeck;
     private final Deck<Goal> goalsDeck;
 
-    public GameSavingMessage(int expectedPlayers, ArrayList<PlayerSavingMessage> players, int gameId,
-                             Deck<PlayCard> goldCardsDeck, Deck<PlayCard> resourceCardsDeck,
-                             PlayCard[] visibleCards, ScoreBoard scoreBoard, Goal[] publicGoal,
-                             Deck<StartCard> startCardsDeck, Deck<Goal> goalsDeck) {
+    public GameSaving(int expectedPlayers, ArrayList<PlayerSaving> players, int gameId,
+                      Deck<PlayCard> goldCardsDeck, Deck<PlayCard> resourceCardsDeck,
+                      PlayCard[] visibleCards, ScoreBoard scoreBoard, Goal[] publicGoal,
+                      Deck<StartCard> startCardsDeck, Deck<Goal> goalsDeck) {
         this.expectedPlayers = expectedPlayers;
         this.players = players;
         this.gameId = gameId;
@@ -41,7 +41,7 @@ public class GameSavingMessage implements Serializable {
         return expectedPlayers;
     }
 
-    public ArrayList<PlayerSavingMessage> getPlayers() {
+    public ArrayList<PlayerSaving> getPlayers() {
         return players;
     }
 

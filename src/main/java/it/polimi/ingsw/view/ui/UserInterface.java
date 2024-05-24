@@ -17,6 +17,7 @@ import it.polimi.ingsw.model.decks.VirtualDeckLoader;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
+import it.polimi.ingsw.model.saving.ClientGameSaving;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.utils.CardLocation;
@@ -31,7 +32,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public abstract class UserInterface extends Thread implements VirtualView {
-    protected final Game gameModel;
+    protected Game gameModel;
     private Player localPlayer;
 
     protected HashSet<Integer> availableGames;
@@ -41,9 +42,11 @@ public abstract class UserInterface extends Thread implements VirtualView {
     private String playersTurn;
 
     private final BlockingQueue<ServerMessage> messageQueue;
+    private final BlockingQueue<ServerMessage> gameMessages;
 
     public UserInterface() {
         messageQueue = new ArrayBlockingQueue<>(100);
+        gameMessages = new ArrayBlockingQueue<>(100);
 
         try {
             gameModel = new Game(
@@ -65,14 +68,50 @@ public abstract class UserInterface extends Thread implements VirtualView {
                     while (true) {
                         try {
                             message = messageQueue.take();
+
+                            if (message.messageType == MessageType.PRIVATE_MODEL_UPDATE_MESSAGE || message.messageType == MessageType.MODEL_UPDATE_MESSAGE) {
+                                this.gameMessages.put(message);
+                                continue;
+                            }
+
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
 
-                        message.updateView(this);
-                        if (message.messageType != MessageType.PING_MESSAGE) {
+                        synchronized (this) {
+                            message.updateView(this);
+                        }
+
+                        if (message.messageType == MessageType.CONNECT_JOIN_MESSAGE ||
+                                message.messageType == MessageType.SERVER_ERROR_MESSAGE ||
+                                message.messageType == MessageType.CHAT_MESSAGE ||
+                                message.messageType == MessageType.GAME_LIST_MESSAGE) {
                             this.update();
                         }
+                    }
+                }
+        ).start();
+
+        new Thread(
+                () -> {
+                    ServerMessage message;
+
+                    while (true) {
+                        try {
+                            if (this.localPlayer != null) {
+                                message = gameMessages.take();
+                            } else {
+                                Thread.sleep(100);
+                                continue;
+                            }
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        synchronized (this) {
+                            message.updateView(this);
+                        }
+                        this.update();
                     }
                 }
         ).start();
@@ -225,7 +264,7 @@ public abstract class UserInterface extends Thread implements VirtualView {
                 } else {
                     int i = 0;
                     for (PlayCard c : p.getPlayerCards()) {
-                        if (c.equals(cardSlot.card())) {
+                        if (c != null && c.equals(cardSlot.card())) {
                             break;
                         }
                         i++;
@@ -250,13 +289,16 @@ public abstract class UserInterface extends Thread implements VirtualView {
     }
 
     @Override
-    public void confirmJoin(String nickname) throws RemoteException {
+    public void confirmJoin(String nickname, ClientGameSaving savings) throws RemoteException {
         //System.err.println("Successfully joined the game as " + nickname);
 
         this.localPlayer = new Player(nickname, null);
 
-        List<Player> currPlayer = gameModel.getPlayers();
+        if (savings != null) {
+            this.gameModel = new Game(savings);
+        }
 
+        List<Player> currPlayer = gameModel.getPlayers();
         if (currPlayer != null) {
             for (Player player : currPlayer) {
                 if (player.nickName.equals(localPlayer.nickName)) {

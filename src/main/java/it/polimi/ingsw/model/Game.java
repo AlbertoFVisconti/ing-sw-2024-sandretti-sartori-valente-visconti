@@ -4,8 +4,6 @@ import it.polimi.ingsw.events.Observable;
 import it.polimi.ingsw.events.messages.server.PlayersListUpdateMessage;
 import it.polimi.ingsw.events.messages.server.PublicGoalsUpdateMessage;
 import it.polimi.ingsw.events.messages.server.VisibleCardUpdateMessage;
-import it.polimi.ingsw.events.saving.GameSavingMessage;
-import it.polimi.ingsw.events.saving.PlayerSavingMessage;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.chat.Chat;
@@ -14,6 +12,10 @@ import it.polimi.ingsw.model.decks.DeckLoader;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
+import it.polimi.ingsw.model.saving.ClientGameSaving;
+import it.polimi.ingsw.model.saving.ClientPlayerSaving;
+import it.polimi.ingsw.model.saving.GameSaving;
+import it.polimi.ingsw.model.saving.PlayerSaving;
 import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
 
 import java.io.IOException;
@@ -91,11 +93,11 @@ public class Game extends Observable {
         this.chat = new Chat();
     }
 
-    public Game(GameSavingMessage gsm) {
+    public Game(GameSaving gsm) {
         players = new ArrayList<>();
         this.availableColor = new HashSet<>();
         this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE, PlayerColor.GREEN, PlayerColor.RED, PlayerColor.YELLOW));
-        for (PlayerSavingMessage psm : gsm.getPlayers()) {
+        for (PlayerSaving psm : gsm.getPlayers()) {
             Player p = new Player(psm);
             players.add(p);
             availableColor.remove(p.getColor());
@@ -108,8 +110,27 @@ public class Game extends Observable {
         this.resourceCardsDeck = gsm.getResourceCardsDeck();
         this.startCardsDeck = gsm.getStartCardsDeck();
         this.goalsDeck = gsm.getGoalsDeck();
+        this.visibleCards = gsm.getVisibleCards();
         // TODO: this.chat = gsm.getChat();
         this.chat = new Chat();
+    }
+
+    public GameSaving getSaving() {
+        ArrayList<PlayerSaving> playerSavings = new ArrayList<>();
+        for (Player p : this.players) {
+            playerSavings.add(p.getSaving());
+        }
+
+        return new GameSaving(expectedPlayers, playerSavings, idGame, this.goldCardsDeck, this.resourceCardsDeck, visibleCards, scoreBoard, commonGoals, startCardsDeck, goalsDeck);
+    }
+
+    public ClientGameSaving getClientSaving(String clientNickname) {
+        ArrayList<ClientPlayerSaving> playerSavings = new ArrayList<>();
+        for (Player p : this.players) {
+            playerSavings.add(p.getClientSaving(clientNickname));
+        }
+
+        return new ClientGameSaving(playerSavings, idGame, this.goldCardsDeck.getTopOfTheStack(), this.resourceCardsDeck.getTopOfTheStack(), visibleCards, scoreBoard, commonGoals);
     }
 
 

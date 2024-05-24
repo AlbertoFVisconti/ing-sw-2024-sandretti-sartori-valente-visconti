@@ -136,7 +136,7 @@ public abstract class ClientHandler implements Observer {
 
             if (gameController != null) {
                 String nickname = MainController.getInstance().getPlayer(this.getPlayerIdentifier()).nickName;
-                this.gameController.handleReconnection(nickname, this);
+                this.gameController.handleReconnection(nickname, this, null);
             }
         } else {
             this.lastMessageTime = System.currentTimeMillis();

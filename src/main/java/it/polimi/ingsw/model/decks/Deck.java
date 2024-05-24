@@ -4,6 +4,7 @@ import it.polimi.ingsw.events.Observable;
 import it.polimi.ingsw.events.messages.server.DeckUpdateMessage;
 import it.polimi.ingsw.model.cards.corners.Resource;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  *
  * @param <T> the type of elements contained by the deck
  */
-public class Deck<T extends Drawable> extends Observable {
+public class Deck<T extends Drawable> extends Observable implements Serializable {
     private final List<T> remaining;
     private T topOfTheStack;
 

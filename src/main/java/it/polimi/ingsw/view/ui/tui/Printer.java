@@ -142,17 +142,17 @@ final class Printer {
 
         // setting the deck frame
 
-        canvas.putChar('╭', 0,0);
-        canvas.putChar('╮', DEFAULT_CARD_WIDTH-1,0);
-        canvas.putChar('╰', 0,DEFAULT_CARD_HEIGHT-1);
-        canvas.putChar('╯', DEFAULT_CARD_WIDTH-1,DEFAULT_CARD_HEIGHT-1);
+        canvas.putChar('╭', 0, 0);
+        canvas.putChar('╮', DEFAULT_CARD_WIDTH - 1, 0);
+        canvas.putChar('╰', 0, DEFAULT_CARD_HEIGHT - 1);
+        canvas.putChar('╯', DEFAULT_CARD_WIDTH - 1, DEFAULT_CARD_HEIGHT - 1);
 
         for (int i = 1; i < DEFAULT_CARD_WIDTH - 1; i++) {
             canvas.putChar('─', i, 0);
             canvas.putChar('─', i, DEFAULT_CARD_HEIGHT - 1);
         }
 
-        for (int i = 1; i < DEFAULT_CARD_HEIGHT -1; i++) {
+        for (int i = 1; i < DEFAULT_CARD_HEIGHT - 1; i++) {
             canvas.putChar('│', 0, i);
             canvas.putChar('│', DEFAULT_CARD_WIDTH - 1, i);
         }
@@ -161,7 +161,7 @@ final class Printer {
     }
 
     private static Canvas getPlayCardDeckCanvas(Deck<PlayCard> deck) {
-        if(deck == null) return new Canvas(0,0);
+        if (deck == null) return new Canvas(0, 0);
         Canvas canvas = getCardFrame();
 
         canvas.setTextColor(cornerToColorMap.get(deck.getTopOfTheStack().getCorner()));
@@ -172,7 +172,7 @@ final class Printer {
     }
 
     private static Canvas getCardCanvas(Card card, boolean onBackSide) {
-        if (card == null) return new Canvas(0,0);
+        if (card == null) return new Canvas(0, 0);
 
         Canvas canvas = getCardFrame();
 
@@ -213,8 +213,8 @@ final class Printer {
             for (int i = 0; i < 3; i++) {
                 canvas.putChar('│', DEFAULT_CARD_WIDTH - 7, 1 + i);
             }
-            canvas.putChar('╰', DEFAULT_CARD_WIDTH-7, 4);
-            canvas.putChar('┬', DEFAULT_CARD_WIDTH-7, 0);
+            canvas.putChar('╰', DEFAULT_CARD_WIDTH - 7, 4);
+            canvas.putChar('┬', DEFAULT_CARD_WIDTH - 7, 0);
 
             canvas.setTextColor(cornerToColorMap.get(ctr));
             canvas.putStringMatrix(cornerToStringsMap.get(ctr), DEFAULT_CARD_WIDTH - 6, 1);
@@ -225,8 +225,8 @@ final class Printer {
             for (int i = 1; i < 4; i++) {
                 canvas.putChar('│', 6, DEFAULT_CARD_HEIGHT - i - 1);
             }
-            canvas.putChar('╮', 6, DEFAULT_CARD_HEIGHT -5);
-            canvas.putChar('┴', 6, DEFAULT_CARD_HEIGHT -1);
+            canvas.putChar('╮', 6, DEFAULT_CARD_HEIGHT - 5);
+            canvas.putChar('┴', 6, DEFAULT_CARD_HEIGHT - 1);
 
             canvas.setTextColor(cornerToColorMap.get(cbl));
             canvas.putStringMatrix(cornerToStringsMap.get(cbl), 1, DEFAULT_CARD_HEIGHT - 3 - 1);
@@ -237,8 +237,8 @@ final class Printer {
             for (int i = 1; i < 4; i++) {
                 canvas.putChar('│', DEFAULT_CARD_WIDTH - 7, DEFAULT_CARD_HEIGHT - i - 1);
             }
-            canvas.putChar('╭', DEFAULT_CARD_WIDTH-7, DEFAULT_CARD_HEIGHT -5);
-            canvas.putChar('┴', DEFAULT_CARD_WIDTH-7, DEFAULT_CARD_HEIGHT -1);
+            canvas.putChar('╭', DEFAULT_CARD_WIDTH - 7, DEFAULT_CARD_HEIGHT - 5);
+            canvas.putChar('┴', DEFAULT_CARD_WIDTH - 7, DEFAULT_CARD_HEIGHT - 1);
 
             canvas.setTextColor(cornerToColorMap.get(cbr));
             canvas.putStringMatrix(cornerToStringsMap.get(cbr), DEFAULT_CARD_WIDTH - 6, DEFAULT_CARD_HEIGHT - 3 - 1);
