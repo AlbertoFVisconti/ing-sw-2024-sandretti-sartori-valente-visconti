@@ -1,9 +1,9 @@
-package it.polimi.ingsw.view.FXController;
+package it.polimi.ingsw.view.ui.gui.FXController;
 
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.network.Client;
-import it.polimi.ingsw.view.ui.FXGraphicalUserInterface;
 import it.polimi.ingsw.view.ui.UserInterface;
+import it.polimi.ingsw.view.ui.gui.FXGraphicalUserInterface;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -88,16 +88,16 @@ public class GameViewController extends UserInterface {
         }
     }
     @Override
-    protected void update() {
+    public void update() {
         List<Player> players;
         players = Client.getInstance().getUserInterface().getPlayersList();
-        s1.setText(Integer.toString(Client.getInstance().getUserInterface().getGameModel().getScoreBoard().getScore(players.get(0))));
-        s2.setText(Integer.toString(Client.getInstance().getUserInterface().getGameModel().getScoreBoard().getScore(players.get(1))));
+        s1.setText(Integer.toString(Client.getInstance().getUserInterface().getGameModel().getScoreBoard().getScore(players.get(0).nickName)));
+        s2.setText(Integer.toString(Client.getInstance().getUserInterface().getGameModel().getScoreBoard().getScore(players.get(1).nickName)));
         if (players.size() > 2) {
-            s3.setText(Integer.toString(Client.getInstance().getUserInterface().getGameModel().getScoreBoard().getScore(players.get(2))));
+            s3.setText(Integer.toString(Client.getInstance().getUserInterface().getGameModel().getScoreBoard().getScore(players.get(2).nickName)));
         }
         if (players.size() > 3) {
-            s4.setText(Integer.toString(Client.getInstance().getUserInterface().getGameModel().getScoreBoard().getScore(players.get(3))));
+            s4.setText(Integer.toString(Client.getInstance().getUserInterface().getGameModel().getScoreBoard().getScore(players.get(3).nickName)));
         }
     }
 
