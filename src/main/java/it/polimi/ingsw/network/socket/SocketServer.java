@@ -25,7 +25,7 @@ public class SocketServer extends Thread {
             throw new RuntimeException(e);
         }
 
-        while(true) {
+        while (true) {
             System.err.println("Waiting for a socket client to connect...");
             try {
                 clientSocket = serverSocket.accept();

@@ -1,9 +1,10 @@
-package it.polimi.ingsw.view.ui;
+package it.polimi.ingsw.view.ui.gui;
 
 
 import it.polimi.ingsw.events.messages.client.GameListRequestMessage;
 import it.polimi.ingsw.events.messages.client.JoinGameMessage;
 import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.view.ui.UserInterface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,15 +23,16 @@ public class GraphicalUserInterface extends UserInterface {
 
     public static class MainFrame extends JFrame {
 
-        private JButton creategame = new JButton("Create game");
-        private Integer[] expectedplayersarray = {2, 3, 4};
-        private JComboBox<Integer> expectedplayers = new JComboBox<>(expectedplayersarray);
-        private static JTextField nickname = new JTextField("Insert nickname", 20);
-        private JButton join = new JButton("join a game");
-        private JButton submit = new JButton("Create Game");
+        private final JButton creategame = new JButton("Create game");
+        private final Integer[] expectedplayersarray = {2, 3, 4};
+        private final JComboBox<Integer> expectedplayers = new JComboBox<>(expectedplayersarray);
+        private static final JTextField nickname = new JTextField("Insert nickname", 20);
+        private final JButton join = new JButton("join a game");
+        private final JButton submit = new JButton("Create Game");
 
 
         boolean creatingGame = false;
+
         public MainFrame(GraphicalUserInterface gui) {
 
             super("Lobby");
@@ -61,7 +63,7 @@ public class GraphicalUserInterface extends UserInterface {
                         public void actionPerformed(ActionEvent e) {
                             JLabel created = new JLabel("Game created! Waiting for players to join");
                             ConfigGame.add(created);
-                            Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(-1, true, (int)expectedplayers.getSelectedItem(), nickname.getText()));
+                            Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(-1, true, (int) expectedplayers.getSelectedItem(), nickname.getText()));
                             submit.setEnabled(false);
                         }
                     });
@@ -82,21 +84,21 @@ public class GraphicalUserInterface extends UserInterface {
                         throw new RuntimeException(ex);
                     }
 
-                    if(gui.availableGames != null) {
+                    if (gui.availableGames != null) {
                         for (Integer gameID : gui.availableGames) {
                             JButton joinGame = new JButton("Join game " + gameID);
                             ConfigGame.add(joinGame);
                             joinGame.addActionListener(new ActionListener() {
                                 public void actionPerformed(ActionEvent e) {
                                     try {
-                                        Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(gameID, false , 0, nickname.getText()));
+                                        Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(gameID, false, 0, nickname.getText()));
                                     } catch (Exception ex) {
                                         ex.printStackTrace();
                                     }
                                 }
                             });
                         }
-                    }else{
+                    } else {
                         JLabel noGames = new JLabel("No games available");
                         ConfigGame.add(noGames);
                     }
@@ -116,7 +118,7 @@ public class GraphicalUserInterface extends UserInterface {
 
 
     @Override
-    protected void update() {
+    public void update() {
 
     }
 }

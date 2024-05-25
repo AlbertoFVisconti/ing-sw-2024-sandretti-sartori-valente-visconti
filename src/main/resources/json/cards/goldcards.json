@@ -1,858 +1,858 @@
 [
-    {
-        "is_gold": true,
-        "type": "FUNGUS",
-        "tl_corner": "HIDDEN",
-        "tr_corner": "EMPTY",
-        "bl_corner": "EMPTY",
-        "br_corner": "FEATHER",
-        "scoring_strategy": "item_count",
-        "free_score": 0,
-        "score_per_corner": 0,
-        "item_to_count": "FEATHER",
-        "score_per_item": 1,
-        "constraint": [
-            {
-                "item": "FUNGUS",
-                "amount": 2
-            },
-            {
-                "item": "ANIMAL",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "FUNGUS",
-        "tl_corner": "EMPTY",
-        "tr_corner": "INK",
-        "bl_corner": "HIDDEN",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "item_count",
-        "free_score": 0,
-        "score_per_corner": 0,
-        "item_to_count": "INK",
-        "score_per_item": 1,
-        "constraint": [
-            {
-                "item": "FUNGUS",
-                "amount": 2
-            },
-            {
-                "item": "PLANT",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "FUNGUS",
-        "tl_corner": "SCROLL",
-        "tr_corner": "EMPTY",
-        "bl_corner": "EMPTY",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "item_count",
-        "free_score": 0,
-        "score_per_corner": 0,
-        "item_to_count": "SCROLL",
-        "score_per_item": 1,
-        "constraint": [
-            {
-                "item": "FUNGUS",
-                "amount": 2
-            },
-            {
-                "item": "INSECT",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "FUNGUS",
-        "tl_corner": "EMPTY",
-        "tr_corner": "EMPTY",
-        "bl_corner": "HIDDEN",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "corner_count",
-        "free_score": 0,
-        "score_per_corner": 2,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "FUNGUS",
-                "amount": 3
-            },
-            {
-                "item": "ANIMAL",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "FUNGUS",
-        "tl_corner": "EMPTY",
-        "tr_corner": "EMPTY",
-        "bl_corner": "EMPTY",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "corner_count",
-        "free_score": 0,
-        "score_per_corner": 2,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "FUNGUS",
-                "amount": 3
-            },
-            {
-                "item": "PLANT",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "FUNGUS",
-        "tl_corner": "EMPTY",
-        "tr_corner": "HIDDEN",
-        "bl_corner": "EMPTY",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "corner_count",
-        "free_score": 0,
-        "score_per_corner": 2,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "FUNGUS",
-                "amount": 3
-            },
-            {
-                "item": "INSECT",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "FUNGUS",
-        "tl_corner": "EMPTY",
-        "tr_corner": "HIDDEN",
-        "bl_corner": "INK",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "free_score",
-        "free_score": 3,
-        "score_per_corner": 0,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "FUNGUS",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "FUNGUS",
-        "tl_corner": "FEATHER",
-        "tr_corner": "EMPTY",
-        "bl_corner": "HIDDEN",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "free_score",
-        "free_score": 3,
-        "score_per_corner": 0,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "FUNGUS",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "FUNGUS",
-        "tl_corner": "HIDDEN",
-        "tr_corner": "SCROLL",
-        "bl_corner": "HIDDEN",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "free_score",
-        "free_score": 3,
-        "score_per_corner": 0,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "FUNGUS",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "FUNGUS",
-        "tl_corner": "EMPTY",
-        "tr_corner": "HIDDEN",
-        "bl_corner": "EMPTY",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "free_score",
-        "free_score": 5,
-        "score_per_corner": 0,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "FUNGUS",
-                "amount": 5
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "PLANT",
-        "tl_corner": "FEATHER",
-        "tr_corner": "EMPTY",
-        "bl_corner": "EMPTY",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "item_count",
-        "free_score": 0,
-        "score_per_corner": 0,
-        "item_to_count": "FEATHER",
-        "score_per_item": 1,
-        "constraint": [
-            {
-                "item": "PLANT",
-                "amount": 2
-            },
-            {
-                "item": "INSECT",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "PLANT",
-        "tl_corner": "EMPTY",
-        "tr_corner": "SCROLL",
-        "bl_corner": "HIDDEN",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "item_count",
-        "free_score": 0,
-        "score_per_corner": 0,
-        "item_to_count": "SCROLL",
-        "score_per_item": 1,
-        "constraint": [
-            {
-                "item": "PLANT",
-                "amount": 2
-            },
-            {
-                "item": "FUNGUS",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "PLANT",
-        "tl_corner": "EMPTY",
-        "tr_corner": "HIDDEN",
-        "bl_corner": "INK",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "item_count",
-        "free_score": 0,
-        "score_per_corner": 0,
-        "item_to_count": "INK",
-        "score_per_item": 1,
-        "constraint": [
-            {
-                "item": "PLANT",
-                "amount": 2
-            },
-            {
-                "item": "ANIMAL",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "PLANT",
-        "tl_corner": "HIDDEN",
-        "tr_corner": "EMPTY",
-        "bl_corner": "EMPTY",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "corner_count",
-        "free_score": 0,
-        "score_per_corner": 2,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "PLANT",
-                "amount": 3
-            },
-            {
-                "item": "INSECT",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "PLANT",
-        "tl_corner": "EMPTY",
-        "tr_corner": "EMPTY",
-        "bl_corner": "EMPTY",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "corner_count",
-        "free_score": 0,
-        "score_per_corner": 2,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "PLANT",
-                "amount": 3
-            },
-            {
-                "item": "ANIMAL",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "PLANT",
-        "tl_corner": "EMPTY",
-        "tr_corner": "HIDDEN",
-        "bl_corner": "EMPTY",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "corner_count",
-        "free_score": 0,
-        "score_per_corner": 2,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "PLANT",
-                "amount": 3
-            },
-            {
-                "item": "FUNGUS",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "PLANT",
-        "tl_corner": "EMPTY",
-        "tr_corner": "HIDDEN",
-        "bl_corner": "FEATHER",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "free_score",
-        "free_score": 3,
-        "score_per_corner": 0,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "PLANT",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "PLANT",
-        "tl_corner": "SCROLL",
-        "tr_corner": "EMPTY",
-        "bl_corner": "HIDDEN",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "free_score",
-        "free_score": 3,
-        "score_per_corner": 0,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "PLANT",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "PLANT",
-        "tl_corner": "HIDDEN",
-        "tr_corner": "INK",
-        "bl_corner": "HIDDEN",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "free_score",
-        "free_score": 3,
-        "score_per_corner": 0,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "PLANT",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "PLANT",
-        "tl_corner": "EMPTY",
-        "tr_corner": "EMPTY",
-        "bl_corner": "HIDDEN",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "free_score",
-        "free_score": 5,
-        "score_per_corner": 0,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "PLANT",
-                "amount": 5
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "ANIMAL",
-        "tl_corner": "INK",
-        "tr_corner": "EMPTY",
-        "bl_corner": "EMPTY",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "item_count",
-        "free_score": 0,
-        "score_per_corner": 0,
-        "item_to_count": "INK",
-        "score_per_item": 1,
-        "constraint": [
-            {
-                "item": "ANIMAL",
-                "amount": 2
-            },
-            {
-                "item": "INSECT",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "ANIMAL",
-        "tl_corner": "HIDDEN",
-        "tr_corner": "EMPTY",
-        "bl_corner": "EMPTY",
-        "br_corner": "INK",
-        "scoring_strategy": "item_count",
-        "free_score": 0,
-        "score_per_corner": 0,
-        "item_to_count": "SCROLL",
-        "score_per_item": 1,
-        "constraint": [
-            {
-                "item": "ANIMAL",
-                "amount": 2
-            },
-            {
-                "item": "PLANT",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "ANIMAL",
-        "tl_corner": "EMPTY",
-        "tr_corner": "HIDDEN",
-        "bl_corner": "FEATHER",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "item_count",
-        "free_score": 0,
-        "score_per_corner": 0,
-        "item_to_count": "FEATHER",
-        "score_per_item": 1,
-        "constraint": [
-            {
-                "item": "ANIMAL",
-                "amount": 2
-            },
-            {
-                "item": "FUNGUS",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "ANIMAL",
-        "tl_corner": "EMPTY",
-        "tr_corner": "EMPTY",
-        "bl_corner": "HIDDEN",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "corner_count",
-        "free_score": 0,
-        "score_per_corner": 2,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "ANIMAL",
-                "amount": 3
-            },
-            {
-                "item": "INSECT",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "ANIMAL",
-        "tl_corner": "EMPTY",
-        "tr_corner": "HIDDEN",
-        "bl_corner": "EMPTY",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "corner_count",
-        "free_score": 0,
-        "score_per_corner": 2,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "ANIMAL",
-                "amount": 3
-            },
-            {
-                "item": "FUNGUS",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "ANIMAL",
-        "tl_corner": "HIDDEN",
-        "tr_corner": "EMPTY",
-        "bl_corner": "EMPTY",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "corner_count",
-        "free_score": 0,
-        "score_per_corner": 2,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "ANIMAL",
-                "amount": 3
-            },
-            {
-                "item": "PLANT",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "ANIMAL",
-        "tl_corner": "EMPTY",
-        "tr_corner": "HIDDEN",
-        "bl_corner": "SCROLL",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "free_score",
-        "free_score": 3,
-        "score_per_corner": 0,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "ANIMAL",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "ANIMAL",
-        "tl_corner": "EMPTY",
-        "tr_corner": "INK",
-        "bl_corner": "HIDDEN",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "free_score",
-        "free_score": 3,
-        "score_per_corner": 0,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "ANIMAL",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "ANIMAL",
-        "tl_corner": "HIDDEN",
-        "tr_corner": "EMPTY",
-        "bl_corner": "HIDDEN",
-        "br_corner": "FEATHER",
-        "scoring_strategy": "free_score",
-        "free_score": 3,
-        "score_per_corner": 0,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "ANIMAL",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "ANIMAL",
-        "tl_corner": "HIDDEN",
-        "tr_corner": "EMPTY",
-        "bl_corner": "HIDDEN",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "free_score",
-        "free_score": 5,
-        "score_per_corner": 0,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "ANIMAL",
-                "amount": 5
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "INSECT",
-        "tl_corner": "EMPTY",
-        "tr_corner": "FEATHER",
-        "bl_corner": "HIDDEN",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "item_count",
-        "free_score": 0,
-        "score_per_corner": 0,
-        "item_to_count": "FEATHER",
-        "score_per_item": 1,
-        "constraint": [
-            {
-                "item": "INSECT",
-                "amount": 2
-            },
-            {
-                "item": "PLANT",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "INSECT",
-        "tl_corner": "EMPTY",
-        "tr_corner": "HIDDEN",
-        "bl_corner": "SCROLL",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "item_count",
-        "free_score": 0,
-        "score_per_corner": 0,
-        "item_to_count": "SCROLL",
-        "score_per_item": 1,
-        "constraint": [
-            {
-                "item": "INSECT",
-                "amount": 2
-            },
-            {
-                "item": "ANIMAL",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "INSECT",
-        "tl_corner": "HIDDEN",
-        "tr_corner": "EMPTY",
-        "bl_corner": "EMPTY",
-        "br_corner": "INK",
-        "scoring_strategy": "item_count",
-        "free_score": 0,
-        "score_per_corner": 0,
-        "item_to_count": "INK",
-        "score_per_item": 1,
-        "constraint": [
-            {
-                "item": "INSECT",
-                "amount": 2
-            },
-            {
-                "item": "FUNGUS",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "INSECT",
-        "tl_corner": "EMPTY",
-        "tr_corner": "EMPTY",
-        "bl_corner": "HIDDEN",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "corner_count",
-        "free_score": 0,
-        "score_per_corner": 2,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "INSECT",
-                "amount": 3
-            },
-            {
-                "item": "ANIMAL",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "INSECT",
-        "tl_corner": "EMPTY",
-        "tr_corner": "EMPTY",
-        "bl_corner": "EMPTY",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "corner_count",
-        "free_score": 0,
-        "score_per_corner": 2,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "INSECT",
-                "amount": 3
-            },
-            {
-                "item": "PLANT",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "INSECT",
-        "tl_corner": "EMPTY",
-        "tr_corner": "HIDDEN",
-        "bl_corner": "EMPTY",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "corner_count",
-        "free_score": 0,
-        "score_per_corner": 2,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "INSECT",
-                "amount": 3
-            },
-            {
-                "item": "FUNGUS",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "INSECT",
-        "tl_corner": "INK",
-        "tr_corner": "HIDDEN",
-        "bl_corner": "EMPTY",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "free_score",
-        "free_score": 3,
-        "score_per_corner": 0,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "INSECT",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "INSECT",
-        "tl_corner": "EMPTY",
-        "tr_corner": "SCROLL",
-        "bl_corner": "HIDDEN",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "free_score",
-        "free_score": 3,
-        "score_per_corner": 0,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "INSECT",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "INSECT",
-        "tl_corner": "HIDDEN",
-        "tr_corner": "HIDDEN",
-        "bl_corner": "FEATHER",
-        "br_corner": "EMPTY",
-        "scoring_strategy": "free_score",
-        "free_score": 3,
-        "score_per_corner": 0,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "INSECT",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "is_gold": true,
-        "type": "INSECT",
-        "tl_corner": "EMPTY",
-        "tr_corner": "EMPTY",
-        "bl_corner": "HIDDEN",
-        "br_corner": "HIDDEN",
-        "scoring_strategy": "free_score",
-        "free_score": 5,
-        "score_per_corner": 0,
-        "item_to_count": "",
-        "score_per_item": 0,
-        "constraint": [
-            {
-                "item": "INSECT",
-                "amount": 5
-            }
-        ]
-    }
+  {
+    "is_gold": true,
+    "type": "FUNGUS",
+    "tl_corner": "HIDDEN",
+    "tr_corner": "EMPTY",
+    "bl_corner": "EMPTY",
+    "br_corner": "FEATHER",
+    "scoring_strategy": "item_count",
+    "free_score": 0,
+    "score_per_corner": 0,
+    "item_to_count": "FEATHER",
+    "score_per_item": 1,
+    "constraint": [
+      {
+        "item": "FUNGUS",
+        "amount": 2
+      },
+      {
+        "item": "ANIMAL",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "FUNGUS",
+    "tl_corner": "EMPTY",
+    "tr_corner": "INK",
+    "bl_corner": "HIDDEN",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "item_count",
+    "free_score": 0,
+    "score_per_corner": 0,
+    "item_to_count": "INK",
+    "score_per_item": 1,
+    "constraint": [
+      {
+        "item": "FUNGUS",
+        "amount": 2
+      },
+      {
+        "item": "PLANT",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "FUNGUS",
+    "tl_corner": "SCROLL",
+    "tr_corner": "EMPTY",
+    "bl_corner": "EMPTY",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "item_count",
+    "free_score": 0,
+    "score_per_corner": 0,
+    "item_to_count": "SCROLL",
+    "score_per_item": 1,
+    "constraint": [
+      {
+        "item": "FUNGUS",
+        "amount": 2
+      },
+      {
+        "item": "INSECT",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "FUNGUS",
+    "tl_corner": "EMPTY",
+    "tr_corner": "EMPTY",
+    "bl_corner": "HIDDEN",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "corner_count",
+    "free_score": 0,
+    "score_per_corner": 2,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "FUNGUS",
+        "amount": 3
+      },
+      {
+        "item": "ANIMAL",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "FUNGUS",
+    "tl_corner": "EMPTY",
+    "tr_corner": "EMPTY",
+    "bl_corner": "EMPTY",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "corner_count",
+    "free_score": 0,
+    "score_per_corner": 2,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "FUNGUS",
+        "amount": 3
+      },
+      {
+        "item": "PLANT",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "FUNGUS",
+    "tl_corner": "EMPTY",
+    "tr_corner": "HIDDEN",
+    "bl_corner": "EMPTY",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "corner_count",
+    "free_score": 0,
+    "score_per_corner": 2,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "FUNGUS",
+        "amount": 3
+      },
+      {
+        "item": "INSECT",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "FUNGUS",
+    "tl_corner": "EMPTY",
+    "tr_corner": "HIDDEN",
+    "bl_corner": "INK",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "free_score",
+    "free_score": 3,
+    "score_per_corner": 0,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "FUNGUS",
+        "amount": 3
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "FUNGUS",
+    "tl_corner": "FEATHER",
+    "tr_corner": "EMPTY",
+    "bl_corner": "HIDDEN",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "free_score",
+    "free_score": 3,
+    "score_per_corner": 0,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "FUNGUS",
+        "amount": 3
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "FUNGUS",
+    "tl_corner": "HIDDEN",
+    "tr_corner": "SCROLL",
+    "bl_corner": "HIDDEN",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "free_score",
+    "free_score": 3,
+    "score_per_corner": 0,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "FUNGUS",
+        "amount": 3
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "FUNGUS",
+    "tl_corner": "EMPTY",
+    "tr_corner": "HIDDEN",
+    "bl_corner": "EMPTY",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "free_score",
+    "free_score": 5,
+    "score_per_corner": 0,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "FUNGUS",
+        "amount": 5
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "PLANT",
+    "tl_corner": "FEATHER",
+    "tr_corner": "EMPTY",
+    "bl_corner": "EMPTY",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "item_count",
+    "free_score": 0,
+    "score_per_corner": 0,
+    "item_to_count": "FEATHER",
+    "score_per_item": 1,
+    "constraint": [
+      {
+        "item": "PLANT",
+        "amount": 2
+      },
+      {
+        "item": "INSECT",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "PLANT",
+    "tl_corner": "EMPTY",
+    "tr_corner": "SCROLL",
+    "bl_corner": "HIDDEN",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "item_count",
+    "free_score": 0,
+    "score_per_corner": 0,
+    "item_to_count": "SCROLL",
+    "score_per_item": 1,
+    "constraint": [
+      {
+        "item": "PLANT",
+        "amount": 2
+      },
+      {
+        "item": "FUNGUS",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "PLANT",
+    "tl_corner": "EMPTY",
+    "tr_corner": "HIDDEN",
+    "bl_corner": "INK",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "item_count",
+    "free_score": 0,
+    "score_per_corner": 0,
+    "item_to_count": "INK",
+    "score_per_item": 1,
+    "constraint": [
+      {
+        "item": "PLANT",
+        "amount": 2
+      },
+      {
+        "item": "ANIMAL",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "PLANT",
+    "tl_corner": "HIDDEN",
+    "tr_corner": "EMPTY",
+    "bl_corner": "EMPTY",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "corner_count",
+    "free_score": 0,
+    "score_per_corner": 2,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "PLANT",
+        "amount": 3
+      },
+      {
+        "item": "INSECT",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "PLANT",
+    "tl_corner": "EMPTY",
+    "tr_corner": "EMPTY",
+    "bl_corner": "EMPTY",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "corner_count",
+    "free_score": 0,
+    "score_per_corner": 2,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "PLANT",
+        "amount": 3
+      },
+      {
+        "item": "ANIMAL",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "PLANT",
+    "tl_corner": "EMPTY",
+    "tr_corner": "HIDDEN",
+    "bl_corner": "EMPTY",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "corner_count",
+    "free_score": 0,
+    "score_per_corner": 2,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "PLANT",
+        "amount": 3
+      },
+      {
+        "item": "FUNGUS",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "PLANT",
+    "tl_corner": "EMPTY",
+    "tr_corner": "HIDDEN",
+    "bl_corner": "FEATHER",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "free_score",
+    "free_score": 3,
+    "score_per_corner": 0,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "PLANT",
+        "amount": 3
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "PLANT",
+    "tl_corner": "SCROLL",
+    "tr_corner": "EMPTY",
+    "bl_corner": "HIDDEN",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "free_score",
+    "free_score": 3,
+    "score_per_corner": 0,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "PLANT",
+        "amount": 3
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "PLANT",
+    "tl_corner": "HIDDEN",
+    "tr_corner": "INK",
+    "bl_corner": "HIDDEN",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "free_score",
+    "free_score": 3,
+    "score_per_corner": 0,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "PLANT",
+        "amount": 3
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "PLANT",
+    "tl_corner": "EMPTY",
+    "tr_corner": "EMPTY",
+    "bl_corner": "HIDDEN",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "free_score",
+    "free_score": 5,
+    "score_per_corner": 0,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "PLANT",
+        "amount": 5
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "ANIMAL",
+    "tl_corner": "INK",
+    "tr_corner": "EMPTY",
+    "bl_corner": "EMPTY",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "item_count",
+    "free_score": 0,
+    "score_per_corner": 0,
+    "item_to_count": "INK",
+    "score_per_item": 1,
+    "constraint": [
+      {
+        "item": "ANIMAL",
+        "amount": 2
+      },
+      {
+        "item": "INSECT",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "ANIMAL",
+    "tl_corner": "HIDDEN",
+    "tr_corner": "EMPTY",
+    "bl_corner": "EMPTY",
+    "br_corner": "INK",
+    "scoring_strategy": "item_count",
+    "free_score": 0,
+    "score_per_corner": 0,
+    "item_to_count": "SCROLL",
+    "score_per_item": 1,
+    "constraint": [
+      {
+        "item": "ANIMAL",
+        "amount": 2
+      },
+      {
+        "item": "PLANT",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "ANIMAL",
+    "tl_corner": "EMPTY",
+    "tr_corner": "HIDDEN",
+    "bl_corner": "FEATHER",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "item_count",
+    "free_score": 0,
+    "score_per_corner": 0,
+    "item_to_count": "FEATHER",
+    "score_per_item": 1,
+    "constraint": [
+      {
+        "item": "ANIMAL",
+        "amount": 2
+      },
+      {
+        "item": "FUNGUS",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "ANIMAL",
+    "tl_corner": "EMPTY",
+    "tr_corner": "EMPTY",
+    "bl_corner": "HIDDEN",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "corner_count",
+    "free_score": 0,
+    "score_per_corner": 2,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "ANIMAL",
+        "amount": 3
+      },
+      {
+        "item": "INSECT",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "ANIMAL",
+    "tl_corner": "EMPTY",
+    "tr_corner": "HIDDEN",
+    "bl_corner": "EMPTY",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "corner_count",
+    "free_score": 0,
+    "score_per_corner": 2,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "ANIMAL",
+        "amount": 3
+      },
+      {
+        "item": "FUNGUS",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "ANIMAL",
+    "tl_corner": "HIDDEN",
+    "tr_corner": "EMPTY",
+    "bl_corner": "EMPTY",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "corner_count",
+    "free_score": 0,
+    "score_per_corner": 2,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "ANIMAL",
+        "amount": 3
+      },
+      {
+        "item": "PLANT",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "ANIMAL",
+    "tl_corner": "EMPTY",
+    "tr_corner": "HIDDEN",
+    "bl_corner": "SCROLL",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "free_score",
+    "free_score": 3,
+    "score_per_corner": 0,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "ANIMAL",
+        "amount": 3
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "ANIMAL",
+    "tl_corner": "EMPTY",
+    "tr_corner": "INK",
+    "bl_corner": "HIDDEN",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "free_score",
+    "free_score": 3,
+    "score_per_corner": 0,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "ANIMAL",
+        "amount": 3
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "ANIMAL",
+    "tl_corner": "HIDDEN",
+    "tr_corner": "EMPTY",
+    "bl_corner": "HIDDEN",
+    "br_corner": "FEATHER",
+    "scoring_strategy": "free_score",
+    "free_score": 3,
+    "score_per_corner": 0,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "ANIMAL",
+        "amount": 3
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "ANIMAL",
+    "tl_corner": "HIDDEN",
+    "tr_corner": "EMPTY",
+    "bl_corner": "HIDDEN",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "free_score",
+    "free_score": 5,
+    "score_per_corner": 0,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "ANIMAL",
+        "amount": 5
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "INSECT",
+    "tl_corner": "EMPTY",
+    "tr_corner": "FEATHER",
+    "bl_corner": "HIDDEN",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "item_count",
+    "free_score": 0,
+    "score_per_corner": 0,
+    "item_to_count": "FEATHER",
+    "score_per_item": 1,
+    "constraint": [
+      {
+        "item": "INSECT",
+        "amount": 2
+      },
+      {
+        "item": "PLANT",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "INSECT",
+    "tl_corner": "EMPTY",
+    "tr_corner": "HIDDEN",
+    "bl_corner": "SCROLL",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "item_count",
+    "free_score": 0,
+    "score_per_corner": 0,
+    "item_to_count": "SCROLL",
+    "score_per_item": 1,
+    "constraint": [
+      {
+        "item": "INSECT",
+        "amount": 2
+      },
+      {
+        "item": "ANIMAL",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "INSECT",
+    "tl_corner": "HIDDEN",
+    "tr_corner": "EMPTY",
+    "bl_corner": "EMPTY",
+    "br_corner": "INK",
+    "scoring_strategy": "item_count",
+    "free_score": 0,
+    "score_per_corner": 0,
+    "item_to_count": "INK",
+    "score_per_item": 1,
+    "constraint": [
+      {
+        "item": "INSECT",
+        "amount": 2
+      },
+      {
+        "item": "FUNGUS",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "INSECT",
+    "tl_corner": "EMPTY",
+    "tr_corner": "EMPTY",
+    "bl_corner": "HIDDEN",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "corner_count",
+    "free_score": 0,
+    "score_per_corner": 2,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "INSECT",
+        "amount": 3
+      },
+      {
+        "item": "ANIMAL",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "INSECT",
+    "tl_corner": "EMPTY",
+    "tr_corner": "EMPTY",
+    "bl_corner": "EMPTY",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "corner_count",
+    "free_score": 0,
+    "score_per_corner": 2,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "INSECT",
+        "amount": 3
+      },
+      {
+        "item": "PLANT",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "INSECT",
+    "tl_corner": "EMPTY",
+    "tr_corner": "HIDDEN",
+    "bl_corner": "EMPTY",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "corner_count",
+    "free_score": 0,
+    "score_per_corner": 2,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "INSECT",
+        "amount": 3
+      },
+      {
+        "item": "FUNGUS",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "INSECT",
+    "tl_corner": "INK",
+    "tr_corner": "HIDDEN",
+    "bl_corner": "EMPTY",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "free_score",
+    "free_score": 3,
+    "score_per_corner": 0,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "INSECT",
+        "amount": 3
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "INSECT",
+    "tl_corner": "EMPTY",
+    "tr_corner": "SCROLL",
+    "bl_corner": "HIDDEN",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "free_score",
+    "free_score": 3,
+    "score_per_corner": 0,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "INSECT",
+        "amount": 3
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "INSECT",
+    "tl_corner": "HIDDEN",
+    "tr_corner": "HIDDEN",
+    "bl_corner": "FEATHER",
+    "br_corner": "EMPTY",
+    "scoring_strategy": "free_score",
+    "free_score": 3,
+    "score_per_corner": 0,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "INSECT",
+        "amount": 3
+      }
+    ]
+  },
+  {
+    "is_gold": true,
+    "type": "INSECT",
+    "tl_corner": "EMPTY",
+    "tr_corner": "EMPTY",
+    "bl_corner": "HIDDEN",
+    "br_corner": "HIDDEN",
+    "scoring_strategy": "free_score",
+    "free_score": 5,
+    "score_per_corner": 0,
+    "item_to_count": "",
+    "score_per_item": 0,
+    "constraint": [
+      {
+        "item": "INSECT",
+        "amount": 5
+      }
+    ]
+  }
 ]

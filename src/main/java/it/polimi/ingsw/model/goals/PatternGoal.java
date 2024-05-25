@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.goals;
 
 import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.player.Player;
@@ -8,8 +9,8 @@ import it.polimi.ingsw.utils.CardLocation;
 
 import java.awt.*;
 import java.security.InvalidParameterException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 
 /**
@@ -33,10 +34,10 @@ public class PatternGoal extends Goal {
         this.pattern = pattern.clone();
 
         pivot = null;
-        for(int i = 0; i < pattern.length && pivot == null; i++) {
-            for(int j = 0; j < pattern[i].length && pivot == null; j++) {
+        for (int i = 0; i < pattern.length && pivot == null; i++) {
+            for (int j = 0; j < pattern[i].length && pivot == null; j++) {
                 if (pattern[i][j] != null) {
-                    this.pivot = new Point(j,i);
+                    this.pivot = new Point(j, i);
                 }
             }
         }
@@ -52,18 +53,18 @@ public class PatternGoal extends Goal {
      */
     @Override
     public int evaluate(Player player) {
-        Map<CardLocation, Card> board = player.getBoard();
+        Map<CardLocation, CardSlot> board = player.getBoard();
 
         List<GraphNode> matches = new ArrayList<>();
 
-        for(CardLocation p : board.keySet()) {
-            Card c = board.get(p);
+        for (CardLocation p : board.keySet()) {
+            Card c = board.get(p).card();
 
-            if(c instanceof PlayCard && ((PlayCard) c).getType().equals(pattern[pivot.y][pivot.x])) {
+            if (c instanceof PlayCard && ((PlayCard) c).getType().equals(pattern[pivot.y][pivot.x])) {
                 // the card at location p is compatible with the pattern's pivot, I check if there's a match
-                CardLocation startingCandidateCell = p.sub(pivot.x, -2*pivot.y - pivot.x);
+                CardLocation startingCandidateCell = p.sub(pivot.x, -2 * pivot.y - pivot.x);
 
-                if(isMatch(board, startingCandidateCell)) {
+                if (isMatch(board, startingCandidateCell)) {
                     // there's a match, I add the Node to the list
                     matches.add(new GraphNode(startingCandidateCell));
                 }
@@ -71,12 +72,12 @@ public class PatternGoal extends Goal {
         }
 
         // I build the proximity lists
-        for(int i = 0; i < matches.size(); i++) {
-            for(int j = i+1; j < matches.size(); j++) {
+        for (int i = 0; i < matches.size(); i++) {
+            for (int j = i + 1; j < matches.size(); j++) {
                 GraphNode n1 = matches.get(i);
                 GraphNode n2 = matches.get(j);
 
-                if(conflict(n1.matchStartingCard, n2.matchStartingCard)) {
+                if (conflict(n1.matchStartingCard, n2.matchStartingCard)) {
                     // the two match overlap thus I add the arc to the graph
                     n1.conflictingNodes.add(n2);
                     n2.conflictingNodes.add(n1);
@@ -87,7 +88,7 @@ public class PatternGoal extends Goal {
         int validMatches = 0;
         for (Iterator<GraphNode> iterator = matches.iterator(); iterator.hasNext(); ) {
             GraphNode node = iterator.next();
-            if(node.conflictingNodes.isEmpty()) {
+            if (node.conflictingNodes.isEmpty()) {
                 validMatches++;
                 iterator.remove();
             }
@@ -95,15 +96,15 @@ public class PatternGoal extends Goal {
 
         List<List<GraphNode>> groups = splitInConnectedGroups(matches);
 
-        for(List<GraphNode> group : groups) {
-            if(group.size() > 30) {
-                System.err.println("A large ("+group.size()+") group of conflicting matches has been found; long elaboration time's is to be expected (you might want to kill if the size is beyond 50)");
+        for (List<GraphNode> group : groups) {
+            if (group.size() > 30) {
+                System.err.println("A large (" + group.size() + ") group of conflicting matches has been found; long elaboration time's is to be expected (you might want to kill if the size is beyond 50)");
             }
             minimumVertexSize(group, 0, new HashSet<>());
             validMatches += (group.size() - bound);
         }
 
-        return validMatches*scorePerMatch;
+        return validMatches * scorePerMatch;
     }
 
     /**
@@ -117,8 +118,8 @@ public class PatternGoal extends Goal {
 
         List<List<GraphNode>> ans = new ArrayList<>();
 
-        for(GraphNode node : graph) {
-            if(!checked.contains(node)) {
+        for (GraphNode node : graph) {
+            if (!checked.contains(node)) {
                 List<GraphNode> group = new ArrayList<>();
                 dfs(node, group);
 
@@ -135,13 +136,13 @@ public class PatternGoal extends Goal {
      * Performs the depth-first-search algorithm and fill the provided list with the reached nodes.
      *
      * @param startingNode the node to start the algorithm on.
-     * @param group the List to store the reached notes.
+     * @param group        the List to store the reached notes.
      */
     private static void dfs(GraphNode startingNode, List<GraphNode> group) {
         group.add(startingNode);
 
-        for(GraphNode neighbour : startingNode.conflictingNodes) {
-            if(!group.contains(neighbour)) dfs(neighbour, group);
+        for (GraphNode neighbour : startingNode.conflictingNodes) {
+            if (!group.contains(neighbour)) dfs(neighbour, group);
         }
     }
 
@@ -150,45 +151,44 @@ public class PatternGoal extends Goal {
     /**
      * Compute the exact size of the Minimum Vertex Cover of the provided graph.
      *
-     *
-     * @param graph the graph to use for the computation
-     * @param i the current checked node (when called, always 0)
+     * @param graph   the graph to use for the computation
+     * @param i       the current checked node (when called, always 0)
      * @param removed the set of already removed nodes
      */
     private static void minimumVertexSize(List<GraphNode> graph, int i, Set<GraphNode> removed) {
-        if(i == 0) bound = 2000000000;
+        if (i == 0) bound = 2000000000;
         if (i >= graph.size()) {
             bound = Math.min(bound, removed.size());
             return;
         }
 
-        if(removed.size() >= bound) return;
+        if (removed.size() >= bound) return;
 
-        if (removed.contains(graph.get(i)))  {
-            PatternGoal.minimumVertexSize(graph, i+1,removed);
+        if (removed.contains(graph.get(i))) {
+            PatternGoal.minimumVertexSize(graph, i + 1, removed);
             return;
         }
 
 
-        if(graph.get(i).conflictingNodes.isEmpty())  {
-            PatternGoal.minimumVertexSize(graph, i+1, removed);
+        if (graph.get(i).conflictingNodes.isEmpty()) {
+            PatternGoal.minimumVertexSize(graph, i + 1, removed);
             return;
         }
 
 
         removed.add(graph.get(i));
-        minimumVertexSize(graph, i+1,removed);
+        minimumVertexSize(graph, i + 1, removed);
         removed.remove(graph.get(i));
 
         Set<GraphNode> removedThisTime = new HashSet<>();
-        for(GraphNode neighbour : graph.get(i).conflictingNodes) {
-            if(!removed.contains(neighbour)) {
+        for (GraphNode neighbour : graph.get(i).conflictingNodes) {
+            if (!removed.contains(neighbour)) {
                 removedThisTime.add(neighbour);
             }
         }
 
         removed.addAll(removedThisTime);
-        minimumVertexSize(graph, i+1, removed);
+        minimumVertexSize(graph, i + 1, removed);
         removed.removeAll(removedThisTime);
     }
 
@@ -214,7 +214,7 @@ public class PatternGoal extends Goal {
 
         @Override
         public String toString() {
-            return matchStartingCard.toString() + " {" + conflictingNodes.stream().map((GraphNode n) -> {return n.matchStartingCard.toString();} ).reduce("", String::concat) + "}";
+            return matchStartingCard.toString() + " {" + conflictingNodes.stream().map((GraphNode n) -> n.matchStartingCard.toString()).reduce("", String::concat) + "}";
         }
     }
 
@@ -223,20 +223,20 @@ public class PatternGoal extends Goal {
      * <p>
      * Helper method to support the goal evaluation.
      *
-     * @param board the player's board
+     * @param board                 the player's board
      * @param startingCandidateCell the top-left cell of the candidate match
      * @return {@code true} if the pattern is found, {@code false} otherwise
      */
-    private boolean isMatch(Map<CardLocation, Card> board, CardLocation startingCandidateCell) {
-        for(int i = 0; i < pattern.length; i++) {
-            for(int j = 0; j < pattern[0].length; j++) {
-                if(pattern[i][j] != null) {
-                    Card c = board.get(startingCandidateCell.add(j, -i*2-j));
+    private boolean isMatch(Map<CardLocation, CardSlot> board, CardLocation startingCandidateCell) {
+        for (int i = 0; i < pattern.length; i++) {
+            for (int j = 0; j < pattern[0].length; j++) {
+                if (pattern[i][j] != null) {
+                    CardSlot slot = board.get(startingCandidateCell.add(j, -i * 2 - j));
 
-                    if(c == null) {
+                    if (slot == null) {
                         return false;
                     }
-                    if ((c instanceof PlayCard) && !((PlayCard) c).getType().equals(pattern[i][j])) {
+                    if ((slot.card() instanceof PlayCard) && !((PlayCard) slot.card()).getType().equals(pattern[i][j])) {
                         return false;
                     }
                 }
@@ -258,23 +258,23 @@ public class PatternGoal extends Goal {
      */
     private boolean conflict(CardLocation a, CardLocation b) {
         CardLocation dist = a.sub(b);
-        if(Math.abs(dist.x) >= this.pattern[0].length) return false;
+        if (Math.abs(dist.x) >= this.pattern[0].length) return false;
 
         // this can be improved, just a naive implementation to speed things up
         Set<CardLocation> locations = new HashSet<>();
 
-        for(int i = 0; i < pattern.length; i++) {
-            for(int j = 0; j < pattern[0].length; j++) {
-                if(pattern[i][j] != null) {
+        for (int i = 0; i < pattern.length; i++) {
+            for (int j = 0; j < pattern[0].length; j++) {
+                if (pattern[i][j] != null) {
                     locations.add(a.add(j, -i * 2 - j));
                 }
             }
         }
 
-        for(int i = 0; i < pattern.length; i++) {
-            for(int j = 0; j < pattern[0].length; j++) {
-                if(locations.contains(b.add(j, -i*2-j))) {
-                    if(pattern[i][j] != null) {
+        for (int i = 0; i < pattern.length; i++) {
+            for (int j = 0; j < pattern[0].length; j++) {
+                if (locations.contains(b.add(j, -i * 2 - j))) {
+                    if (pattern[i][j] != null) {
                         return true;
                     }
                 }

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.FXController;
+package it.polimi.ingsw.view.ui.gui.FXController;
 
 import it.polimi.ingsw.events.messages.client.SelectGoalMessage;
 import it.polimi.ingsw.network.Client;

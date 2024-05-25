@@ -50,10 +50,12 @@ public abstract class DeckLoader<T extends Drawable> {
      * @throws IOException if there's a problem when trying to read the file
      */
     private ArrayList<T> getContent() throws IOException {
-        if(loadedContent == null) {
+        if (loadedContent == null) {
             this.loadedContent = this.load();
         }
+
         return new ArrayList<>(loadedContent);
+
     }
 
     /**
@@ -78,8 +80,8 @@ public abstract class DeckLoader<T extends Drawable> {
         StringBuilder jsonString = new StringBuilder();
 
         int c;
-        while((c = reader.read()) != -1) {
-            jsonString.append((char)c);
+        while ((c = reader.read()) != -1) {
+            jsonString.append((char) c);
         }
         reader.close();
 

@@ -18,9 +18,9 @@ public class PlaceCardMessage extends ClientMessage {
     /**
      * Builds the message. Requires the player's identifier to recognise who is sending the message.
      *
-     * @param index the index that represents the card that the client want to place.
+     * @param index      the index that represents the card that the client want to place.
      * @param onBackSide {@code true} if the cards needs to placed with the back side up, {@code false} otherwise.
-     * @param location the location where the card needs to be placed.
+     * @param location   the location where the card needs to be placed.
      */
     public PlaceCardMessage(int index, boolean onBackSide, CardLocation location) {
         super(MessageType.PLAYER_MESSAGE);
@@ -32,7 +32,7 @@ public class PlaceCardMessage extends ClientMessage {
     /**
      * Tries to place the selected card.
      *
-     * @param selector the GameSelector instance that handles the game the player's playing.
+     * @param selector   the GameSelector instance that handles the game the player's playing.
      * @param controller the GameController that handles the game the player's playing.
      */
     @Override

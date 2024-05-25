@@ -6,7 +6,7 @@ import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
 
-public class PlayersListUpdateMessage extends ServerMessage{
+public class PlayersListUpdateMessage extends ServerMessage {
     private final String[] nicknames;
     private final PlayerColor[] colors;
 

@@ -4,18 +4,20 @@ import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.controller.TurnStatus;
 import it.polimi.ingsw.events.messages.server.*;
 import it.polimi.ingsw.model.ScoreBoard;
-import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Resource;
+import it.polimi.ingsw.model.chat.ChatMessage;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.PlayerColor;
+import it.polimi.ingsw.model.saving.ClientGameSaving;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.network.serverhandlers.RMIServerHandler;
 import it.polimi.ingsw.network.serverhandlers.ServerHandler;
-import it.polimi.ingsw.view.ui.UserInterface;
 import it.polimi.ingsw.utils.CardLocation;
+import it.polimi.ingsw.view.ui.UserInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -25,7 +27,7 @@ import java.util.Set;
  * Client-side remote object that receive Remote Method Invocations from the Server
  * and "transform" them into messages that will be processed by the actual View (UserInterface) asynchronously.
  */
-public class ViewWrapper extends UnicastRemoteObject implements VirtualView{
+public class ViewWrapper extends UnicastRemoteObject implements VirtualView {
     UserInterface userInterface;
 
     public UserInterface getUserInterface() {
@@ -40,7 +42,7 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView{
     @Override
     public void setController(VirtualController controller) throws RemoteException {
         ServerHandler serverHandler = Client.getInstance().getServerHandler();
-        if(serverHandler instanceof RMIServerHandler)
+        if (serverHandler instanceof RMIServerHandler)
             ((RMIServerHandler) serverHandler).setController(controller);
     }
 
@@ -85,8 +87,8 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView{
     }
 
     @Override
-    public void placeCardOnPlayersBoard(String playerNickName, Card card, CardLocation location) throws RemoteException {
-        userInterface.forwardMessage(new PlayersBoardUpdateMessage(playerNickName, card, location));
+    public void placeCardOnPlayersBoard(String playerNickName, CardSlot cardSlot, CardLocation location) throws RemoteException {
+        userInterface.forwardMessage(new PlayersBoardUpdateMessage(playerNickName, cardSlot, location));
     }
 
     @Override
@@ -95,8 +97,8 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView{
     }
 
     @Override
-    public void confirmJoin(String nickname) throws RemoteException {
-        userInterface.forwardMessage(new JoinConfirmationMessage(nickname));
+    public void confirmJoin(String nickname, ClientGameSaving savings) throws RemoteException {
+        userInterface.forwardMessage(new JoinConfirmationMessage(nickname, savings));
     }
 
     @Override
@@ -122,5 +124,10 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView{
     @Override
     public void ping(boolean isAnswer) throws RemoteException {
         userInterface.forwardMessage(new ServerToClientPingMessage(isAnswer));
+    }
+
+    @Override
+    public void receiveMessage(ChatMessage chatMessage, boolean isPrivate) throws RemoteException {
+        userInterface.forwardMessage(new ServerChatMsgMessage(chatMessage, isPrivate));
     }
 }

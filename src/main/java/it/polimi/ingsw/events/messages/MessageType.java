@@ -14,6 +14,8 @@ public enum MessageType {
     PLAYER_MESSAGE,
     CONNECT_JOIN_MESSAGE,
 
+    GAME_LIST_MESSAGE,
+
 
     PING_MESSAGE
 }

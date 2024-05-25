@@ -1,11 +1,11 @@
 package it.polimi.ingsw.model.decks;
 
-import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.goals.ItemGoal;
 import it.polimi.ingsw.model.goals.PatternGoal;
+import it.polimi.ingsw.utils.ItemCollection;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * The GoalDeckLoader class allows to create objects to load standard game's goals from files.
  */
-public class GoalDeckLoader extends DeckLoader<Goal>{
+public class GoalDeckLoader extends DeckLoader<Goal> {
     /**
      * Build a new GoalDeckLoader that operates on the file whose name is provided.
      *
@@ -39,7 +39,7 @@ public class GoalDeckLoader extends DeckLoader<Goal>{
 
         JSONArray goalsJson = buildJSONArrayFromFile(filename);
 
-        for(int i = 0; i < goalsJson.length(); i++) {
+        for (int i = 0; i < goalsJson.length(); i++) {
             JSONObject json = goalsJson.getJSONObject(i);
 
             String goalType = json.getString("goal_type");
@@ -48,7 +48,7 @@ public class GoalDeckLoader extends DeckLoader<Goal>{
             Resource[][] pattern;
             ItemCollection items;
 
-            switch(goalType) {
+            switch (goalType) {
                 case "pattern":
                     JSONArray patternJson = json.getJSONArray("pattern");
                     int rows = patternJson.length();
@@ -56,15 +56,14 @@ public class GoalDeckLoader extends DeckLoader<Goal>{
 
                     pattern = new Resource[rows][cols];
 
-                    for(int y = 0; y < rows; y++) {
+                    for (int y = 0; y < rows; y++) {
                         JSONArray currentRow = patternJson.getJSONArray(y);
-                        for(int x = 0; x < cols; x++) {
+                        for (int x = 0; x < cols; x++) {
                             String resourceName = currentRow.get(x).toString();
 
-                            if(resourceName.isEmpty()){
+                            if (resourceName.isEmpty()) {
                                 pattern[y][x] = null;
-                            }
-                            else {
+                            } else {
                                 pattern[y][x] = Resource.valueOf(resourceName);
                             }
                         }
@@ -78,7 +77,7 @@ public class GoalDeckLoader extends DeckLoader<Goal>{
                     JSONArray constraintArray = json.getJSONArray("items");
                     items = new ItemCollection();
 
-                    for(int j = 0; j < constraintArray.length(); j++) {
+                    for (int j = 0; j < constraintArray.length(); j++) {
                         JSONObject itemsJson = constraintArray.getJSONObject(j);
                         items.add(
                                 Corner.valueOf(itemsJson.getString("item")),

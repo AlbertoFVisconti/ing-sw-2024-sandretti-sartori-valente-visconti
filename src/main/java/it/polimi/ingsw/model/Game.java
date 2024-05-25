@@ -1,18 +1,21 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.events.messages.server.PlayersListUpdateMessage;
-import it.polimi.ingsw.model.cards.PlayCard;
-import it.polimi.ingsw.model.cards.StartCard;
-import it.polimi.ingsw.model.decks.Deck;
-import it.polimi.ingsw.model.decks.DeckLoader;
 import it.polimi.ingsw.events.Observable;
+import it.polimi.ingsw.events.messages.server.PlayersListUpdateMessage;
 import it.polimi.ingsw.events.messages.server.PublicGoalsUpdateMessage;
 import it.polimi.ingsw.events.messages.server.VisibleCardUpdateMessage;
-import it.polimi.ingsw.events.saving.GameSavingMessage;
-import it.polimi.ingsw.events.saving.PlayerSavingMessage;
+import it.polimi.ingsw.model.cards.PlayCard;
+import it.polimi.ingsw.model.cards.StartCard;
+import it.polimi.ingsw.model.chat.Chat;
+import it.polimi.ingsw.model.decks.Deck;
+import it.polimi.ingsw.model.decks.DeckLoader;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
+import it.polimi.ingsw.model.saving.ClientGameSaving;
+import it.polimi.ingsw.model.saving.ClientPlayerSaving;
+import it.polimi.ingsw.model.saving.GameSaving;
+import it.polimi.ingsw.model.saving.PlayerSaving;
 import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
 
 import java.io.IOException;
@@ -42,75 +45,99 @@ public class Game extends Observable {
     private final int expectedPlayers;
     private final Set<PlayerColor> availableColor;
 
+    private final Chat chat;
+
     /**
      * Constructs a new Game object, initializing the game components.
      * In particular, the Decks' content is loaded from the provided files.
      *
-     * @param goldCardDeckLoader DeckLoader that loads the game's Gold Cards
+     * @param goldCardDeckLoader     DeckLoader that loads the game's Gold Cards
      * @param resourceCardDeckLoader DeckLoader that loads the game's Resource Cards
-     * @param startCardDeckLoader DeckLoader that loads the game's Start Cards
-     * @param goalDeckLoader DeckLoader that loads the game's Goals
-     * @param idGame the Id of the game that players can use to rejoin a specific game
+     * @param startCardDeckLoader    DeckLoader that loads the game's Start Cards
+     * @param goalDeckLoader         DeckLoader that loads the game's Goals
+     * @param idGame                 the Id of the game that players can use to rejoin a specific game
      * @throws IOException if there's a problem reading one of the files
      */
     public Game(DeckLoader<PlayCard> goldCardDeckLoader, DeckLoader<PlayCard> resourceCardDeckLoader,
                 DeckLoader<StartCard> startCardDeckLoader, DeckLoader<Goal> goalDeckLoader, int idGame, int expectedPlayers) throws IOException {
-        if(goldCardDeckLoader != null) {
+        if (goldCardDeckLoader != null) {
             this.goldCardsDeck = goldCardDeckLoader.getDeck();
             this.goldCardsDeck.setDeckIdentifier(1);
-        }
-        else {
+        } else {
             this.goldCardsDeck = null;
         }
-        if(resourceCardDeckLoader != null) {
+        if (resourceCardDeckLoader != null) {
             this.resourceCardsDeck = resourceCardDeckLoader.getDeck();
             this.resourceCardsDeck.setDeckIdentifier(0);
-        }
-        else {
+        } else {
             this.resourceCardsDeck = null;
         }
 
-        if(startCardDeckLoader != null)
+        if (startCardDeckLoader != null)
             this.startCardsDeck = startCardDeckLoader.getDeck();
         else
             this.startCardsDeck = null;
-        if(goalDeckLoader != null)
+        if (goalDeckLoader != null)
             this.goalsDeck = goalDeckLoader.getDeck();
         else
             this.goalsDeck = null;
 
         this.players = new ArrayList<>();
-        this.idGame=idGame;
-        this.expectedPlayers=expectedPlayers;
-        this.availableColor= new HashSet<>();
-        this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE,PlayerColor.GREEN,PlayerColor.RED,PlayerColor.YELLOW));
+        this.idGame = idGame;
+        this.expectedPlayers = expectedPlayers;
+        this.availableColor = new HashSet<>();
+        this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE, PlayerColor.GREEN, PlayerColor.RED, PlayerColor.YELLOW));
 
         scoreBoard = new ScoreBoard();
+
+        this.chat = new Chat();
     }
-    public Game(GameSavingMessage gsm){
-        players=new ArrayList<>();
-        this.availableColor= new HashSet<>();
-        this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE,PlayerColor.GREEN,PlayerColor.RED,PlayerColor.YELLOW));
-        for(PlayerSavingMessage psm: gsm.getPlayers()){
-            Player p=new Player(psm);
+
+    public Game(GameSaving gsm) {
+        players = new ArrayList<>();
+        this.availableColor = new HashSet<>();
+        this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE, PlayerColor.GREEN, PlayerColor.RED, PlayerColor.YELLOW));
+        for (PlayerSaving psm : gsm.getPlayers()) {
+            Player p = new Player(psm);
             players.add(p);
             availableColor.remove(p.getColor());
         }
-        this.expectedPlayers=gsm.getExpectedPlayers();
-        this.idGame=gsm.getGameId();
-        this.scoreBoard=gsm.getScoreBoard();
-        this.commonGoals=gsm.getPublicGoal();
-        this.goldCardsDeck=gsm.getGoldCardsDeck();
-        this.resourceCardsDeck=gsm.getResourceCardsDeck();
-        this.startCardsDeck=gsm.getStartCardsDeck();
-        this.goalsDeck=gsm.getGoalsDeck();
+        this.expectedPlayers = gsm.getExpectedPlayers();
+        this.idGame = gsm.getGameId();
+        this.scoreBoard = gsm.getScoreBoard();
+        this.commonGoals = gsm.getPublicGoal();
+        this.goldCardsDeck = gsm.getGoldCardsDeck();
+        this.resourceCardsDeck = gsm.getResourceCardsDeck();
+        this.startCardsDeck = gsm.getStartCardsDeck();
+        this.goalsDeck = gsm.getGoalsDeck();
+        this.visibleCards = gsm.getVisibleCards();
+        // TODO: this.chat = gsm.getChat();
+        this.chat = new Chat();
+    }
+
+    public GameSaving getSaving() {
+        ArrayList<PlayerSaving> playerSavings = new ArrayList<>();
+        for (Player p : this.players) {
+            playerSavings.add(p.getSaving());
+        }
+
+        return new GameSaving(expectedPlayers, playerSavings, idGame, this.goldCardsDeck, this.resourceCardsDeck, visibleCards, scoreBoard, commonGoals, startCardsDeck, goalsDeck);
+    }
+
+    public ClientGameSaving getClientSaving(String clientNickname) {
+        ArrayList<ClientPlayerSaving> playerSavings = new ArrayList<>();
+        for (Player p : this.players) {
+            playerSavings.add(p.getClientSaving(clientNickname));
+        }
+
+        return new ClientGameSaving(playerSavings, idGame, this.goldCardsDeck.getTopOfTheStack(), this.resourceCardsDeck.getTopOfTheStack(), visibleCards, scoreBoard, commonGoals);
     }
 
 
     public void updateAvailableColors() {
-        this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE,PlayerColor.GREEN,PlayerColor.RED,PlayerColor.YELLOW));
+        this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE, PlayerColor.GREEN, PlayerColor.RED, PlayerColor.YELLOW));
 
-        for(Player p : this.players) {
+        for (Player p : this.players) {
             availableColor.remove(p.getColor());
         }
 
@@ -121,7 +148,7 @@ public class Game extends Observable {
         String[] nicknames = new String[players.size()];
         PlayerColor[] colors = new PlayerColor[players.size()];
 
-        for(int i = 0; i < players.size(); i++) {
+        for (int i = 0; i < players.size(); i++) {
             nicknames[i] = players.get(i).nickName;
             colors[i] = players.get(i).getColor();
         }
@@ -130,7 +157,7 @@ public class Game extends Observable {
     }
 
     public void resetPlayers() {
-        if(isStarted) throw new RuntimeException();
+        if (isStarted) throw new RuntimeException();
         this.players.clear();
     }
 
@@ -141,10 +168,11 @@ public class Game extends Observable {
      * @param player Player to add to the game.
      * @throws RuntimeException if the game's already started.
      */
-    public void addPlayer(Player player)  {
-        if(isStarted) throw new RuntimeException("Cannot add a new player to a started game");
+    public void addPlayer(Player player) {
+        if (isStarted) throw new RuntimeException("Cannot add a new player to a started game");
 
-        if(this.expectedPlayers != -1 && players.size() >= this.expectedPlayers) throw new RuntimeException("Game's full");
+        if (this.expectedPlayers != -1 && players.size() >= this.expectedPlayers)
+            throw new RuntimeException("Game's full");
 
         players.add(player);
         availableColor.remove(player.getColor());
@@ -156,10 +184,10 @@ public class Game extends Observable {
 
 
     public void removePlayer(Player player) {
-        if(isStarted) throw new RuntimeException();
+        if (isStarted) throw new RuntimeException();
         this.players.remove(player);
 
-        if(player.getColor() != null) {
+        if (player.getColor() != null) {
             this.availableColor.add(player.getColor());
         }
     }
@@ -179,8 +207,8 @@ public class Game extends Observable {
      * @throws RuntimeException if the game has not started yet.
      */
     public void nextTurn() {
-        if(!isStarted) throw new RuntimeException("The game has not been started yet");
-        currentTurn = (currentTurn+1)%players.size();
+        if (!isStarted) throw new RuntimeException("The game has not been started yet");
+        currentTurn = (currentTurn + 1) % players.size();
     }
 
     /**
@@ -189,7 +217,7 @@ public class Game extends Observable {
      * @throws RuntimeException if the game has not started yet.
      */
     public void setFinalRound() {
-        if(!isStarted) throw new RuntimeException("the game has not been started yet");
+        if (!isStarted) throw new RuntimeException("the game has not been started yet");
         this.isFinal = true;
     }
 
@@ -210,10 +238,16 @@ public class Game extends Observable {
     public void shufflePlayers() {
         if (this.isStarted) throw new RuntimeException("Game has already started");
         Collections.shuffle(this.players);
+
+        notifyPlayersListUpdate();
+    }
+
+    public Chat getChat() {
+        return chat;
     }
 
     public void setCommonGoals(Goal[] goals) {
-        if(this.isStarted) throw new RuntimeException("Game has already started");
+        if (this.isStarted) throw new RuntimeException("Game has already started");
         this.commonGoals = goals.clone();
 
         this.notifyObservers(new PublicGoalsUpdateMessage(commonGoals));
@@ -229,25 +263,37 @@ public class Game extends Observable {
     }
 
     /**
+     * Create the ScoreBoard for the game with the players currently connected.
+     * This method shouldn't be used on the server, since it is intended for the client to create a
+     * "default" scoreboard before it receive an updated one from the server.
+     */
+    public void setupScoreBoard() {
+        if (isStarted) throw new UnsupportedOperationException("setupScoreBoard shouldn't be used after a game starts");
+        this.scoreBoard = new ScoreBoard(players);
+    }
+
+    /**
      * Starts the game by drawing and distributing cards.
      * Once this method is called, it becomes impossible to edit the game's info.
      */
     public void startGame() {
-        if(isStarted) return;
+        if (isStarted) return;
 
         this.scoreBoard = new ScoreBoard(players);
+        this.subscribeCommonObservers();
 
         // Draws the common goals
-        this.setCommonGoals( new Goal[]{
+        this.setCommonGoals(new Goal[]{
                 this.goalsDeck.draw(),
                 this.goalsDeck.draw()
         });
 
         // Draws the visible cards
+        this.visibleCards = new PlayCard[4];
         refillVisibleCards();
 
 
-        for(Player player : this.players) {
+        for (Player player : this.players) {
             // draws the player's private startcard
             player.setStartCard(this.startCardsDeck.draw());
 
@@ -265,8 +311,6 @@ public class Game extends Observable {
 
         }
 
-        this.subscribeCommonObservers();
-
         this.currentTurn = 0;
         this.isFinal = false;
         this.isStarted = true;
@@ -277,7 +321,7 @@ public class Game extends Observable {
      *
      * @return a list of Player objects that represents the players in the game.
      */
-    public List<Player> getPlayers(){
+    public List<Player> getPlayers() {
         return Collections.unmodifiableList(players);
     }
 
@@ -286,21 +330,27 @@ public class Game extends Observable {
      *
      * @return the number of players that the game is expecting.
      */
-    public int getExpectedPlayers(){return this.expectedPlayers;}
+    public int getExpectedPlayers() {
+        return this.expectedPlayers;
+    }
 
     /**
      * Retrieves the available player colors for this game.
      *
      * @return a set of PlayerColor that represents the set of available colors.
      */
-    public Set<PlayerColor> getAvailableColor(){ return this.availableColor;}
+    public Set<PlayerColor> getAvailableColor() {
+        return this.availableColor;
+    }
 
     /**
      * Retrieves the game scoreboard.
      *
      * @return a reference to the scoreboard that contains player's score for this game.
      */
-    public ScoreBoard getScoreBoard(){return this.scoreBoard;}
+    public ScoreBoard getScoreBoard() {
+        return this.scoreBoard;
+    }
 
     /**
      * Retrieves the Resource cards deck.
@@ -333,7 +383,7 @@ public class Game extends Observable {
         if (this.isStarted) throw new RuntimeException("Game has already started");
 
         this.visibleCards = new PlayCard[length];
-        for(int i = 0; i < length; i++) visibleCards[i] = null;
+        for (int i = 0; i < length; i++) visibleCards[i] = null;
     }
 
     /**
@@ -346,18 +396,17 @@ public class Game extends Observable {
      */
     public void refillVisibleCards() {
         // first i try to fill the empty slots with the preferred card type
-        for(int i = 0; i < visibleCards.length; i++) {
-            if(visibleCards[i] == null) {
-                if(i < 2) {
+        for (int i = 0; i < visibleCards.length; i++) {
+            if (visibleCards[i] == null) {
+                if (i < 2) {
                     // resource card preferred
-                    if(!this.resourceCardsDeck.isEmpty()) {
+                    if (!this.resourceCardsDeck.isEmpty()) {
                         visibleCards[i] = resourceCardsDeck.draw();
                         this.notifyObservers(new VisibleCardUpdateMessage(visibleCards[i], i));
                     }
-                }
-                else {
+                } else {
                     // gold card
-                    if(!this.goldCardsDeck.isEmpty()) {
+                    if (!this.goldCardsDeck.isEmpty()) {
                         visibleCards[i] = goldCardsDeck.draw();
                         this.notifyObservers(new VisibleCardUpdateMessage(visibleCards[i], i));
                     }
@@ -366,18 +415,17 @@ public class Game extends Observable {
         }
 
         // in the second run i try to fill the empty slots with whichever type of card is available
-        for(int i = 0; i < visibleCards.length; i++) {
-            if(visibleCards[i] == null) {
-                if(i < 2) {
+        for (int i = 0; i < visibleCards.length; i++) {
+            if (visibleCards[i] == null) {
+                if (i < 2) {
                     // resource card preferred
-                    if(!this.goldCardsDeck.isEmpty()) {
+                    if (!this.goldCardsDeck.isEmpty()) {
                         visibleCards[i] = goldCardsDeck.draw();
                         this.notifyObservers(new VisibleCardUpdateMessage(visibleCards[i], i));
                     }
-                }
-                else {
+                } else {
                     // gold card
-                    if(!this.resourceCardsDeck.isEmpty()) {
+                    if (!this.resourceCardsDeck.isEmpty()) {
                         visibleCards[i] = resourceCardsDeck.draw();
                         this.notifyObservers(new VisibleCardUpdateMessage(visibleCards[i], i));
                     }
@@ -400,21 +448,25 @@ public class Game extends Observable {
      *
      * @return the GameID for the current game.
      */
-    public int getIdGame() {return this.idGame;}
+    public int getIdGame() {
+        return this.idGame;
+    }
 
     /**
      * Checks whether both decks are empty.
      *
      * @return {@code true} if both decks are empty, {@code false} otherwise.
      */
-    public boolean emptyDecks(){ return (this.goldCardsDeck.isEmpty()&& this.resourceCardsDeck.isEmpty());}
+    public boolean emptyDecks() {
+        return (this.goldCardsDeck.isEmpty() && this.resourceCardsDeck.isEmpty());
+    }
 
     /**
      * Subscribes players to the decks and to the game itself.
      */
     public void subscribeCommonObservers() {
-        for(Player p1 : this.players) {
-            for(Player p2 : this.players) {
+        for (Player p1 : this.players) {
+            for (Player p2 : this.players) {
                 p1.subscribe(p2.getClientHandler());
             }
 
@@ -425,7 +477,7 @@ public class Game extends Observable {
     }
 
     public void subscribeCommonObservers(ClientHandler clientHandler) {
-        for(Player p1 : this.players) {
+        for (Player p1 : this.players) {
             p1.subscribe(clientHandler);
         }
 
@@ -435,7 +487,7 @@ public class Game extends Observable {
     }
 
     public void unsubscribeFromCommonObservable(ClientHandler clientHandler) {
-        for(Player p1 : this.players) {
+        for (Player p1 : this.players) {
             p1.unsubscribe(clientHandler);
         }
         this.goldCardsDeck.subscribe(clientHandler);
@@ -451,7 +503,6 @@ public class Game extends Observable {
     public Deck<Goal> getGoalsDeck() {
         return goalsDeck;
     }
-
 
 
 }

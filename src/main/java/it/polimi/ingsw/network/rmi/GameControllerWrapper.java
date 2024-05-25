@@ -1,4 +1,5 @@
 package it.polimi.ingsw.network.rmi;
+
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.events.messages.client.*;
 import it.polimi.ingsw.model.player.PlayerColor;
@@ -6,6 +7,7 @@ import it.polimi.ingsw.utils.CardLocation;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+
 public class GameControllerWrapper extends UnicastRemoteObject implements VirtualController {
     private final GameController gameController;
 
@@ -19,7 +21,7 @@ public class GameControllerWrapper extends UnicastRemoteObject implements Virtua
     }
 
     @Override
-    public void placeCard(String playerIdentifier, int index, boolean onBackSide ,CardLocation location) throws RemoteException {
+    public void placeCard(String playerIdentifier, int index, boolean onBackSide, CardLocation location) throws RemoteException {
         ClientMessage message = new PlaceCardMessage(index, onBackSide, location);
         message.setPlayerIdentifier(playerIdentifier);
         gameController.forwardMessage(message);
@@ -51,5 +53,12 @@ public class GameControllerWrapper extends UnicastRemoteObject implements Virtua
         ClientMessage message = new SelectColorMessage(color);
         message.setPlayerIdentifier(playerIdentifier);
         gameController.forwardMessage(message);
+    }
+
+    @Override
+    public void sendChatMsg(String playerIdentifier, String message, String addressee) throws RemoteException {
+        ClientMessage clientMessage = new ClientChatMsgMessage(message, addressee);
+        clientMessage.setPlayerIdentifier(playerIdentifier);
+        gameController.forwardMessage(clientMessage);
     }
 }

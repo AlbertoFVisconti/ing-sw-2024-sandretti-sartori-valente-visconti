@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.FXController;
+package it.polimi.ingsw.view.ui.gui.FXController;
 
 import it.polimi.ingsw.events.messages.client.SelectColorMessage;
 import it.polimi.ingsw.model.player.PlayerColor;
@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class ColorController  {
+public class ColorController {
 
     @FXML
     private ImageView blue;
@@ -48,14 +48,14 @@ public class ColorController  {
     }
 
 
-        public void SelectRed(MouseEvent mouseEvent) throws IOException {
+    public void SelectRed(MouseEvent mouseEvent) throws IOException {
         red.setOpacity(0.5);
         Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.RED));
         //Client.getInstance().getServerHandler().
-            Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/WaitingForPlayers.fxml")));
-            Stage window = (Stage) ((javafx.scene.Node) mouseEvent.getSource()).getScene().getWindow();
-            window.setScene(new Scene(nextPageParent));
-            window.show();
+        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/WaitingForPlayers.fxml")));
+        Stage window = (Stage) ((javafx.scene.Node) mouseEvent.getSource()).getScene().getWindow();
+        window.setScene(new Scene(nextPageParent));
+        window.show();
     }
 
     public void SelectBlue(MouseEvent mouseEvent) throws IOException {

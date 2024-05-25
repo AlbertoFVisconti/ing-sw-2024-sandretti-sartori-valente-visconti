@@ -8,7 +8,7 @@ import it.polimi.ingsw.view.ViewWrapper;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class RMIServerHandler extends ServerHandler{
+public class RMIServerHandler extends ServerHandler {
 
     private VirtualController controller;
     private VirtualMainController mainController;
@@ -19,7 +19,7 @@ public class RMIServerHandler extends ServerHandler{
 
     private final String mainControllerRemoteObjectName;
 
-    public RMIServerHandler(ViewWrapper viewWrapper,String ip, int port, String mainControllerRemoteObjectName)  {
+    public RMIServerHandler(ViewWrapper viewWrapper, String ip, int port, String mainControllerRemoteObjectName) {
         this.viewWrapper = viewWrapper;
         this.ip = ip;
         this.port = port;

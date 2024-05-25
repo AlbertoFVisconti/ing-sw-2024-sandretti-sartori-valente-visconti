@@ -1,10 +1,10 @@
-package it.polimi.ingsw.view.FXController;
+package it.polimi.ingsw.view.ui.gui.FXController;
 
 import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.network.Client;
-import it.polimi.ingsw.view.ui.FXGraphicalUserInterface;
 import it.polimi.ingsw.view.ui.UserInterface;
+import it.polimi.ingsw.view.ui.gui.FXGraphicalUserInterface;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -65,7 +64,7 @@ public class WaitingForPlayersController extends UserInterface {
     }
 
     @Override
-    protected void update() {
+    public void update() {
         List<Player> players;
         players = Client.getInstance().getUserInterface().getPlayersList();
         for (Player player : players) {
@@ -81,7 +80,7 @@ public class WaitingForPlayersController extends UserInterface {
 
         }
         if(Client.getInstance().getUserInterface().getGameStatus().equals(GameStatus.GAME_CREATION)){
-            Parent nextPageParent = null;
+            Parent nextPageParent;
             try {
                 nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/StartingCard.fxml")));
             } catch (IOException e) {

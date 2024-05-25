@@ -8,7 +8,6 @@ import it.polimi.ingsw.network.rmi.VirtualMainController;
 /**
  * Abstract message that the Client sends to the Server.
  * Allows to update execution an operation through the server's controller.
-
  */
 public abstract class ClientMessage extends Message {
     private String playerIdentifier;
@@ -40,7 +39,7 @@ public abstract class ClientMessage extends Message {
     /**
      * Allows the server to perform the operation required by the message given the controllers
      *
-     * @param selector the GameSelector instance that handles the game the player's playing.
+     * @param selector   the GameSelector instance that handles the game the player's playing.
      * @param controller the GameController that handles the game the player's playing.
      */
     public abstract void execute(VirtualMainController selector, VirtualController controller);

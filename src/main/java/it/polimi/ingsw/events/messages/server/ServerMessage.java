@@ -15,7 +15,7 @@ public abstract class ServerMessage extends Message {
      * Builds a ServerMessage with a specified type.
      * The message has a specified recipient.
      *
-     * @param messageType the type of the message
+     * @param messageType         the type of the message
      * @param addresseeIdentifier if the message is for a single client only, provide its identifier
      */
     public ServerMessage(MessageType messageType, String addresseeIdentifier) {

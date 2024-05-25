@@ -8,6 +8,13 @@ import it.polimi.ingsw.model.cards.corners.Resource;
 public class VirtualDeck<T extends Drawable> extends Deck<T> {
     private Resource shownResource;
 
+    public VirtualDeck() {
+    }
+
+    public VirtualDeck(Resource topOfTheStack) {
+        this.shownResource = topOfTheStack;
+    }
+
     /**
      * VirtualDecks don't allow to draw a card.
      *

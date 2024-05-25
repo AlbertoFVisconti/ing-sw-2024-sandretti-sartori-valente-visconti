@@ -1,4 +1,5 @@
 package it.polimi.ingsw.network.rmi;
+
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.utils.CardLocation;
 
@@ -23,10 +24,10 @@ public interface VirtualController extends Remote {
      * </ul>
      *
      * @param playerIdentifier The string that the player received while joining/creating the game.
-     * @param index The index of the player's hand that contains the cards that needs to be placed.
-     * @param onBackSide {@code true} if the cards should be placed with the back side up, {@code false} otherwise.
-     * @param location The CardLocation that represents the desired placement location of the card.
-     * @throws RemoteException in case of errors with the remote communication.
+     * @param index            The index of the player's hand that contains the cards that needs to be placed.
+     * @param onBackSide       {@code true} if the cards should be placed with the back side up, {@code false} otherwise.
+     * @param location         The CardLocation that represents the desired placement location of the card.
+     * @throws RemoteException  in case of errors with the remote communication.
      * @throws RuntimeException in case of poorly set parameters.
      */
     void placeCard(String playerIdentifier, int index, boolean onBackSide, CardLocation location) throws RemoteException;
@@ -47,8 +48,8 @@ public interface VirtualController extends Remote {
      * </ul>
      *
      * @param playerIdentifier The string that the player received while joining/creating the game.
-     * @param index The number that represents what the player's trying to draw/pick up.
-     * @throws RemoteException in case of errors with remote communication.
+     * @param index            The number that represents what the player's trying to draw/pick up.
+     * @throws RemoteException  in case of errors with remote communication.
      * @throws RuntimeException if the index is out of bound.
      */
     void drawCard(String playerIdentifier, int index) throws RemoteException;
@@ -64,8 +65,8 @@ public interface VirtualController extends Remote {
      * </ul>
      *
      * @param playerIdentifier The string that the player received while joining/creating the game.
-     * @param onBackSide {@code true} if the cards should be placed with the back side up, {@code false} otherwise.
-     * @throws RemoteException in case of errors with the remote communication.
+     * @param onBackSide       {@code true} if the cards should be placed with the back side up, {@code false} otherwise.
+     * @throws RemoteException  in case of errors with the remote communication.
      * @throws RuntimeException in case of poorly set parameters.
      */
     void placeStartCard(String playerIdentifier, boolean onBackSide) throws RemoteException;
@@ -81,11 +82,13 @@ public interface VirtualController extends Remote {
      * </ul>
      *
      * @param playerIdentifier The string that the player received while joining/creating the game.
-     * @param index The index of the available goal the player has chosen.
-     * @throws RemoteException in case of errors with the remote communication.
+     * @param index            The index of the available goal the player has chosen.
+     * @throws RemoteException  in case of errors with the remote communication.
      * @throws RuntimeException in case of poorly set parameters.
      */
     void selectPrivateGoal(String playerIdentifier, int index) throws RemoteException;
 
-    void selectColor(String playerIdentifier,PlayerColor color) throws RemoteException;
+    void selectColor(String playerIdentifier, PlayerColor color) throws RemoteException;
+
+    void sendChatMsg(String playerIdentifier, String message, String addressee) throws RemoteException;
 }

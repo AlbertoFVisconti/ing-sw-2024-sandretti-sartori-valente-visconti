@@ -31,16 +31,16 @@ public class CoveredCornersScoringStrategy implements ScoringStrategy {
     public int evaluate(Player player, CardLocation placingLocation) {
         int countNeighbour = 0;
 
-        if(player.getPlacedCard(placingLocation.topLeftNeighbour()) != null) countNeighbour++;
-        if(player.getPlacedCard(placingLocation.topRightNeighbour()) != null) countNeighbour++;
-        if(player.getPlacedCard(placingLocation.bottomLeftNeighbour()) != null) countNeighbour++;
-        if(player.getPlacedCard(placingLocation.bottomRightNeighbour()) != null) countNeighbour++;
+        if (player.getPlacedCardSlot(placingLocation.topLeftNeighbour()) != null) countNeighbour++;
+        if (player.getPlacedCardSlot(placingLocation.topRightNeighbour()) != null) countNeighbour++;
+        if (player.getPlacedCardSlot(placingLocation.bottomLeftNeighbour()) != null) countNeighbour++;
+        if (player.getPlacedCardSlot(placingLocation.bottomRightNeighbour()) != null) countNeighbour++;
 
-        return countNeighbour*scorePerCoveredCorner;
+        return countNeighbour * scorePerCoveredCorner;
     }
 
     @Override
     public String toString() {
-        return this.scorePerCoveredCorner + " points per covered corner";
+        return this.scorePerCoveredCorner + " x corner";
     }
 }

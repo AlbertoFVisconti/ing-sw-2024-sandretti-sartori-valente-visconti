@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.FXController;
+package it.polimi.ingsw.view.ui.gui.FXController;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,6 +17,7 @@ public class RulesPage4Controller {
     @FXML
     private Button GoBackButton;
     private ImageView RulesPage1;
+
     @FXML
     void GoBackToLobby(MouseEvent event) throws IOException {
         Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/Lobby.fxml")));
@@ -24,6 +25,7 @@ public class RulesPage4Controller {
         window.setScene(new Scene(nextPageParent));
         window.show();
     }
+
     @FXML
     void NextPage(ActionEvent event) throws IOException {
         Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/RulesPage5.fxml")));
@@ -31,6 +33,7 @@ public class RulesPage4Controller {
         window.setScene(new Scene(nextPageParent));
         window.show();
     }
+
     @FXML
     void PreviousPage(ActionEvent event) throws IOException {
         Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/RulesPage3.fxml")));

@@ -1,10 +1,10 @@
 package it.polimi.ingsw.model.cards;
 
-import it.polimi.ingsw.model.cards.scoring.FreeScoreScoringStrategy;
-import it.polimi.ingsw.utils.ItemCollection;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.cards.corners.Resource;
+import it.polimi.ingsw.model.cards.scoring.FreeScoreScoringStrategy;
 import it.polimi.ingsw.model.cards.scoring.ScoringStrategy;
+import it.polimi.ingsw.utils.ItemCollection;
 
 /**
  * Represents both Gold and Resource cards.
@@ -12,25 +12,25 @@ import it.polimi.ingsw.model.cards.scoring.ScoringStrategy;
  * (The StartCard is never actually "played", the player just choose the side)
  */
 public class PlayCard extends Card {
-    final ItemCollection constraint;
+    private final ItemCollection constraint;
 
-    final ScoringStrategy scoringStrategy;
+    private final ScoringStrategy scoringStrategy;
 
-    final Resource type;
-    protected boolean isGold;
+    private final Resource type;
+    protected final boolean isGold;
 
     /**
      * Constructs a PlayCard object with specified corners, placement constraint and scoring strategy.
      *
-     * @param cardID the card identifier
-     * @param topLeft the top-left corner on the front side.
-     * @param topRight the top-right corner on the front side.
-     * @param bottomLeft the bottom-left corner on the front side.
-     * @param bottomRight the bottom-right corner on the front side.
-     * @param resourceType the resource type of the card (also the permanent resource on the back).
-     * @param isGold flag to distinguish if a cards is a gold or resource card.
+     * @param cardID              the card identifier
+     * @param topLeft             the top-left corner on the front side.
+     * @param topRight            the top-right corner on the front side.
+     * @param bottomLeft          the bottom-left corner on the front side.
+     * @param bottomRight         the bottom-right corner on the front side.
+     * @param resourceType        the resource type of the card (also the permanent resource on the back).
+     * @param isGold              flag to distinguish if a cards is a gold or resource card.
      * @param placementConstraint ItemCollection representing the items the player needs to have in order to place the card.
-     * @param scoringStrategy ScoringStrategy to evaluate the score to award the player with upon placement.
+     * @param scoringStrategy     ScoringStrategy to evaluate the score to award the player with upon placement.
      */
     private PlayCard(String cardID, String frontpath, String backpath,
                         Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
@@ -41,7 +41,7 @@ public class PlayCard extends Card {
         super(cardID, frontpath, backpath, topLeft, topRight, bottomLeft, bottomRight);
         this.isGold = isGold;
 
-        if(isGold) this.constraint = new ItemCollection(placementConstraint);
+        if (isGold) this.constraint = new ItemCollection(placementConstraint);
         else this.constraint = new ItemCollection();
 
         this.scoringStrategy = scoringStrategy;
@@ -54,14 +54,14 @@ public class PlayCard extends Card {
      * generateResourceCard method) allows to create the card and to avoid creating
      * one with invalid data.
      *
-     * @param cardID the card's identifier
-     * @param topLeft the top-left corner on the front side of the card.
-     * @param topRight the top-right corner on the front side of the card.
-     * @param bottomLeft the bottom-left corner on the front side of the card.
-     * @param bottomRight the bottom-right corner on the front side of the card.
-     * @param resourceType the Resource type of the card (also the permanent resource on the back).
+     * @param cardID              the card's identifier
+     * @param topLeft             the top-left corner on the front side of the card.
+     * @param topRight            the top-right corner on the front side of the card.
+     * @param bottomLeft          the bottom-left corner on the front side of the card.
+     * @param bottomRight         the bottom-right corner on the front side of the card.
+     * @param resourceType        the Resource type of the card (also the permanent resource on the back).
      * @param placementConstraint ItemCollection representing the items the players needs to have to place the card.
-     * @param scoringStrategy ScoringStrategy to use to evaluate the score the player is awarded upon placing the card.
+     * @param scoringStrategy     ScoringStrategy to use to evaluate the score the player is awarded upon placing the card.
      * @return a new PlayCard object representing the Gold card with the specified values.
      */
     public static PlayCard generateGoldCard(String cardID, String frontpath, String backpath,
@@ -81,12 +81,12 @@ public class PlayCard extends Card {
      * generateGoldCard method) allows to create the card and to avoid creating
      * one with invalid data.
      *
-     * @param cardID the card's identifier
-     * @param topLeft the top-left corner on the front side of the card.
-     * @param topRight the top-right corner on the front side of the card.
-     * @param bottomLeft the bottom-left corner on the front side of the card.
-     * @param bottomRight the bottom-right corner on the front side of the card.
-     * @param resourceType the Resource type of the card (also the permanent resource on the back).
+     * @param cardID             the card's identifier
+     * @param topLeft            the top-left corner on the front side of the card.
+     * @param topRight           the top-right corner on the front side of the card.
+     * @param bottomLeft         the bottom-left corner on the front side of the card.
+     * @param bottomRight        the bottom-right corner on the front side of the card.
+     * @param resourceType       the Resource type of the card (also the permanent resource on the back).
      * @param scoreUponPlacement the score the player is awarded upon placing the card.
      * @return a new PlayCard object representing the Resource card with the specified values.
      */
@@ -94,7 +94,7 @@ public class PlayCard extends Card {
                                                 Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
                                                 Resource resourceType,
                                                 int scoreUponPlacement) {
-        return new PlayCard(cardID , frontpath, backpath, topLeft, topRight, bottomLeft, bottomRight, resourceType,
+        return new PlayCard(cardID, frontpath, backpath, topLeft, topRight, bottomLeft, bottomRight, resourceType,
                 false,
                 null,
                 new FreeScoreScoringStrategy(scoreUponPlacement));
@@ -119,7 +119,7 @@ public class PlayCard extends Card {
     }
 
     /**
-     *Retrieves the Resource representing the type of the card.
+     * Retrieves the Resource representing the type of the card.
      *
      * @return Resource representing the cards' type.
      */
@@ -127,40 +127,16 @@ public class PlayCard extends Card {
         return type;
     }
 
-    /**
-     * Retrieves the corner at the specified index in the shown side of the card.
-     * This method is intended for internal usage in order to avoid code repetition.
-     * <p>
-     * Because of how Gold and Resource cards work, if the back side's up, then the result
-     * is always an empty corner.
-     * Otherwise, Card.getCorner method will be invoked to return the corner.
-     *
-     * @param index the index of the desired corner.
-     * @return the corner at the specified index in the shown side of the card.
-     */
     @Override
-    protected Corner getCorner(int index) {
-        if(!this.isOnBackSide())
-            return super.getCorner(index);
-
+    protected Corner getBackCorner(int index) {
         return Corner.EMPTY;
     }
 
-    /**
-     * Retrieves all the items the player has obtained by placing this card on the current side.
-     * <p>
-     * If the card's the front side up, the Card.collectItems will be called.
-     * Otherwise, the collected items are just represented by the permanent resource on the back.
-     *
-     * @return ItemCollection containing the items in the shown side's corner.
-     */
     @Override
-    public ItemCollection collectItems() {
-        if(isOnBackSide()) {
-            return new ItemCollection().add(this.type.getCorner());
-        }
-        return super.collectItems();
+    protected ItemCollection collectBackItems() {
+        return new ItemCollection().add(this.getType().getCorner());
     }
+
 
     /**
      * Allows decks to ask for the resource on the back of the card.

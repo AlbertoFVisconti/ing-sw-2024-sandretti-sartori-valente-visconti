@@ -14,7 +14,7 @@ public interface ScoringStrategy extends Serializable {
      * Computes the score obtained by a player by placing a Card with the implemented scoring strategy
      * in a specific location on their board.
      *
-     * @param player Player who is placing the card
+     * @param player          Player who is placing the card
      * @param placingLocation the location on the game board where the card is being placed.
      * @return the score obtained by the player
      */

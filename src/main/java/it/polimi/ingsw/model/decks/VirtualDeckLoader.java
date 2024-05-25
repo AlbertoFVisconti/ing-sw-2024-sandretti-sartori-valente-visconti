@@ -24,9 +24,8 @@ public class VirtualDeckLoader<T extends Drawable> extends DeckLoader<T> {
      * VirtualDecks have no content. There's nothing to load.
      *
      * @return null
-
      */
-    protected List<T> load()  {
+    protected List<T> load() {
         return null;
     }
 }

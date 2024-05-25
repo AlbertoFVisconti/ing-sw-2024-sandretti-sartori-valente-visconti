@@ -3,12 +3,14 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.controller.TurnStatus;
 import it.polimi.ingsw.model.ScoreBoard;
-import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Resource;
+import it.polimi.ingsw.model.chat.ChatMessage;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.PlayerColor;
+import it.polimi.ingsw.model.saving.ClientGameSaving;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.utils.CardLocation;
 
@@ -61,7 +63,7 @@ public interface VirtualView extends Remote {
      * Allows the server to give the player one of the cards in their hand.
      *
      * @param playerNickname the nickname of the player whose board needs to be updated.
-     * @param card the PlayCard object representing the new card to put in the player's hand.
+     * @param card           the PlayCard object representing the new card to put in the player's hand.
      * @throws RemoteException in case of error with the remote communication.
      */
     void setPlayersCard(String playerNickname, PlayCard card, int index) throws RemoteException;
@@ -69,7 +71,7 @@ public interface VirtualView extends Remote {
     /**
      * Allows the server to inform the player that one of the visible cards has changed.
      *
-     * @param card the PlayCard object representing the new visible card.
+     * @param card  the PlayCard object representing the new visible card.
      * @param index the index of the visible card to change.
      * @throws RemoteException in case of error with the remote communication.
      */
@@ -79,7 +81,7 @@ public interface VirtualView extends Remote {
      * Allows the server to inform the player that one of the decks has changed
      *
      * @param resource the Resource object representing the resource on the back of the card on top of the deck.
-     * @param index the deckID that identify the deck that needs to be updated.
+     * @param index    the deckID that identify the deck that needs to be updated.
      * @throws RemoteException in case of error with the remote communication
      */
     void setDeckTopResource(Resource resource, int index) throws RemoteException;
@@ -88,10 +90,10 @@ public interface VirtualView extends Remote {
      * Allows the server to inform the player that a card was placed on a board.
      *
      * @param playerNickName the nickname of the player whose board needs to be updated.
-     * @param card the StartCard object representing the player starting card.
+     * @param cardSlot       the CardSlot that contains the card that was placed.
      * @throws RemoteException in case of error with the remote communication
      */
-    void placeCardOnPlayersBoard(String playerNickName, Card card, CardLocation location) throws RemoteException;
+    void placeCardOnPlayersBoard(String playerNickName, CardSlot cardSlot, CardLocation location) throws RemoteException;
 
     /**
      * Allows the server to hand the player the available games list.
@@ -106,9 +108,10 @@ public interface VirtualView extends Remote {
      * the game with a certain nickname.
      *
      * @param nickname the nickname that the clients chose when they joined the game.
+     * @param savings  if the player is rejoining a game, this ClientGameSaving object contains all data that the player need
      * @throws RemoteException in case of error with the remote communication.
      */
-    void confirmJoin(String nickname) throws RemoteException;
+    void confirmJoin(String nickname, ClientGameSaving savings) throws RemoteException;
 
     /**
      * Allows the server to provide an updated version of the players list with nicknames and colors.
@@ -117,7 +120,7 @@ public interface VirtualView extends Remote {
      * starting (shuffling).
      *
      * @param nicknames the array of nicknames of the players in the game.
-     * @param colors the array of colors of the players in the game.
+     * @param colors    the array of colors of the players in the game.
      * @throws RemoteException in case of error with the remote communication.
      */
     void updatePlayersList(String[] nicknames, PlayerColor[] colors) throws RemoteException;
@@ -125,8 +128,8 @@ public interface VirtualView extends Remote {
     /**
      * Allows the server to inform the client when the game's status changes.
      *
-     * @param gameStatus the current game phase
-     * @param turnStatus the current turn status (either DRAW or PLACE)
+     * @param gameStatus  the current game phase
+     * @param turnStatus  the current turn status (either DRAW or PLACE)
      * @param playersTurn the nickname of the player that needs to play.
      * @throws RemoteException in case of error with the remote communication
      */
@@ -157,4 +160,6 @@ public interface VirtualView extends Remote {
      * @throws RemoteException in case of error with the remote communication.
      */
     void ping(boolean isAnswer) throws RemoteException;
+
+    void receiveMessage(ChatMessage chatMessage, boolean isPrivate) throws RemoteException;
 }

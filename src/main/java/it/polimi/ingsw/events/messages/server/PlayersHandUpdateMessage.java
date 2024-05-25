@@ -1,7 +1,7 @@
 package it.polimi.ingsw.events.messages.server;
 
-import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.events.messages.MessageType;
+import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
@@ -18,10 +18,10 @@ public class PlayersHandUpdateMessage extends ServerMessage {
      * Builds the message.
      *
      * @param playerNickname the nickname of the player whose hand has changed
-     * @param card the card that was inserted in the player's hand
-     * @param cardSlot the index of the player hands where the card needs to be updated.
+     * @param card           the card that was inserted in the player's hand
+     * @param cardSlot       the index of the player hands where the card needs to be updated.
      */
-    public PlayersHandUpdateMessage(String playerNickname,PlayCard card, int cardSlot) {
+    public PlayersHandUpdateMessage(String playerNickname, PlayCard card, int cardSlot) {
         super(MessageType.MODEL_UPDATE_MESSAGE);
         this.nickname = playerNickname;
         this.card = card;
@@ -36,7 +36,7 @@ public class PlayersHandUpdateMessage extends ServerMessage {
     @Override
     public void updateView(VirtualView view) {
         try {
-            view.setPlayersCard(nickname,card, cardSlot);
+            view.setPlayersCard(nickname, card, cardSlot);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

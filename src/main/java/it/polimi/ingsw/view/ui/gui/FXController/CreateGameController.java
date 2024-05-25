@@ -1,9 +1,9 @@
-package it.polimi.ingsw.view.FXController;
+package it.polimi.ingsw.view.ui.gui.FXController;
 
 import it.polimi.ingsw.events.messages.client.JoinGameMessage;
 import it.polimi.ingsw.network.Client;
-import it.polimi.ingsw.view.ui.FXGraphicalUserInterface;
 import it.polimi.ingsw.view.ui.UserInterface;
+import it.polimi.ingsw.view.ui.gui.FXGraphicalUserInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -80,7 +80,7 @@ public class CreateGameController extends UserInterface {
 
 
     @Override
-    protected void update() {
+    public void update() {
 
     }
 }

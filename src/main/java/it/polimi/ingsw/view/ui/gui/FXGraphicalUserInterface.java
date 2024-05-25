@@ -1,5 +1,6 @@
-package it.polimi.ingsw.view.ui;
+package it.polimi.ingsw.view.ui.gui;
 
+import it.polimi.ingsw.view.ui.UserInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,8 +21,8 @@ public class FXGraphicalUserInterface extends UserInterface {
     }
 
     @Override
-    protected void update() {
-        if(currentInterface != null) currentInterface.update();
+    public void update() {
+        if (currentInterface != null) currentInterface.update();
     }
 
     //run method that launches the GUI
@@ -29,7 +30,7 @@ public class FXGraphicalUserInterface extends UserInterface {
         Application.launch(GUI.class);
     }
 
-     public static class GUI extends Application{
+    public static class GUI extends Application {
 
         //start method that loads the Lobby.fxml file
         public void start(Stage stage) throws Exception {
@@ -39,7 +40,7 @@ public class FXGraphicalUserInterface extends UserInterface {
         }
 
         public static void main(String[] args) {
-           launch(args);
+            launch(args);
         }
     }
 }

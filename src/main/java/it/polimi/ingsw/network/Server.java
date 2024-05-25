@@ -10,6 +10,7 @@ public class Server {
 
     private static final int RMI_SERVER_PORT = 1234;
     private static final int SOCKET_SERVER_PORT = 1235;
+
     public static void main(String[] args) {
         try {
             RMIServer.setup(RMI_SERVER_PORT);

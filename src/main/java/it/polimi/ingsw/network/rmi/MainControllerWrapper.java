@@ -31,8 +31,8 @@ public class MainControllerWrapper extends UnicastRemoteObject implements Virtua
      * The GameSelector will then give the player another remote object that will handle the communication for the game.
      *
      * @param playerIdentifier the identifier of the client
-     * @param IDGame The numerical identifier of the game, chosen among the available ones
-     * @param nick The players nickname, unique for the game
+     * @param IDGame           The numerical identifier of the game, chosen among the available ones
+     * @param nick             The players nickname, unique for the game
      * @throws RemoteException in case of errors during the remote method invocation.
      */
     @Override
@@ -48,8 +48,8 @@ public class MainControllerWrapper extends UnicastRemoteObject implements Virtua
      * The GameSelector will then give the player another remote object that will handle the communication for the game.
      *
      * @param playerIdentifier the identifier of the client
-     * @param expectedPlayers The number of players the game is expected to handle
-     * @param nick The nickname of the player creating the game
+     * @param expectedPlayers  The number of players the game is expected to handle
+     * @param nick             The nickname of the player creating the game
      * @throws RemoteException in case of errors during the remote method invocation.
      */
     @Override

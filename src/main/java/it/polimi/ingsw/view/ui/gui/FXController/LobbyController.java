@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.FXController;
+package it.polimi.ingsw.view.ui.gui.FXController;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,7 +35,7 @@ public class LobbyController {
     @FXML
     void CreateGamefx(ActionEvent event) throws IOException {
         nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/CreateGame.fxml")));
-        window = (Stage)((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         window.setScene(new Scene(nextPageParent));
         window.show();
     }
@@ -44,15 +44,16 @@ public class LobbyController {
     @FXML
     void JoinGamefx(ActionEvent event) throws IOException {
         nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/JoinGame.fxml")));
-        window = (Stage)((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         window.setScene(new Scene(nextPageParent));
         window.show();
     }
+
     //GoToRules allows the user to change Pane to RulesPage1.fxml
     @FXML
     void GoToRules(ActionEvent event) throws IOException {
         nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/RulesPage1.fxml")));
-        window = (Stage)((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         window.setScene(new Scene(nextPageParent));
         window.show();
     }

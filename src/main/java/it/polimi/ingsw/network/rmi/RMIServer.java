@@ -1,11 +1,13 @@
 package it.polimi.ingsw.network.rmi;
 
-import java.rmi.*;
+import java.rmi.AlreadyBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class RMIServer {
     private static final String MAIN_CONTROLLER_OBJECT_NAME = "MainController";
+
     //private static final String GAME_CONTROLLER_OBJECT_NAME = "GameController";
     public static void setup(int registryPort) throws RemoteException, AlreadyBoundException {
 

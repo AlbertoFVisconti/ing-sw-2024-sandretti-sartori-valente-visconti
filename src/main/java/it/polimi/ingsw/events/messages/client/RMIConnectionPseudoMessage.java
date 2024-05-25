@@ -7,13 +7,12 @@ import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
 
-public class RMIConnectionPseudoMessage extends ClientMessage{
+public class RMIConnectionPseudoMessage extends ClientMessage {
     private final VirtualView view;
 
     /**
      * Builds a RMIConnectionPseudoMessage with a specified virtual View.
      * Requires the player's identifier in order to recognize the player.
-     *
      */
     public RMIConnectionPseudoMessage(VirtualView view) {
         super(MessageType.CONNECT_JOIN_MESSAGE);
