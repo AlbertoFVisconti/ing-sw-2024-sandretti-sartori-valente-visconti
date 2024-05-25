@@ -32,13 +32,13 @@ public class PlayCard extends Card {
      * @param placementConstraint ItemCollection representing the items the player needs to have in order to place the card.
      * @param scoringStrategy ScoringStrategy to evaluate the score to award the player with upon placement.
      */
-    private PlayCard(String cardID,
+    private PlayCard(String cardID, String frontpath, String backpath,
                         Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
                         Resource resourceType,
                         boolean isGold,
                         ItemCollection placementConstraint,
                         ScoringStrategy scoringStrategy) {
-        super(cardID, topLeft, topRight, bottomLeft, bottomRight);
+        super(cardID, frontpath, backpath, topLeft, topRight, bottomLeft, bottomRight);
         this.isGold = isGold;
 
         if(isGold) this.constraint = new ItemCollection(placementConstraint);
@@ -64,12 +64,12 @@ public class PlayCard extends Card {
      * @param scoringStrategy ScoringStrategy to use to evaluate the score the player is awarded upon placing the card.
      * @return a new PlayCard object representing the Gold card with the specified values.
      */
-    public static PlayCard generateGoldCard(String cardID,
+    public static PlayCard generateGoldCard(String cardID, String frontpath, String backpath,
                                             Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
                                             Resource resourceType,
                                             ItemCollection placementConstraint,
                                             ScoringStrategy scoringStrategy) {
-        return new PlayCard(cardID, topLeft, topRight, bottomLeft, bottomRight, resourceType,
+        return new PlayCard(cardID, frontpath, backpath, topLeft, topRight, bottomLeft, bottomRight, resourceType,
                 true,
                 placementConstraint,
                 scoringStrategy);
@@ -90,11 +90,11 @@ public class PlayCard extends Card {
      * @param scoreUponPlacement the score the player is awarded upon placing the card.
      * @return a new PlayCard object representing the Resource card with the specified values.
      */
-    public static PlayCard generateResourceCard(String cardID,
+    public static PlayCard generateResourceCard(String cardID, String frontpath, String backpath,
                                                 Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
                                                 Resource resourceType,
                                                 int scoreUponPlacement) {
-        return new PlayCard(cardID ,topLeft, topRight, bottomLeft, bottomRight, resourceType,
+        return new PlayCard(cardID , frontpath, backpath, topLeft, topRight, bottomLeft, bottomRight, resourceType,
                 false,
                 null,
                 new FreeScoreScoringStrategy(scoreUponPlacement));

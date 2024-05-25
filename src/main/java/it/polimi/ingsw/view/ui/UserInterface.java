@@ -37,6 +37,9 @@ public abstract class UserInterface extends Thread implements VirtualView {
     private GameStatus gameStatus;
     private TurnStatus turnStatus;
     private String playersTurn;
+    private int selectedside;
+
+
 
     private final BlockingQueue<ServerMessage> messageQueue;
     public UserInterface() {
@@ -311,5 +314,20 @@ public abstract class UserInterface extends Thread implements VirtualView {
     }
     public Set<PlayerColor> getAvailableColors() {
         return gameModel.getAvailableColor();
+    }
+    public List<Player> getPlayersList() {
+        return gameModel.getPlayers();
+    }
+    public String getLocalPlayerName() {
+        return localPlayer.nickName;
+    }
+    public int getSelectedside() {
+        return selectedside;
+    }
+    public void setSelectedside(int selectedside) {
+        this.selectedside = selectedside;
+    }
+    public Game getGameModel() {
+        return gameModel;
     }
 }
