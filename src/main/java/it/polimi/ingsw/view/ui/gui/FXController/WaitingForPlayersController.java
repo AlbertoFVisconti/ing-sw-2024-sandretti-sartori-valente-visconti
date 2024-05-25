@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.view.ui.UserInterface;
 import it.polimi.ingsw.view.ui.gui.FXGraphicalUserInterface;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -65,32 +66,35 @@ public class WaitingForPlayersController extends UserInterface {
 
     @Override
     public void update() {
-        List<Player> players;
-        players = Client.getInstance().getUserInterface().getPlayersList();
-        for (Player player : players) {
-            if (!player.getNickname().equals(Client.getInstance().getUserInterface().getLocalPlayerName())) {
-                if (player1.getText().isEmpty()) {
-                    player1.setText(player.getNickname());
-                } else if (player2.getText().isEmpty() && !player1.getText().equals(player.getNickname())) {
-                    player2.setText(player.getNickname());
-                } else if (player3.getText().isEmpty() && !player1.getText().equals(player.getNickname()) && !player2.getText().equals(player.getNickname())){
-                    player3.setText(player.getNickname());
+        Platform.runLater(
+                () -> {
+                    List<Player> players;
+                    players = Client.getInstance().getUserInterface().getPlayersList();
+                    for (Player player : players) {
+                        if (!player.getNickname().equals(Client.getInstance().getUserInterface().getLocalPlayerName())) {
+                            if (player1.getText().isEmpty()) {
+                                player1.setText(player.getNickname());
+                            } else if (player2.getText().isEmpty() && !player1.getText().equals(player.getNickname())) {
+                                player2.setText(player.getNickname());
+                            } else if (player3.getText().isEmpty() && !player1.getText().equals(player.getNickname()) && !player2.getText().equals(player.getNickname())){
+                                player3.setText(player.getNickname());
+                            }
+                        }
+
+                    }
+                    if(Client.getInstance().getUserInterface().getGameStatus().equals(GameStatus.GAME_CREATION)){
+                        Parent nextPageParent;
+                        try {
+                            nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/StartingCard.fxml")));
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        Stage window = (Stage) BackArrow.getScene().getWindow();
+                        window.setScene(new Scene(nextPageParent));
+                        window.show();
+                    }
                 }
-            }
-
-        }
-        if(Client.getInstance().getUserInterface().getGameStatus().equals(GameStatus.GAME_CREATION)){
-            Parent nextPageParent;
-            try {
-                nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/StartingCard.fxml")));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Stage window = (Stage) BackArrow.getScene().getWindow();
-            window.setScene(new Scene(nextPageParent));
-            window.show();
-        }
-
+        );
     }
 
     @Override

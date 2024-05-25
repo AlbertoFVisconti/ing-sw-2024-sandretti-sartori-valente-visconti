@@ -9,6 +9,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class StartingCardController {
 
@@ -18,8 +19,15 @@ public class StartingCardController {
     private AnchorPane TablePane;
     @FXML
     public void initialize()  {
-        startingcardfront= new ImageView(new Image(Client.getInstance().getUserInterface().getLocalPlayer().getStartCard().getFrontpath()));
-        startingcardback= new ImageView(new Image(Client.getInstance().getUserInterface().getLocalPlayer().getStartCard().getBackpath()));
+        System.out.println(Client.getInstance().getUserInterface().getLocalPlayer().getStartCard().getFrontpath());
+        System.out.println(Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getStartCard().getFrontpath())).toString());
+
+        startingcardfront= new ImageView(new Image(
+                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getStartCard().getFrontpath())).toString()
+        ));
+        startingcardback= new ImageView(new Image(
+                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getStartCard().getBackpath())).toString()
+        ));
     }
     @FXML
     void SelectFront(MouseEvent event) throws IOException {
