@@ -33,11 +33,11 @@ public class StartCard extends Card {
      * @param backBottomRight    the bottom-right corner on the back side of the card.
      * @param permanentResources ItemCollection representing the set of permanent resources on the back of the card.
      */
-    public StartCard(String cardID,
-                     Corner frontTopLeft, Corner frontTopRight, Corner frontBottomLeft, Corner frontBottomRight,
-                     Corner backTopLeft, Corner backTopRight, Corner backBottomLeft, Corner backBottomRight,
-                     ItemCollection permanentResources) {
-        super(cardID, frontTopLeft, frontTopRight, frontBottomLeft, frontBottomRight);
+    public StartCard(String cardID, String frontpath, String backpath,
+                        Corner frontTopLeft, Corner frontTopRight, Corner frontBottomLeft, Corner frontBottomRight,
+                        Corner backTopLeft, Corner backTopRight, Corner backBottomLeft, Corner backBottomRight,
+                        ItemCollection permanentResources) {
+        super(cardID, frontpath, backpath, frontTopLeft, frontTopRight, frontBottomLeft, frontBottomRight);
         this.backCorners = new Corner[]{backTopLeft, backTopRight, backBottomLeft, backBottomRight};
         this.permanentResources = new ItemCollection(permanentResources);
     }

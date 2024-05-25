@@ -15,6 +15,8 @@ public abstract class Card implements Drawable, Serializable {
     private final String cardID;
 
     private final Corner[] corners;
+    private final String frontpath;
+    private final String backpath;
 
     /**
      * Stores the front face's corners in an array.
@@ -26,9 +28,11 @@ public abstract class Card implements Drawable, Serializable {
      * @param bottomLeft  the front bottom-left corner of the card
      * @param bottomRight the front bottom-right corner of the card
      */
-    protected Card(String cardID, Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight) {
+    protected Card(String cardID, String frontpath, String backpath, Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight) {
         this.cardID = cardID;
         this.corners = new Corner[]{topLeft, topRight, bottomLeft, bottomRight};
+        this.frontpath=frontpath;
+        this.backpath=backpath;
     }
 
     public String getCardID() {
@@ -146,4 +150,12 @@ public abstract class Card implements Drawable, Serializable {
             return objCard.cardID.equals(this.cardID);
         } else return false;
     }
+
+    public String getFrontpath() {
+        return frontpath;
+    }
+    public String getBackpath() {
+        return backpath;
+    }
+
 }

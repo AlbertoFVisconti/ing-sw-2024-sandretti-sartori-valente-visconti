@@ -51,7 +51,8 @@ public class ColorController {
     public void SelectRed(MouseEvent mouseEvent) throws IOException {
         red.setOpacity(0.5);
         Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.RED));
-        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/GameView.fxml")));
+        //Client.getInstance().getServerHandler().
+        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/WaitingForPlayers.fxml")));
         Stage window = (Stage) ((javafx.scene.Node) mouseEvent.getSource()).getScene().getWindow();
         window.setScene(new Scene(nextPageParent));
         window.show();
@@ -60,7 +61,7 @@ public class ColorController {
     public void SelectBlue(MouseEvent mouseEvent) throws IOException {
         blue.setOpacity(0.5);
         Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.BLUE));
-        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/GameView.fxml")));
+        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/WaitingForPlayers.fxml")));
         Stage window = (Stage) ((javafx.scene.Node) mouseEvent.getSource()).getScene().getWindow();
         window.setScene(new Scene(nextPageParent));
         window.show();
@@ -69,7 +70,7 @@ public class ColorController {
     public void SelectYellow(MouseEvent mouseEvent) throws IOException {
         yellow.setOpacity(0.5);
         Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.YELLOW));
-        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/GameView.fxml")));
+        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/WaitingForPlayers.fxml")));
         Stage window = (Stage) ((javafx.scene.Node) mouseEvent.getSource()).getScene().getWindow();
         window.setScene(new Scene(nextPageParent));
         window.show();
@@ -78,7 +79,7 @@ public class ColorController {
     public void SelectGreen(MouseEvent mouseEvent) throws IOException {
         green.setOpacity(0.5);
         Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.GREEN));
-        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/GameView.fxml")));
+        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/WaitingForPlayers.fxml")));
         Stage window = (Stage) ((javafx.scene.Node) mouseEvent.getSource()).getScene().getWindow();
         window.setScene(new Scene(nextPageParent));
         window.show();
