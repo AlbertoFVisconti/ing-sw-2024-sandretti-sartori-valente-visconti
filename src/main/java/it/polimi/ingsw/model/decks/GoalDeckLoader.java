@@ -70,7 +70,7 @@ public class GoalDeckLoader extends DeckLoader<Goal> {
                     }
 
                     goals.add(
-                            new PatternGoal(pattern, scorePerMatch)
+                            new PatternGoal(pattern, scorePerMatch, "/image/goal" + (i+1) +".png")
                     );
                     break;
                 case "items":
@@ -86,7 +86,7 @@ public class GoalDeckLoader extends DeckLoader<Goal> {
                     }
 
                     goals.add(
-                            new ItemGoal(items, scorePerMatch)
+                            new ItemGoal(items, scorePerMatch, "/image/goal" + (i+1) + ".png")
                     );
                     break;
             }

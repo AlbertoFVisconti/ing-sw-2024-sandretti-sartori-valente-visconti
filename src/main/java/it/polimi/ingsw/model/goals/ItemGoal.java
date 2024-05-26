@@ -17,9 +17,10 @@ public class ItemGoal extends Goal {
      * @param items       ItemCollection of items required to satisfy the goal.
      * @param scorePerSet score obtained per complete set of items.
      */
-    public ItemGoal(ItemCollection items, int scorePerSet) {
+    public ItemGoal(ItemCollection items, int scorePerSet, String path) {
         this.items = new ItemCollection(items);
         this.scorePerSet = scorePerSet;
+        this.path=path;
     }
 
     /**

@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import java.awt.*;
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Objects;
 
 public class GameViewController extends UserInterface {
 
@@ -59,14 +60,26 @@ public class GameViewController extends UserInterface {
     public void initialize() {
         FXGraphicalUserInterface.currentInterface = this;
         if (Client.getInstance().getUserInterface().getSelectedside() == 0) {
-            startingcard = new ImageView(new Image(Client.getInstance().getUserInterface().getLocalPlayer().getStartCard().getFrontpath()));
+            startingcard.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getStartCard().getFrontpath())).toString()
+            ));
         } else {
-            startingcard = new ImageView(new Image(Client.getInstance().getUserInterface().getLocalPlayer().getStartCard().getBackpath()));
+            startingcard.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getStartCard().getBackpath())).toString()
+            ));
         }
-        privategoal = new ImageView(new Image(Client.getInstance().getUserInterface().getLocalPlayer().getPrivateGoal().getPath()));
-        handcard1 = new ImageView(new Image(Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[0].getFrontpath()));
-        handcard2 = new ImageView(new Image(Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[1].getFrontpath()));
-        handcard3 = new ImageView(new Image(Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[2].getFrontpath()));
+        privategoal.setImage(new Image(
+                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getPrivateGoal().getPath())).toString()
+        ));
+//        handcard1.setImage(new Image(
+//                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[0].getFrontpath())).toString()
+//        ));
+//        handcard2.setImage(new Image(
+//                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[1].getFrontpath())).toString()
+//        ));
+//        handcard3.setImage(new Image(
+//                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[2].getFrontpath())).toString()
+//        ));
         List<Player> players;
         players = Client.getInstance().getUserInterface().getPlayersList();
         if (players.size() == 2) {

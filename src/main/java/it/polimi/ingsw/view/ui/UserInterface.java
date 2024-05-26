@@ -40,7 +40,7 @@ public abstract class UserInterface extends Thread implements VirtualView {
     private GameStatus gameStatus;
     private TurnStatus turnStatus;
     private String playersTurn;
-    private int selectedside;
+    private int selectedside=-1;
 
 
 

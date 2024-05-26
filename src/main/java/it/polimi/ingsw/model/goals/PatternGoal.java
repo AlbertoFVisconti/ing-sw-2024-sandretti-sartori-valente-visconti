@@ -29,9 +29,10 @@ public class PatternGoal extends Goal {
      * @param pattern       pattern of resources to match on the player's board.
      * @param scorePerMatch score awarded per matching pattern.
      */
-    public PatternGoal(Resource[][] pattern, int scorePerMatch) {
+    public PatternGoal(Resource[][] pattern, int scorePerMatch, String path) {
         this.scorePerMatch = scorePerMatch;
         this.pattern = pattern.clone();
+        this.path=path;
 
         pivot = null;
         for (int i = 0; i < pattern.length && pivot == null; i++) {
