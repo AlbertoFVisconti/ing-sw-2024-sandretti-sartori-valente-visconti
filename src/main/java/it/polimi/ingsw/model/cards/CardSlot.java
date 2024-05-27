@@ -26,4 +26,7 @@ public record CardSlot(Card card, boolean onBackSide, int placementTurn) impleme
     public ItemCollection collectItems() {
         return card.collectItems(onBackSide);
     }
+    public Card getCard() {
+        return card;
+    }
 }

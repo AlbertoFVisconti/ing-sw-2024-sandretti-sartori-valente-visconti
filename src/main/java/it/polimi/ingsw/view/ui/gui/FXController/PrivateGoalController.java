@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,6 +21,7 @@ import java.util.Objects;
 public class PrivateGoalController extends UserInterface {
     public ImageView privategoal1;
     public ImageView privategoal2;
+    public AnchorPane GoalPane;
     boolean selected = false;
 
     public void initialize()  {
@@ -63,6 +65,7 @@ public class PrivateGoalController extends UserInterface {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                GoalPane.getScene().getWindow().hide();
             });
         }
     }

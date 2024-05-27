@@ -7,48 +7,29 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="1200.0" minWidth="1800.0" prefHeight="1200.0" prefWidth="1800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.FXController.GameViewController">
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="1200.0" minWidth="1800.0" prefHeight="1200.0" prefWidth="1800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.ui.gui.FXController.GameViewController">
    <children>
       <ScrollPane hmax="0.99" hmin="0.01" hvalue="0.5" layoutX="533.0" prefHeight="1204.0" prefWidth="1264.0" vmax="0.99" vmin="0.01" vvalue="0.5">
          <content>
             <AnchorPane fx:id="TablePane" prefHeight="2066.0" prefWidth="3157.0">
                <children>
-                  <ImageView fitHeight="2048.0" fitWidth="2402.0" layoutX="99.0" layoutY="99.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="2369.0" fitWidth="3575.0" layoutX="-298.0" layoutY="-261.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../image/CodexWallpaper.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="startingcard" fitHeight="124.0" fitWidth="171.0" layoutX="1573.0" layoutY="950.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../../../Downloads/Cards/Fronts/075.png" />
-                     </image>
-                  </ImageView>
+                  <ImageView fx:id="startingcard" fitHeight="124.0" fitWidth="171.0" layoutX="1563.0" layoutY="1001.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </AnchorPane>
          </content>
       </ScrollPane>
       <AnchorPane layoutX="-2.0" layoutY="-1.0" prefHeight="1200.0" prefWidth="527.0">
          <children>
-            <ImageView fx:id="handcard1" fitHeight="124.0" fitWidth="171.0" layoutX="60.0" layoutY="673.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../../../Downloads/Cards/Fronts/075.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="handcard2" fitHeight="124.0" fitWidth="171.0" layoutX="294.0" layoutY="674.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../../../Downloads/Cards/Fronts/075.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="handcard3" fitHeight="124.0" fitWidth="171.0" layoutX="192.0" layoutY="830.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../../../Downloads/Cards/Fronts/075.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="privategoal" fitHeight="124.0" fitWidth="171.0" layoutX="32.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../../../Downloads/Cards/Fronts/075.png" />
-               </image>
-            </ImageView>
+            <ImageView fx:id="handcard1" fitHeight="124.0" fitWidth="171.0" layoutX="60.0" layoutY="673.0" onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="handcard2" fitHeight="124.0" fitWidth="171.0" layoutX="294.0" layoutY="674.0" onMouseClicked="#SelectCard2" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="handcard3" fitHeight="124.0" fitWidth="171.0" layoutX="192.0" layoutY="830.0" onMouseClicked="#SelectCard3" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="privategoal" fitHeight="124.0" fitWidth="171.0" layoutX="32.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" />
             <Label layoutX="52.0" layoutY="173.0" prefHeight="50.0" prefWidth="160.0" text="Scoreboard:">
                <font>
                   <Font name="Bangla MN" size="19.0" />
