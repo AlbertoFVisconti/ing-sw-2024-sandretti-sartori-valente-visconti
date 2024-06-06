@@ -19,6 +19,7 @@ import java.util.List;
  * The PlayCardDeckLoader class allows to create objects to load standard game's PlayCards from files.
  */
 public class PlayCardDeckLoader extends DeckLoader<PlayCard> {
+    private String backpath;
     /**
      * Build a new PlayCardDeckLoader that operates on the file whose name is provided.
      *
@@ -66,6 +67,16 @@ public class PlayCardDeckLoader extends DeckLoader<PlayCard> {
             if (!cornerString.equals("HIDDEN")) bottomRight = Corner.valueOf(cornerString);
 
             if (isGoldCard) {
+                switch (json.getString("type")){
+                    case ("FUNGUS"):
+                        backpath="/image/golden_card1b.png";
+                    case ("PLANT"):
+                        backpath="/image/golden_card2b.png";
+                    case ("ANIMAL"):
+                        backpath="/image/golden_card3b.png";
+                    case ("INSECT"):
+                        backpath="/image/golden_card4b.png";
+                }
                 ScoringStrategy scoringStrategy = null;
 
                 switch (json.getString("scoring_strategy")) {
@@ -102,12 +113,22 @@ public class PlayCardDeckLoader extends DeckLoader<PlayCard> {
                     );
                 }
 
-                cards.add(PlayCard.generateGoldCard("golden_card_"+i, "/image/golden_card" + (i + 1) +"f.png", "/image/golden_card" + i +"b.png", topLeft, topRight, bottomLeft, bottomRight, type, constraint, scoringStrategy));
+                cards.add(PlayCard.generateGoldCard("golden_card_"+i, "/image/golden_card" + (i + 1) +"f.png", filename, topLeft, topRight, bottomLeft, bottomRight, type, constraint, scoringStrategy));
 
             } else {
+                switch (json.getString("type")){
+                    case ("FUNGUS"):
+                        backpath="/image/resource_card1b.png";
+                    case ("PLANT"):
+                        backpath="/image/resource_card2b.png";
+                    case ("ANIMAL"):
+                        backpath="/image/resource_card3b.png";
+                    case ("INSECT"):
+                        backpath="/image/resource_card4b.png";
+                }
                 int score = json.getInt("free_score");
 
-                cards.add(PlayCard.generateResourceCard("resrouce_card_"+i, "/image/resource_card" + (i+1) +"f.png", "/image/resource_card" + i +"b.png", topLeft, topRight, bottomLeft, bottomRight, type, score));
+                cards.add(PlayCard.generateResourceCard("resrouce_card_"+i, "/image/resource_card" + (i+1) +"f.png", backpath, topLeft, topRight, bottomLeft, bottomRight, type, score));
             }
         }
 
