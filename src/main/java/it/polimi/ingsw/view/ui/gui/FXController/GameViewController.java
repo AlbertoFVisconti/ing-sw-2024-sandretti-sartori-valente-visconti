@@ -1,17 +1,12 @@
 package it.polimi.ingsw.view.ui.gui.FXController;
 
-import it.polimi.ingsw.controller.GameStatus;
-import it.polimi.ingsw.controller.MainController;
 import it.polimi.ingsw.controller.TurnStatus;
 import it.polimi.ingsw.events.messages.client.DrawCardMessage;
 import it.polimi.ingsw.events.messages.client.PlaceCardMessage;
 import it.polimi.ingsw.model.cards.Card;
-import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.utils.CardLocation;
-import it.polimi.ingsw.view.ui.UserInterface;
-import it.polimi.ingsw.view.ui.gui.FXGraphicalUserInterface;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
@@ -20,16 +15,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Label;
 
-import java.awt.*;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class GameViewController extends UserInterface {
+public class GameViewController implements GUIScene {
 
     public ImageView resourceDeckf1;
     public ImageView goldDeckf1;
@@ -82,64 +73,65 @@ public class GameViewController extends UserInterface {
     private int sel;
     private Card selected;
     //hashmap to store the shapes that are placed on the board
-    private HashMap<CardLocation, ImageView> boardshapes = new HashMap<>();
+    private final HashMap<CardLocation, ImageView> boardshapes = new HashMap<>();
     //hashmap to store the image of the cards that are placed on the board
-    private HashMap<CardLocation, ImageView> cardsimage = new HashMap<>();
+    private final HashMap<CardLocation, ImageView> cardsimage = new HashMap<>();
     String previousplayer;
 
     //initialize boards
     @FXML
     public void initialize() throws FileNotFoundException {
-        FXGraphicalUserInterface.currentInterface = this;
-        System.out.println(Client.getInstance().getUserInterface().getLocalPlayer().getStartCard());
-        if (Client.getInstance().getUserInterface().getSelectedside() == 0) {
-            startingcard.setImage(new Image(
-                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getBoard().get(new CardLocation(0, 0)).getCard().getFrontpath())).toString()
+        try {
+            if (Client.getInstance().getView().getSelectedside() == 0) {
+                startingcard.setImage(new Image(
+                        Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getBoard().get(new CardLocation(0, 0)).getCard().getFrontpath())).toString()
+                ));
+            } else {
+                startingcard.setImage(new Image(
+                        Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getBoard().get(new CardLocation(0, 0)).getCard().getFrontpath())).toString()
+                ));
+            }
+            privategoal.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPrivateGoal().getPath())).toString()
             ));
-        } else {
-            startingcard.setImage(new Image(
-                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getBoard().get(new CardLocation(0, 0)).getCard().getFrontpath())).toString()
+            handcard1.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[0].getFrontpath())).toString()
+            ));
+            handcard2.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[1].getFrontpath())).toString()
+            ));
+            handcard3.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[2].getFrontpath())).toString()
+            ));
+            resourceDeckb.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getGameModel().getResourceCardsDeck().getTopOfTheStack().getPath())).toString()
+            ));
+            resourceDeckf1.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getGameModel().getVisibleCards()[0].getFrontpath())).toString()
+            ));
+            resourceDeckf2.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getGameModel().getVisibleCards()[1].getFrontpath())).toString()
+            ));
+            goldDeckf1.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getGameModel().getVisibleCards()[2].getFrontpath())).toString()
+            ));
+            goldDeckf2.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getGameModel().getVisibleCards()[3].getFrontpath())).toString()
+            ));
+            goldDeckb.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getGameModel().getGoldCardsDeck().getTopOfTheStack().getGoldenPath())).toString()
+            ));
+            commongoal1.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getGameModel().getCommonGoals()[0].getPath())).toString()
+            ));
+            commongoal2.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getGameModel().getCommonGoals()[1].getPath())).toString()
             ));
         }
-        privategoal.setImage(new Image(
-                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getPrivateGoal().getPath())).toString()
-        ));
-        handcard1.setImage(new Image(
-                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[0].getFrontpath())).toString()
-        ));
-        handcard2.setImage(new Image(
-                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[1].getFrontpath())).toString()
-        ));
-        handcard3.setImage(new Image(
-                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[2].getFrontpath())).toString()
-        ));
-        resourceDeckb.setImage(new Image(
-                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getGameModel().getResourceCardsDeck().getTopOfTheStack().getPath())).toString()
-        ));
-        resourceDeckf1.setImage(new Image(
-                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getGameModel().getVisibleCards()[0].getFrontpath())).toString()
-        ));
-        resourceDeckf2.setImage(new Image(
-                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getGameModel().getVisibleCards()[1].getFrontpath())).toString()
-        ));
-        goldDeckf1.setImage(new Image(
-                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getGameModel().getVisibleCards()[2].getFrontpath())).toString()
-        ));
-        goldDeckf2.setImage(new Image(
-                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getGameModel().getVisibleCards()[3].getFrontpath())).toString()
-        ));
-        goldDeckb.setImage(new Image(
-                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getGameModel().getGoldCardsDeck().getTopOfTheStack().getGoldenPath())).toString()
-        ));
-        commongoal1.setImage(new Image(
-                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getGameModel().getCommonGoals()[0].getPath())).toString()
-        ));
-        commongoal2.setImage(new Image(
-                Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getGameModel().getCommonGoals()[1].getPath())).toString()
-        ));
+        catch (NullPointerException ignored) {}
 
         List<Player> players;
-        players = Client.getInstance().getUserInterface().getPlayersList();
+        players = Client.getInstance().getView().getPlayersList();
         if (players.size() == 2) {
             p3.setVisible(false);
             p4.setVisible(false);
@@ -164,11 +156,11 @@ public class GameViewController extends UserInterface {
     }
     @FXML
     public void SelectCard1(MouseEvent mouseEvent) {
-        if (!Client.getInstance().getUserInterface().getGameModel().getTurn().equals(Client.getInstance().getUserInterface().getLocalPlayer())|| !Client.getInstance().getUserInterface().getTurnStatus().equals(TurnStatus.PLACE)){
+        if (!Client.getInstance().getView().getGameModel().getTurn().equals(Client.getInstance().getView().getLocalPlayer())|| !Client.getInstance().getView().getTurnStatus().equals(TurnStatus.PLACE)){
             //TODO: send a message to the client 'you can't place a card now'
         }else{
             sel=0;
-            selected=Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[0];
+            selected=Client.getInstance().getView().getLocalPlayer().getPlayerCards()[0];
             handcard1.setOpacity(0.5);
             handcard2.setOpacity(1);
             handcard3.setOpacity(1);
@@ -176,11 +168,11 @@ public class GameViewController extends UserInterface {
     }
     @FXML
     public void SelectCard2(MouseEvent mouseEvent) {
-        if (!Client.getInstance().getUserInterface().getGameModel().getTurn().equals(Client.getInstance().getUserInterface().getLocalPlayer()) || !Client.getInstance().getUserInterface().getTurnStatus().equals(TurnStatus.PLACE)) {
+        if (!Client.getInstance().getView().getGameModel().getTurn().equals(Client.getInstance().getView().getLocalPlayer()) || !Client.getInstance().getView().getTurnStatus().equals(TurnStatus.PLACE)) {
             //TODO: send a message to the client 'you can't place a card now'
         }else{
             sel = 1;
-            selected = Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[1];
+            selected = Client.getInstance().getView().getLocalPlayer().getPlayerCards()[1];
             handcard2.setOpacity(0.5);
             handcard1.setOpacity(1);
             handcard3.setOpacity(1);
@@ -189,11 +181,11 @@ public class GameViewController extends UserInterface {
     }
     @FXML
     public void SelectCard3(MouseEvent mouseEvent) {
-        if (!Client.getInstance().getUserInterface().getGameModel().getTurn().equals(Client.getInstance().getUserInterface().getLocalPlayer()) || !Client.getInstance().getUserInterface().getTurnStatus().equals(TurnStatus.PLACE)) {
+        if (!Client.getInstance().getView().getGameModel().getTurn().equals(Client.getInstance().getView().getLocalPlayer()) || !Client.getInstance().getView().getTurnStatus().equals(TurnStatus.PLACE)) {
             //TODO: send a message to the client 'you can't place a card now'
         }else{
             sel = 2;
-            selected = Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[2];
+            selected = Client.getInstance().getView().getLocalPlayer().getPlayerCards()[2];
             handcard3.setOpacity(0.5);
             handcard2.setOpacity(1);
             handcard1.setOpacity(1);
@@ -202,14 +194,14 @@ public class GameViewController extends UserInterface {
 
     public void refreshScoreboard() {
         List<Player> players;
-        players = Client.getInstance().getUserInterface().getPlayersList();
-        s1.setText(Integer.toString(Client.getInstance().getUserInterface().getGameModel().getScoreBoard().getScore(players.get(0).nickName)));
-        s2.setText(Integer.toString(Client.getInstance().getUserInterface().getGameModel().getScoreBoard().getScore(players.get(1).nickName)));
+        players = Client.getInstance().getView().getPlayersList();
+        s1.setText(Integer.toString(Client.getInstance().getView().getGameModel().getScoreBoard().getScore(players.get(0).nickName)));
+        s2.setText(Integer.toString(Client.getInstance().getView().getGameModel().getScoreBoard().getScore(players.get(1).nickName)));
         if (players.size() > 2) {
-            s3.setText(Integer.toString(Client.getInstance().getUserInterface().getGameModel().getScoreBoard().getScore(players.get(2).nickName)));
+            s3.setText(Integer.toString(Client.getInstance().getView().getGameModel().getScoreBoard().getScore(players.get(2).nickName)));
         }
         if (players.size() > 3) {
-            s4.setText(Integer.toString(Client.getInstance().getUserInterface().getGameModel().getScoreBoard().getScore(players.get(3).nickName)));
+            s4.setText(Integer.toString(Client.getInstance().getView().getGameModel().getScoreBoard().getScore(players.get(3).nickName)));
         }
     }
 
@@ -270,33 +262,39 @@ public class GameViewController extends UserInterface {
                 handcard3.setOpacity(1);
             });
     }
+
+    @Override
+    public void setup() {
+
+    }
+
     @Override
     public void update() {
 
         Platform.runLater(() -> {
             refreshScoreboard();
-            System.out.println("update della view");
-            if((Client.getInstance().getUserInterface().getPlayersTurn().equals(Client.getInstance().getUserInterface().getLocalPlayer().getNickname()))) {
-                if (Client.getInstance().getUserInterface().getTurnStatus().equals(TurnStatus.PLACE)) {
-                    turnwarning.setText(Client.getInstance().getUserInterface().getLocalPlayer().getNickname() + " it's your turn to place a card!");
+
+            if((Client.getInstance().getView().getPlayersTurn().equals(Client.getInstance().getView().getLocalPlayer().getNickname()))) {
+                if (Client.getInstance().getView().getTurnStatus().equals(TurnStatus.PLACE)) {
+                    turnwarning.setText(Client.getInstance().getView().getLocalPlayer().getNickname() + " it's your turn to place a card!");
                     //cards again clickable
                     this.handcard1.setOnMouseClicked((MouseEvent mouseEvent) -> {
                         sel = 0;
-                        selected = Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[0];
+                        selected = Client.getInstance().getView().getLocalPlayer().getPlayerCards()[0];
                         handcard1.setOpacity(0.5);
                         handcard2.setOpacity(1);
                         handcard3.setOpacity(1);
                     });
                     handcard2.setOnMouseClicked((MouseEvent mouseEvent) -> {
                         sel = 1;
-                        selected = Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[1];
+                        selected = Client.getInstance().getView().getLocalPlayer().getPlayerCards()[1];
                         handcard2.setOpacity(0.5);
                         handcard1.setOpacity(1);
                         handcard3.setOpacity(1);
                     });
                     handcard3.setOnMouseClicked((MouseEvent mouseEvent) -> {
                         sel = 2;
-                        selected = Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[2];
+                        selected = Client.getInstance().getView().getLocalPlayer().getPlayerCards()[2];
                         handcard3.setOpacity(0.5);
                         handcard2.setOpacity(1);
                         handcard1.setOpacity(1);
@@ -308,38 +306,38 @@ public class GameViewController extends UserInterface {
                     deactiveDeck();
 
                     //adds the shapes(slot where you can place cards) to the board
-                    for (CardLocation cardLocation : Client.getInstance().getUserInterface().getLocalPlayer().getBoard().keySet()) {
-                        if (!Client.getInstance().getUserInterface().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1))) {
+                    for (CardLocation cardLocation : Client.getInstance().getView().getLocalPlayer().getBoard().keySet()) {
+                        if (!Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1))) {
                             if ((!boardshapes.containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1))) || (boardshapes.containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1))) && !boardshapes.get(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1)).isVisible()) {
                                 addShape(cardLocation, 1, 1);
                             }
                         }
-                        if (!Client.getInstance().getUserInterface().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1))) {
+                        if (!Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1))) {
                             if ((!boardshapes.containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1))) || (boardshapes.containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1))) && !boardshapes.get(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1)).isVisible()){
                                 addShape(cardLocation, 1, -1);
                             }
                         }
-                        if (!Client.getInstance().getUserInterface().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1))) {
+                        if (!Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1))) {
                             if ((!boardshapes.containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1))) || (boardshapes.containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1))) && !boardshapes.get(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1)).isVisible()) {
                                 addShape(cardLocation, -1, 1);
                             }
                         }
-                        if (!Client.getInstance().getUserInterface().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1))) {
+                        if (!Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1))) {
                             if ((!boardshapes.containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1))) || (boardshapes.containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1))) && !boardshapes.get(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1)).isVisible()){
                                 addShape(cardLocation, -1, -1);
                             }
                         }
                     }
 
-                } else if (Client.getInstance().getUserInterface().getTurnStatus().equals(TurnStatus.DRAW)) {
+                } else if (Client.getInstance().getView().getTurnStatus().equals(TurnStatus.DRAW)) {
                     resourceDeckb.setOpacity(1);
                     goldDeckb.setOpacity(1);
                     resourceDeckf1.setOpacity(1);
                     resourceDeckf2.setOpacity(1);
                     goldDeckf1.setOpacity(1);
                     goldDeckf2.setOpacity(1);
-                    previousplayer = Client.getInstance().getUserInterface().getPlayersTurn();
-                    turnwarning.setText(Client.getInstance().getUserInterface().getLocalPlayer().getNickname() + " it's your turn to pick up a card!");
+                    previousplayer = Client.getInstance().getView().getPlayersTurn();
+                    turnwarning.setText(Client.getInstance().getView().getLocalPlayer().getNickname() + " it's your turn to pick up a card!");
                     for(ImageView s : boardshapes.values()){
                         s.setVisible(false);
                         s.setOnMouseClicked(null);
@@ -366,22 +364,22 @@ public class GameViewController extends UserInterface {
             }else {
                 deactiveDeck();
 
-                turnwarning.setText(Client.getInstance().getUserInterface().getPlayersTurn() + "'s turn!");
-                if(Client.getInstance().getUserInterface().getLocalPlayerName().equals(previousplayer)){
+                turnwarning.setText(Client.getInstance().getView().getPlayersTurn() + "'s turn!");
+                if(Client.getInstance().getView().getLocalPlayerName().equals(previousplayer)){
                     switch (sel){
                         case 0:
                             handcard1.setImage(new Image(
-                                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[sel].getFrontpath())).toString())
+                                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[sel].getFrontpath())).toString())
                             );
                             break;
                         case 1:
                             handcard2.setImage(new Image(
-                                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[sel].getFrontpath())).toString())
+                                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[sel].getFrontpath())).toString())
                             );
                             break;
                         case 2:
                             handcard3.setImage(new Image(
-                                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getUserInterface().getLocalPlayer().getPlayerCards()[sel].getFrontpath())).toString())
+                                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[sel].getFrontpath())).toString())
                             );
                             break;
                     }
@@ -395,7 +393,7 @@ public class GameViewController extends UserInterface {
 
 
     @Override
-    public void reportError(RuntimeException exception) throws RemoteException {
+    public void reportError(RuntimeException exception)  {
 
     }
 

@@ -3,9 +3,10 @@ package it.polimi.ingsw.network;
 import it.polimi.ingsw.network.serverhandlers.RMIServerHandler;
 import it.polimi.ingsw.network.serverhandlers.ServerHandler;
 import it.polimi.ingsw.network.serverhandlers.SocketServerHandler;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.ViewWrapper;
 import it.polimi.ingsw.view.ui.UserInterface;
-import it.polimi.ingsw.view.ui.gui.FXGraphicalUserInterface;
+import it.polimi.ingsw.view.ui.gui.GraphicalUserInterface;
 import it.polimi.ingsw.view.ui.tui.TextualUserInterface;
 
 import java.io.IOException;
@@ -13,13 +14,13 @@ import java.rmi.NotBoundException;
 import java.util.Scanner;
 
 public class Client {
-    private final UserInterface userInterface;
+    private final View view;
     public static Client instance;
     private final ServerHandler serverHandler;
 
 
-    private Client(UserInterface userInterface, ServerHandler serverHandler) {
-        this.userInterface = userInterface;
+    private Client(View view, ServerHandler serverHandler) {
+        this.view = view;
         this.serverHandler = serverHandler;
 
         instance = this;
@@ -35,7 +36,7 @@ public class Client {
 
 
     private void run() {
-        userInterface.start();
+        view.start();
     }
 
     public static void main(String[] args) throws IOException, NotBoundException {
@@ -54,21 +55,27 @@ public class Client {
 
 
         UserInterface userInterface;
-        if (selectedInterface == 2) userInterface = new FXGraphicalUserInterface();
-        else userInterface = new TextualUserInterface(scanner);
+        if (selectedInterface == 2) {
+            userInterface = new GraphicalUserInterface();
+            new Thread((GraphicalUserInterface)userInterface).start();
+        }
+        else userInterface= new TextualUserInterface(scanner);
+
+
+        View view = new View(userInterface);
 
         ServerHandler handler;
         if (selectedProtocol == 1) handler = new SocketServerHandler("127.0.0.1", 1235);
-        else handler = new RMIServerHandler(new ViewWrapper(userInterface), "127.0.0.1", 1234, "MainController");
+        else handler = new RMIServerHandler(new ViewWrapper(view), "127.0.0.1", 1234, "MainController");
 
 
-        Client client = new Client(userInterface, handler);
+        Client client = new Client(view, handler);
         client.run();
 
     }
 
-    public UserInterface getUserInterface() {
-        return userInterface;
+    public View getView() {
+        return view;
     }
 
     public ServerHandler getServerHandler() {

@@ -17,7 +17,6 @@ import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.network.serverhandlers.RMIServerHandler;
 import it.polimi.ingsw.network.serverhandlers.ServerHandler;
 import it.polimi.ingsw.utils.CardLocation;
-import it.polimi.ingsw.view.ui.UserInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -25,18 +24,18 @@ import java.util.Set;
 
 /**
  * Client-side remote object that receive Remote Method Invocations from the Server
- * and "transform" them into messages that will be processed by the actual View (UserInterface) asynchronously.
+ * and "transform" them into messages that will be processed by the actual View (View) asynchronously.
  */
 public class ViewWrapper extends UnicastRemoteObject implements VirtualView {
-    UserInterface userInterface;
+    View view;
 
-    public UserInterface getUserInterface() {
-        return userInterface;
+    public View getUserInterface() {
+        return view;
     }
 
-    public ViewWrapper(UserInterface userInterface) throws RemoteException {
+    public ViewWrapper(View view) throws RemoteException {
         super();
-        this.userInterface = userInterface;
+        this.view = view;
     }
 
     @Override
@@ -48,86 +47,86 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView {
 
     @Override
     public void setPlayerIdentifier(String playerIdentifier) throws RemoteException {
-        userInterface.forwardMessage(new ConnectionConfirmationMessage(playerIdentifier));
+        view.forwardMessage(new ConnectionConfirmationMessage(playerIdentifier));
     }
 
     @Override
     public void setStartingCard(StartCard card) throws RemoteException {
-        userInterface.forwardMessage(new StartCardUpdateMessage(card));
+        view.forwardMessage(new StartCardUpdateMessage(card));
     }
 
     @Override
     public void setPublicGoal(Goal[] goals) throws RemoteException {
-        userInterface.forwardMessage(new PublicGoalsUpdateMessage(goals));
+        view.forwardMessage(new PublicGoalsUpdateMessage(goals));
     }
 
     @Override
     public void setAvailablePrivateGoals(Goal[] goals) throws RemoteException {
-        userInterface.forwardMessage(new PrivateGoalUpdateMessage(goals));
+        view.forwardMessage(new PrivateGoalUpdateMessage(goals));
     }
 
     @Override
     public void setDefinitivePrivateGoal(Goal goal) throws RemoteException {
-        userInterface.forwardMessage(new PrivateGoalUpdateMessage(goal));
+        view.forwardMessage(new PrivateGoalUpdateMessage(goal));
     }
 
     @Override
     public void setPlayersCard(String playerNickname, PlayCard card, int index) throws RemoteException {
-        userInterface.forwardMessage(new PlayersHandUpdateMessage(playerNickname, card, index));
+        view.forwardMessage(new PlayersHandUpdateMessage(playerNickname, card, index));
     }
 
     @Override
     public void setVisibleCard(PlayCard card, int index) throws RemoteException {
-        userInterface.forwardMessage(new VisibleCardUpdateMessage(card, index));
+        view.forwardMessage(new VisibleCardUpdateMessage(card, index));
     }
 
     @Override
     public void setDeckTopResource(Resource resource, int index) throws RemoteException {
-        userInterface.forwardMessage(new DeckUpdateMessage(resource, index));
+        view.forwardMessage(new DeckUpdateMessage(resource, index));
     }
 
     @Override
     public void placeCardOnPlayersBoard(String playerNickName, CardSlot cardSlot, CardLocation location) throws RemoteException {
-        userInterface.forwardMessage(new PlayersBoardUpdateMessage(playerNickName, cardSlot, location));
+        view.forwardMessage(new PlayersBoardUpdateMessage(playerNickName, cardSlot, location));
     }
 
     @Override
     public void updateGameList(Set<Integer> availableGames) throws RemoteException {
-        userInterface.forwardMessage(new GameListMessage(availableGames));
+        view.forwardMessage(new GameListMessage(availableGames));
     }
 
     @Override
     public void confirmJoin(String nickname, ClientGameSaving savings) throws RemoteException {
-        userInterface.forwardMessage(new JoinConfirmationMessage(nickname, savings));
+        view.forwardMessage(new JoinConfirmationMessage(nickname, savings));
     }
 
     @Override
     public void updatePlayersList(String[] nicknames, PlayerColor[] colors) throws RemoteException {
-        userInterface.forwardMessage(new PlayersListUpdateMessage(nicknames, colors));
+        view.forwardMessage(new PlayersListUpdateMessage(nicknames, colors));
     }
 
     @Override
     public void updateGameStatus(GameStatus gameStatus, TurnStatus turnStatus, String playersTurn) throws RemoteException {
-        userInterface.forwardMessage(new GameStatusUpdateMessage(gameStatus, turnStatus, playersTurn));
+        view.forwardMessage(new GameStatusUpdateMessage(gameStatus, turnStatus, playersTurn));
     }
 
     @Override
     public void reportError(RuntimeException exception) throws RemoteException {
-        userInterface.forwardMessage(new ServerErrorMessage(exception));
+        view.forwardMessage(new ServerErrorMessage(exception));
     }
 
     @Override
     public void updateScore(ScoreBoard scoreBoard) throws RemoteException {
-        userInterface.forwardMessage(new ScoreUpdateMessage(scoreBoard));
+        view.forwardMessage(new ScoreUpdateMessage(scoreBoard));
     }
 
     @Override
     public void ping(boolean isAnswer) throws RemoteException {
-        userInterface.forwardMessage(new ServerToClientPingMessage(isAnswer));
+        view.forwardMessage(new ServerToClientPingMessage(isAnswer));
     }
 
     @Override
     public void receiveMessage(ChatMessage chatMessage, boolean isPrivate) throws RemoteException {
-        userInterface.forwardMessage(new ServerChatMsgMessage(chatMessage, isPrivate));
+        view.forwardMessage(new ServerChatMsgMessage(chatMessage, isPrivate));
     }
 }

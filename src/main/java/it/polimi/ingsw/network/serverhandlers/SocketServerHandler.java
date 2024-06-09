@@ -54,7 +54,7 @@ public class SocketServerHandler extends ServerHandler implements Runnable {
                 throw new RuntimeException(e);
             }
 
-            Client.getInstance().getUserInterface().forwardMessage((ServerMessage) message);
+            Client.getInstance().getView().forwardMessage((ServerMessage) message);
         }
     }
 }

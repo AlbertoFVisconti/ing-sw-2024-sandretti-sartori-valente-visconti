@@ -1,124 +1,131 @@
 package it.polimi.ingsw.view.ui.gui;
 
-
-import it.polimi.ingsw.events.messages.client.GameListRequestMessage;
-import it.polimi.ingsw.events.messages.client.JoinGameMessage;
-import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.controller.GameStatus;
+import it.polimi.ingsw.controller.TurnStatus;
+import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.view.ui.UserInterface;
+import it.polimi.ingsw.view.ui.gui.FXController.GUIScene;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.rmi.RemoteException;
+import java.io.IOException;
+import java.util.Objects;
 
 
-public class GraphicalUserInterface extends UserInterface {
+public class GraphicalUserInterface extends Application implements UserInterface, Runnable {
+    private GUIScene currentScene;
 
+    private static Stage window;
 
     @Override
-    public void reportError(RuntimeException exception) throws RemoteException {
-        System.err.println(exception.getMessage());
+    public void start(Stage stage) throws Exception {
+        window = new Stage();
+        this.setStartingScene();
     }
 
-    public static class MainFrame extends JFrame {
+    @Override
+    public void resetError() {
 
-        private final JButton creategame = new JButton("Create game");
-        private final Integer[] expectedplayersarray = {2, 3, 4};
-        private final JComboBox<Integer> expectedplayers = new JComboBox<>(expectedplayersarray);
-        private static final JTextField nickname = new JTextField("Insert nickname", 20);
-        private final JButton join = new JButton("join a game");
-        private final JButton submit = new JButton("Create Game");
+    }
 
+    @Override
+    public void init() {}
 
-        boolean creatingGame = false;
+    @Override
+    public synchronized void setGameStatus(GameStatus gameStatus, TurnStatus turnStatus, String playerTurn) {
 
-        public MainFrame(GraphicalUserInterface gui) {
+    }
 
-            super("Lobby");
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            setSize(1000, 400);
-            setLayout(new GridLayout(2, 1));
-            //add the join and create buttons
-            JPanel SelectGameType = new JPanel();
-            SelectGameType.setLayout(new FlowLayout());
-            add(SelectGameType);
-            SelectGameType.add(creategame);
-            SelectGameType.add(join);
-            //add the configuration for the game
-            JPanel ConfigGame = new JPanel();
-            ConfigGame.setLayout(new FlowLayout());
-            add(ConfigGame);
-            ConfigGame.add(expectedplayers);
-            ConfigGame.add(nickname);
-            ConfigGame.setVisible(false);
-            ConfigGame.add(submit);
-            //add functionality to the buttons
-            creategame.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    SelectGameType.setVisible(false);
-                    ConfigGame.setVisible(true);
-                    creatingGame = true;
-                    submit.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            JLabel created = new JLabel("Game created! Waiting for players to join");
-                            ConfigGame.add(created);
-                            Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(-1, true, (int) expectedplayers.getSelectedItem(), nickname.getText()));
-                            submit.setEnabled(false);
-                        }
-                    });
-                }
-            });
-            join.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    SelectGameType.setVisible(false);
-                    expectedplayers.setVisible(false);
-                    submit.setVisible(false);
-                    ConfigGame.setVisible(true);
-                    Client.getInstance().getServerHandler().sendMessage(new GameListRequestMessage());
+    @Override
+    public synchronized void setStartingScene() {
+        changeScene("/fxml/Lobby.fxml");
+    }
 
+    @Override
+    public synchronized void setCreateGameScene() {
+        changeScene("/fxml/CreateGame.fxml");
+    }
+
+    @Override
+    public synchronized void setJoinGameScene() {
+        changeScene("/fxml/JoinGame.fxml");
+    }
+
+    private void changeScene(String fxml) {
+        Platform.runLater(
+                () -> {
                     try {
-                        // TODO: find a better way (UserInterface.update())
-                        Thread.sleep(2000);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
+                        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(fxml)));
+                        Parent newRoot = loader.load();
+                        this.currentScene = loader.getController();
+                        window.setScene(new Scene(newRoot));
+                        window.show();
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
 
-                    if (gui.availableGames != null) {
-                        for (Integer gameID : gui.availableGames) {
-                            JButton joinGame = new JButton("Join game " + gameID);
-                            ConfigGame.add(joinGame);
-                            joinGame.addActionListener(new ActionListener() {
-                                public void actionPerformed(ActionEvent e) {
-                                    try {
-                                        Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(gameID, false, 0, nickname.getText()));
-                                    } catch (Exception ex) {
-                                        ex.printStackTrace();
-                                    }
-                                }
-                            });
-                        }
-                    } else {
-                        JLabel noGames = new JLabel("No games available");
-                        ConfigGame.add(noGames);
-                    }
-                }
-            });
-        }
+                    this.currentScene.setup();
+                });
     }
-
-    public void run() {
-        try {
-            MainFrame frame = new MainFrame(this);
-            frame.setVisible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     @Override
-    public void update() {
+    public synchronized void setSetColorScene() {
+        changeScene("/fxml/SelectColor.fxml");
+    }
 
+    @Override
+    public synchronized void setWaitPlayersScene() {
+        changeScene("/fxml/WaitingForPlayers.fxml");
+    }
+
+    @Override
+    public synchronized void setPlaceStartScene() {
+        changeScene("/fxml/StartingCard.fxml");
+    }
+
+    @Override
+    public synchronized void setSelectGoalScene() {
+        changeScene("/fxml/PrivateGoal.fxml");
+    }
+
+    @Override
+    public synchronized void setDrawScene() {
+        // TODO
+    }
+
+    @Override
+    public synchronized void setPlayerBoardScene(Player nickname) {
+        changeScene("/fxml/GameView.fxml");
+    }
+
+    @Override
+    public synchronized void setChatScene(Player player) {
+        throw new UnsupportedOperationException("GUI does not implement a chat scene");
+    }
+
+    @Override
+    public synchronized void setScoreScene() {
+        // TODO
+    }
+
+    @Override
+    public synchronized void update() {
+        if (currentScene != null) currentScene.update();
+    }
+
+    @Override
+    public synchronized void reportError(RuntimeException exception) {
+        this.currentScene.reportError(exception);
+    }
+
+    @Override
+    public void run() {
+        Application.launch(GraphicalUserInterface.class);
     }
 }
+

@@ -14,7 +14,7 @@ import it.polimi.ingsw.utils.CardLocation;
 
 import java.util.*;
 
-final class Printer {
+public final class Printer {
     private final static int DEFAULT_CARD_WIDTH = 27;
     private final static int DEFAULT_CARD_HEIGHT = 11;
 
@@ -356,7 +356,7 @@ final class Printer {
 
 
         for (int i = 0; i < visibleCards.length; i++) {
-            canvas.putString("Card n°" + i, DEFAULT_CARD_WIDTH + 5 + (DEFAULT_CARD_WIDTH + 2) * (i % 2) + DEFAULT_CARD_WIDTH / 2 - 4, 1 + (DEFAULT_CARD_HEIGHT + 3) * (i / 2));
+            canvas.putString("Card n°" + (i+2), DEFAULT_CARD_WIDTH + 5 + (DEFAULT_CARD_WIDTH + 2) * (i % 2) + DEFAULT_CARD_WIDTH / 2 - 4, 1 + (DEFAULT_CARD_HEIGHT + 3) * (i / 2));
 
             canvas.putCanvas(getCardCanvas(visibleCards[i], false), DEFAULT_CARD_WIDTH + 5 + (DEFAULT_CARD_WIDTH + 2) * (i % 2), 2 + (DEFAULT_CARD_HEIGHT + 3) * (i / 2));
         }
@@ -403,8 +403,10 @@ final class Printer {
         System.out.println(canvas);
     }
 
-    public static void printChat(Chat chat, String localNickname, String remoteNickname) {
-        List<ChatMessage> messages = chat.getMessagesChat(localNickname, remoteNickname);
+    public static void printChat(Chat chat, Player localPlayer, Player remotePlayer) {
+        List<ChatMessage> messages;
+        if(remotePlayer != null) messages= chat.getMessagesChat(localPlayer.nickName, remotePlayer.nickName);
+        else messages = chat.getMessagesChat(localPlayer.nickName, null);
 
         System.out.println("Messages:");
         for (ChatMessage msg : messages) {
@@ -412,7 +414,7 @@ final class Printer {
         }
     }
 
-    private static class Canvas {
+    public static class Canvas {
         char[][] content;
         TextColor[][] contentColor;
         private final int width;
@@ -524,7 +526,7 @@ final class Printer {
         }
     }
 
-    private enum TextColor {
+    public enum TextColor {
         CYAN("\u001B[36m"),
         GREEN("\u001B[32m"),
         RED("\u001B[31m"),

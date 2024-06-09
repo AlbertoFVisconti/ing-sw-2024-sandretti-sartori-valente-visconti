@@ -21,8 +21,7 @@ module it.polimi.ingsw {
     exports it.polimi.ingsw.model.player;
     exports it.polimi.ingsw.model.goals;
     exports it.polimi.ingsw.network.serverhandlers;
-
-    exports it.polimi.ingsw.view to java.rmi;
+    exports it.polimi.ingsw.view.ui.gui.FXController;
 
     opens it.polimi.ingsw.view.ui to javafx.fxml;
     opens it.polimi.ingsw.view.ui.gui.FXController to javafx.fxml;
@@ -33,4 +32,6 @@ module it.polimi.ingsw {
     opens it.polimi.ingsw.view.ui.tui to javafx.fxml;
     exports it.polimi.ingsw.view.ui.gui;
     opens it.polimi.ingsw.view.ui.gui to javafx.fxml;
+    exports it.polimi.ingsw.view;
+    opens it.polimi.ingsw.view to javafx.fxml;
 }

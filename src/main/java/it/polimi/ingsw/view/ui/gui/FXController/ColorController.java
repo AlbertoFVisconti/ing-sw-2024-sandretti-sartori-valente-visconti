@@ -4,17 +4,12 @@ import it.polimi.ingsw.events.messages.client.SelectColorMessage;
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.Client;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Objects;
 
-public class ColorController {
+public class ColorController implements GUIScene {
 
     @FXML
     private ImageView blue;
@@ -31,58 +26,76 @@ public class ColorController {
     @FXML
     private ImageView yellow;
 
-    public void initialize() {
-        if (!Client.getInstance().getUserInterface().getAvailableColors().contains(PlayerColor.RED)) {
-            red.setOpacity(0.1);
-            red.setOnMouseClicked(null);
-        } else if (!Client.getInstance().getUserInterface().getAvailableColors().contains(PlayerColor.BLUE)) {
-            blue.setOpacity(0.1);
-            blue.setOnMouseClicked(null);
-        } else if (!Client.getInstance().getUserInterface().getAvailableColors().contains(PlayerColor.GREEN)) {
-            green.setOpacity(0.1);
-            green.setOnMouseClicked(null);
-        } else if (!Client.getInstance().getUserInterface().getAvailableColors().contains(PlayerColor.YELLOW)) {
-            yellow.setOpacity(0.1);
-            yellow.setOnMouseClicked(null);
-        }
-    }
-
 
     public void SelectRed(MouseEvent mouseEvent) throws IOException {
         red.setOpacity(0.5);
+        if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.RED)) {
+            return;
+        }
+
         Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.RED));
-        //Client.getInstance().getServerHandler().
-        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/WaitingForPlayers.fxml")));
-        Stage window = (Stage) ((javafx.scene.Node) mouseEvent.getSource()).getScene().getWindow();
-        window.setScene(new Scene(nextPageParent));
-        window.show();
     }
 
     public void SelectBlue(MouseEvent mouseEvent) throws IOException {
-        blue.setOpacity(0.5);
+        red.setOpacity(0.5);
+        if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.BLUE)) {
+            return;
+        }
+
         Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.BLUE));
-        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/WaitingForPlayers.fxml")));
-        Stage window = (Stage) ((javafx.scene.Node) mouseEvent.getSource()).getScene().getWindow();
-        window.setScene(new Scene(nextPageParent));
-        window.show();
     }
 
     public void SelectYellow(MouseEvent mouseEvent) throws IOException {
-        yellow.setOpacity(0.5);
+        red.setOpacity(0.5);
+        if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.YELLOW)) {
+            return;
+        }
+
         Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.YELLOW));
-        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/WaitingForPlayers.fxml")));
-        Stage window = (Stage) ((javafx.scene.Node) mouseEvent.getSource()).getScene().getWindow();
-        window.setScene(new Scene(nextPageParent));
-        window.show();
     }
 
     public void SelectGreen(MouseEvent mouseEvent) throws IOException {
-        green.setOpacity(0.5);
+        red.setOpacity(0.5);
+        if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.GREEN)) {
+            return;
+        }
+
         Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.GREEN));
-        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/WaitingForPlayers.fxml")));
-        Stage window = (Stage) ((javafx.scene.Node) mouseEvent.getSource()).getScene().getWindow();
-        window.setScene(new Scene(nextPageParent));
-        window.show();
+    }
+
+    @Override
+    public void setup() {
+        if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.RED)) {
+            red.setOpacity(0.1);
+        }
+        else red.setOpacity(1);
+
+
+        if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.BLUE)) {
+            blue.setOpacity(0.1);
+        }
+        else blue.setOpacity(1);
+
+        if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.GREEN)) {
+            green.setOpacity(0.1);
+
+        }
+        else green.setOpacity(1);
+
+        if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.YELLOW)) {
+            yellow.setOpacity(0.1);
+        }
+        else yellow.setOpacity(1);
+    }
+
+    @Override
+    public void update() {
+        this.setup();
+    }
+
+    @Override
+    public void reportError(RuntimeException exception) {
+
     }
 }
 

@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class RulesPage5Controller {
+public class RulesPage5Controller implements GUIScene {
     @FXML
     private Button GoBackButton;
     private ImageView RulesPage1;
@@ -32,5 +32,20 @@ public class RulesPage5Controller {
         Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         window.setScene(new Scene(nextPageParent));
         window.show();
+    }
+
+    @Override
+    public void setup() {
+
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public void reportError(RuntimeException exception) {
+
     }
 }

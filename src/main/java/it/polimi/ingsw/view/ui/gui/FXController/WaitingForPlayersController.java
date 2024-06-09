@@ -1,10 +1,7 @@
 package it.polimi.ingsw.view.ui.gui.FXController;
 
-import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.network.Client;
-import it.polimi.ingsw.view.ui.UserInterface;
-import it.polimi.ingsw.view.ui.gui.FXGraphicalUserInterface;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,11 +13,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Objects;
 
-public class WaitingForPlayersController extends UserInterface {
+public class WaitingForPlayersController implements GUIScene {
 
     @FXML
     private ImageView BackArrow;
@@ -47,11 +43,10 @@ public class WaitingForPlayersController extends UserInterface {
 
     @FXML
     public void initialize() {
-        FXGraphicalUserInterface.currentInterface = this;
         List<Player> players;
-        players = Client.getInstance().getUserInterface().getPlayersList();
+        players = Client.getInstance().getView().getPlayersList();
         for (Player player : players) {
-            if (!player.getNickname().equals(Client.getInstance().getUserInterface().getLocalPlayerName())) {
+            if (!player.getNickname().equals(Client.getInstance().getView().getLocalPlayerName())) {
                 if (player1.getText().isEmpty()) {
                     player1.setText(player.getNickname());
                 } else if (player2.getText().isEmpty()) {
@@ -65,13 +60,21 @@ public class WaitingForPlayersController extends UserInterface {
     }
 
     @Override
+    public void setup() {
+    }
+
+    @Override
     public void update() {
         Platform.runLater(
                 () -> {
+                    player1.setText("");
+                    player2.setText("");
+                    player3.setText("");
+
                     List<Player> players;
-                    players = Client.getInstance().getUserInterface().getPlayersList();
+                    players = Client.getInstance().getView().getPlayersList();
                     for (Player player : players) {
-                        if (!player.getNickname().equals(Client.getInstance().getUserInterface().getLocalPlayerName())) {
+                        if (!player.getNickname().equals(Client.getInstance().getView().getLocalPlayerName())) {
                             if (player1.getText().isEmpty()) {
                                 player1.setText(player.getNickname());
                             } else if (player2.getText().isEmpty() && !player1.getText().equals(player.getNickname())) {
@@ -82,23 +85,13 @@ public class WaitingForPlayersController extends UserInterface {
                         }
 
                     }
-                    if(Client.getInstance().getUserInterface().getGameStatus().equals(GameStatus.GAME_CREATION)){
-                        Parent nextPageParent;
-                        try {
-                            nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/StartingCard.fxml")));
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        Stage window = (Stage) BackArrow.getScene().getWindow();
-                        window.setScene(new Scene(nextPageParent));
-                        window.show();
-                    }
+
                 }
         );
     }
 
     @Override
-    public void reportError(RuntimeException exception) throws RemoteException {
+    public void reportError(RuntimeException exception) {
 
     }
 }
