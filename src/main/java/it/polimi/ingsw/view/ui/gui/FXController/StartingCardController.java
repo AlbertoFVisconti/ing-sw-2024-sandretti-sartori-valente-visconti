@@ -45,11 +45,6 @@ public class StartingCardController implements GUIScene {
     }
 
     @Override
-    public void setup() {
-
-    }
-
-    @Override
     public void update() {
         this.initialize();
     }

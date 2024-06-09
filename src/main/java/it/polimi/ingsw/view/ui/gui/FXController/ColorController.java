@@ -63,8 +63,7 @@ public class ColorController implements GUIScene {
         Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.GREEN));
     }
 
-    @Override
-    public void setup() {
+    public void initialize() {
         if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.RED)) {
             red.setOpacity(0.1);
         }
@@ -90,7 +89,7 @@ public class ColorController implements GUIScene {
 
     @Override
     public void update() {
-        this.setup();
+        this.initialize();
     }
 
     @Override

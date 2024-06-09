@@ -78,9 +78,8 @@ public class GameViewController implements GUIScene {
     private final HashMap<CardLocation, ImageView> cardsimage = new HashMap<>();
     String previousplayer;
 
-    //initialize boards
     @FXML
-    public void initialize() throws FileNotFoundException {
+    public void initialize() {
         try {
             if (Client.getInstance().getView().getSelectedside() == 0) {
                 startingcard.setImage(new Image(
@@ -264,130 +263,122 @@ public class GameViewController implements GUIScene {
     }
 
     @Override
-    public void setup() {
-
-    }
-
-    @Override
     public void update() {
 
-        Platform.runLater(() -> {
-            refreshScoreboard();
+        refreshScoreboard();
 
-            if((Client.getInstance().getView().getPlayersTurn().equals(Client.getInstance().getView().getLocalPlayer().getNickname()))) {
-                if (Client.getInstance().getView().getTurnStatus().equals(TurnStatus.PLACE)) {
-                    turnwarning.setText(Client.getInstance().getView().getLocalPlayer().getNickname() + " it's your turn to place a card!");
-                    //cards again clickable
-                    this.handcard1.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                        sel = 0;
-                        selected = Client.getInstance().getView().getLocalPlayer().getPlayerCards()[0];
-                        handcard1.setOpacity(0.5);
-                        handcard2.setOpacity(1);
-                        handcard3.setOpacity(1);
-                    });
-                    handcard2.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                        sel = 1;
-                        selected = Client.getInstance().getView().getLocalPlayer().getPlayerCards()[1];
-                        handcard2.setOpacity(0.5);
-                        handcard1.setOpacity(1);
-                        handcard3.setOpacity(1);
-                    });
-                    handcard3.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                        sel = 2;
-                        selected = Client.getInstance().getView().getLocalPlayer().getPlayerCards()[2];
-                        handcard3.setOpacity(0.5);
-                        handcard2.setOpacity(1);
-                        handcard1.setOpacity(1);
-                    });
-                    handcard1.setOpacity(1);
+        if((Client.getInstance().getView().getPlayersTurn().equals(Client.getInstance().getView().getLocalPlayer().getNickname()))) {
+            if (Client.getInstance().getView().getTurnStatus().equals(TurnStatus.PLACE)) {
+                turnwarning.setText(Client.getInstance().getView().getLocalPlayer().getNickname() + " it's your turn to place a card!");
+                //cards again clickable
+                this.handcard1.setOnMouseClicked((MouseEvent mouseEvent) -> {
+                    sel = 0;
+                    selected = Client.getInstance().getView().getLocalPlayer().getPlayerCards()[0];
+                    handcard1.setOpacity(0.5);
                     handcard2.setOpacity(1);
                     handcard3.setOpacity(1);
+                });
+                handcard2.setOnMouseClicked((MouseEvent mouseEvent) -> {
+                    sel = 1;
+                    selected = Client.getInstance().getView().getLocalPlayer().getPlayerCards()[1];
+                    handcard2.setOpacity(0.5);
+                    handcard1.setOpacity(1);
+                    handcard3.setOpacity(1);
+                });
+                handcard3.setOnMouseClicked((MouseEvent mouseEvent) -> {
+                    sel = 2;
+                    selected = Client.getInstance().getView().getLocalPlayer().getPlayerCards()[2];
+                    handcard3.setOpacity(0.5);
+                    handcard2.setOpacity(1);
+                    handcard1.setOpacity(1);
+                });
+                handcard1.setOpacity(1);
+                handcard2.setOpacity(1);
+                handcard3.setOpacity(1);
 
-                    deactiveDeck();
-
-                    //adds the shapes(slot where you can place cards) to the board
-                    for (CardLocation cardLocation : Client.getInstance().getView().getLocalPlayer().getBoard().keySet()) {
-                        if (!Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1))) {
-                            if ((!boardshapes.containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1))) || (boardshapes.containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1))) && !boardshapes.get(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1)).isVisible()) {
-                                addShape(cardLocation, 1, 1);
-                            }
-                        }
-                        if (!Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1))) {
-                            if ((!boardshapes.containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1))) || (boardshapes.containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1))) && !boardshapes.get(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1)).isVisible()){
-                                addShape(cardLocation, 1, -1);
-                            }
-                        }
-                        if (!Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1))) {
-                            if ((!boardshapes.containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1))) || (boardshapes.containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1))) && !boardshapes.get(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1)).isVisible()) {
-                                addShape(cardLocation, -1, 1);
-                            }
-                        }
-                        if (!Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1))) {
-                            if ((!boardshapes.containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1))) || (boardshapes.containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1))) && !boardshapes.get(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1)).isVisible()){
-                                addShape(cardLocation, -1, -1);
-                            }
-                        }
-                    }
-
-                } else if (Client.getInstance().getView().getTurnStatus().equals(TurnStatus.DRAW)) {
-                    resourceDeckb.setOpacity(1);
-                    goldDeckb.setOpacity(1);
-                    resourceDeckf1.setOpacity(1);
-                    resourceDeckf2.setOpacity(1);
-                    goldDeckf1.setOpacity(1);
-                    goldDeckf2.setOpacity(1);
-                    previousplayer = Client.getInstance().getView().getPlayersTurn();
-                    turnwarning.setText(Client.getInstance().getView().getLocalPlayer().getNickname() + " it's your turn to pick up a card!");
-                    for(ImageView s : boardshapes.values()){
-                        s.setVisible(false);
-                        s.setOnMouseClicked(null);
-                    }
-                    resourceDeckb.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                        Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(0));
-                    });
-                    goldDeckb.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                        Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(1));
-                    });
-                    resourceDeckf1.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                        Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(2));
-                    });
-                    resourceDeckf2.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                        Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(3));
-                    });
-                    goldDeckf1.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                        Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(4));
-                    });
-                    goldDeckf2.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                        Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(5));
-                    });
-                }
-            }else {
                 deactiveDeck();
 
-                turnwarning.setText(Client.getInstance().getView().getPlayersTurn() + "'s turn!");
-                if(Client.getInstance().getView().getLocalPlayerName().equals(previousplayer)){
-                    switch (sel){
-                        case 0:
-                            handcard1.setImage(new Image(
-                                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[sel].getFrontpath())).toString())
-                            );
-                            break;
-                        case 1:
-                            handcard2.setImage(new Image(
-                                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[sel].getFrontpath())).toString())
-                            );
-                            break;
-                        case 2:
-                            handcard3.setImage(new Image(
-                                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[sel].getFrontpath())).toString())
-                            );
-                            break;
+                //adds the shapes(slot where you can place cards) to the board
+                for (CardLocation cardLocation : Client.getInstance().getView().getLocalPlayer().getBoard().keySet()) {
+                    if (!Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1))) {
+                        if ((!boardshapes.containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1))) || (boardshapes.containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1))) && !boardshapes.get(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1)).isVisible()) {
+                            addShape(cardLocation, 1, 1);
+                        }
                     }
-
+                    if (!Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1))) {
+                        if ((!boardshapes.containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1))) || (boardshapes.containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1))) && !boardshapes.get(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1)).isVisible()){
+                            addShape(cardLocation, 1, -1);
+                        }
+                    }
+                    if (!Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1))) {
+                        if ((!boardshapes.containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1))) || (boardshapes.containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1))) && !boardshapes.get(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1)).isVisible()) {
+                            addShape(cardLocation, -1, 1);
+                        }
+                    }
+                    if (!Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1))) {
+                        if ((!boardshapes.containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1))) || (boardshapes.containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1))) && !boardshapes.get(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1)).isVisible()){
+                            addShape(cardLocation, -1, -1);
+                        }
+                    }
                 }
-            }
 
-        });
+            } else if (Client.getInstance().getView().getTurnStatus().equals(TurnStatus.DRAW)) {
+                resourceDeckb.setOpacity(1);
+                goldDeckb.setOpacity(1);
+                resourceDeckf1.setOpacity(1);
+                resourceDeckf2.setOpacity(1);
+                goldDeckf1.setOpacity(1);
+                goldDeckf2.setOpacity(1);
+                previousplayer = Client.getInstance().getView().getPlayersTurn();
+                turnwarning.setText(Client.getInstance().getView().getLocalPlayer().getNickname() + " it's your turn to pick up a card!");
+                for(ImageView s : boardshapes.values()){
+                    s.setVisible(false);
+                    s.setOnMouseClicked(null);
+                }
+                resourceDeckb.setOnMouseClicked((MouseEvent mouseEvent) -> {
+                    Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(0));
+                });
+                goldDeckb.setOnMouseClicked((MouseEvent mouseEvent) -> {
+                    Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(1));
+                });
+                resourceDeckf1.setOnMouseClicked((MouseEvent mouseEvent) -> {
+                    Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(2));
+                });
+                resourceDeckf2.setOnMouseClicked((MouseEvent mouseEvent) -> {
+                    Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(3));
+                });
+                goldDeckf1.setOnMouseClicked((MouseEvent mouseEvent) -> {
+                    Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(4));
+                });
+                goldDeckf2.setOnMouseClicked((MouseEvent mouseEvent) -> {
+                    Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(5));
+                });
+            }
+        }else {
+            deactiveDeck();
+
+            turnwarning.setText(Client.getInstance().getView().getPlayersTurn() + "'s turn!");
+            if(Client.getInstance().getView().getLocalPlayerName().equals(previousplayer)){
+                switch (sel){
+                    case 0:
+                        handcard1.setImage(new Image(
+                                Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[sel].getFrontpath())).toString())
+                        );
+                        break;
+                    case 1:
+                        handcard2.setImage(new Image(
+                                Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[sel].getFrontpath())).toString())
+                        );
+                        break;
+                    case 2:
+                        handcard3.setImage(new Image(
+                                Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[sel].getFrontpath())).toString())
+                        );
+                        break;
+                }
+
+            }
+        }
 
     }
 
@@ -399,4 +390,3 @@ public class GameViewController implements GUIScene {
 
 
 }
-

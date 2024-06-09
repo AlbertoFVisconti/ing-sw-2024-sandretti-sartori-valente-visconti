@@ -35,11 +35,6 @@ public class RulesPage5Controller implements GUIScene {
     }
 
     @Override
-    public void setup() {
-
-    }
-
-    @Override
     public void update() {
 
     }

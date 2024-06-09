@@ -68,8 +68,6 @@ public class GraphicalUserInterface extends Application implements UserInterface
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-
-                    this.currentScene.setup();
                 });
     }
 
@@ -95,7 +93,7 @@ public class GraphicalUserInterface extends Application implements UserInterface
 
     @Override
     public synchronized void setDrawScene() {
-        // TODO
+
     }
 
     @Override
@@ -110,12 +108,12 @@ public class GraphicalUserInterface extends Application implements UserInterface
 
     @Override
     public synchronized void setScoreScene() {
-        // TODO
+
     }
 
     @Override
     public synchronized void update() {
-        if (currentScene != null) currentScene.update();
+        if (currentScene != null) Platform.runLater(() -> currentScene.update());
     }
 
     @Override

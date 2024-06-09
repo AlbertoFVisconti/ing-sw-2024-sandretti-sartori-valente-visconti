@@ -54,8 +54,8 @@ public class LobbyController implements GUIScene{
         window.show();
     }
 
-    @Override
-    public void setup() {
+    @FXML
+    public void initialize() {
 
     }
 

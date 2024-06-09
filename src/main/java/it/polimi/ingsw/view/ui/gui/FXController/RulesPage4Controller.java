@@ -43,11 +43,6 @@ public class RulesPage4Controller implements GUIScene {
     }
 
     @Override
-    public void setup() {
-
-    }
-
-    @Override
     public void update() {
 
     }

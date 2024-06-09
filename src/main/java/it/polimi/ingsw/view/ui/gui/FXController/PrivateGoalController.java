@@ -13,6 +13,7 @@ public class PrivateGoalController implements GUIScene {
     public ImageView privategoal2;
     boolean selected = false;
 
+    @FXML
     public void initialize()  {
         try {
             privategoal1.setImage(new Image(
@@ -36,14 +37,8 @@ public class PrivateGoalController implements GUIScene {
     }
 
     @Override
-    public void reportError(RuntimeException exception)
-    {
+    public void reportError(RuntimeException exception) {
 
-    }
-
-    @Override
-    public void setup() {
-        this.initialize();
     }
 
     @Override

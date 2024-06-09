@@ -42,11 +42,6 @@ public class CreateGameController implements GUIScene {
     private ImageView codexWallpaper;
 
     @FXML
-    public void initialize() {
-
-    }
-
-    @FXML
     void CreateGameFX(ActionEvent event) throws IOException {
         Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(0, true, ExpectedPlayersComboBox.getValue(), NicknameField.getText()));
     }
@@ -62,8 +57,8 @@ public class CreateGameController implements GUIScene {
     }
 
 
-    @Override
-    public void setup() {
+    @FXML
+    public void initialize() {
         ExpectedPlayersComboBox.getItems().addAll(expectedplayersarray);
     }
 

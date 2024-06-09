@@ -60,34 +60,25 @@ public class WaitingForPlayersController implements GUIScene {
     }
 
     @Override
-    public void setup() {
-    }
-
-    @Override
     public void update() {
-        Platform.runLater(
-                () -> {
-                    player1.setText("");
-                    player2.setText("");
-                    player3.setText("");
+        player1.setText("");
+        player2.setText("");
+        player3.setText("");
 
-                    List<Player> players;
-                    players = Client.getInstance().getView().getPlayersList();
-                    for (Player player : players) {
-                        if (!player.getNickname().equals(Client.getInstance().getView().getLocalPlayerName())) {
-                            if (player1.getText().isEmpty()) {
-                                player1.setText(player.getNickname());
-                            } else if (player2.getText().isEmpty() && !player1.getText().equals(player.getNickname())) {
-                                player2.setText(player.getNickname());
-                            } else if (player3.getText().isEmpty() && !player1.getText().equals(player.getNickname()) && !player2.getText().equals(player.getNickname())){
-                                player3.setText(player.getNickname());
-                            }
-                        }
-
-                    }
-
+        List<Player> players;
+        players = Client.getInstance().getView().getPlayersList();
+        for (Player player : players) {
+            if (!player.getNickname().equals(Client.getInstance().getView().getLocalPlayerName())) {
+                if (player1.getText().isEmpty()) {
+                    player1.setText(player.getNickname());
+                } else if (player2.getText().isEmpty() && !player1.getText().equals(player.getNickname())) {
+                    player2.setText(player.getNickname());
+                } else if (player3.getText().isEmpty() && !player1.getText().equals(player.getNickname()) && !player2.getText().equals(player.getNickname())){
+                    player3.setText(player.getNickname());
                 }
-        );
+            }
+
+        }
     }
 
     @Override

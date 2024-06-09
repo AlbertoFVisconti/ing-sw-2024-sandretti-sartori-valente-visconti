@@ -44,11 +44,6 @@ public class JoinGameController implements GUIScene {
         Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(selectGame.getValue(), false, 0, nicknameField.getText()));
     }
 
-    @FXML
-    public void initialize() {
-
-    }
-
     public void RefreshGame(ActionEvent actionEvent) {
         Client.getInstance().getServerHandler().sendMessage(new GameListRequestMessage());
     }
@@ -58,8 +53,8 @@ public class JoinGameController implements GUIScene {
 
     }
 
-    @Override
-    public void setup() {
+    @FXML
+    public void initialize() {
         Client.getInstance().getServerHandler().sendMessage(new GameListRequestMessage());
     }
 
