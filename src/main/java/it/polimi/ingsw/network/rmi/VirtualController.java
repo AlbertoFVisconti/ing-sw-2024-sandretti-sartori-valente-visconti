@@ -14,7 +14,7 @@ public interface VirtualController extends Remote {
     /**
      * Allows the player to place on of their cards on their board.
      * <p>
-     * Might throw RuntimeExceptions in the following cases:
+     * The server might answer by reporting an error in the following cases:
      * <ul>
      *     <li>The playerIdentifier is not recognised</li>
      *     <li>The player identified by playerIdentified is not expected to play (it is not their turn)</li>
@@ -28,7 +28,6 @@ public interface VirtualController extends Remote {
      * @param onBackSide       {@code true} if the cards should be placed with the back side up, {@code false} otherwise.
      * @param location         The CardLocation that represents the desired placement location of the card.
      * @throws RemoteException  in case of errors with the remote communication.
-     * @throws RuntimeException in case of poorly set parameters.
      */
     void placeCard(String playerIdentifier, int index, boolean onBackSide, CardLocation location) throws RemoteException;
 
@@ -39,7 +38,7 @@ public interface VirtualController extends Remote {
      * if it is 1, the player is drawing from the second deck (gold cards).
      * If the provided index is greater or equal to 2, then the player is picking up the (index-2)th visible card.
      * <p>
-     * Might throw RuntimeExceptions in the following cases:
+     * The server might answer by reporting an error in the following cases:
      * <ul>
      *     <li>The playerIdentifier is not recognised</li>
      *     <li>The player identified by playerIdentified is not expected to play (it is not their turn)</li>
@@ -50,14 +49,13 @@ public interface VirtualController extends Remote {
      * @param playerIdentifier The string that the player received while joining/creating the game.
      * @param index            The number that represents what the player's trying to draw/pick up.
      * @throws RemoteException  in case of errors with remote communication.
-     * @throws RuntimeException if the index is out of bound.
      */
     void drawCard(String playerIdentifier, int index) throws RemoteException;
 
     /**
      * Allows the player to place the first card of the game on their board.
      * <p>
-     * Might throw RuntimeExceptions in the following cases:
+     * The server might answer by reporting an error in the following cases:
      * <ul>
      *     <li>The playerIdentifier is not recognised</li>
      *     <li>The player identified by playerIdentified already placed their starting card</li>
@@ -67,14 +65,13 @@ public interface VirtualController extends Remote {
      * @param playerIdentifier The string that the player received while joining/creating the game.
      * @param onBackSide       {@code true} if the cards should be placed with the back side up, {@code false} otherwise.
      * @throws RemoteException  in case of errors with the remote communication.
-     * @throws RuntimeException in case of poorly set parameters.
      */
     void placeStartCard(String playerIdentifier, boolean onBackSide) throws RemoteException;
 
     /**
      * Allows the player to place the first card of the game on their board.
      * <p>
-     * Might throw RuntimeExceptions in the following cases:
+     * The server might answer by reporting an error in the following cases:
      * <ul>
      *     <li>The playerIdentifier is not recognised</li>
      *     <li>The player identified by playerIdentified already placed their starting card</li>
@@ -84,11 +81,31 @@ public interface VirtualController extends Remote {
      * @param playerIdentifier The string that the player received while joining/creating the game.
      * @param index            The index of the available goal the player has chosen.
      * @throws RemoteException  in case of errors with the remote communication.
-     * @throws RuntimeException in case of poorly set parameters.
      */
     void selectPrivateGoal(String playerIdentifier, int index) throws RemoteException;
 
+    /**
+     * Allows the player to select their color.
+     * The server might answer by reporting an error in the following cases:
+     * <ul>
+     *     <li>The playerIdentifier is not recognised</li>
+     *     <li>The selected color was already taken</li>
+     *     <li>The game already started</li>
+     * </ul>
+     *
+     * @param playerIdentifier the string that the player received while joining/creating the game.
+     * @param color the PlayerColor that represent the player's choice
+     * @throws RemoteException in case of errors with the remote communication
+     */
     void selectColor(String playerIdentifier, PlayerColor color) throws RemoteException;
 
+    /**
+     * Allows the player to send a message in the chat.
+     *
+     * @param playerIdentifier the string that the player received while joining/creating the game
+     * @param message the message that the player want to send
+     * @param addressee the nickname of the player that needs to receive this message, {@code null} for public messages
+     * @throws RemoteException in case of errors with the remote communication
+     */
     void sendChatMsg(String playerIdentifier, String message, String addressee) throws RemoteException;
 }

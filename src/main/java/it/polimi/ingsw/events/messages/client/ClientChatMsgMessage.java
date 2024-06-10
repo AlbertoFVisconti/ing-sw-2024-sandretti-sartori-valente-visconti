@@ -6,6 +6,10 @@ import it.polimi.ingsw.network.rmi.VirtualMainController;
 
 import java.rmi.RemoteException;
 
+/**
+ * Message that the client can send to the server
+ * in order to send a chat message.
+ */
 public class ClientChatMsgMessage extends ClientMessage {
     private final String message;
     private final String addressee;
@@ -33,8 +37,14 @@ public class ClientChatMsgMessage extends ClientMessage {
         this.addressee = null;
     }
 
+    /**
+     * Execute the message by calling the matching method on the controller
+     *
+     * @param mainController   the MainController instance that handles the game the player's playing.
+     * @param controller the GameController that handles the game the player's playing.
+     */
     @Override
-    public void execute(VirtualMainController selector, VirtualController controller) {
+    public void execute(VirtualMainController mainController, VirtualController controller) {
         if (controller == null) throw new RuntimeException("Client game matching failed");
 
         try {

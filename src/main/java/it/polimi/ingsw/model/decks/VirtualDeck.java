@@ -3,14 +3,23 @@ package it.polimi.ingsw.model.decks;
 import it.polimi.ingsw.model.cards.corners.Resource;
 
 /**
- * VirtualDeck
+ * VirtualDeck allows the client's view to hold an object that looks like an actual Deck,
+ * but doesn't actually contain any data regarding the cards inside the matching server's deck.
  */
 public class VirtualDeck<T extends Drawable> extends Deck<T> {
     private Resource shownResource;
 
+    /**
+     * Creates an empty VirtualDeck
+     */
     public VirtualDeck() {
     }
 
+    /**
+     * Creates a VirtualDeck with a starting top-of-the-stack resource-
+     *
+     * @param topOfTheStack the initial Resource to be displayed on top of the deck
+     */
     public VirtualDeck(Resource topOfTheStack) {
         this.shownResource = topOfTheStack;
     }

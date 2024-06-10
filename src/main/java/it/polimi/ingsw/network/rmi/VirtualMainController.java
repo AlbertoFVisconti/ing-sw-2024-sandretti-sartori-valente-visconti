@@ -41,6 +41,12 @@ public interface VirtualMainController extends Remote {
      */
     void getAvailableGames(String playerIdentifier) throws RemoteException;
 
+    /**
+     * Allows a client to connect to the server.
+     *
+     * @param view a reference to the client's view (remote object)
+     * @throws RemoteException in case of errors with the remote communication
+     */
     void connect(VirtualView view) throws RemoteException;
 
     /**

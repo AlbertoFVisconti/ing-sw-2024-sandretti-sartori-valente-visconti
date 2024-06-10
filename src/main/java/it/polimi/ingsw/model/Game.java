@@ -93,6 +93,11 @@ public class Game extends Observable {
         this.chat = new Chat();
     }
 
+    /**
+     * Constructs a new Game object from existing data
+     *
+     * @param gsm game data
+     */
     public Game(GameSaving gsm) {
         players = new ArrayList<>();
         this.availableColor = new HashSet<>();
@@ -115,6 +120,11 @@ public class Game extends Observable {
         this.chat = new Chat();
     }
 
+    /**
+     * Retrieves the Game's data in a format that can be loaded by another Game object.
+     *
+     * @return GameSaving object containing the Game's data
+     */
     public GameSaving getSaving() {
         ArrayList<PlayerSaving> playerSavings = new ArrayList<>();
         for (Player p : this.players) {
@@ -124,6 +134,14 @@ public class Game extends Observable {
         return new GameSaving(expectedPlayers, playerSavings, idGame, this.goldCardsDeck, this.resourceCardsDeck, visibleCards, scoreBoard, commonGoals, startCardsDeck, goalsDeck);
     }
 
+    /**
+     * Retrieves the Game's data in a format that can be loaded by another Game in the Client's model.
+     * Requires a nickname in order to only put "secret" information if the data is going to be sent to a player
+     * that is authorized to receive such information.
+     *
+     * @param clientNickname the nickname of the client that will receive the requested data
+     * @return ClientGameSaving object containing the Game's data that the receiving player is authorized to receive.
+     */
     public ClientGameSaving getClientSaving(String clientNickname) {
         ArrayList<ClientPlayerSaving> playerSavings = new ArrayList<>();
         for (Player p : this.players) {
@@ -133,7 +151,9 @@ public class Game extends Observable {
         return new ClientGameSaving(playerSavings, idGame, this.goldCardsDeck.getTopOfTheStack(), this.resourceCardsDeck.getTopOfTheStack(), visibleCards, scoreBoard, commonGoals);
     }
 
-
+    /**
+     * Update the availableColors set according to the updated players list
+     */
     public void updateAvailableColors() {
         this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE, PlayerColor.GREEN, PlayerColor.RED, PlayerColor.YELLOW));
 
@@ -144,6 +164,9 @@ public class Game extends Observable {
         notifyPlayersListUpdate();
     }
 
+    /**
+     * Notify all subscribers (usually players) that the players list has been updated.
+     */
     private void notifyPlayersListUpdate() {
         String[] nicknames = new String[players.size()];
         PlayerColor[] colors = new PlayerColor[players.size()];
@@ -156,6 +179,9 @@ public class Game extends Observable {
         notifyObservers(new PlayersListUpdateMessage(nicknames, colors));
     }
 
+    /**
+     * Empties the players list
+     */
     public void resetPlayers() {
         if (isStarted) throw new RuntimeException();
         this.players.clear();
@@ -182,14 +208,17 @@ public class Game extends Observable {
         notifyPlayersListUpdate();
     }
 
-
+    /**
+     * Removes one of the players from the players list.
+     * Won't work if the game has already been started.
+     *
+     * @param player the Player object that needs to be removed from the game.
+     */
     public void removePlayer(Player player) {
         if (isStarted) throw new RuntimeException();
         this.players.remove(player);
 
-        if (player.getColor() != null) {
-            this.availableColor.add(player.getColor());
-        }
+        updateAvailableColors();
     }
 
     /**
@@ -242,10 +271,21 @@ public class Game extends Observable {
         notifyPlayersListUpdate();
     }
 
+    /**
+     * Retrieves the game's Chat object.
+     *
+     * @return Game's Chat object.
+     */
     public Chat getChat() {
         return chat;
     }
 
+    /**
+     * Allows to set the game's common goals.
+     * Won't work if the game has already been started.
+     *
+     * @param goals the array containing the common goals
+     */
     public void setCommonGoals(Goal[] goals) {
         if (this.isStarted) throw new RuntimeException("Game has already started");
         this.commonGoals = goals.clone();
@@ -379,6 +419,14 @@ public class Game extends Observable {
         return visibleCards;
     }
 
+    /**
+     * Empties the visible cards and recreate a new (empty) array
+     * with a specified length.
+     * <p>
+     * Used on the client's View.
+     *
+     * @param length the length of the new visible cards array.
+     */
     public void resetVisibleCards(int length) {
         if (this.isStarted) throw new RuntimeException("Game has already started");
 
@@ -476,6 +524,11 @@ public class Game extends Observable {
         }
     }
 
+    /**
+     * Subscribes a certain player to the common observers
+     *
+     * @param clientHandler the player that needs to be subscribed.
+     */
     public void subscribeCommonObservers(ClientHandler clientHandler) {
         for (Player p1 : this.players) {
             p1.subscribe(clientHandler);
@@ -486,6 +539,11 @@ public class Game extends Observable {
         this.scoreBoard.subscribe(clientHandler);
     }
 
+    /**
+     * Unsubscribes a certain player from the common observers
+     *
+     * @param clientHandler the player that needs to be unsubscribed.
+     */
     public void unsubscribeFromCommonObservable(ClientHandler clientHandler) {
         for (Player p1 : this.players) {
             p1.unsubscribe(clientHandler);
@@ -496,10 +554,20 @@ public class Game extends Observable {
 
     }
 
+    /**
+     * Retrieves the StartCard deck
+     *
+     * @return the StartCard Deck
+     */
     public Deck<StartCard> getStartCardsDeck() {
         return startCardsDeck;
     }
 
+    /**
+     * Retrieves the Goal Deck
+     *
+     * @return the Goal Deck
+     */
     public Deck<Goal> getGoalsDeck() {
         return goalsDeck;
     }

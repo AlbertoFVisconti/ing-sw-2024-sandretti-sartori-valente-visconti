@@ -53,6 +53,11 @@ public class Player extends Observable {
         this.turnCounter = 1;
     }
 
+    /**
+     * Constructs a new Player object from existing data
+     *
+     * @param psm Player's data
+     */
     public Player(PlayerSaving psm) {
         this.nickName = psm.getNick();
         this.color = psm.getPlayerColor();
@@ -64,20 +69,43 @@ public class Player extends Observable {
         this.turnCounter = this.board.size();
     }
 
+    /**
+     * Retrieves the Player's data in a format that can be loaded by another Player object.
+     *
+     * @return PlayerSaving object containing the Player's data
+     */
     public PlayerSaving getSaving() {
         return new PlayerSaving(nickName, color, this.board, playerCards, privateGoal, inventory);
     }
 
+    /**
+     * Retrieves the Player's data in a format that can be loaded by another Player in the Client's model.
+     * Requires a nickname in order to only put "secret" information if the data is going to be sent to the player
+     * that this object represents.
+     *
+     * @param clientNickname the nickname of the client that will receive the requested data
+     * @return ClientPlayerSaving object containing the Player's data that the receiving player is authorized to receive.
+     */
     public ClientPlayerSaving getClientSaving(String clientNickname) {
         if (clientNickname.equals(this.nickName))
             return new ClientPlayerSaving(nickName, color, this.board, playerCards, privateGoal, inventory);
         else return new ClientPlayerSaving(nickName, color, board, playerCards, null, inventory);
     }
 
+    /**
+     * Retrieves the player's color
+     *
+     * @return PlayerColor object that represents the player's color, {@code null} if the player's color isn't selected
+     */
     public PlayerColor getColor() {
         return color;
     }
 
+    /**
+     * Set the player's color
+     *
+     * @param color PlayerColor object representing the player's new color
+     */
     public void setColor(PlayerColor color) {
         this.color = color;
     }

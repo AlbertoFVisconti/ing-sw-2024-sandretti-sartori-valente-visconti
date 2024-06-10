@@ -37,20 +37,20 @@ public class JoinGameMessage extends ClientMessage {
     /**
      * Tries to add the player to the game (or to create a new game)
      *
-     * @param selector   the GameSelector instance that handles the game the player's playing.
+     * @param mainController   the MainController instance that handles the game the player's playing.
      * @param controller the GameController that handles the game the player's playing. Which should be null, because the client isn't playing yet.
      */
     @Override
-    public void execute(VirtualMainController selector, VirtualController controller) {
+    public void execute(VirtualMainController mainController, VirtualController controller) {
         if (this.creatingGame) {
             try {
-                selector.createGame(this.getPlayerIdentifier(), expectedPlayers, nickname);
+                mainController.createGame(this.getPlayerIdentifier(), expectedPlayers, nickname);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
         } else {
             try {
-                selector.joinGame(this.getPlayerIdentifier(), gameID, nickname);
+                mainController.joinGame(this.getPlayerIdentifier(), gameID, nickname);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }

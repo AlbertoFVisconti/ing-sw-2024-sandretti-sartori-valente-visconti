@@ -25,11 +25,11 @@ public class SelectGoalMessage extends ClientMessage {
     /**
      * Tries to select the private goal.
      *
-     * @param selector   the GameSelector instance that handles the game the player's playing.
+     * @param mainController   the GameSelector instance that handles the game the player's playing.
      * @param controller the GameController that handles the game the player's playing.
      */
     @Override
-    public void execute(VirtualMainController selector, VirtualController controller) {
+    public void execute(VirtualMainController mainController, VirtualController controller) {
         try {
             controller.selectPrivateGoal(this.getPlayerIdentifier(), index);
         } catch (RemoteException e) {

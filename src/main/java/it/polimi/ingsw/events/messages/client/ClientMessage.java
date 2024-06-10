@@ -39,8 +39,8 @@ public abstract class ClientMessage extends Message {
     /**
      * Allows the server to perform the operation required by the message given the controllers
      *
-     * @param selector   the GameSelector instance that handles the game the player's playing.
+     * @param mainController   the MainController instance that handles the game the player's playing.
      * @param controller the GameController that handles the game the player's playing.
      */
-    public abstract void execute(VirtualMainController selector, VirtualController controller);
+    public abstract void execute(VirtualMainController mainController, VirtualController controller);
 }

@@ -25,11 +25,11 @@ public class PlaceStartCardMessage extends ClientMessage {
     /**
      * Tries to place the starting card.
      *
-     * @param selector   the GameSelector instance that handles the game the player's playing.
+     * @param mainController   the MainController instance that handles the game the player's playing.
      * @param controller the GameController that handles the game the player's playing.
      */
     @Override
-    public void execute(VirtualMainController selector, VirtualController controller) {
+    public void execute(VirtualMainController mainController, VirtualController controller) {
         try {
             controller.placeStartCard(this.getPlayerIdentifier(), onBackSide);
         } catch (RemoteException e) {

@@ -7,7 +7,6 @@ import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.utils.CardLocation;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,7 +14,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Label;
 
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -83,11 +81,11 @@ public class GameViewController implements GUIScene {
         try {
             if (Client.getInstance().getView().getSelectedside() == 0) {
                 startingcard.setImage(new Image(
-                        Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getBoard().get(new CardLocation(0, 0)).getCard().getFrontpath())).toString()
+                        Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getBoard().get(new CardLocation(0, 0)).card().getFrontpath())).toString()
                 ));
             } else {
                 startingcard.setImage(new Image(
-                        Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getBoard().get(new CardLocation(0, 0)).getCard().getFrontpath())).toString()
+                        Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getBoard().get(new CardLocation(0, 0)).card().getFrontpath())).toString()
                 ));
             }
             privategoal.setImage(new Image(

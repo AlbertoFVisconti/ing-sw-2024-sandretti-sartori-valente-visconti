@@ -51,6 +51,11 @@ public class ChatMessage implements Serializable {
         return senderNick;
     }
 
+    /**
+     * Retrieves the nickname of the message receiver.
+     *
+     * @return nickname of the message receiver.
+     */
     public String getReceiverNick() {
         return receiverNick;
     }

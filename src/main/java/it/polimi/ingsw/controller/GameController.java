@@ -29,15 +29,24 @@ import java.util.concurrent.BlockingQueue;
  * It handles all the game logic and checks that the player is performing legal operations.
  **/
 public class GameController extends Observable implements VirtualController, Runnable {
+    // if this number of player isn't currently connected, the game will be paused
     private static final int MINIMUM_PLAYER_TO_RUN_GAME = 2;
+
+    // the number of player that is currently online
+    private int connectedPlayers;
+    private boolean paused;
+
+
+    // the game object that contains the data of the controlled game
     private final Game game;
+
+    // the current game and turn status
     private GameStatus gameStatus;
     private TurnStatus turnStatus;
 
-    private int connectedPlayers;
 
+    // the queue that contains all messages that the controller needs to process
     private final BlockingQueue<ClientMessage> messageQueue;
-    private boolean paused;
 
     /**
      * Constructs a GameController that handles the provided game.
@@ -56,6 +65,13 @@ public class GameController extends Observable implements VirtualController, Run
         new Thread(this).start();
     }
 
+    /**
+     * Add a new player to the game.
+     *
+     * @param nickname the nickname of the joining player
+     * @param clientHandler the client handler of the joining player
+     * @throws UnsupportedOperationException if the game is already started
+     */
     public void addNewPlayer(String nickname, ClientHandler clientHandler) {
         synchronized (this) {
             if (this.gameStatus != GameStatus.LOBBY) {
@@ -68,6 +84,9 @@ public class GameController extends Observable implements VirtualController, Run
 
             clientHandler.sendMessage(new JoinConfirmationMessage(nickname));
         }
+
+        this.subscribe(clientHandler);
+        updateStatus();
     }
 
     /**
@@ -102,31 +121,61 @@ public class GameController extends Observable implements VirtualController, Run
         }
     }
 
+    /**
+     * Allows to let the game controller know that a player has disconnected.
+     * If the player was actually playing this game, the game controller will handle
+     * the disconnection. If the current number of online players
+     * is below the threshold, the game will be paused.
+     *
+     * @param clientHandler the ClientHandler of the disconnected player
+     */
     public void handleDisconnection(ClientHandler clientHandler) {
         Player player = this.getPlayerByPlayerIdentifier(clientHandler.getPlayerIdentifier());
 
         if (this.game.getPlayers().contains(player)) {
-            System.err.println(player.nickName + " has disconnected");
+            boolean isCurrentPlayer = false;
 
-            this.unsubscribe(clientHandler);
-            this.game.unsubscribe(clientHandler);
-            this.game.unsubscribeFromCommonObservable(clientHandler);
+            synchronized (this) {
+                System.err.println(player.nickName + " has disconnected");
 
-            this.game.getChat().unsubscribe(clientHandler);
+                this.unsubscribe(clientHandler);
+                this.game.unsubscribe(clientHandler);
+                this.game.unsubscribeFromCommonObservable(clientHandler);
 
-            if (gameStatus == GameStatus.LOBBY) {
-                game.removePlayer(player);
-            } else {
-                this.connectedPlayers--;
+                this.game.getChat().unsubscribe(clientHandler);
 
-                if (this.connectedPlayers < GameController.MINIMUM_PLAYER_TO_RUN_GAME) {
-                    this.paused = true;
+                if (gameStatus == GameStatus.LOBBY) {
+                    game.removePlayer(player);
+                } else {
+                    this.connectedPlayers--;
+
+                    if (this.connectedPlayers < GameController.MINIMUM_PLAYER_TO_RUN_GAME) {
+                        this.paused = true;
+                    }
                 }
+
+                if (this.game.getTurn().hasDisconnected()) isCurrentPlayer = true;
+            }
+
+            if(!paused && isCurrentPlayer) {
+                advanceTurn();
             }
 
         }
     }
 
+    /**
+     * Allows to let the game controller know that a player that had previously disconnected,
+     * has now rejoined the game. If the player was actually playing this game and if
+     * they were actually disconnected, the game controller will handle the reconnection.
+     * If the game is currently paused and the number of online players reaches the
+     * threshold, the game can be unpaused.
+     *
+     * @param nickname the nickname of the player who is rejoining
+     * @param clientHandler the ClientHandler of the player who is rejoining
+     * @param gameControllerWrapper the remote object that contains a reference to the game controller
+     * @throws RuntimeException if the reconnection fails (either the player is unknown or the player is already online)
+     */
     public void handleReconnection(String nickname, ClientHandler clientHandler, GameControllerWrapper gameControllerWrapper) {
         Player connectingPlayer = null;
         ClientGameSaving saving;
@@ -159,6 +208,7 @@ public class GameController extends Observable implements VirtualController, Run
 
             saving = this.game.getClientSaving(nickname);
         }
+        this.subscribe(clientHandler);
         clientHandler.sendMessage(new JoinConfirmationMessage(nickname, saving));
 
         this.connectedPlayers++;
@@ -260,29 +310,40 @@ public class GameController extends Observable implements VirtualController, Run
         notifyObservers(new GameStatusUpdateMessage(gameStatus, turnStatus, game.getTurn().nickName));
     }
 
+    /**
+     * Allows advance the game turn.
+     */
     private void advanceTurn() {
-        boolean canCurrPlayerPlay, isItFirstPlayersTurn, newRoundStarted;
+        boolean needToSkipTurn, isItFirstPlayersTurn, newRoundStarted;
 
         synchronized (this) {
+            // checking if the current turn was the first player's
             isItFirstPlayersTurn = this.game.isFirstPlayersTurn() || (turnStatus == null);
 
             if (this.turnStatus == null) {
+                // this is the first turn of the first round, the first player have to place a card
                 this.turnStatus = TurnStatus.PLACE;
-            } else if (this.turnStatus == TurnStatus.PLACE) {
+            } else if (this.turnStatus == TurnStatus.PLACE && this.gameStatus != GameStatus.LAST_TURN) {
+                // the player who just placed a card needs to draw
                 this.turnStatus = TurnStatus.DRAW;
             } else {
+                // the previous player finished his turn, the next player needs to place a card
                 this.turnStatus = TurnStatus.PLACE;
-
                 this.game.nextTurn();
-
             }
 
-            canCurrPlayerPlay = !this.paused && this.game.getTurn().hasDisconnected();
+            // checking if the current turn should be skipped
+            needToSkipTurn = !this.paused && this.game.getTurn().hasDisconnected();
+
+            // checking if the current advance caused a new round to start
             newRoundStarted = !isItFirstPlayersTurn && this.game.isFirstPlayersTurn();
         }
 
-        if (canCurrPlayerPlay) {
+        if (needToSkipTurn) {
+            // if the current turn is skipped, updateStatus is called only if a new round started
             if (newRoundStarted) this.updateStatus();
+            // forcing the next advanceTurn to move on to the next player
+            synchronized (this) {this.turnStatus = TurnStatus.DRAW;}
             this.advanceTurn();
         } else {
             this.updateStatus();
@@ -299,26 +360,34 @@ public class GameController extends Observable implements VirtualController, Run
      * @return {@code true} if the location is valid and a card can be placed, {@code false} otherwise.
      */
     private synchronized boolean isLocationValid(CardLocation location, Player player) {
+        // checking if there's a card in the location
         if (player.getPlacedCardSlot(location) != null) return false;
 
-
+        // checking if the top right neighbouring card has a hidden corner that makes the location invalid
         if (player.getPlacedCardSlot(location.topRightNeighbour()) != null &&
                 (player.getPlacedCardSlot(location.topRightNeighbour()).getBottomLeftCorner() == null)) {
             return false;
         }
+
+        // checking if the top left neighbouring card has a hidden corner that makes the location invalid
         if (player.getPlacedCardSlot(location.topLeftNeighbour()) != null &&
                 (player.getPlacedCardSlot(location.topLeftNeighbour()).getBottomRightCorner() == null)) {
             return false;
         }
+
+        // checking if the bottom right neighbouring card has a hidden corner that makes the location invalid
         if (player.getPlacedCardSlot(location.bottomRightNeighbour()) != null &&
                 (player.getPlacedCardSlot(location.bottomRightNeighbour()).getTopLeftCorner() == null)) {
             return false;
         }
+
+        // checking if the bottom left neighbouring card has a hidden corner that makes the location invalid
         if (player.getPlacedCardSlot(location.bottomLeftNeighbour()) != null &&
                 (player.getPlacedCardSlot(location.bottomLeftNeighbour()).getTopRightCorner() == null)) {
             return false;
         }
 
+        // checking if the location has neighbouring cards
         return player.getPlacedCardSlot(location.topRightNeighbour()) != null
                 || player.getPlacedCardSlot(location.topLeftNeighbour()) != null
                 || player.getPlacedCardSlot(location.bottomRightNeighbour()) != null
@@ -338,8 +407,10 @@ public class GameController extends Observable implements VirtualController, Run
 
         for (Player p : game.getPlayers()) {
             for (Goal g : game.getCommonGoals()) {
+                // evaluating the common goal
                 scoreBoard.addScore(p.nickName, g.evaluate(p));
             }
+            // evaluating the private goal
             scoreBoard.addScore(p.nickName, p.getPrivateGoal().evaluate(p));
         }
     }
@@ -356,29 +427,34 @@ public class GameController extends Observable implements VirtualController, Run
      */
     @Override
     public void selectPrivateGoal(String playerIdentifier, int index) {
+        // retrieving player's object
         Player player = this.getPlayerByPlayerIdentifier(playerIdentifier);
         if (player == null) throw new RuntimeException("Unknown Player");
 
         synchronized (this) {
+            // checking if the current game phase allows to select private goals (GAME_CREATION)
             if (gameStatus != GameStatus.GAME_CREATION) {
                 throw new RuntimeException("Cannot select private goal in this game status");
             }
 
+            // checking if the player hadn't already selected their private goal
             if (player.getPrivateGoal() != null) {
                 throw new RuntimeException("Cannot select private goal twice");
             }
 
+            // retrieving the player's available private goals
             Goal[] availableGoals = player.getAvailableGoals();
 
+            // setting the selected goal as the player's private goal
             if (index < 0 || index >= availableGoals.length) {
                 throw new RuntimeException("index out of bound");
             }
-
             player.setPrivateGoal(availableGoals[index]);
         }
 
 
         System.err.println(this.game.getIdGame() + ": " + player.nickName + " selected their goal");
+        // status update
         updateStatus();
     }
 
@@ -392,29 +468,35 @@ public class GameController extends Observable implements VirtualController, Run
      * @param onBackSide       {@code true} if the starting card needs to be placed with the back side up, {@code false} otherwise.
      */
     public void placeStartCard(String playerIdentifier, boolean onBackSide) {
+        // retrieving player's object
         Player player = this.getPlayerByPlayerIdentifier(playerIdentifier);
         if (player == null) throw new RuntimeException("Unknown Player");
 
         synchronized (this) {
+            // checking if the current game phase allows to place start cards (GAME_CREATION)
             if (gameStatus != GameStatus.GAME_CREATION) {
                 throw new RuntimeException("Cannot place starting card in this game status");
             }
 
+            // checking if the player hadn't already placed their starting card
             if (player.getPlacedCardSlot(new CardLocation(0, 0)) != null) {
                 throw new RuntimeException("starting card already placed");
             }
 
             try {
+                // placing the player's starting card
                 player.placeStartingCard(onBackSide);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
 
+        // updating the player's inventory
         updateInventory(player, new CardLocation(0, 0));
 
 
         System.err.println(this.game.getIdGame() + ": " + player.nickName + " placed their starting card");
+        // update status
         updateStatus();
     }
 
@@ -425,24 +507,29 @@ public class GameController extends Observable implements VirtualController, Run
      * @param location the location where the placement occurred.
      */
     private synchronized void updateInventory(Player player, CardLocation location) {
+        // retrieving the card that was placed and adding its items in the player's inventory
         CardSlot placedCard = player.getPlacedCardSlot(location);
         player.addItems(placedCard.collectItems());
 
+        // removing the item covered by the card in the top left neighbour
         CardSlot t = player.getPlacedCardSlot(location.topLeftNeighbour());
         if (t != null) {
             player.removeItem(t.getBottomRightCorner());
         }
 
+        // removing the item covered by the card in the top right neighbour
         t = player.getPlacedCardSlot(location.topRightNeighbour());
         if (t != null) {
             player.removeItem(t.getBottomLeftCorner());
         }
 
+        // removing the item covered by the card in the bottom left neighbour
         t = player.getPlacedCardSlot(location.bottomLeftNeighbour());
         if (t != null) {
             player.removeItem(t.getTopRightCorner());
         }
 
+        // removing the item covered by the card in the bottom right neighbour
         t = player.getPlacedCardSlot(location.bottomRightNeighbour());
         if (t != null) {
             player.removeItem(t.getTopLeftCorner());
@@ -462,38 +549,46 @@ public class GameController extends Observable implements VirtualController, Run
      */
     @Override
     public void placeCard(String playerIdentifier, int index, boolean onBackSide, CardLocation location) {
+        // retrieving the player's object (also checking if it is this player's turn)
         Player player = turnCheck(playerIdentifier);
 
         synchronized (this) {
+            // checking if the player is expected to place a card
             if (this.turnStatus != TurnStatus.PLACE) {
                 throw new RuntimeException("Placement already occurred, player's expected to draw a card");
             }
 
+            // checking if the provided location is valid
             if (!isLocationValid(location, player)) {
                 throw new RuntimeException("cannot place card in the provided location");
             }
 
+            // checking if the provided index is valid
             if (index < 0 || index >= player.getPlayerCards().length) {
                 throw new RuntimeException("Card index's out of bound");
             }
 
+            // checking if the selected card exists
             PlayCard card = player.getPlayerCards()[index];
             if (card == null) {
                 throw new RuntimeException("there's no card in the specified slot");
             }
 
+            // checking if the card's constraint is met
             if (!onBackSide && !card.getConstraint().isSubSetOf(player.getInventory())) {
-                throw new RuntimeException("Card constraint aren't met");
+                throw new RuntimeException("Card constraint isn't met");
             }
 
             try {
+                // placing the card in the player's board
                 player.placeCard(index, onBackSide, location);
 
+                // updating the player's inventory
                 updateInventory(player, location);
 
                 if (!onBackSide) {
+                    // evaluating the card scoring strategy (only if placed on the front side)
                     game.getScoreBoard().addScore(player.nickName,
-
                             // it is safe to assume that the card that was just placed is a PlayCard
                             // since it is certain to come from the player's hand
                             ((PlayCard) player.getPlacedCardSlot(location).card()).getScoringStrategy().evaluate(player, location)
@@ -507,10 +602,11 @@ public class GameController extends Observable implements VirtualController, Run
 
         }
 
-        // Card successfully placed
         advanceTurn();
 
         System.err.println(this.game.getIdGame() + ": " + player.nickName + " placed a card");
+
+        // update status
         updateStatus();
     }
 
@@ -525,13 +621,16 @@ public class GameController extends Observable implements VirtualController, Run
      */
     @Override
     public void drawCard(String playerIdentifier, int index) {
+        // retrieving the player's object (also checking if it is this player's turn)
         Player player = turnCheck(playerIdentifier);
 
         synchronized (this) {
+            // checking if the player's expected to draw
             if (this.turnStatus != TurnStatus.DRAW) {
                 throw new RuntimeException("the player must place a card before they can draw");
             }
 
+            // checking if the provided index is valid
             if (index < 0 || index > 5) {
                 throw new RuntimeException("index out of range");
             }
@@ -591,6 +690,14 @@ public class GameController extends Observable implements VirtualController, Run
         System.err.println(this.game.getIdGame() + ": " + player.nickName + " picked up a card");
     }
 
+    /**
+     * Checks if the player identified by the provided playerIdentifier is expected to play in the current turn.
+     * Also provide a reference to the player's object
+     *
+     * @param playerIdentifier the playerIdentifier of the player who is trying to play
+     * @return the player's object
+     * @throws RuntimeException if the player isn't expected to play in the current turn
+     */
     private Player turnCheck(String playerIdentifier) {
         if (paused) throw new RuntimeException("this game is currently paused");
 
@@ -616,13 +723,21 @@ public class GameController extends Observable implements VirtualController, Run
      *
      * @param playerIdentifier the identifier of the player who is selecting a color
      * @param color            the color selected by the player
+     * @throws RuntimeException if the player is u
      */
     @Override
     public void selectColor(String playerIdentifier, PlayerColor color) {
+        // retrieving the player's object
         Player player = this.getPlayerByPlayerIdentifier(playerIdentifier);
         if (player == null) throw new RuntimeException("Unknown Player");
 
         synchronized (this) {
+            // checking if the game is still in Lobby
+            if(this.gameStatus != GameStatus.LOBBY) {
+                throw new RuntimeException("Color cannot be changed once the game starts");
+            }
+
+            // checking if the color is available
             if (game.getAvailableColor().contains(color)) {
                 player.setColor(color);
                 game.updateAvailableColors();
@@ -635,6 +750,13 @@ public class GameController extends Observable implements VirtualController, Run
         updateStatus();
     }
 
+    /**
+     * Allow to put a message (sent by an authenticated player) in one of the game chats (public or private)
+     *
+     * @param playerIdentifier the string that the player received while joining/creating the game
+     * @param message the message that the player want to send
+     * @param addressee the nickname of the player that needs to receive this message, {@code null} for public messages
+     */
     @Override
     public void sendChatMsg(String playerIdentifier, String message, String addressee) throws RemoteException {
         Player senderPlayer = this.getPlayerByPlayerIdentifier(playerIdentifier);
@@ -685,6 +807,12 @@ public class GameController extends Observable implements VirtualController, Run
     }
 
 
+    /**
+     * Allows to retrieve a reference to the object of the player whose identifier is provided.
+     *
+     * @param playerIdentifier the identifier of the player whose object is required
+     * @return Player object of the requested player, {@code null} if the player isn't recognized within this game
+     */
     public synchronized Player getPlayerByPlayerIdentifier(String playerIdentifier) {
         for (Player p : this.game.getPlayers()) {
             if (p.getClientHandler().getPlayerIdentifier().equals(playerIdentifier)) {
@@ -694,6 +822,12 @@ public class GameController extends Observable implements VirtualController, Run
         return null;
     }
 
+    /**
+     * Allows to retrieve a reference to the object of the player whose nickname is provided.
+     *
+     * @param nickname the nickname of the player whose object is required
+     * @return Player object of the requested player, {@code null} if the player isn't recognized within this game
+     */
     public synchronized Player getPlayerByNickname(String nickname) {
         for (Player p : this.game.getPlayers()) {
             if (p.nickName.equals(nickname)) {
@@ -704,6 +838,12 @@ public class GameController extends Observable implements VirtualController, Run
     }
 
 
+    /**
+     * Checks if a provided nickname is available for this game
+     *
+     * @param nickname the nickname that needs to be checked
+     * @return {@code true} if the nickname is available, {@code false} otherwise
+     */
     public synchronized boolean isNicknameAvailable(String nickname) {
         for (Player p : this.game.getPlayers()) {
             if (p.nickName.equalsIgnoreCase(nickname)) {

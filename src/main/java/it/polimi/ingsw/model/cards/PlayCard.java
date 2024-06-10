@@ -127,11 +127,23 @@ public class PlayCard extends Card {
         return type;
     }
 
+    /**
+     * Retrieves the required corner on the back side of the card
+     *
+     * @param index the index of the desired corner
+     * @return the corner in the specified position, on the back side
+     */
     @Override
     protected Corner getBackCorner(int index) {
         return Corner.EMPTY;
     }
 
+    /**
+     * Retrieves the items that the player has obtained by placing the card on the back side.
+     * Intended for internal use.
+     *
+     * @return ItemCollection containing  the items that the player has obtained by placing the card on the back side
+     */
     @Override
     protected ItemCollection collectBackItems() {
         return new ItemCollection().add(this.getType().getCorner());

@@ -15,7 +15,7 @@ public class PlayersHandUpdateMessage extends ServerMessage {
     private final int cardSlot;
 
     /**
-     * Builds the message.
+     * Builds a PlayersHandUpdateMessage.
      *
      * @param playerNickname the nickname of the player whose hand has changed
      * @param card           the card that was inserted in the player's hand

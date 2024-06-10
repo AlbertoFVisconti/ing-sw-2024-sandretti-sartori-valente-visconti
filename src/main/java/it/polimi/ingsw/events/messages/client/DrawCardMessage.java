@@ -25,11 +25,11 @@ public class DrawCardMessage extends ClientMessage {
     /**
      * Tries to draw/pick up the selected card.
      *
-     * @param selector   the GameSelector instance that handles the game the player's playing.
+     * @param mainController   the GameSelector instance that handles the game the player's playing.
      * @param controller the GameController that handles the game the player's playing.
      */
     @Override
-    public void execute(VirtualMainController selector, VirtualController controller) {
+    public void execute(VirtualMainController mainController, VirtualController controller) {
         try {
             controller.drawCard(this.getPlayerIdentifier(), index);
         } catch (RemoteException e) {

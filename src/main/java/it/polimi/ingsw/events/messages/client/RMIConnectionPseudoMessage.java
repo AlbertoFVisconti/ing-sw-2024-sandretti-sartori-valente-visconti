@@ -7,6 +7,10 @@ import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
 
+/**
+ * "Message" that the server uses internally in order to process RMI connection request
+ * asynchronously.
+ */
 public class RMIConnectionPseudoMessage extends ClientMessage {
     private final VirtualView view;
 
@@ -19,10 +23,16 @@ public class RMIConnectionPseudoMessage extends ClientMessage {
         this.view = view;
     }
 
+    /**
+     * Allows the server to perform the operation required by the message given the controllers
+     *
+     * @param mainController   the GameController instance that handles the game the player's playing.
+     * @param controller the GameController that handles the game the player's playing.
+     */
     @Override
-    public void execute(VirtualMainController selector, VirtualController controller) {
+    public void execute(VirtualMainController mainController, VirtualController controller) {
         try {
-            selector.connect(view);
+            mainController.connect(view);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

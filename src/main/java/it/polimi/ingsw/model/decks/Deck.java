@@ -100,8 +100,4 @@ public class Deck<T extends Drawable> extends Observable implements Serializable
     public boolean isEmpty() {
         return this.topOfTheStack == null;
     }
-
-    public ArrayList<T> remaningCards() {
-        return (ArrayList<T>) remaining;
-    }
 }

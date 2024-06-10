@@ -29,6 +29,12 @@ public abstract class Goal implements Drawable, Serializable {
     public Resource getCardResourceType() {
         return null;
     }
+
+    /**
+     * Retrieves the path to the image that represents the goal
+     *
+     * @return the path to the image that represents the goal
+     */
     public String getPath(){
         return path;
     }

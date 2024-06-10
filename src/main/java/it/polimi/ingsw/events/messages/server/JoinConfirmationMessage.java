@@ -13,7 +13,7 @@ public class JoinConfirmationMessage extends ServerMessage {
 
 
     /**
-     * Builds the message.
+     * Builds a JoinConfirmationMessage with no game data (game has yet to start).
      *
      * @param nickname the player's nickname.
      */
@@ -24,6 +24,12 @@ public class JoinConfirmationMessage extends ServerMessage {
     }
 
 
+    /**
+     * Builds a JoinConfirmationMessage that contains game data
+     *
+     * @param nickname the nickname that the player used to join the game
+     * @param savings the game data
+     */
     public JoinConfirmationMessage(String nickname, ClientGameSaving savings) {
         super(MessageType.CONNECT_JOIN_MESSAGE);
         this.nickname = nickname;

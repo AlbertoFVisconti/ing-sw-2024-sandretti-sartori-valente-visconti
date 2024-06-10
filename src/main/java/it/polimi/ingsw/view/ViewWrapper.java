@@ -126,7 +126,7 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView {
     }
 
     @Override
-    public void receiveMessage(ChatMessage chatMessage, boolean isPrivate) throws RemoteException {
+    public void sendChatMsg(ChatMessage chatMessage, boolean isPrivate) throws RemoteException {
         view.forwardMessage(new ServerChatMsgMessage(chatMessage, isPrivate));
     }
 }

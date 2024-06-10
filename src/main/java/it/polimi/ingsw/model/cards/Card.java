@@ -10,6 +10,8 @@ import java.util.Arrays;
 /**
  * Abstract representation of in-game cards
  * Holds methods and parameters that helps handle and generate every card in the game.
+ * Cards are immutable objects, allowing to create a single object for each card in the game
+ * and reuse the same set of object for all the games.
  */
 public abstract class Card implements Drawable, Serializable {
     private final String cardID;
@@ -35,6 +37,11 @@ public abstract class Card implements Drawable, Serializable {
         this.backpath=backpath;
     }
 
+    /**
+     * Retrieves the card's ID
+     *
+     * @return the card's ID
+     */
     public String getCardID() {
         return cardID;
     }
@@ -42,14 +49,6 @@ public abstract class Card implements Drawable, Serializable {
     /**
      * Retrieves the corner at the specified index in the front face.
      * This method is intended for internal usage in order to avoid code repetition.
-     * <p>
-     * Subclasses override this method in order to provide the correct Corner depending
-     * on the side of the card.
-     * This method definition always retrieves the corner on the front side.
-     * That's mainly because the corners array (representing the front corners) is private to this
-     * class, so subclasses cannot access it.
-     * In order to provide the corner, if the card has the front side up, subclasses needs to
-     * cass this version of the method (through super.getCorner(index)).
      *
      * @param index the index of the desired corner
      * @return the requested corner on the front face, {@code null} if the corner is hidden
@@ -58,8 +57,23 @@ public abstract class Card implements Drawable, Serializable {
         return corners[index];
     }
 
+    /**
+     * Retrieves the corner at the specified index in the back face.
+     * This method is intended for internal usage in order to avoid code repetition.
+     *
+     * @param index the index of the desired corner
+     * @return the requested corner on the front face, {@code null} if the corner is hidden
+     */
     protected abstract Corner getBackCorner(int index);
 
+    /**
+     * Retrieves the corner at the specified index in the specified face.
+     * This method is intended for internal usage in order to avoid code repetition.
+     *
+     * @param index the index of the desired corner
+     * @param onBackSide {@code true} if the requested corner is on the back side, {@code false} otherwise
+     * @return the requested corner on the selected face, {@code null} if the corner is hidden
+     */
     private Corner getCorner(int index, boolean onBackSide) {
         if (onBackSide) return this.getBackCorner(index);
         else return this.getFrontCorner(index);
@@ -114,23 +128,30 @@ public abstract class Card implements Drawable, Serializable {
     }
 
     /**
-     * Retrieves all the items the player has obtained by placing this card.
-     * This implementation always return the content of the front side's corners.
-     * That's because the front side's corners are stored in the corner array which
-     * is private to this class, because The front is the same (in terms of resources to collect)
-     * for all the cards (start, gold and resource cards).
-     * Thus, subclasses needs to call this method if the card has the front side up, the
-     * redefinition handles the collection of items on the back side.
+     * Retrieves all the items the player has obtained by placing this card
+     * on the specified side.
      *
-     * @return ItemCollection containing the items in the card's front side's corner.
+     * @return ItemCollection containing the items that the cards provide
      */
     public ItemCollection collectItems(boolean onBackSide) {
         if (onBackSide) return collectBackItems();
         else return collectFrontItems();
     }
 
+    /**
+     * Retrieves the items that the player has obtained by placing the card on the back side.
+     * Intended for internal use.
+     *
+     * @return ItemCollection containing  the items that the player has obtained by placing the card on the back side
+     */
     protected abstract ItemCollection collectBackItems();
 
+    /**
+     * Retrieves the items that the player has obtained by placing the card on the front side
+     * Intended for internal use.
+     *
+     * @return ItemCollection containing  the items that the player has obtained by placing the card on the front side
+     */
     private ItemCollection collectFrontItems() {
         return new ItemCollection()
                 .add(getTopLeftCorner(false))
@@ -151,9 +172,18 @@ public abstract class Card implements Drawable, Serializable {
         } else return false;
     }
 
+    /**
+     * Retrieves the path to the image that represents the front side of the card
+     * @return the path to the image that represents the front side of the card
+     */
     public String getFrontpath() {
         return frontpath;
     }
+
+    /**
+     * Retrieves the path to the image that represents the back side of the card
+     * @return the path to the image that represents the back side of the card
+     */
     public String getBackpath() {
         return backpath;
     }

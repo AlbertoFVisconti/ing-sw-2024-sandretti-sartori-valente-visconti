@@ -104,12 +104,11 @@ public class View extends Thread implements VirtualView {
                 () -> {
                     ServerMessage message;
 
-                    while (true) {
+                    while (!Thread.currentThread().isInterrupted()) {
                         try {
                             if (this.localPlayer != null) {
                                 message = gameMessages.take();
                             } else {
-                                Thread.sleep(100);
                                 continue;
                             }
                         } catch (InterruptedException e) {
@@ -350,7 +349,7 @@ public class View extends Thread implements VirtualView {
     }
 
     @Override
-    public void receiveMessage(ChatMessage chatMessage, boolean isPrivate) throws RemoteException {
+    public void sendChatMsg(ChatMessage chatMessage, boolean isPrivate) throws RemoteException {
         if (isPrivate) {
             String remoteNickname;
             if (chatMessage.getSenderNick().equals(this.localPlayer.nickName)) {

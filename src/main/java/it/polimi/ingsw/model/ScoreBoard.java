@@ -75,6 +75,11 @@ public class ScoreBoard extends Observable implements Serializable {
         this.setScore(nickName, scores.get(nickName) + scoreDelta);
     }
 
+    /**
+     * Copy the current ScoreBoard's content in another ScoreBoard object.
+     *
+     * @param scoreBoard ScoreBoard that needs to be overridden.
+     */
     public void copyScore(ScoreBoard scoreBoard) {
         this.scores = new HashMap<>();
         for (String nickname : scoreBoard.scores.keySet()) {

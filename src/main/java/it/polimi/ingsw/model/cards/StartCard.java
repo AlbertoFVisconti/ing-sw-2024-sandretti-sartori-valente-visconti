@@ -42,23 +42,40 @@ public class StartCard extends Card {
         this.permanentResources = new ItemCollection(permanentResources);
     }
 
+    /**
+     * Retrieves the startcard's permanent resources
+     *
+     * @return ItemCollection containing the card's permanent resources
+     */
     public ItemCollection getPermanentResources() {
         return new ItemCollection(this.permanentResources);
     }
 
     /**
-     * @return {@code mull}
+     * @return {@code null}
      */
     @Override
     public Resource getCardResourceType() {
         return null;
     }
 
+    /**
+     * Retrieves the required corner on the back side of the card
+     *
+     * @param index the index of the desired corner
+     * @return the corner in the specified position, on the back side
+     */
     @Override
     protected Corner getBackCorner(int index) {
         return this.backCorners[index];
     }
 
+    /**
+     * Retrieves the items that the player has obtained by placing the card on the back side.
+     * Intended for internal use.
+     *
+     * @return ItemCollection containing  the items that the player has obtained by placing the card on the back side
+     */
     @Override
     protected ItemCollection collectBackItems() {
         return new ItemCollection()

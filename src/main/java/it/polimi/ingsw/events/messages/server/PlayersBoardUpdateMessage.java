@@ -16,7 +16,7 @@ public class PlayersBoardUpdateMessage extends ServerMessage {
     private final CardLocation location;
 
     /**
-     * Builds the message.
+     * Builds a PlayersBoardUpdateMessage.
      *
      * @param playerNickname the nickname of the player whose board has changed.
      * @param placedCardSlot the cardSlot that contains the card that was place on the board.
