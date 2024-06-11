@@ -7,7 +7,9 @@ import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.utils.CardLocation;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -233,37 +235,68 @@ public class GameViewController implements GUIScene {
                     Objects.requireNonNull(getClass().getResource("/image/cardshape.png")).toString()));
             shape.setFitHeight(124.0);
             shape.setFitWidth(171.0);
-            shape.setLayoutX(cardsimage.get(cl).getLayoutX() + (i * 128));
-            shape.setLayoutY(cardsimage.get(cl).getLayoutY() + (-j * 63));
-            shape.setOpacity(0.5);
-            shape.setVisible(true);
-            TablePane.getChildren().add(shape);
-            shape.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                Client.getInstance().getServerHandler().sendMessage(new PlaceCardMessage(0, false, new CardLocation(cl.getX() + i, cl.getY() + j)));
-                for (ImageView s : boardshapes.values()) {
-                    s.setVisible(false);
-                    s.setOnMouseClicked(null);
-                }
-                ImageView card = new ImageView();
-                cardsimage.put(new CardLocation(cl.getX() + 1, cl.getY() + 1), card);
-                card.setImage(new Image(
-                        Objects.requireNonNull(getClass().getResource(selected.getFrontpath())).toString()));
-                card.setFitHeight(124.0);
-                card.setFitWidth(171.0);
-                card.setLayoutX(cardsimage.get(cl).getLayoutX() + (i * 128));
-                card.setLayoutY(cardsimage.get(cl).getLayoutY() + (-j * 63));
-                TablePane.getChildren().add(card);
-                card.setVisible(true);
-                handcard1.setOpacity(1);
-                handcard2.setOpacity(1);
-                handcard3.setOpacity(1);
-            });
+            double lx=0;
+            double ly=0;
+            if (cardsimage.get(cl)!=null) {
+                lx = cardsimage.get(cl).getLayoutX();
+                ly = cardsimage.get(cl).getLayoutY();
+                shape.setLayoutX(lx + (i * 128));
+                shape.setLayoutY(ly + (-j * 63));
+                shape.setOpacity(0.5);
+                shape.setVisible(true);
+                TablePane.getChildren().add(shape);
+                shape.setOnMouseClicked((MouseEvent mouseEvent) -> {
+                    try {
+                        Client.getInstance().getServerHandler().sendMessage(new PlaceCardMessage(sel, false, new CardLocation(cl.getX() + i, cl.getY() + j)));
+                        for (ImageView s : boardshapes.values()) {
+                            s.setVisible(false);
+                            s.setOnMouseClicked(null);
+                        }
+                        ImageView card = new ImageView();
+                        cardsimage.put(new CardLocation(cl.getX() + i, cl.getY() + j), card);
+                        card.setImage(new Image(
+                                Objects.requireNonNull(getClass().getResource(selected.getFrontpath())).toString()));
+                        card.setFitHeight(124.0);
+                        card.setFitWidth(171.0);
+                        card.setLayoutX(cardsimage.get(cl).getLayoutX() + (i * 128));
+                        card.setLayoutY(cardsimage.get(cl).getLayoutY() + (-j * 63));
+                        TablePane.getChildren().add(card);
+                        card.setVisible(true);
+                        handcard1.setOpacity(1);
+                        handcard2.setOpacity(1);
+                        handcard3.setOpacity(1);
+                    } catch (RuntimeException e) {
+                        reportError(e);
+                    }
+                });
+            }else{
+                System.out.println("non ho trovato la cardsimage in "+cl.getX()+" "+cl.getY());
+            }
     }
 
     @Override
     public void update() {
 
         refreshScoreboard();
+
+        resourceDeckb.setImage(new Image(
+                Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getGameModel().getResourceCardsDeck().getTopOfTheStack().getPath())).toString()
+        ));
+        resourceDeckf1.setImage(new Image(
+                Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getGameModel().getVisibleCards()[0].getFrontpath())).toString()
+        ));
+        resourceDeckf2.setImage(new Image(
+                Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getGameModel().getVisibleCards()[1].getFrontpath())).toString()
+        ));
+        goldDeckf1.setImage(new Image(
+                Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getGameModel().getVisibleCards()[2].getFrontpath())).toString()
+        ));
+        goldDeckf2.setImage(new Image(
+                Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getGameModel().getVisibleCards()[3].getFrontpath())).toString()
+        ));
+        goldDeckb.setImage(new Image(
+                Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getGameModel().getGoldCardsDeck().getTopOfTheStack().getGoldenPath())).toString()
+        ));
 
         if((Client.getInstance().getView().getPlayersTurn().equals(Client.getInstance().getView().getLocalPlayer().getNickname()))) {
             if (Client.getInstance().getView().getTurnStatus().equals(TurnStatus.PLACE)) {
@@ -383,6 +416,13 @@ public class GameViewController implements GUIScene {
 
     @Override
     public void reportError(RuntimeException exception)  {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("An error occurred");
+            alert.setContentText(exception.getMessage());
+            alert.showAndWait();
+        });
 
     }
 

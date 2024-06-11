@@ -456,7 +456,7 @@
     "tl_corner": "HIDDEN",
     "tr_corner": "EMPTY",
     "bl_corner": "EMPTY",
-    "br_corner": "INK",
+    "br_corner": "SCROLL",
     "scoring_strategy": "item_count",
     "free_score": 0,
     "score_per_corner": 0,

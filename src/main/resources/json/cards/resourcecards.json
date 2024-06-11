@@ -86,7 +86,7 @@
   {
     "is_gold": false,
     "type": "FUNGUS",
-    "tl_corner": "PLANT",
+    "tl_corner": "FUNGUS",
     "tr_corner": "INSECT",
     "bl_corner": "SCROLL",
     "br_corner": "EMPTY",
@@ -383,7 +383,7 @@
     "tl_corner": "HIDDEN",
     "tr_corner": "EMPTY",
     "bl_corner": "ANIMAL",
-    "br_corner": "HIDDEN",
+    "br_corner": "EMPTY",
     "scoring_strategy": "free_score",
     "free_score": 1,
     "score_per_corner": 0,
