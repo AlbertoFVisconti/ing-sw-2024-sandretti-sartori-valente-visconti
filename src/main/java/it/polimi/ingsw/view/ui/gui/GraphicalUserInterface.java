@@ -10,6 +10,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -108,8 +109,23 @@ public class GraphicalUserInterface extends Application implements UserInterface
 
     @Override
     public synchronized void setScoreScene() {
+        Platform.runLater( () -> {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/ScoreBoard.fxml"));
+            Parent parent;
+            try {
+                parent = fxmlLoader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
 
+            stage.setTitle("Scoreboard");
+            stage.setScene(new Scene(parent));
+            stage.show();
+        });
     }
+
 
     @Override
     public synchronized void update() {

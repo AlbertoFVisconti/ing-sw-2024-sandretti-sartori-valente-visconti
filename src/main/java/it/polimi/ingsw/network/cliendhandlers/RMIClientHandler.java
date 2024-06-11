@@ -33,6 +33,12 @@ public class RMIClientHandler extends ClientHandler {
         this.view = view;
     }
 
+    /**
+     * Allows to send a message to the client through RMI.
+     * The message will be "converted" to an equivalent Remote Method Invocation.
+     *
+     * @param message ServerMessage object containing the data that needs to be sent to the client
+     */
     @Override
     public void sendMessage(ServerMessage message) {
         try {

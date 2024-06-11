@@ -36,18 +36,22 @@ public class SocketClientHandler extends ClientHandler {
                 () -> {
                     ClientMessage message;
 
-                    while (true) {
+                    while (!Thread.currentThread().isInterrupted()) {
                         try {
+                            // reading the next incoming message
                             message = (ClientMessage) inputStream.readObject();
                         } catch (IOException | ClassNotFoundException e) {
+                            // client's disconnected
                             this.forceDisconnection();
                             break;
                         }
 
                         if (message.messageType == MessageType.CONNECT_JOIN_MESSAGE ||
                                 message.messageType == MessageType.PING_MESSAGE) {
+                            // forwarding the message to the MainController
                             MainController.getInstance().forwardMessage(message);
                         } else {
+                            // forwarding the message to the GameController
                             gameController.forwardMessage(message);
                         }
 
@@ -70,6 +74,11 @@ public class SocketClientHandler extends ClientHandler {
         }
     }
 
+    /**
+     * Sends a message to the client through socket.
+     *
+     * @param message ServerMessage object containing the data that needs to be sent to the client
+     */
     @Override
     public synchronized void sendMessage(ServerMessage message) {
         try {

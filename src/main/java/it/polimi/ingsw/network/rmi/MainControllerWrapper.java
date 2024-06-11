@@ -60,6 +60,12 @@ public class MainControllerWrapper extends UnicastRemoteObject implements Virtua
 
     }
 
+    /**
+     * Allows to request a list of available games.
+     *
+     * @param playerIdentifier the identifier of the client that is creating a game
+     * @throws RemoteException in case of errors with the remote communication.
+     */
     @Override
     public void getAvailableGames(String playerIdentifier) throws RemoteException {
         ClientMessage message = new GameListRequestMessage();
@@ -67,12 +73,25 @@ public class MainControllerWrapper extends UnicastRemoteObject implements Virtua
         mainController.forwardMessage(message);
     }
 
+    /**
+     * Allows to connect to the server as an RMI client.
+     *
+     * @param view a reference to the client's view (remote object)
+     * @throws RemoteException in case of errors with the remote communication.
+     */
     @Override
     public void connect(VirtualView view) throws RemoteException {
         ClientMessage message = new RMIConnectionPseudoMessage(view);
         mainController.forwardMessage(message);
     }
 
+    /**
+     * Allows to send a ping message.
+     *
+     * @param playerIdentifier the identifier of the player who sending the ping message.
+     * @param isAnswer         {@code true} if the server is answering to a previous ping message, {@code false} if the server is checking on the client.
+     * @throws RemoteException in case of errors with the remote communication.
+     */
     @Override
     public void ping(String playerIdentifier, boolean isAnswer) throws RemoteException {
         ClientMessage message = new ClientToServerPingMessage(isAnswer);

@@ -10,15 +10,27 @@ import it.polimi.ingsw.view.ui.gui.GraphicalUserInterface;
 import it.polimi.ingsw.view.ui.tui.TextualUserInterface;
 
 import java.io.IOException;
-import java.rmi.NotBoundException;
 import java.util.Scanner;
 
+/**
+ * Allows to run the client application that allows to play the game as a client.
+ */
 public class Client {
-    private final View view;
+    // Singleton
     public static Client instance;
+
+    // local view
+    private final View view;
+
+    // Server Handler
     private final ServerHandler serverHandler;
 
-
+    /**
+     * Builds a Client with the specified view and server handler
+     *
+     * @param view the local view
+     * @param serverHandler the local server handler
+     */
     private Client(View view, ServerHandler serverHandler) {
         this.view = view;
         this.serverHandler = serverHandler;
@@ -34,20 +46,58 @@ public class Client {
         }
     }
 
+    /**
+     * Returns a reference to the Client object
+     *
+     * @return reference to Client object
+     */
+    public static Client getInstance() {
+        return instance;
+    }
 
+    /**
+     * Retrieves the local view
+     *
+     * @return the local View
+     */
+    public View getView() {
+        return view;
+    }
+
+    /**
+     * Retrieves the local server handler
+     *
+     * @return the local ServerHandler
+     */
+    public ServerHandler getServerHandler() {
+        return serverHandler;
+    }
+
+    /**
+     * Starts the client application by running the view
+     */
     private void run() {
         view.start();
     }
 
-    public static void main(String[] args) throws IOException, NotBoundException {
+    /**
+     * The main method to run the client application.
+     *
+     * @param args commend line arguments
+     * @throws IOException if an I/O error occurs
+     */
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
 
         int selectedProtocol, selectedInterface;
+
+        // asking to select the connection protocol (socket or RMI)
         do {
             System.out.println("Select protocol (1 -> socket, 2 -> RMI): ");
             selectedProtocol = scanner.nextInt();
         } while (selectedProtocol != 1 && selectedProtocol != 2);
 
+        // asking to select between TUI/CLI and GUI
         do {
             System.out.println("Select User Interface (1 -> TUI, 2 -> GUI): ");
             selectedInterface = scanner.nextInt();
@@ -73,18 +123,4 @@ public class Client {
         client.run();
 
     }
-
-    public View getView() {
-        return view;
-    }
-
-    public ServerHandler getServerHandler() {
-        return serverHandler;
-    }
-
-    public static Client getInstance() {
-        return instance;
-    }
-
-
 }

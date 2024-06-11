@@ -11,19 +11,36 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+/**
+ * Handle the client-side socket connection to the server.
+ */
 public class SocketServerHandler extends ServerHandler implements Runnable {
+    // the socket that connects to the server and output/input streams
     private Socket socket;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
 
+    // Socket server's IP address
     private final String ip;
+    // Socket server's port
     private final int port;
 
+    /**
+     * Builds a SocketServerHandler with the specified parameters
+     *
+     * @param ip socket server's IP address
+     * @param port socket server's port
+     */
     public SocketServerHandler(String ip, int port) {
         this.ip = ip;
         this.port = port;
     }
 
+    /**
+     * Sends a message to the server through socket connection
+     *
+     * @param message ClientMessage that needs to be sent
+     */
     @Override
     protected void forwardMessage(ClientMessage message) {
         try {
@@ -34,6 +51,11 @@ public class SocketServerHandler extends ServerHandler implements Runnable {
         }
     }
 
+    /**
+     *
+     *
+     * @throws Exception if an error occurs during the connection
+     */
     @Override
     public void connect() throws Exception {
         socket = new Socket(ip, port);
@@ -43,11 +65,14 @@ public class SocketServerHandler extends ServerHandler implements Runnable {
         new Thread(this).start();
     }
 
+    /**
+     * Thread method that process inbound message and forwards them to the View
+     */
     @Override
     public void run() {
         Message message;
 
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             try {
                 message = (Message) inputStream.readObject();
             } catch (IOException | ClassNotFoundException e) {
