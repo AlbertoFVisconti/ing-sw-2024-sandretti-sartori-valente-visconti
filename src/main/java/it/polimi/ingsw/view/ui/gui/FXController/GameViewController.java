@@ -8,14 +8,23 @@ import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.utils.CardLocation;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Label;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +40,11 @@ public class GameViewController implements GUIScene {
     public ImageView resourceDeckb;
     public ImageView goldDeckb;
     public Label turnwarning;
+    public Button showScoreBoard;
+    public ImageView p1color;
+    public ImageView p2color;
+    public ImageView p3color;
+    public ImageView p4color;
     @FXML
     private AnchorPane TablePane;
 
@@ -126,6 +140,8 @@ public class GameViewController implements GUIScene {
             commongoal2.setImage(new Image(
                     Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getGameModel().getCommonGoals()[1].getPath())).toString()
             ));
+            setcolors();
+
         }
         catch (NullPointerException ignored) {}
 
@@ -152,6 +168,101 @@ public class GameViewController implements GUIScene {
         update();
 
 
+    }
+
+    private  void setcolors(){
+        switch(Client.getInstance().getView().getGameModel().getPlayers().get(0).getColor()){
+            case RED:
+                p1color.setImage(new Image(
+                        Objects.requireNonNull(getClass().getResource("/image/RedCircle.png")).toString()
+                ));
+                break;
+            case GREEN:
+                p1color.setImage(new Image(
+                        Objects.requireNonNull(getClass().getResource("/image/GreenCircle.png")).toString()
+                ));
+                break;
+            case YELLOW:
+                p1color.setImage(new Image(
+                        Objects.requireNonNull(getClass().getResource("/image/YellowCircle.png")).toString()
+                ));
+                break;
+            case BLUE:
+                p1color.setImage(new Image(
+                        Objects.requireNonNull(getClass().getResource("/image/BlueCircle.png")).toString()
+                ));
+                break;
+        }
+        switch (Client.getInstance().getView().getGameModel().getPlayers().get(1).getColor()){
+            case RED:
+                p2color.setImage(new Image(
+                        Objects.requireNonNull(getClass().getResource("/image/RedCircle.png")).toString()
+                ));
+                break;
+            case GREEN:
+                p2color.setImage(new Image(
+                        Objects.requireNonNull(getClass().getResource("/image/GreenCircle.png")).toString()
+                ));
+                break;
+            case YELLOW:
+                p2color.setImage(new Image(
+                        Objects.requireNonNull(getClass().getResource("/image/YellowCircle.png")).toString()
+                ));
+                break;
+            case BLUE:
+                p2color.setImage(new Image(
+                        Objects.requireNonNull(getClass().getResource("/image/BlueCircle.png")).toString()
+                ));
+                break;
+        }
+        if (Client.getInstance().getView().getGameModel().getPlayers().size() > 2) {
+            switch (Client.getInstance().getView().getGameModel().getPlayers().get(2).getColor()) {
+                case RED:
+                    p3color.setImage(new Image(
+                            Objects.requireNonNull(getClass().getResource("/image/RedCircle.png")).toString()
+                    ));
+                    break;
+                case GREEN:
+                    p3color.setImage(new Image(
+                            Objects.requireNonNull(getClass().getResource("/image/GreenCircle.png")).toString()
+                    ));
+                    break;
+                case YELLOW:
+                    p3color.setImage(new Image(
+                            Objects.requireNonNull(getClass().getResource("/image/YellowCircle.png")).toString()
+                    ));
+                    break;
+                case BLUE:
+                    p3color.setImage(new Image(
+                            Objects.requireNonNull(getClass().getResource("/image/BlueCircle.png")).toString()
+                    ));
+                    break;
+            }
+        }
+        if (Client.getInstance().getView().getGameModel().getPlayers().size() > 3) {
+            switch (Client.getInstance().getView().getGameModel().getPlayers().get(3).getColor()) {
+                case RED:
+                    p4color.setImage(new Image(
+                            Objects.requireNonNull(getClass().getResource("/image/RedCircle.png")).toString()
+                    ));
+                    break;
+                case GREEN:
+                    p4color.setImage(new Image(
+                            Objects.requireNonNull(getClass().getResource("/image/GreenCircle.png")).toString()
+                    ));
+                    break;
+                case YELLOW:
+                    p4color.setImage(new Image(
+                            Objects.requireNonNull(getClass().getResource("/image/YellowCircle.png")).toString()
+                    ));
+                    break;
+                case BLUE:
+                    p4color.setImage(new Image(
+                            Objects.requireNonNull(getClass().getResource("/image/BlueCircle.png")).toString()
+                    ));
+                    break;
+            }
+        }
     }
     @FXML
     public void SelectCard1(MouseEvent mouseEvent) {
@@ -427,4 +538,14 @@ public class GameViewController implements GUIScene {
     }
 
 
+    public void showScoreboard(ActionEvent event) throws IOException {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/ScoreBoard.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            //stage.initStyle(StageStyle.UNDECORATED);
+            stage.setTitle("ABC");
+            stage.setScene(new Scene(root1));
+            stage.show();
+    }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
@@ -116,6 +117,11 @@
             <ImageView fx:id="commongoal2" fitHeight="75.0" fitWidth="113.0" layoutX="388.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="resourceDeckb" fitHeight="86.0" fitWidth="137.0" layoutX="46.0" layoutY="619.0" onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="goldDeckb" fitHeight="86.0" fitWidth="137.0" layoutX="307.0" layoutY="619.0" onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true" />
+            <Button fx:id="showScoreBoard" layoutX="182.0" layoutY="185.0" mnemonicParsing="false" onAction="#showScoreboard" prefHeight="16.0" prefWidth="53.0" stylesheets="@Style.css" text="Show" />
+            <ImageView fx:id="p1color" fitHeight="27.0" fitWidth="25.0" layoutX="195.0" layoutY="234.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="p2color" fitHeight="27.0" fitWidth="25.0" layoutX="195.0" layoutY="273.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="p3color" fitHeight="27.0" fitWidth="25.0" layoutX="195.0" layoutY="312.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="p4color" fitHeight="27.0" fitWidth="25.0" layoutX="195.0" layoutY="351.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </AnchorPane>
    </children>

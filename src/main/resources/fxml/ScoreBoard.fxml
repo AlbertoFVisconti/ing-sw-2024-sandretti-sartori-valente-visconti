@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="ScorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="806.0" prefWidth="422.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.ui.gui.FXController.ScoreBoardController">
+   <children>
+      <ImageView fitHeight="824.0" fitWidth="432.0">
+         <image>
+            <Image url="@../image/plateau_score.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="redpawn" fitHeight="55.0" fitWidth="52.0" layoutX="93.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="93.0">
+         <image>
+            <Image url="@../image/RedCircle.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="greenpawn" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/GreenCircle.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="yellowpawn" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/YellowCircle.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="bluepwan" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/BlueCircle.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
