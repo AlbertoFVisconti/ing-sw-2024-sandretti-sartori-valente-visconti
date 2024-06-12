@@ -347,26 +347,60 @@ public class GameViewController implements GUIScene {
         cardImage.setVisible(true);
     }
 
-    public void addShape(CardLocation cl, int i, int j){
+    private boolean placeable(CardLocation cl ){
+        CardLocation bl=new CardLocation(cl.getX()-1, cl.getY()-1);
+        CardLocation tl=new CardLocation(cl.getX()-1, cl.getY()+1);
+        CardLocation br=new CardLocation(cl.getX()+1, cl.getY()-1);
+        CardLocation tr=new CardLocation(cl.getX()+1, cl.getY()+1);
+        if(Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(bl)
+                && Client.getInstance().getView().getLocalPlayer().getBoard().get(bl).getTopRightCorner()==null)
+            return false;
+        if(Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(tl)
+                && Client.getInstance().getView().getLocalPlayer().getBoard().get(tl).getBottomRightCorner()==null)
+            return false;
+        if(Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(br)
+                && Client.getInstance().getView().getLocalPlayer().getBoard().get(br).getTopLeftCorner()==null )
+            return false;
+        if(Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(tr)
+                && Client.getInstance().getView().getLocalPlayer().getBoard().get(tr).getBottomLeftCorner()==null)
+            return false;
+        return true;
+    }
+    public void addPlaceHolder(CardLocation cl, Set<CardLocation> seen){
+        if(cardsimage.containsKey(cl)){
+            int[] poss={-1,1};
+            for(int i: poss){
+                for(int j: poss){
+                    CardLocation p = new CardLocation(cl.getX() + i, cl.getY() + j);
+                    if (!seen.contains(p) && placeable(p)) {
+                        seen.add(p);
+                        addShape(p);
+                        addPlaceHolder(p, seen);
+                    }
+                }
+            }
+        }
+    }
+    public void addShape(CardLocation cl){
+            if(boardshapes.containsKey(cl)){
+                boardshapes.get(cl).setVisible(false);
+                boardshapes.get(cl).setOnMouseClicked(null);
+            }
             ImageView shape = new ImageView();
-            boardshapes.put(new CardLocation(cl.getX() + i, cl.getY() + j), shape);
+            boardshapes.put(new CardLocation(cl.getX() , cl.getY() ), shape);
             shape.setImage(new Image(
                     Objects.requireNonNull(getClass().getResource("/image/cardshape.png")).toString()));
             shape.setFitHeight(124.0);
             shape.setFitWidth(171.0);
-            double lx=0;
-            double ly=0;
-            if (cardsimage.get(cl)!=null) {
-                lx = cardsimage.get(cl).getLayoutX();
-                ly = cardsimage.get(cl).getLayoutY();
-                shape.setLayoutX(lx + (i * 128));
-                shape.setLayoutY(ly + (-j * 63));
+            if (!cardsimage.containsKey(cl)) {
+                shape.setLayoutX(startingcard.getLayoutX() + (cl.getX() * 128));
+                shape.setLayoutY(startingcard.getLayoutY() + (-cl.getY() * 63));
                 shape.setOpacity(0.5);
                 shape.setVisible(true);
                 TablePane.getChildren().add(shape);
                 shape.setOnMouseClicked((MouseEvent mouseEvent) -> {
                     try {
-                        Client.getInstance().getServerHandler().sendMessage(new PlaceCardMessage(sel, false, new CardLocation(cl.getX() + i, cl.getY() + j)));
+                        Client.getInstance().getServerHandler().sendMessage(new PlaceCardMessage(sel, false, new CardLocation(cl.getX() , cl.getY() )));
                         for (ImageView s : boardshapes.values()) {
                             s.setVisible(false);
                             s.setOnMouseClicked(null);
@@ -464,29 +498,8 @@ public class GameViewController implements GUIScene {
 
                 deactiveDeck();
 
-                //adds the shapes(slot where you can place cards) to the board
-                for (CardLocation cardLocation : Client.getInstance().getView().getLocalPlayer().getBoard().keySet()) {
-                    if (!Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1))) {
-                        if ((!boardshapes.containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1))) || (boardshapes.containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1))) && !boardshapes.get(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() + 1)).isVisible()) {
-                            addShape(cardLocation, 1, 1);
-                        }
-                    }
-                    if (!Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1))) {
-                        if ((!boardshapes.containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1))) || (boardshapes.containsKey(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1))) && !boardshapes.get(new CardLocation(cardLocation.getX() + 1, cardLocation.getY() - 1)).isVisible()){
-                            addShape(cardLocation, 1, -1);
-                        }
-                    }
-                    if (!Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1))) {
-                        if ((!boardshapes.containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1))) || (boardshapes.containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1))) && !boardshapes.get(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() + 1)).isVisible()) {
-                            addShape(cardLocation, -1, 1);
-                        }
-                    }
-                    if (!Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1))) {
-                        if ((!boardshapes.containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1))) || (boardshapes.containsKey(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1))) && !boardshapes.get(new CardLocation(cardLocation.getX() - 1, cardLocation.getY() - 1)).isVisible()){
-                            addShape(cardLocation, -1, -1);
-                        }
-                    }
-                }
+
+                addPlaceHolder(new CardLocation(0,0), new HashSet<>());
 
             } else if (Client.getInstance().getView().getTurnStatus().equals(TurnStatus.DRAW)) {
                 resourceDeckb.setOpacity(1);
