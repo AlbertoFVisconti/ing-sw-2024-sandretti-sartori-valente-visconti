@@ -4,9 +4,12 @@ import it.polimi.ingsw.controller.TurnStatus;
 import it.polimi.ingsw.events.messages.client.DrawCardMessage;
 import it.polimi.ingsw.events.messages.client.PlaceCardMessage;
 import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.CardSlot;
+import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.utils.CardLocation;
+import it.polimi.ingsw.view.ui.gui.MediaManager;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,9 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Label;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class GameViewController implements GUIScene {
 
@@ -332,6 +333,20 @@ public class GameViewController implements GUIScene {
         handcard3.setOpacity(0.5);
     }
 
+    private void addCardSlot(CardSlot cardSlot,CardLocation cl){
+        ImageView cardImage = new ImageView(MediaManager.getInstance().getImage(cardSlot));
+        cardImage.setFitHeight(124.0);
+        cardImage.setFitWidth(171.0);
+
+        cardImage.setLayoutX(startingcard.getLayoutX() + (cl.getX() * 128));
+        cardImage.setLayoutY(startingcard.getLayoutY() + (-cl.getY() * 63));
+
+        cardsimage.put(cl, cardImage);
+
+        TablePane.getChildren().add(cardImage);
+        cardImage.setVisible(true);
+    }
+
     public void addShape(CardLocation cl, int i, int j){
             ImageView shape = new ImageView();
             boardshapes.put(new CardLocation(cl.getX() + i, cl.getY() + j), shape);
@@ -356,16 +371,16 @@ public class GameViewController implements GUIScene {
                             s.setVisible(false);
                             s.setOnMouseClicked(null);
                         }
-                        ImageView card = new ImageView();
-                        cardsimage.put(new CardLocation(cl.getX() + i, cl.getY() + j), card);
-                        card.setImage(new Image(
-                                Objects.requireNonNull(getClass().getResource(selected.getFrontpath())).toString()));
-                        card.setFitHeight(124.0);
-                        card.setFitWidth(171.0);
-                        card.setLayoutX(cardsimage.get(cl).getLayoutX() + (i * 128));
-                        card.setLayoutY(cardsimage.get(cl).getLayoutY() + (-j * 63));
-                        TablePane.getChildren().add(card);
-                        card.setVisible(true);
+//                        ImageView card = new ImageView();
+//                        cardsimage.put(new CardLocation(cl.getX() + i, cl.getY() + j), card);
+//                        card.setImage(new Image(
+//                                Objects.requireNonNull(getClass().getResource(selected.getFrontpath())).toString()));
+//                        card.setFitHeight(124.0);
+//                        card.setFitWidth(171.0);
+//                        card.setLayoutX(cardsimage.get(cl).getLayoutX() + (i * 128));
+//                        card.setLayoutY(cardsimage.get(cl).getLayoutY() + (-j * 63));
+//                        TablePane.getChildren().add(card);
+//                        card.setVisible(true);
                         handcard1.setOpacity(1);
                         handcard2.setOpacity(1);
                         handcard3.setOpacity(1);
@@ -382,6 +397,22 @@ public class GameViewController implements GUIScene {
     public void update() {
 
         refreshScoreboard();
+
+        ArrayList<CardLocation> newCardsOnBoard = new ArrayList<>();
+
+        Map<CardLocation,CardSlot> playerBoard = Client.getInstance().getView().getLocalPlayer().getBoard();
+        for(CardLocation cardLocation : playerBoard.keySet()) {
+            if(!cardsimage.containsKey(cardLocation)) {
+                newCardsOnBoard.add(cardLocation);
+            }
+        }
+
+        newCardsOnBoard.sort(Comparator.comparingInt((CardLocation cl) -> playerBoard.get(cl).placementTurn()));
+
+        for(CardLocation cardLocation: newCardsOnBoard) {
+            this.addCardSlot(playerBoard.get(cardLocation),cardLocation);
+        }
+
 
         resourceDeckb.setImage(new Image(
                 Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getGameModel().getResourceCardsDeck().getTopOfTheStack().getPath())).toString()
@@ -464,7 +495,7 @@ public class GameViewController implements GUIScene {
                 resourceDeckf2.setOpacity(1);
                 goldDeckf1.setOpacity(1);
                 goldDeckf2.setOpacity(1);
-                previousplayer = Client.getInstance().getView().getPlayersTurn();
+
                 turnwarning.setText(Client.getInstance().getView().getLocalPlayer().getNickname() + " it's your turn to pick up a card!");
                 for(ImageView s : boardshapes.values()){
                     s.setVisible(false);
@@ -489,30 +520,40 @@ public class GameViewController implements GUIScene {
                     Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(5));
                 });
             }
-        }else {
+        }
+        else {
             deactiveDeck();
 
             turnwarning.setText(Client.getInstance().getView().getPlayersTurn() + "'s turn!");
-            if(Client.getInstance().getView().getLocalPlayerName().equals(previousplayer)){
-                switch (sel){
-                    case 0:
-                        handcard1.setImage(new Image(
-                                Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[sel].getFrontpath())).toString())
-                        );
-                        break;
-                    case 1:
-                        handcard2.setImage(new Image(
-                                Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[sel].getFrontpath())).toString())
-                        );
-                        break;
-                    case 2:
-                        handcard3.setImage(new Image(
-                                Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[sel].getFrontpath())).toString())
-                        );
-                        break;
-                }
+        }
 
-            }
+        PlayCard[] playerCards =  Client.getInstance().getView().getLocalPlayer().getPlayerCards();
+
+        if(playerCards[0] != null) {
+            handcard1.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(playerCards[0].getFrontpath())).toString())
+            );
+        }
+        else {
+            handcard1.setImage(null);
+        }
+
+        if(playerCards[1] != null) {
+            handcard2.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(playerCards[1].getFrontpath())).toString())
+            );
+        }
+        else {
+            handcard2.setImage(null);
+        }
+
+        if(playerCards[2] != null) {
+            handcard3.setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(playerCards[2].getFrontpath())).toString())
+            );
+        }
+        else {
+            handcard3.setImage(null);
         }
 
     }

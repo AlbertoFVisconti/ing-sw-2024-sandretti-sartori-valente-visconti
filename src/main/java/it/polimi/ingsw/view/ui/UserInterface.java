@@ -8,7 +8,7 @@ public interface UserInterface {
     void setStartingScene();
     void setCreateGameScene();
     void setJoinGameScene();
-    void setSetColorScene();
+
     void setWaitPlayersScene();
     void setPlaceStartScene();
     void setSelectGoalScene();

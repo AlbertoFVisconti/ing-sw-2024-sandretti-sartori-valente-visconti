@@ -1,8 +1,9 @@
 package it.polimi.ingsw.view.ui.gui.FXController;
 
+import it.polimi.ingsw.events.messages.client.SelectColorMessage;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.Client;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +19,11 @@ import java.util.Objects;
 
 public class WaitingForPlayersController implements GUIScene {
 
+
+    public ImageView blue;
+    public ImageView red;
+    public ImageView yellow;
+    public ImageView green;
     @FXML
     private ImageView BackArrow;
 
@@ -34,6 +40,11 @@ public class WaitingForPlayersController implements GUIScene {
     private Label player3= new Label();
 
     @FXML
+    private Label player4= new Label();
+
+    private Label[] playerLabels;
+
+    @FXML
     void GoBackToLobby(MouseEvent event) throws IOException {
         Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/Lobby.fxml")));
         Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
@@ -43,46 +54,93 @@ public class WaitingForPlayersController implements GUIScene {
 
     @FXML
     public void initialize() {
-        List<Player> players;
-        players = Client.getInstance().getView().getPlayersList();
-        for (Player player : players) {
-            if (!player.getNickname().equals(Client.getInstance().getView().getLocalPlayerName())) {
-                if (player1.getText().isEmpty()) {
-                    player1.setText(player.getNickname());
-                } else if (player2.getText().isEmpty()) {
-                    player2.setText(player.getNickname());
-                } else if (player3.getText().isEmpty()) {
-                    player3.setText(player.getNickname());
-                }
-            }
+        this.playerLabels = new Label[]{player1, player2, player3, player4};
 
-        }
+        this.update();
     }
 
     @Override
     public void update() {
-        player1.setText("");
-        player2.setText("");
-        player3.setText("");
-
         List<Player> players;
         players = Client.getInstance().getView().getPlayersList();
+
+        int labelIndex = 0;
         for (Player player : players) {
-            if (!player.getNickname().equals(Client.getInstance().getView().getLocalPlayerName())) {
-                if (player1.getText().isEmpty()) {
-                    player1.setText(player.getNickname());
-                } else if (player2.getText().isEmpty() && !player1.getText().equals(player.getNickname())) {
-                    player2.setText(player.getNickname());
-                } else if (player3.getText().isEmpty() && !player1.getText().equals(player.getNickname()) && !player2.getText().equals(player.getNickname())){
-                    player3.setText(player.getNickname());
-                }
+            if (Client.getInstance().getView().getLocalPlayer() != null && Client.getInstance().getView().getLocalPlayer().nickName.equals(player.nickName)) {
+                playerLabels[labelIndex].setText(player.getNickname() + " (you)");
+            }
+            else {
+                playerLabels[labelIndex].setText(player.getNickname());
             }
 
+            if(player.getColor() != null) {
+                playerLabels[labelIndex].setTextFill(PlayerColor.playerColorToColor(player.getColor()));
+            }
+
+            labelIndex++;
         }
+
+        if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.RED)) {
+            red.setOpacity(0.1);
+        }
+        else red.setOpacity(1);
+
+
+        if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.BLUE)) {
+            blue.setOpacity(0.1);
+        }
+        else blue.setOpacity(1);
+
+        if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.GREEN)) {
+            green.setOpacity(0.1);
+
+        }
+        else green.setOpacity(1);
+
+        if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.YELLOW)) {
+            yellow.setOpacity(0.1);
+        }
+        else yellow.setOpacity(1);
     }
 
     @Override
     public void reportError(RuntimeException exception) {
 
+    }
+
+    public void SelectRed(MouseEvent mouseEvent) {
+        if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.RED)) {
+            return;
+        }
+        red.setOpacity(0.5);
+
+        Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.RED));
+    }
+
+    public void SelectBlue(MouseEvent mouseEvent) {
+        if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.BLUE)) {
+            return;
+        }
+        blue.setOpacity(0.5);
+
+        Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.BLUE));
+    }
+
+    public void SelectYellow(MouseEvent mouseEvent) {
+        if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.YELLOW)) {
+            return;
+        }
+        yellow.setOpacity(0.5);
+
+        Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.YELLOW));
+    }
+
+    public void SelectGreen(MouseEvent mouseEvent) {
+        if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.GREEN)) {
+            return;
+        }
+        green.setOpacity(0.5);
+
+        Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.GREEN));
     }
 }

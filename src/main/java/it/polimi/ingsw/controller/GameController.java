@@ -581,7 +581,8 @@ public class GameController extends Observable implements VirtualController, Run
 
             try {
                 // placing the card in the player's board
-                player.placeCard(index, onBackSide, location);
+                player.placeCard(player.getPlayerCard(index), onBackSide, location);
+                player.setPlayerCard(null, index);
 
                 // updating the player's inventory
                 updateInventory(player, location);

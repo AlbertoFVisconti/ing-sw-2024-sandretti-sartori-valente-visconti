@@ -44,7 +44,7 @@ public class TextualUserInterface implements UserInterface {
                 (userInterface, tokens) -> userInterface.setSelectGoalScene()
         );
         commandParser.registerCommand("!set_color",
-                (userInterface, tokens) -> userInterface.setSetColorScene()
+                (userInterface, tokens) -> userInterface.setWaitPlayersScene()
         );
         commandParser.registerCommand("!board",
                 (userInterface, tokens) -> {
@@ -115,12 +115,6 @@ public class TextualUserInterface implements UserInterface {
     public void setJoinGameScene() {
         Client.getInstance().getServerHandler().sendMessage(new GameListRequestMessage());
         this.currentScene = new JoinGameTUIScene();
-        this.update();
-    }
-
-    @Override
-    public void setSetColorScene() {
-        this.currentScene = new LobbyTUIScene();
         this.update();
     }
 

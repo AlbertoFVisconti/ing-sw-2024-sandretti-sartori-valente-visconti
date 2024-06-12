@@ -73,11 +73,6 @@ public class GraphicalUserInterface extends Application implements UserInterface
     }
 
     @Override
-    public synchronized void setSetColorScene() {
-        changeScene("/fxml/SelectColor.fxml");
-    }
-
-    @Override
     public synchronized void setWaitPlayersScene() {
         changeScene("/fxml/WaitingForPlayers.fxml");
     }

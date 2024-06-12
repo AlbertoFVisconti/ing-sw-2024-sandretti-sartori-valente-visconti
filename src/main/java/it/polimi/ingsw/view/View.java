@@ -236,19 +236,8 @@ public class View extends Thread implements VirtualView {
                         throw new RuntimeException(e);
                     }
                 } else {
-                    int i = 0;
-                    for (PlayCard c : p.getPlayerCards()) {
-                        if (c != null && c.equals(cardSlot.card())) {
-                            break;
-                        }
-                        i++;
-                    }
 
-                    if (i == p.getPlayerCards().length)
-                        throw new RuntimeException("Card not found in player's hand in local model");
-
-                    p.placeCard(i, cardSlot.onBackSide(), location);
-
+                    p.placeCard(cardSlot.card(), cardSlot.onBackSide(), location);
                 }
                 found = true;
                 break;
@@ -285,7 +274,7 @@ public class View extends Thread implements VirtualView {
             }
         }
 
-        this.userInterface.setSetColorScene();
+        this.userInterface.setWaitPlayersScene();
     }
 
     @Override
