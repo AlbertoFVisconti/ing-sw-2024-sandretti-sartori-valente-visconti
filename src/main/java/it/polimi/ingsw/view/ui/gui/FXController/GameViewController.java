@@ -23,7 +23,7 @@ import javafx.scene.control.Label;
 
 import java.util.*;
 
-public class GameViewController implements GUIScene {
+public class GameViewController extends GUIScene {
 
     public ImageView resourceDeckf1;
     public ImageView goldDeckf1;
@@ -587,5 +587,10 @@ public class GameViewController implements GUIScene {
 
     public void showScoreboard(ActionEvent event) {
         Client.getInstance().getView().getUserInterface().setScoreScene();
+    }
+
+    @Override
+    protected AnchorPane getChatContainer() {
+        return null;
     }
 }

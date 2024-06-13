@@ -11,7 +11,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ScoreBoardController implements GUIScene{
+public class ScoreBoardController extends GUIScene{
 
     public AnchorPane ScorePane;
     public ImageView redpawn;
@@ -114,7 +114,10 @@ public class ScoreBoardController implements GUIScene{
             }
         }
     }
-
+    @Override
+    protected AnchorPane getChatContainer() {
+        return null;
+    }
     @Override
     public void reportError(RuntimeException exception) {
 

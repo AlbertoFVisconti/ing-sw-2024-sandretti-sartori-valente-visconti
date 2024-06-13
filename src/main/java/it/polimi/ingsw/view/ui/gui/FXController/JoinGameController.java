@@ -11,11 +11,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.util.HashSet;
 
-public class JoinGameController implements GUIScene {
+public class JoinGameController extends GUIScene {
 
     public ChoiceBox<Integer> selectGame = new ChoiceBox<>();
     public TextField nicknameField;
@@ -76,6 +77,9 @@ public class JoinGameController implements GUIScene {
 
         }
     }
-
+    @Override
+    protected AnchorPane getChatContainer() {
+        return null;
+    }
 
 }

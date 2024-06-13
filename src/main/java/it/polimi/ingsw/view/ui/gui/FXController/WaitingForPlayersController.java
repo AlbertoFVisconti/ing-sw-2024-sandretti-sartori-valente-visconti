@@ -11,19 +11,21 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-public class WaitingForPlayersController implements GUIScene {
+public class WaitingForPlayersController extends GUIScene {
 
 
     public ImageView blue;
     public ImageView red;
     public ImageView yellow;
     public ImageView green;
+    public AnchorPane chatContainer;
     @FXML
     private ImageView BackArrow;
 
@@ -57,6 +59,11 @@ public class WaitingForPlayersController implements GUIScene {
         this.playerLabels = new Label[]{player1, player2, player3, player4};
 
         this.update();
+    }
+
+    @Override
+    protected AnchorPane getChatContainer() {
+        return this.chatContainer;
     }
 
     @Override

@@ -8,12 +8,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Objects;
 
-public class LobbyController implements GUIScene{
+public class LobbyController extends GUIScene{
 
     @FXML
     private Button CreateGameButton;
@@ -63,7 +64,10 @@ public class LobbyController implements GUIScene{
     public void update() {
 
     }
-
+    @Override
+    protected AnchorPane getChatContainer() {
+        return null;
+    }
     @Override
     public void reportError(RuntimeException exception) {
 

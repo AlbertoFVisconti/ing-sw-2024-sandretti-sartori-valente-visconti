@@ -5,10 +5,11 @@ import it.polimi.ingsw.network.Client;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 
 import java.util.Objects;
 
-public class PrivateGoalController implements GUIScene {
+public class PrivateGoalController extends GUIScene {
     public ImageView privategoal1;
     public ImageView privategoal2;
     boolean selected = false;
@@ -40,7 +41,10 @@ public class PrivateGoalController implements GUIScene {
     public void reportError(RuntimeException exception) {
 
     }
-
+    @Override
+    protected AnchorPane getChatContainer() {
+        return null;
+    }
     @Override
     public void update() {
         this.initialize();

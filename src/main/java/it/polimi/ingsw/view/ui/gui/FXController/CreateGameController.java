@@ -10,10 +10,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 
-public class CreateGameController implements GUIScene {
+public class CreateGameController extends GUIScene {
 
     @FXML
     private Button CreateButton;
@@ -60,6 +61,11 @@ public class CreateGameController implements GUIScene {
     @FXML
     public void initialize() {
         ExpectedPlayersComboBox.getItems().addAll(expectedplayersarray);
+    }
+
+    @Override
+    protected AnchorPane getChatContainer() {
+        return null;
     }
 
     @Override

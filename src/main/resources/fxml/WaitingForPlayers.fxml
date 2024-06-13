@@ -6,71 +6,77 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="it.polimi.ingsw.view.ui.gui.FXController.WaitingForPlayersController">
-   <ImageView fx:id="codexWallpaper" fitHeight="414.0" fitWidth="613.0" layoutX="-6.0" layoutY="-7.0">
-      <effect>
-         <Blend/>
-      </effect>
-      <Image url="@../image/CodexWallpaper.png"/>
-   </ImageView>
-
-   <ImageView fx:id="blue" fitHeight="75.0" fitWidth="75.0" layoutX="113.0" layoutY="302.0" onMouseClicked="#SelectBlue"
-              pickOnBounds="true" preserveRatio="true">
-      <Image url="@../image/Blue.png"/>
-   </ImageView>
-   <ImageView fx:id="red" fitHeight="75.0" fitWidth="75.0" layoutX="213.0" layoutY="302.0" onMouseClicked="#SelectRed"
-              pickOnBounds="true" preserveRatio="true">
-      <Image url="@../image/Red.png"/>
-   </ImageView>
-   <ImageView fx:id="yellow" fitHeight="75.0" fitWidth="75.0" layoutX="313.0" layoutY="302.0"
-              onMouseClicked="#SelectYellow" pickOnBounds="true" preserveRatio="true">
-      <Image url="@../image/Yellow.png"/>
-   </ImageView>
-   <ImageView fx:id="green" fitHeight="75.0" fitWidth="75.0" layoutX="413.0" layoutY="302.0"
-              onMouseClicked="#SelectGreen" pickOnBounds="true" preserveRatio="true">
-      <Image url="@../image/Green.png"/>
-   </ImageView>
-   <Label layoutX="234.0" layoutY="260.0" text="Select Color:">
-      <font>
-         <Font name="Bangla MN" size="24.0"/>
-      </font>
-   </Label>
-   <ImageView fx:id="BackArrow" fitHeight="26.0" fitWidth="54.0" layoutX="21.0" layoutY="14.0"
-              onMouseClicked="#GoBackToLobby" pickOnBounds="true" preserveRatio="true">
-      <Image url="@../image/BackArrowButton.png"/>
-   </ImageView>
-   <Label layoutX="138.0" layoutY="27.0" text="Waiting for players...">
-      <font>
-         <Font name="Bangla MN" size="36.0"/>
-      </font>
-   </Label>
-   <Label layoutX="246.0" layoutY="93.0" text="Connected players:">
-      <font>
-         <Font name="Bangla MN" size="13.0"/>
-      </font>
-   </Label>
-   <Label fx:id="player1" layoutX="149.0" layoutY="126.0" prefHeight="19.0" prefWidth="305.0" textAlignment="CENTER"
-          AnchorPane.topAnchor="126.0">
-      <font>
-         <Font name="Bangla MN" size="13.0"/>
-      </font>
-   </Label>
-   <Label fx:id="player2" layoutX="149.0" layoutY="150.0" prefHeight="19.0" prefWidth="305.0" textAlignment="CENTER">
-      <font>
-         <Font name="Bangla MN" size="13.0"/>
-      </font>
-   </Label>
-   <Label fx:id="player3" layoutX="149.0" layoutY="175.0" prefHeight="19.0" prefWidth="305.0" textAlignment="CENTER">
-      <font>
-         <Font name="Bangla MN" size="13.0"/>
-      </font>
-   </Label>
-   <Label fx:id="player4" layoutX="149.0" layoutY="200.0" prefHeight="19.0" prefWidth="305.0" textAlignment="CENTER">
-      <font>
-         <Font name="Bangla MN" size="13.0"/>
-      </font>
-   </Label>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.ui.gui.FXController.WaitingForPlayersController">
+   <children>
+      <ImageView fx:id="codexWallpaper" fitHeight="414.0" fitWidth="613.0" layoutX="-6.0" layoutY="-7.0">
+         <effect>
+            <Blend />
+         </effect>
+         <image>
+            <Image url="@../image/CodexWallpaper.png" />
+         </image>
+      </ImageView>
+   
+      <ImageView fx:id="blue" fitHeight="75.0" fitWidth="75.0" layoutX="14.0" layoutY="310.0" onMouseClicked="#SelectBlue" pickOnBounds="true" preserveRatio="true">
+      <image>
+            <Image url="@../image/Blue.png" />
+      </image>
+      </ImageView>
+      <ImageView fx:id="red" fitHeight="75.0" fitWidth="75.0" layoutX="89.0" layoutY="310.0" onMouseClicked="#SelectRed" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/Red.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="yellow" fitHeight="75.0" fitWidth="75.0" layoutX="164.0" layoutY="310.0" onMouseClicked="#SelectYellow" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/Yellow.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="green" fitHeight="75.0" fitWidth="75.0" layoutX="239.0" layoutY="310.0" onMouseClicked="#SelectGreen" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/Green.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="14.0" layoutY="266.0" text="Select Color:">
+         <font>
+            <Font name="Bangla MN" size="24.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="BackArrow" fitHeight="26.0" fitWidth="54.0" layoutX="21.0" layoutY="14.0" onMouseClicked="#GoBackToLobby" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/BackArrowButton.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="39.0" layoutY="35.0" text="Waiting for players...">
+         <font>
+            <Font name="Bangla MN" size="36.0" />
+         </font>
+      </Label>
+      <Label layoutX="121.0" layoutY="113.0" text="Connected players:">
+         <font>
+            <Font name="Bangla MN" size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="player1" alignment="CENTER" layoutX="23.0" layoutY="147.0" prefHeight="19.0" prefWidth="305.0" textAlignment="CENTER" AnchorPane.topAnchor="147.0">
+         <font>
+            <Font name="Bangla MN" size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="player2" alignment="CENTER" layoutX="23.0" layoutY="171.0" prefHeight="19.0" prefWidth="305.0" textAlignment="CENTER">
+         <font>
+            <Font name="Bangla MN" size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="player3" alignment="CENTER" layoutX="23.0" layoutY="196.0" prefHeight="19.0" prefWidth="305.0" textAlignment="CENTER">
+         <font>
+            <Font name="Bangla MN" size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="player4" alignment="CENTER" layoutX="23.0" layoutY="221.0" prefHeight="19.0" prefWidth="305.0" textAlignment="CENTER">
+         <font>
+            <Font name="Bangla MN" size="13.0" />
+         </font>
+      </Label>
+      <AnchorPane fx:id="chatContainer" layoutX="363.0" layoutY="11.0" prefHeight="379.0" prefWidth="233.0" />
+   </children>
 </AnchorPane>

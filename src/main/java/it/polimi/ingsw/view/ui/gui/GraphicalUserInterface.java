@@ -4,12 +4,14 @@ import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.controller.TurnStatus;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.view.ui.UserInterface;
+import it.polimi.ingsw.view.ui.gui.FXController.ChatController;
 import it.polimi.ingsw.view.ui.gui.FXController.GUIScene;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -21,6 +23,9 @@ public class GraphicalUserInterface extends Application implements UserInterface
     private GUIScene currentScene;
 
     private static Stage window;
+
+    private AnchorPane chat = null;
+    private ChatController chatController = null;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -63,6 +68,9 @@ public class GraphicalUserInterface extends Application implements UserInterface
                         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(fxml)));
                         Parent newRoot = loader.load();
                         this.currentScene = loader.getController();
+
+                        if(this.chat != null) this.currentScene.addChat(chat);
+
                         window.setScene(new Scene(newRoot));
                         window.show();
 
@@ -75,6 +83,14 @@ public class GraphicalUserInterface extends Application implements UserInterface
     @Override
     public synchronized void setWaitPlayersScene() {
         changeScene("/fxml/WaitingForPlayers.fxml");
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/chat.fxml"));
+        try {
+            chat = fxmlLoader.load();
+            chatController = fxmlLoader.getController();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -124,6 +140,7 @@ public class GraphicalUserInterface extends Application implements UserInterface
 
     @Override
     public synchronized void update() {
+        if(chat != null) Platform.runLater(() -> chatController.updateChat());
         if (currentScene != null) Platform.runLater(() -> currentScene.update());
     }
 

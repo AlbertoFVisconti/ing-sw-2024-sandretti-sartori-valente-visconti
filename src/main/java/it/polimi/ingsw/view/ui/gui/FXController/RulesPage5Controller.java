@@ -8,12 +8,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Objects;
 
-public class RulesPage5Controller implements GUIScene {
+public class RulesPage5Controller extends GUIScene {
     @FXML
     private Button GoBackButton;
     private ImageView RulesPage1;
@@ -38,7 +39,10 @@ public class RulesPage5Controller implements GUIScene {
     public void update() {
 
     }
-
+    @Override
+    protected AnchorPane getChatContainer() {
+        return null;
+    }
     @Override
     public void reportError(RuntimeException exception) {
 

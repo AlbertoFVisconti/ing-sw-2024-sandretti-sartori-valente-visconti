@@ -11,7 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.util.Objects;
 
-public class StartingCardController implements GUIScene {
+public class StartingCardController extends GUIScene {
 
     public ImageView startingcardback;
     public ImageView startingcardfront;
@@ -48,7 +48,10 @@ public class StartingCardController implements GUIScene {
     public void update() {
         this.initialize();
     }
-
+    @Override
+    protected AnchorPane getChatContainer() {
+        return null;
+    }
     @Override
     public void reportError(RuntimeException exception) {
 
