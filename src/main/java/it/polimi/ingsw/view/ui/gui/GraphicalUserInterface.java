@@ -64,12 +64,22 @@ public class GraphicalUserInterface extends Application implements UserInterface
     private void changeScene(String fxml) {
         Platform.runLater(
                 () -> {
+                    if(this.chat == null) {
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/chat.fxml"));
+                        try {
+                            chat = fxmlLoader.load();
+                            chatController = fxmlLoader.getController();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
                     try {
                         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(fxml)));
                         Parent newRoot = loader.load();
                         this.currentScene = loader.getController();
 
-                        if(this.chat != null) this.currentScene.addChat(chat);
+                        this.currentScene.addChat(chat);
 
                         window.setScene(new Scene(newRoot));
                         window.show();
@@ -83,14 +93,6 @@ public class GraphicalUserInterface extends Application implements UserInterface
     @Override
     public synchronized void setWaitPlayersScene() {
         changeScene("/fxml/WaitingForPlayers.fxml");
-
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/chat.fxml"));
-        try {
-            chat = fxmlLoader.load();
-            chatController = fxmlLoader.getController();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
@@ -146,7 +148,7 @@ public class GraphicalUserInterface extends Application implements UserInterface
 
     @Override
     public synchronized void reportError(RuntimeException exception) {
-        this.currentScene.reportError(exception);
+        if(currentScene != null) Platform.runLater(() -> this.currentScene.reportError(exception));
     }
 
     @Override

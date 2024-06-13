@@ -110,11 +110,6 @@ public class WaitingForPlayersController extends GUIScene {
         else yellow.setOpacity(1);
     }
 
-    @Override
-    public void reportError(RuntimeException exception) {
-
-    }
-
     public void SelectRed(MouseEvent mouseEvent) {
         if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.RED)) {
             return;

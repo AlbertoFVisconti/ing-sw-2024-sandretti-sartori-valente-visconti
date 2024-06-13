@@ -10,10 +10,8 @@ import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.utils.CardLocation;
 import it.polimi.ingsw.view.ui.gui.MediaManager;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,6 +22,13 @@ import javafx.scene.control.Label;
 import java.util.*;
 
 public class GameViewController extends GUIScene {
+    public static final int[] POSS = {-1, 1};
+    private final static double CARD_HEIGHT = 114;
+    private final static double CARD_WIDTH = 171;
+
+    private final static double CARD_CORNER_HEIGHT = (265.0/662.0) * CARD_HEIGHT;
+    private final static double CARD_CORNER_WIDTH = (219.0/993.0) * CARD_WIDTH;
+
 
     public ImageView resourceDeckf1;
     public ImageView goldDeckf1;
@@ -39,6 +44,7 @@ public class GameViewController extends GUIScene {
     public ImageView p2color;
     public ImageView p3color;
     public ImageView p4color;
+    public AnchorPane chatContainer;
     @FXML
     private AnchorPane TablePane;
 
@@ -84,20 +90,12 @@ public class GameViewController extends GUIScene {
     private final HashMap<CardLocation, ImageView> boardshapes = new HashMap<>();
     //hashmap to store the image of the cards that are placed on the board
     private final HashMap<CardLocation, ImageView> cardsimage = new HashMap<>();
-    String previousplayer;
 
     @FXML
     public void initialize() {
+        TablePane.getStylesheets().add((Objects.requireNonNull(getClass().getResource("/fxml/Style.css")).toExternalForm()));
+
         try {
-            if (Client.getInstance().getView().getSelectedside() == 0) {
-                startingcard.setImage(new Image(
-                        Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getBoard().get(new CardLocation(0, 0)).card().getFrontpath())).toString()
-                ));
-            } else {
-                startingcard.setImage(new Image(
-                        Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getBoard().get(new CardLocation(0, 0)).card().getFrontpath())).toString()
-                ));
-            }
             privategoal.setImage(new Image(
                     Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPrivateGoal().getPath())).toString()
             ));
@@ -158,7 +156,7 @@ public class GameViewController extends GUIScene {
         if (players.size() > 3) {
             p4.setText(players.get(3).getNickname());
         }
-        cardsimage.put(new CardLocation(0, 0), startingcard);
+
         update();
 
 
@@ -335,11 +333,11 @@ public class GameViewController extends GUIScene {
 
     private void addCardSlot(CardSlot cardSlot,CardLocation cl){
         ImageView cardImage = new ImageView(MediaManager.getInstance().getImage(cardSlot));
-        cardImage.setFitHeight(124.0);
-        cardImage.setFitWidth(171.0);
+        cardImage.setFitHeight(CARD_HEIGHT);
+        cardImage.setFitWidth(CARD_WIDTH);
 
-        cardImage.setLayoutX(startingcard.getLayoutX() + (cl.getX() * 128));
-        cardImage.setLayoutY(startingcard.getLayoutY() + (-cl.getY() * 63));
+        cardImage.setLayoutX(startingcard.getLayoutX() + (cl.getX() * (CARD_WIDTH - CARD_CORNER_WIDTH)));
+        cardImage.setLayoutY(startingcard.getLayoutY() + (-cl.getY() * (CARD_HEIGHT - CARD_CORNER_HEIGHT)));
 
         cardsimage.put(cl, cardImage);
 
@@ -348,88 +346,77 @@ public class GameViewController extends GUIScene {
     }
 
     private boolean placeable(CardLocation cl ){
-        CardLocation bl=new CardLocation(cl.getX()-1, cl.getY()-1);
-        CardLocation tl=new CardLocation(cl.getX()-1, cl.getY()+1);
-        CardLocation br=new CardLocation(cl.getX()+1, cl.getY()-1);
-        CardLocation tr=new CardLocation(cl.getX()+1, cl.getY()+1);
-        if(Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(bl)
-                && Client.getInstance().getView().getLocalPlayer().getBoard().get(bl).getTopRightCorner()==null)
+        Map<CardLocation, CardSlot> board = Client.getInstance().getView().getLocalPlayer().getBoard();
+
+        if(board.get(cl) != null) return false;
+
+        if(board.containsKey(cl.bottomLeftNeighbour())
+                && board.get(cl.bottomLeftNeighbour()).getTopRightCorner()==null)
             return false;
-        if(Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(tl)
-                && Client.getInstance().getView().getLocalPlayer().getBoard().get(tl).getBottomRightCorner()==null)
+        if(board.containsKey(cl.topLeftNeighbour())
+                && board.get(cl.topLeftNeighbour()).getBottomRightCorner()==null)
             return false;
-        if(Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(br)
-                && Client.getInstance().getView().getLocalPlayer().getBoard().get(br).getTopLeftCorner()==null )
+        if(board.containsKey(cl.bottomRightNeighbour())
+                && board.get(cl.bottomRightNeighbour()).getTopLeftCorner()==null )
             return false;
-        if(Client.getInstance().getView().getLocalPlayer().getBoard().containsKey(tr)
-                && Client.getInstance().getView().getLocalPlayer().getBoard().get(tr).getBottomLeftCorner()==null)
-            return false;
-        return true;
+        return !board.containsKey(cl.topRightNeighbour())
+                || board.get(cl.topRightNeighbour()).getBottomLeftCorner() != null;
     }
     public void addPlaceHolder(CardLocation cl, Set<CardLocation> seen){
         if(cardsimage.containsKey(cl)){
-            int[] poss={-1,1};
-            for(int i: poss){
-                for(int j: poss){
+            for(int i: POSS){
+                for(int j: POSS){
                     CardLocation p = new CardLocation(cl.getX() + i, cl.getY() + j);
-                    if (!seen.contains(p) && placeable(p)) {
+                    if (!seen.contains(p)) {
                         seen.add(p);
-                        addShape(p);
+                        if(placeable(p)) addShape(p);
                         addPlaceHolder(p, seen);
                     }
                 }
             }
         }
     }
+
+    private void placeMessage(CardLocation cardLocation) {
+        try {
+            Client.getInstance().getServerHandler().sendMessage(new PlaceCardMessage(sel, false, new CardLocation(cardLocation.getX() , cardLocation.getY() )));
+            for (ImageView s : boardshapes.values()) {
+                s.setVisible(false);
+                s.setOnMouseClicked(null);
+            }
+            handcard1.setOpacity(1);
+            handcard2.setOpacity(1);
+            handcard3.setOpacity(1);
+        } catch (RuntimeException e) {
+            reportError(e);
+        }
+    }
+
     public void addShape(CardLocation cl){
-            if(boardshapes.containsKey(cl)){
-                boardshapes.get(cl).setVisible(false);
-                boardshapes.get(cl).setOnMouseClicked(null);
-            }
-            ImageView shape = new ImageView();
-            boardshapes.put(new CardLocation(cl.getX() , cl.getY() ), shape);
-            shape.setImage(new Image(
-                    Objects.requireNonNull(getClass().getResource("/image/cardshape.png")).toString()));
-            shape.setFitHeight(124.0);
-            shape.setFitWidth(171.0);
-            if (!cardsimage.containsKey(cl)) {
-                shape.setLayoutX(startingcard.getLayoutX() + (cl.getX() * 128));
-                shape.setLayoutY(startingcard.getLayoutY() + (-cl.getY() * 63));
-                shape.setOpacity(0.5);
-                shape.setVisible(true);
-                TablePane.getChildren().add(shape);
-                shape.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                    try {
-                        Client.getInstance().getServerHandler().sendMessage(new PlaceCardMessage(sel, false, new CardLocation(cl.getX() , cl.getY() )));
-                        for (ImageView s : boardshapes.values()) {
-                            s.setVisible(false);
-                            s.setOnMouseClicked(null);
-                        }
-//                        ImageView card = new ImageView();
-//                        cardsimage.put(new CardLocation(cl.getX() + i, cl.getY() + j), card);
-//                        card.setImage(new Image(
-//                                Objects.requireNonNull(getClass().getResource(selected.getFrontpath())).toString()));
-//                        card.setFitHeight(124.0);
-//                        card.setFitWidth(171.0);
-//                        card.setLayoutX(cardsimage.get(cl).getLayoutX() + (i * 128));
-//                        card.setLayoutY(cardsimage.get(cl).getLayoutY() + (-j * 63));
-//                        TablePane.getChildren().add(card);
-//                        card.setVisible(true);
-                        handcard1.setOpacity(1);
-                        handcard2.setOpacity(1);
-                        handcard3.setOpacity(1);
-                    } catch (RuntimeException e) {
-                        reportError(e);
-                    }
-                });
-            }else{
-                System.out.println("non ho trovato la cardsimage in "+cl.getX()+" "+cl.getY());
-            }
+        if(boardshapes.containsKey(cl)){
+            boardshapes.get(cl).setVisible(true);
+            boardshapes.get(cl).setOnMouseClicked((MouseEvent mouseEvent) -> placeMessage(cl));
+            return;
+        }
+
+
+        ImageView shape = new ImageView();
+        boardshapes.put(cl, shape);
+        shape.setImage(MediaManager.getInstance().getImage("/image/cardshape.png"));
+        shape.setFitHeight(CARD_HEIGHT);
+        shape.setFitWidth(CARD_WIDTH);
+        shape.getStyleClass().add("cardshape");
+
+        shape.setLayoutX(startingcard.getLayoutX() + (cl.getX() * (CARD_WIDTH-CARD_CORNER_WIDTH)));
+        shape.setLayoutY(startingcard.getLayoutY() + (-cl.getY() * (CARD_HEIGHT-CARD_CORNER_HEIGHT)));
+
+        shape.setVisible(true);
+        TablePane.getChildren().add(shape);
+        shape.setOnMouseClicked((MouseEvent mouseEvent) -> placeMessage(cl));
     }
 
     @Override
     public void update() {
-
         refreshScoreboard();
 
         ArrayList<CardLocation> newCardsOnBoard = new ArrayList<>();
@@ -514,24 +501,12 @@ public class GameViewController extends GUIScene {
                     s.setVisible(false);
                     s.setOnMouseClicked(null);
                 }
-                resourceDeckb.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                    Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(0));
-                });
-                goldDeckb.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                    Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(1));
-                });
-                resourceDeckf1.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                    Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(2));
-                });
-                resourceDeckf2.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                    Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(3));
-                });
-                goldDeckf1.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                    Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(4));
-                });
-                goldDeckf2.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                    Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(5));
-                });
+                resourceDeckb.setOnMouseClicked((MouseEvent mouseEvent) -> Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(0)));
+                goldDeckb.setOnMouseClicked((MouseEvent mouseEvent) -> Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(1)));
+                resourceDeckf1.setOnMouseClicked((MouseEvent mouseEvent) -> Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(2)));
+                resourceDeckf2.setOnMouseClicked((MouseEvent mouseEvent) -> Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(3)));
+                goldDeckf1.setOnMouseClicked((MouseEvent mouseEvent) -> Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(4)));
+                goldDeckf2.setOnMouseClicked((MouseEvent mouseEvent) -> Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(5)));
             }
         }
         else {
@@ -571,26 +546,12 @@ public class GameViewController extends GUIScene {
 
     }
 
-
-    @Override
-    public void reportError(RuntimeException exception)  {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("An error occurred");
-            alert.setContentText(exception.getMessage());
-            alert.showAndWait();
-        });
-
-    }
-
-
     public void showScoreboard(ActionEvent event) {
         Client.getInstance().getView().getUserInterface().setScoreScene();
     }
 
     @Override
     protected AnchorPane getChatContainer() {
-        return null;
+        return chatContainer;
     }
 }

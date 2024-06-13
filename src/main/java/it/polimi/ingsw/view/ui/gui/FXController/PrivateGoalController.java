@@ -12,6 +12,7 @@ import java.util.Objects;
 public class PrivateGoalController extends GUIScene {
     public ImageView privategoal1;
     public ImageView privategoal2;
+    public AnchorPane chatContainer;
     boolean selected = false;
 
     @FXML
@@ -38,12 +39,8 @@ public class PrivateGoalController extends GUIScene {
     }
 
     @Override
-    public void reportError(RuntimeException exception) {
-
-    }
-    @Override
     protected AnchorPane getChatContainer() {
-        return null;
+        return chatContainer;
     }
     @Override
     public void update() {

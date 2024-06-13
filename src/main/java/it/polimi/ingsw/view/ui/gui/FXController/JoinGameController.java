@@ -49,11 +49,6 @@ public class JoinGameController extends GUIScene {
         Client.getInstance().getServerHandler().sendMessage(new GameListRequestMessage());
     }
 
-    @Override
-    public void reportError(RuntimeException exception) {
-
-    }
-
     @FXML
     public void initialize() {
         Client.getInstance().getServerHandler().sendMessage(new GameListRequestMessage());

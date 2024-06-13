@@ -15,7 +15,7 @@ public class StatusManager {
         ArrayList<PlayerSaving> playerSavingArray = new ArrayList<>();
         for (Player p : game.getPlayers()) {
             PlayerSaving playerSaving = new PlayerSaving(p.getNickname(), p.getColor(),
-                    p.getBoard(), p.getPlayerCards(), p.getPrivateGoal(), p.getInventory());
+                    p.getBoard(), p.getPlayerCards(), p.getPrivateGoal(), p.getInventory(), p.getStartCard(), p.getAvailableGoals());
             playerSavingArray.add(playerSaving);
         }
         GameSaving gameSaving = new GameSaving(game.getExpectedPlayers(), playerSavingArray,

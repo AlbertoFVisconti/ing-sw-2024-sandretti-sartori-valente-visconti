@@ -43,8 +43,4 @@ public class RulesPage1Controller extends GUIScene{
     protected AnchorPane getChatContainer() {
         return null;
     }
-    @Override
-    public void reportError(RuntimeException exception) {
-
-    }
 }

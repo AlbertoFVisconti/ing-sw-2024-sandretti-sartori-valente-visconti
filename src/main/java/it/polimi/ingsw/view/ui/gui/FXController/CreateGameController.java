@@ -52,12 +52,6 @@ public class CreateGameController extends GUIScene {
         Client.getInstance().getView().getUserInterface().setStartingScene();
     }
 
-    @Override
-    public void reportError(RuntimeException exception) {
-
-    }
-
-
     @FXML
     public void initialize() {
         ExpectedPlayersComboBox.getItems().addAll(expectedplayersarray);

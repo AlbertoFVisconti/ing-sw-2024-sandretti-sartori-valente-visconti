@@ -548,9 +548,9 @@ public class Game extends Observable {
         for (Player p1 : this.players) {
             p1.unsubscribe(clientHandler);
         }
-        this.goldCardsDeck.subscribe(clientHandler);
-        this.resourceCardsDeck.subscribe(clientHandler);
-        this.scoreBoard.subscribe(clientHandler);
+        this.goldCardsDeck.unsubscribe(clientHandler);
+        this.resourceCardsDeck.unsubscribe(clientHandler);
+        this.scoreBoard.unsubscribe(clientHandler);
 
     }
 

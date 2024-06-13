@@ -15,6 +15,7 @@ public class StartingCardController extends GUIScene {
 
     public ImageView startingcardback;
     public ImageView startingcardfront;
+    public AnchorPane chatContainer;
     boolean selected = false;
     @FXML
     private AnchorPane TablePane;
@@ -50,10 +51,6 @@ public class StartingCardController extends GUIScene {
     }
     @Override
     protected AnchorPane getChatContainer() {
-        return null;
-    }
-    @Override
-    public void reportError(RuntimeException exception) {
-
+        return chatContainer;
     }
 }

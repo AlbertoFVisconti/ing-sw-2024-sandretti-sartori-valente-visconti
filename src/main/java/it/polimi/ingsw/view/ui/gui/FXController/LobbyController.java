@@ -68,8 +68,4 @@ public class LobbyController extends GUIScene{
     protected AnchorPane getChatContainer() {
         return null;
     }
-    @Override
-    public void reportError(RuntimeException exception) {
-
-    }
 }

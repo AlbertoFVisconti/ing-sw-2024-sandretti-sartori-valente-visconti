@@ -23,3 +23,12 @@
 .button:hover {
     -fx-background-color: #8a4242;
 }
+
+.cardshape {
+    -fx-opacity: 0.5;
+
+}
+
+.cardshape:hover {
+    -fx-opacity: 1;
+}

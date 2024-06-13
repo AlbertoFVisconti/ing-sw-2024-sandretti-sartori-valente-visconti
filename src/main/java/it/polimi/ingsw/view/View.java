@@ -274,7 +274,12 @@ public class View extends Thread implements VirtualView {
             }
         }
 
-        this.userInterface.setWaitPlayersScene();
+        if(savings != null) {
+            if(localPlayer.getBoard().get(new CardLocation(0,0)) == null) this.userInterface.setPlaceStartScene();
+            else if (localPlayer.getPrivateGoal() == null) this.userInterface.setSelectGoalScene();
+            else this.userInterface.setPlayerBoardScene(localPlayer);
+        }
+        else this.userInterface.setWaitPlayersScene();
     }
 
     @Override
@@ -305,7 +310,7 @@ public class View extends Thread implements VirtualView {
                 default: break;
                 case GAME_CREATION:
                     this.gameModel.setupScoreBoard();
-                    this.userInterface.setPlaceStartScene();
+                    if(localPlayer.getPlacedCardSlot(new CardLocation(0,0)) == null) this.userInterface.setPlaceStartScene();
                     break;
                 case NORMAL_TURN:
                     this.userInterface.setPlayerBoardScene(localPlayer);

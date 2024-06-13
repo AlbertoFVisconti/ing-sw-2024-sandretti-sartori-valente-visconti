@@ -589,11 +589,12 @@ public class GameController extends Observable implements VirtualController, Run
 
                 if (!onBackSide) {
                     // evaluating the card scoring strategy (only if placed on the front side)
-                    game.getScoreBoard().addScore(player.nickName,
-                            // it is safe to assume that the card that was just placed is a PlayCard
-                            // since it is certain to come from the player's hand
-                            ((PlayCard) player.getPlacedCardSlot(location).card()).getScoringStrategy().evaluate(player, location)
-                    );
+
+                    // it is safe to assume that the card that was just placed is a PlayCard
+                    // since it is certain to come from the player's hand
+                    int score = ((PlayCard) player.getPlacedCardSlot(location).card()).getScoringStrategy().evaluate(player, location);
+                    ScoreBoard scoreBoard = game.getScoreBoard();
+                    scoreBoard.addScore(player.nickName, score);
                 }
 
             } catch (InvalidParameterException e) {

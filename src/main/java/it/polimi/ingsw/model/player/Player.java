@@ -66,6 +66,8 @@ public class Player extends Observable {
         this.playerCards = psm.getPlayerHand();
         this.privateGoal = psm.getPrivateGoal();
         this.inventory = psm.getInventory();
+        this.startCard = psm.getStartCard();
+        this.availableGoals = psm.getAvailableGoal();
 
         this.turnCounter = this.board.size();
     }
@@ -76,7 +78,7 @@ public class Player extends Observable {
      * @return PlayerSaving object containing the Player's data
      */
     public PlayerSaving getSaving() {
-        return new PlayerSaving(nickName, color, this.board, playerCards, privateGoal, inventory);
+        return new PlayerSaving(nickName, color, this.board, playerCards, privateGoal, inventory, startCard, availableGoals);
     }
 
     /**
@@ -89,8 +91,8 @@ public class Player extends Observable {
      */
     public ClientPlayerSaving getClientSaving(String clientNickname) {
         if (clientNickname.equals(this.nickName))
-            return new ClientPlayerSaving(nickName, color, this.board, playerCards, privateGoal, inventory);
-        else return new ClientPlayerSaving(nickName, color, board, playerCards, null, inventory);
+            return new ClientPlayerSaving(nickName, color, this.board, playerCards, privateGoal, inventory, startCard, availableGoals);
+        else return new ClientPlayerSaving(nickName, color, board, playerCards, null, inventory, null, null);
     }
 
     /**
