@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="379.0" prefWidth="233.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.ui.gui.FXController.ChatController">
+   <children>
+      <ScrollPane fx:id="scrollPane" layoutX="9.0" layoutY="56.0" prefHeight="287.0" prefWidth="216.0">
+         <content>
+            <VBox fx:id="messageVBox" prefHeight="285.0" prefWidth="213.0" />
+         </content>
+      </ScrollPane>
+      <TextField fx:id="messageTextField" layoutX="9.0" layoutY="343.0" prefHeight="25.0" prefWidth="179.0" />
+      <Button fx:id="sendButton" layoutX="188.0" layoutY="343.0" mnemonicParsing="false" onAction="#handleSendMessage" prefHeight="25.0" prefWidth="36.0" text="Send">
+         <font>
+            <Font size="8.0" />
+         </font>
+      </Button>
+      <ChoiceBox fx:id="selectChat" layoutX="9.0" layoutY="14.0" prefHeight="25.0" prefWidth="216.0" />
+   </children>
+</AnchorPane>
