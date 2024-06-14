@@ -16,12 +16,12 @@ public interface VirtualMainController extends Remote {
      * Might throw RuntimeExceptions if the player's nickname is unavailable, or if the selected game doesn't exist.
      *
      * @param playerIdentifier the identifier of the client that is joining the game
-     * @param IDgame           The numerical identifier of the game, chosen among the available ones
+     * @param IDgame           The identifier of the game, chosen among the available ones
      * @param nick             The players nickname, unique for the game
      * @throws RemoteException  in case of errors with the remote communication
      * @throws RuntimeException if color or nickname are unavailable or if game doesn't exist
      */
-    void joinGame(String playerIdentifier, int IDgame, String nick) throws RemoteException;
+    void joinGame(String playerIdentifier, String IDgame, String nick) throws RemoteException;
 
     /**
      * Allows a remote client to try to create and join a new game.
@@ -50,11 +50,18 @@ public interface VirtualMainController extends Remote {
     void connect(VirtualView view) throws RemoteException;
 
     /**
-     * Allows the server to send a ping message to the client.
+     * Allows the client to send a ping message to the server.
      *
-     * @param playerIdentifier the identifier of the player who sending the ping message.
+     * @param playerIdentifier the identifier of the player who is sending the ping message.
      * @param isAnswer         {@code true} if the server is answering to a previous ping message, {@code false} if the server is checking on the client.
      * @throws RemoteException in case of error with the remote communication.
      */
     void ping(String playerIdentifier, boolean isAnswer) throws RemoteException;
+
+    /**
+     * Allows the client to inform the server that the player wants to leave the game.
+     *
+     * @param playerIdentifier the identifier of the player who is leaving the game
+     */
+    void leaveGame(String playerIdentifier) throws RemoteException;
 }

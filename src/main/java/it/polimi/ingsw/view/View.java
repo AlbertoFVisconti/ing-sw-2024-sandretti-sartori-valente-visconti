@@ -37,7 +37,7 @@ public class View extends Thread implements VirtualView {
     private Game gameModel;
     private Player localPlayer;
 
-    protected HashSet<Integer> availableGames;
+    protected HashSet<String> availableGames;
 
     private GameStatus gameStatus;
     private TurnStatus turnStatus;
@@ -59,7 +59,7 @@ public class View extends Thread implements VirtualView {
                     new VirtualDeckLoader<>(),
                     null,
                     null,
-                    -1,
+                    null,
                     -1
             );
         } catch (IOException e) {
@@ -249,7 +249,7 @@ public class View extends Thread implements VirtualView {
     }
 
     @Override
-    public void updateGameList(Set<Integer> availableGames) throws RemoteException {
+    public void updateGameList(Set<String> availableGames) throws RemoteException {
         this.availableGames = new HashSet<>(availableGames);
     }
 
@@ -353,7 +353,7 @@ public class View extends Thread implements VirtualView {
         } else this.gameModel.getChat().appendMessage(chatMessage, null, null);
     }
 
-    public HashSet<Integer> getAvailableGames() {
+    public HashSet<String> getAvailableGames() {
         return availableGames;
     }
 

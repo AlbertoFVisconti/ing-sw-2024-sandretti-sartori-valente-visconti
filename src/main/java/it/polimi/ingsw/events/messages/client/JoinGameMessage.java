@@ -10,7 +10,7 @@ import java.rmi.RemoteException;
  * Message that the client sends when it's trying to connect to an existing game or to create a new one.
  */
 public class JoinGameMessage extends ClientMessage {
-    private final int gameID;
+    private final String gameID;
     private final boolean creatingGame;
     private final int expectedPlayers;
     private final String nickname;
@@ -26,7 +26,7 @@ public class JoinGameMessage extends ClientMessage {
      * @param expectedPlayers if the client's creating a new game, this value represents the number of clients that will play the game
      * @param nickname        the nickname of the client that is trying to join
      */
-    public JoinGameMessage(int gameID, boolean creatingGame, int expectedPlayers, String nickname) {
+    public JoinGameMessage(String gameID, boolean creatingGame, int expectedPlayers, String nickname) {
         super(MessageType.CONNECT_JOIN_MESSAGE);
         this.gameID = gameID;
         this.creatingGame = creatingGame;

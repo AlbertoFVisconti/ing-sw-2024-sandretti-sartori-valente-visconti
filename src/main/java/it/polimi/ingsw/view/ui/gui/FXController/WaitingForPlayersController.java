@@ -1,22 +1,19 @@
 package it.polimi.ingsw.view.ui.gui.FXController;
 
+import it.polimi.ingsw.events.messages.client.LeaveGameMessage;
 import it.polimi.ingsw.events.messages.client.SelectColorMessage;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.Client;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 public class WaitingForPlayersController extends GUIScene {
     public ImageView blue;
@@ -48,10 +45,8 @@ public class WaitingForPlayersController extends GUIScene {
 
     @FXML
     void goBackToLobby(MouseEvent event) throws IOException {
-        Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/Lobby.fxml")));
-        Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-        window.setScene(new Scene(nextPageParent));
-        window.show();
+        Client.getInstance().getServerHandler().sendMessage(new LeaveGameMessage());
+        Client.getInstance().getView().getUserInterface().setStartingScene();
     }
 
     @Override
@@ -79,6 +74,11 @@ public class WaitingForPlayersController extends GUIScene {
 
             labelIndex++;
         }
+        for(int i = players.size(); i < playerLabels.length; i++) {
+            playerLabels[i].setText("");
+            playerLabels[i].setTextFill(Color.color(0,0,0));
+        }
+
 
         if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.RED)) {
             red.setOpacity(0.1);

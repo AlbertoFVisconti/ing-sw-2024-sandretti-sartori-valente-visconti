@@ -35,10 +35,9 @@ import java.util.concurrent.*;
 public class MainController extends Thread implements VirtualMainController {
     public static final int CLEANUP_PROCEDURE_TIMER = 30000; // 30sec
 
-    private final Map<Integer, GameControllerWrapper> gameControllerWrappers;
+    private final Map<String, GameControllerWrapper> gameControllerWrappers;
     private final Map<String, GameController> playerIdentifierToGameController;
     private final Map<String, ClientHandler> playerIdentifierToClientHandler;
-    private int nextGameID = 0;
 
     private final BlockingQueue<ClientMessage> messageQueue;
 
@@ -75,7 +74,7 @@ public class MainController extends Thread implements VirtualMainController {
      */
     private void cleanUp() {
         // removing ended games' wrappers
-        for (Integer gameID : gameControllerWrappers.keySet()) {
+        for (String gameID : gameControllerWrappers.keySet()) {
             if (gameControllerWrappers.get(gameID).getGameController().getGameStatus() == GameStatus.END) {
                 gameControllerWrappers.remove(gameID);
             }
@@ -129,7 +128,7 @@ public class MainController extends Thread implements VirtualMainController {
      *
      * @param idGame the id of the game that needs to be removed.
      */
-    public void RemoveGame(int idGame) {
+    public void RemoveGame(String idGame) {
         synchronized (this.gameControllerWrappers) {
             gameControllerWrappers.remove(idGame);
         }
@@ -142,7 +141,7 @@ public class MainController extends Thread implements VirtualMainController {
      * @param gameId the gameID of the game whose GameController is needed.
      * @return a reference to the GameController that handles the specified game, {@code null} if there's no game with the provided GameID.
      */
-    public GameController getGameController(int gameId) {
+    public GameController getGameController(String gameId) {
         return this.gameControllerWrappers.get(gameId).getGameController();
     }
 
@@ -232,7 +231,7 @@ public class MainController extends Thread implements VirtualMainController {
      * @throws RemoteException in case of errors during the remote communication
      */
     @Override
-    public void joinGame(String playerIdentifier, int IDGame, String nickname) throws RemoteException {
+    public void joinGame(String playerIdentifier, String IDGame, String nickname) throws RemoteException {
         // retrieving the player's client handler
         ClientHandler clientHandler = this.getPlayersClientHandler(playerIdentifier);
         if (clientHandler == null) throw new RuntimeException("player was not recognized");
@@ -311,6 +310,21 @@ public class MainController extends Thread implements VirtualMainController {
         }
     }
 
+    @Override
+    public void leaveGame(String playerIdentifier) {
+        GameController gameController;
+        synchronized (playerIdentifierToGameController) {
+            gameController = playerIdentifierToGameController.get(playerIdentifier);
+        }
+
+        if(gameController != null) {
+            ClientHandler clientHandler = this.getPlayersClientHandler(playerIdentifier);
+            gameController.handleDisconnection(clientHandler);
+
+            clientHandler.resetController();
+        }
+    }
+
     /**
      * Allows a player to create a new game.
      *
@@ -320,9 +334,13 @@ public class MainController extends Thread implements VirtualMainController {
      */
     @Override
     public void createGame(String playerIdentifier, int expectedPlayers, String nick) throws RemoteException {
+        synchronized (gameControllerWrappers) {
+            if(gameControllerWrappers.containsKey(nick)) throw new RuntimeException("Game creators needs to have unique names and this one was already taken");
+        }
+
         Game g;
         try {
-            g = new Game(goldCardDeckLoader, resourceCardDeckLoader, startCardDeckLoader, goalDeckLoader, nextGameID, expectedPlayers);
+            g = new Game(goldCardDeckLoader, resourceCardDeckLoader, startCardDeckLoader, goalDeckLoader, nick, expectedPlayers);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -330,10 +348,10 @@ public class MainController extends Thread implements VirtualMainController {
         GameControllerWrapper controllerWrapper = new GameControllerWrapper(controller);
 
         synchronized (gameControllerWrappers) {
-            gameControllerWrappers.put(nextGameID, controllerWrapper);
+            gameControllerWrappers.put(nick, controllerWrapper);
         }
 
-        joinGame(playerIdentifier, nextGameID++, nick);
+        joinGame(playerIdentifier, nick, nick);
     }
 
     /**

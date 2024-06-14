@@ -9,7 +9,7 @@ import it.polimi.ingsw.model.goals.Goal;
 import java.util.ArrayList;
 
 public class ClientGameSaving extends GameSaving {
-    public ClientGameSaving(ArrayList<ClientPlayerSaving> players, int gameId, Resource goldCardsDeckTopResource, Resource resourceCardsDeckTopResource, PlayCard[] visibleCards, ScoreBoard scoreBoard, Goal[] publicGoal) {
+    public ClientGameSaving(ArrayList<ClientPlayerSaving> players, String gameId, Resource goldCardsDeckTopResource, Resource resourceCardsDeckTopResource, PlayCard[] visibleCards, ScoreBoard scoreBoard, Goal[] publicGoal) {
         super(-1, new ArrayList<>(players), gameId, new VirtualDeck<>(goldCardsDeckTopResource), new VirtualDeck<>(resourceCardsDeckTopResource), visibleCards, scoreBoard, publicGoal, null, null);
     }
 }

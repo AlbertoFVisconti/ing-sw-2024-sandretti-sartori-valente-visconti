@@ -11,14 +11,14 @@ import java.util.Set;
  * Message that the server sends to a client to provide the available games list
  */
 public class GameListMessage extends ServerMessage {
-    private final HashSet<Integer> availableGames;
+    private final HashSet<String> availableGames;
 
     /**
      * Builds a new GameListMessage ServerMessage with a specified set of available games
      *
      * @param availableGames the set of available games
      */
-    public GameListMessage(Set<Integer> availableGames) {
+    public GameListMessage(Set<String> availableGames) {
         super(MessageType.GAME_LIST_MESSAGE);
         this.availableGames = new HashSet<>(availableGames);
     }

@@ -48,7 +48,7 @@ public class CreateGameTUIScene implements TUIScene{
         }
 
         if(this.providedFields == 2) {
-            Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(-1, true, expectedPlayers, nickname));
+            Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(null, true, expectedPlayers, nickname));
         }
     }
 }

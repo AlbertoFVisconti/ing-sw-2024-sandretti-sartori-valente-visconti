@@ -7,7 +7,7 @@ import java.security.InvalidParameterException;
 
 public class JoinGameTUIScene implements TUIScene{
     private int providedFields = 0;
-    private int gameID;
+    private String gameID;
     private String nickname;
 
     @Override
@@ -15,7 +15,7 @@ public class JoinGameTUIScene implements TUIScene{
         System.out.println("Available Games:");
 
         if(Client.getInstance().getView().getAvailableGames() != null) {
-            for(Integer g : Client.getInstance().getView().getAvailableGames()) {
+            for(String g : Client.getInstance().getView().getAvailableGames()) {
                 System.out.println("\t" + g);
             }
         }
@@ -36,11 +36,7 @@ public class JoinGameTUIScene implements TUIScene{
         if(tokens.length == 0) return;
 
         if(this.providedFields == 0) {
-            try {
-                gameID = Integer.parseInt(tokens[0]);
-            } catch (NumberFormatException e) {
-                throw new InvalidParameterException(e);
-            }
+            gameID = tokens[0];
 
             if (!Client.getInstance().getView().getAvailableGames().contains(gameID)) {
                 throw new InvalidParameterException("a game cannot contain less then 2 players and more than 4");

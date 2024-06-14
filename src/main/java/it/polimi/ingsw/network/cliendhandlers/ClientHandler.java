@@ -154,6 +154,11 @@ public abstract class ClientHandler implements Observer {
         this.linkController(gameControllerWrapper);
     }
 
+    final public void resetController() {
+        this.gameController = null;
+        this.linkController(null);
+    }
+
     /**
      * Allows to link the client handler to the game the client is playing.
      *

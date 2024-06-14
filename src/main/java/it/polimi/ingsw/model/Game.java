@@ -41,7 +41,7 @@ public class Game extends Observable {
     private final Deck<StartCard> startCardsDeck;
     private final Deck<Goal> goalsDeck;
     private ScoreBoard scoreBoard;
-    private final int idGame;
+    private final String idGame;
     private final int expectedPlayers;
     private final Set<PlayerColor> availableColor;
 
@@ -55,11 +55,11 @@ public class Game extends Observable {
      * @param resourceCardDeckLoader DeckLoader that loads the game's Resource Cards
      * @param startCardDeckLoader    DeckLoader that loads the game's Start Cards
      * @param goalDeckLoader         DeckLoader that loads the game's Goals
-     * @param idGame                 the Id of the game that players can use to rejoin a specific game
+     * @param idGame                 the identifier of the game that players can use to rejoin a specific game
      * @throws IOException if there's a problem reading one of the files
      */
     public Game(DeckLoader<PlayCard> goldCardDeckLoader, DeckLoader<PlayCard> resourceCardDeckLoader,
-                DeckLoader<StartCard> startCardDeckLoader, DeckLoader<Goal> goalDeckLoader, int idGame, int expectedPlayers) throws IOException {
+                DeckLoader<StartCard> startCardDeckLoader, DeckLoader<Goal> goalDeckLoader, String idGame, int expectedPlayers) throws IOException {
         if (goldCardDeckLoader != null) {
             this.goldCardsDeck = goldCardDeckLoader.getDeck();
             this.goldCardsDeck.setDeckIdentifier(1);
@@ -496,7 +496,7 @@ public class Game extends Observable {
      *
      * @return the GameID for the current game.
      */
-    public int getIdGame() {
+    public String getIdGame() {
         return this.idGame;
     }
 

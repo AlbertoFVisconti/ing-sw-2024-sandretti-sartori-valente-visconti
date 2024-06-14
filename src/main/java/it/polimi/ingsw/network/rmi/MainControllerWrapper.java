@@ -36,7 +36,7 @@ public class MainControllerWrapper extends UnicastRemoteObject implements Virtua
      * @throws RemoteException in case of errors during the remote method invocation.
      */
     @Override
-    public void joinGame(String playerIdentifier, int IDGame, String nick) throws RemoteException {
+    public void joinGame(String playerIdentifier, String IDGame, String nick) throws RemoteException {
         ClientMessage message = new JoinGameMessage(IDGame, false, -1, nick);
         message.setPlayerIdentifier(playerIdentifier);
         mainController.forwardMessage(message);
@@ -54,7 +54,7 @@ public class MainControllerWrapper extends UnicastRemoteObject implements Virtua
      */
     @Override
     public void createGame(String playerIdentifier, int expectedPlayers, String nick) throws RemoteException {
-        ClientMessage message = new JoinGameMessage(-1, true, expectedPlayers, nick);
+        ClientMessage message = new JoinGameMessage(null, true, expectedPlayers, nick);
         message.setPlayerIdentifier(playerIdentifier);
         mainController.forwardMessage(message);
 
@@ -95,6 +95,18 @@ public class MainControllerWrapper extends UnicastRemoteObject implements Virtua
     @Override
     public void ping(String playerIdentifier, boolean isAnswer) throws RemoteException {
         ClientMessage message = new ClientToServerPingMessage(isAnswer);
+        message.setPlayerIdentifier(playerIdentifier);
+        mainController.forwardMessage(message);
+    }
+
+    /**
+     * Allows to leave the game.
+     *
+     * @param playerIdentifier the identifier of the player who is leaving the game
+     */
+    @Override
+    public void leaveGame(String playerIdentifier) {
+        ClientMessage message = new LeaveGameMessage();
         message.setPlayerIdentifier(playerIdentifier);
         mainController.forwardMessage(message);
     }

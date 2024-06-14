@@ -91,7 +91,7 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView {
     }
 
     @Override
-    public void updateGameList(Set<Integer> availableGames) throws RemoteException {
+    public void updateGameList(Set<String> availableGames) throws RemoteException {
         view.forwardMessage(new GameListMessage(availableGames));
     }
 

@@ -21,7 +21,7 @@ public class CreateGameController extends GUIScene {
 
     @FXML
     void createGame(ActionEvent event) {
-        Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(0, true, expectedPlayersChoiceBox.getValue(), nicknameFieldText.getText()));
+        Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(null, true, expectedPlayersChoiceBox.getValue(), nicknameFieldText.getText()));
     }
 
     @FXML

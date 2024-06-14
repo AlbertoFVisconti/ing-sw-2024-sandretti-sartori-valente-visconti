@@ -100,6 +100,7 @@ public class SocketClientHandler extends ClientHandler {
      */
     @Override
     public void linkController(GameControllerWrapper gameControllerWrapper) {
-        this.gameController = gameControllerWrapper.getGameController();
+        if(gameControllerWrapper != null) this.gameController = gameControllerWrapper.getGameController();
+        else this.gameController = null;
     }
 }

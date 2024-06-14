@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class GameSaving implements Serializable {
     private final int expectedPlayers;
     private final ArrayList<PlayerSaving> players;
-    private final int gameId;
+    private final String gameId;
     private final Deck<PlayCard> goldCardsDeck;
     private final Deck<PlayCard> resourceCardsDeck;
     private final PlayCard[] visibleCards;
@@ -21,7 +21,7 @@ public class GameSaving implements Serializable {
     private final Deck<StartCard> startCardsDeck;
     private final Deck<Goal> goalsDeck;
 
-    public GameSaving(int expectedPlayers, ArrayList<PlayerSaving> players, int gameId,
+    public GameSaving(int expectedPlayers, ArrayList<PlayerSaving> players, String gameId,
                       Deck<PlayCard> goldCardsDeck, Deck<PlayCard> resourceCardsDeck,
                       PlayCard[] visibleCards, ScoreBoard scoreBoard, Goal[] publicGoal,
                       Deck<StartCard> startCardsDeck, Deck<Goal> goalsDeck) {
@@ -45,7 +45,7 @@ public class GameSaving implements Serializable {
         return players;
     }
 
-    public int getGameId() {
+    public String getGameId() {
         return gameId;
     }
 

@@ -116,7 +116,7 @@ public interface VirtualView extends Remote {
      * @param availableGames a set of integer, each integer represents the ID of an available game
      * @throws RemoteException in case of error with the remote communication
      */
-    void updateGameList(Set<Integer> availableGames) throws RemoteException;
+    void updateGameList(Set<String> availableGames) throws RemoteException;
 
     /**
      * Allows the server to confirm that the client (whose view this is) successfully joined

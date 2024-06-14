@@ -16,7 +16,7 @@ import java.util.HashSet;
 
 public class JoinGameController extends GUIScene {
 
-    public ChoiceBox<Integer> selectGame = new ChoiceBox<>();
+    public ChoiceBox<String> selectGame = new ChoiceBox<>();
     public TextField nicknameField;
     public Label insertNickname;
     public Button joinButton;
@@ -46,9 +46,9 @@ public class JoinGameController extends GUIScene {
     public void update() {
         selectGame.getItems().clear();
 
-        HashSet<Integer> availableGames = Client.getInstance().getView().getAvailableGames();
+        HashSet<String> availableGames = Client.getInstance().getView().getAvailableGames();
         if (availableGames != null) {
-            for (Integer gameID : availableGames) {
+            for (String gameID : availableGames) {
                 selectGame.getItems().add(gameID);
             }
         } else {
