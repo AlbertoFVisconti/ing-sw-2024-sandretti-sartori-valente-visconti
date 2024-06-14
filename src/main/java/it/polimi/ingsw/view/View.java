@@ -42,9 +42,6 @@ public class View extends Thread implements VirtualView {
     private GameStatus gameStatus;
     private TurnStatus turnStatus;
     private String playersTurn;
-    private int selectedside=-1;
-
-
 
     private final BlockingQueue<ServerMessage> messageQueue;
     private final BlockingQueue<ServerMessage> gameMessages;
@@ -369,12 +366,7 @@ public class View extends Thread implements VirtualView {
     public String getLocalPlayerName() {
         return localPlayer.nickName;
     }
-    public int getSelectedside() {
-        return selectedside;
-    }
-    public void setSelectedside(int selectedside) {
-        this.selectedside = selectedside;
-    }
+
     public Game getGameModel() {
         return gameModel;
     }

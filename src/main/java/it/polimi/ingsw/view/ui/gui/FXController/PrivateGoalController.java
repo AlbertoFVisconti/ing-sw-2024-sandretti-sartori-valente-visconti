@@ -2,38 +2,35 @@ package it.polimi.ingsw.view.ui.gui.FXController;
 
 import it.polimi.ingsw.events.messages.client.SelectGoalMessage;
 import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.view.ui.gui.MediaManager;
 import javafx.fxml.FXML;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
-import java.util.Objects;
-
 public class PrivateGoalController extends GUIScene {
-    public ImageView privategoal1;
-    public ImageView privategoal2;
+    public ImageView privateGoal1;
+    public ImageView privateGoal2;
     public AnchorPane chatContainer;
     boolean selected = false;
-
     @FXML
     public void initialize()  {
-        try {
-            privategoal1.setImage(new Image(
-                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getAvailableGoals()[0].getPath())).toString()
-            ));
-            privategoal2.setImage(new Image(
-                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getAvailableGoals()[1].getPath())).toString()
-            ));
-        }
-        catch (NullPointerException ignored) {}
+        privateGoal1.getStyleClass().add("clickable");
+        privateGoal2.getStyleClass().add("clickable");
+
+        privateGoal1.setImage(MediaManager.getInstance().getImage(
+                Client.getInstance().getView().getLocalPlayer().getAvailableGoals()[0]
+        ));
+        privateGoal2.setImage(MediaManager.getInstance().getImage(
+                Client.getInstance().getView().getLocalPlayer().getAvailableGoals()[1]
+        ));
     }
     @FXML
-    public void SelectGoal1() {
+    public void selectGoal1() {
         selected = true;
         Client.getInstance().getServerHandler().sendMessage(new SelectGoalMessage(0));
     }
     @FXML
-    public void SelectGoal2() {
+    public void selectGoal2() {
         selected = true;
         Client.getInstance().getServerHandler().sendMessage(new SelectGoalMessage(1));
     }

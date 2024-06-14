@@ -1,5 +1,8 @@
 [
   {
+    "front_image": "/image/resource_cards/resource_card1f.png",
+    "back_image": "/image/resource_cards/resource_card1b.png",
+
     "is_gold": false,
     "type": "FUNGUS",
     "tl_corner": "FUNGUS",
@@ -14,6 +17,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card2f.png",
+    "back_image": "/image/resource_cards/resource_card1b.png",
+
     "is_gold": false,
     "type": "FUNGUS",
     "tl_corner": "FUNGUS",
@@ -28,6 +34,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card3f.png",
+    "back_image": "/image/resource_cards/resource_card1b.png",
+
     "is_gold": false,
     "type": "FUNGUS",
     "tl_corner": "EMPTY",
@@ -42,6 +51,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card4f.png",
+    "back_image": "/image/resource_cards/resource_card1b.png",
+
     "is_gold": false,
     "type": "FUNGUS",
     "tl_corner": "HIDDEN",
@@ -56,6 +68,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card5f.png",
+    "back_image": "/image/resource_cards/resource_card1b.png",
+
     "is_gold": false,
     "type": "FUNGUS",
     "tl_corner": "HIDDEN",
@@ -70,6 +85,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card6f.png",
+    "back_image": "/image/resource_cards/resource_card1b.png",
+
     "is_gold": false,
     "type": "FUNGUS",
     "tl_corner": "INK",
@@ -84,6 +102,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card7f.png",
+    "back_image": "/image/resource_cards/resource_card1b.png",
+
     "is_gold": false,
     "type": "FUNGUS",
     "tl_corner": "FUNGUS",
@@ -98,6 +119,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card8f.png",
+    "back_image": "/image/resource_cards/resource_card1b.png",
+
     "is_gold": false,
     "type": "FUNGUS",
     "tl_corner": "EMPTY",
@@ -112,6 +136,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card9f.png",
+    "back_image": "/image/resource_cards/resource_card1b.png",
+
     "is_gold": false,
     "type": "FUNGUS",
     "tl_corner": "FUNGUS",
@@ -126,6 +153,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card10f.png",
+    "back_image": "/image/resource_cards/resource_card1b.png",
+
     "is_gold": false,
     "type": "FUNGUS",
     "tl_corner": "HIDDEN",
@@ -140,6 +170,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card11f.png",
+    "back_image": "/image/resource_cards/resource_card2b.png",
+
     "is_gold": false,
     "type": "PLANT",
     "tl_corner": "PLANT",
@@ -154,6 +187,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card12f.png",
+    "back_image": "/image/resource_cards/resource_card2b.png",
+
     "is_gold": false,
     "type": "PLANT",
     "tl_corner": "PLANT",
@@ -168,6 +204,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card13f.png",
+    "back_image": "/image/resource_cards/resource_card2b.png",
+
     "is_gold": false,
     "type": "PLANT",
     "tl_corner": "EMPTY",
@@ -182,6 +221,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card14f.png",
+    "back_image": "/image/resource_cards/resource_card2b.png",
+
     "is_gold": false,
     "type": "PLANT",
     "tl_corner": "HIDDEN",
@@ -196,6 +238,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card15f.png",
+    "back_image": "/image/resource_cards/resource_card2b.png",
+
     "is_gold": false,
     "type": "PLANT",
     "tl_corner": "HIDDEN",
@@ -210,6 +255,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card16f.png",
+    "back_image": "/image/resource_cards/resource_card2b.png",
+
     "is_gold": false,
     "type": "PLANT",
     "tl_corner": "FUNGUS",
@@ -224,6 +272,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card17f.png",
+    "back_image": "/image/resource_cards/resource_card2b.png",
+
     "is_gold": false,
     "type": "PLANT",
     "tl_corner": "SCROLL",
@@ -238,6 +289,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card18f.png",
+    "back_image": "/image/resource_cards/resource_card2b.png",
+
     "is_gold": false,
     "type": "PLANT",
     "tl_corner": "EMPTY",
@@ -252,6 +306,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card19f.png",
+    "back_image": "/image/resource_cards/resource_card2b.png",
+
     "is_gold": false,
     "type": "PLANT",
     "tl_corner": "EMPTY",
@@ -266,6 +323,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card20f.png",
+    "back_image": "/image/resource_cards/resource_card2b.png",
+
     "is_gold": false,
     "type": "PLANT",
     "tl_corner": "HIDDEN",
@@ -280,6 +340,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card21f.png",
+    "back_image": "/image/resource_cards/resource_card3b.png",
+
     "is_gold": false,
     "type": "ANIMAL",
     "tl_corner": "ANIMAL",
@@ -294,6 +357,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card22f.png",
+    "back_image": "/image/resource_cards/resource_card3b.png",
+
     "is_gold": false,
     "type": "ANIMAL",
     "tl_corner": "HIDDEN",
@@ -308,6 +374,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card23f.png",
+    "back_image": "/image/resource_cards/resource_card3b.png",
+
     "is_gold": false,
     "type": "ANIMAL",
     "tl_corner": "ANIMAL",
@@ -322,12 +391,15 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card24f.png",
+    "back_image": "/image/resource_cards/resource_card3b.png",
+
     "is_gold": false,
     "type": "ANIMAL",
     "tl_corner": "EMPTY",
     "tr_corner": "ANIMAL",
     "bl_corner": "HIDDEN",
-    "br_corner": "EMPTY",
+    "br_corner": "ANIMAL",
     "scoring_strategy": "free_score",
     "free_score": 0,
     "score_per_corner": 0,
@@ -336,6 +408,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card25f.png",
+    "back_image": "/image/resource_cards/resource_card3b.png",
+
     "is_gold": false,
     "type": "ANIMAL",
     "tl_corner": "HIDDEN",
@@ -350,6 +425,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card26f.png",
+    "back_image": "/image/resource_cards/resource_card3b.png",
+
     "is_gold": false,
     "type": "ANIMAL",
     "tl_corner": "PLANT",
@@ -364,6 +442,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card27f.png",
+    "back_image": "/image/resource_cards/resource_card3b.png",
+
     "is_gold": false,
     "type": "ANIMAL",
     "tl_corner": "FEATHER",
@@ -378,6 +459,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card28f.png",
+    "back_image": "/image/resource_cards/resource_card3b.png",
+
     "is_gold": false,
     "type": "ANIMAL",
     "tl_corner": "HIDDEN",
@@ -392,6 +476,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card29f.png",
+    "back_image": "/image/resource_cards/resource_card3b.png",
+
     "is_gold": false,
     "type": "ANIMAL",
     "tl_corner": "EMPTY",
@@ -406,6 +493,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card30f.png",
+    "back_image": "/image/resource_cards/resource_card3b.png",
+
     "is_gold": false,
     "type": "ANIMAL",
     "tl_corner": "EMPTY",
@@ -420,6 +510,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card31f.png",
+    "back_image": "/image/resource_cards/resource_card4b.png",
+
     "is_gold": false,
     "type": "INSECT",
     "tl_corner": "INSECT",
@@ -434,6 +527,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card32f.png",
+    "back_image": "/image/resource_cards/resource_card4b.png",
+
     "is_gold": false,
     "type": "INSECT",
     "tl_corner": "HIDDEN",
@@ -448,6 +544,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card33f.png",
+    "back_image": "/image/resource_cards/resource_card4b.png",
+
     "is_gold": false,
     "type": "INSECT",
     "tl_corner": "INSECT",
@@ -462,6 +561,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card34f.png",
+    "back_image": "/image/resource_cards/resource_card4b.png",
+
     "is_gold": false,
     "type": "INSECT",
     "tl_corner": "EMPTY",
@@ -476,6 +578,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card35f.png",
+    "back_image": "/image/resource_cards/resource_card4b.png",
+
     "is_gold": false,
     "type": "INSECT",
     "tl_corner": "HIDDEN",
@@ -490,6 +595,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card36f.png",
+    "back_image": "/image/resource_cards/resource_card4b.png",
+
     "is_gold": false,
     "type": "INSECT",
     "tl_corner": "SCROLL",
@@ -504,6 +612,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card37f.png",
+    "back_image": "/image/resource_cards/resource_card4b.png",
+
     "is_gold": false,
     "type": "INSECT",
     "tl_corner": "INSECT",
@@ -518,6 +629,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card38f.png",
+    "back_image": "/image/resource_cards/resource_card4b.png",
+
     "is_gold": false,
     "type": "INSECT",
     "tl_corner": "INSECT",
@@ -532,6 +646,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card39f.png",
+    "back_image": "/image/resource_cards/resource_card4b.png",
+
     "is_gold": false,
     "type": "INSECT",
     "tl_corner": "EMPTY",
@@ -546,6 +663,9 @@
     "constraint": []
   },
   {
+    "front_image": "/image/resource_cards/resource_card40f.png",
+    "back_image": "/image/resource_cards/resource_card4b.png",
+
     "is_gold": false,
     "type": "INSECT",
     "tl_corner": "HIDDEN",

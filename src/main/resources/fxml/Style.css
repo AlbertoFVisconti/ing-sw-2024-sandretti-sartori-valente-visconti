@@ -32,3 +32,7 @@
 .cardshape:hover {
     -fx-opacity: 1;
 }
+
+.clickable:hover {
+    -fx-opacity: 0.5;
+}

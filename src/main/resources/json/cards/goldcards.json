@@ -1,5 +1,8 @@
 [
   {
+    "front_image": "/image/golden_cards/golden_card1f.png",
+    "back_image": "/image/golden_cards/golden_card1b.png",
+
     "is_gold": true,
     "type": "FUNGUS",
     "tl_corner": "HIDDEN",
@@ -23,6 +26,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card2f.png",
+    "back_image": "/image/golden_cards/golden_card1b.png",
+
     "is_gold": true,
     "type": "FUNGUS",
     "tl_corner": "EMPTY",
@@ -46,6 +52,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card3f.png",
+    "back_image": "/image/golden_cards/golden_card1b.png",
+
     "is_gold": true,
     "type": "FUNGUS",
     "tl_corner": "SCROLL",
@@ -69,6 +78,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card4f.png",
+    "back_image": "/image/golden_cards/golden_card1b.png",
+
     "is_gold": true,
     "type": "FUNGUS",
     "tl_corner": "EMPTY",
@@ -92,6 +104,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card5f.png",
+    "back_image": "/image/golden_cards/golden_card1b.png",
+
     "is_gold": true,
     "type": "FUNGUS",
     "tl_corner": "EMPTY",
@@ -115,6 +130,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card6f.png",
+    "back_image": "/image/golden_cards/golden_card1b.png",
+
     "is_gold": true,
     "type": "FUNGUS",
     "tl_corner": "EMPTY",
@@ -138,6 +156,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card7f.png",
+    "back_image": "/image/golden_cards/golden_card1b.png",
+
     "is_gold": true,
     "type": "FUNGUS",
     "tl_corner": "EMPTY",
@@ -157,6 +178,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card8f.png",
+    "back_image": "/image/golden_cards/golden_card1b.png",
+
     "is_gold": true,
     "type": "FUNGUS",
     "tl_corner": "FEATHER",
@@ -176,6 +200,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card9f.png",
+    "back_image": "/image/golden_cards/golden_card1b.png",
+
     "is_gold": true,
     "type": "FUNGUS",
     "tl_corner": "HIDDEN",
@@ -195,6 +222,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card10f.png",
+    "back_image": "/image/golden_cards/golden_card1b.png",
+
     "is_gold": true,
     "type": "FUNGUS",
     "tl_corner": "EMPTY",
@@ -214,6 +244,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card11f.png",
+    "back_image": "/image/golden_cards/golden_card2b.png",
+
     "is_gold": true,
     "type": "PLANT",
     "tl_corner": "FEATHER",
@@ -237,6 +270,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card12f.png",
+    "back_image": "/image/golden_cards/golden_card2b.png",
+
     "is_gold": true,
     "type": "PLANT",
     "tl_corner": "EMPTY",
@@ -260,6 +296,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card13f.png",
+    "back_image": "/image/golden_cards/golden_card2b.png",
+
     "is_gold": true,
     "type": "PLANT",
     "tl_corner": "EMPTY",
@@ -283,6 +322,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card14f.png",
+    "back_image": "/image/golden_cards/golden_card2b.png",
+
     "is_gold": true,
     "type": "PLANT",
     "tl_corner": "HIDDEN",
@@ -306,6 +348,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card15f.png",
+    "back_image": "/image/golden_cards/golden_card2b.png",
+
     "is_gold": true,
     "type": "PLANT",
     "tl_corner": "EMPTY",
@@ -329,6 +374,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card16f.png",
+    "back_image": "/image/golden_cards/golden_card2b.png",
+
     "is_gold": true,
     "type": "PLANT",
     "tl_corner": "EMPTY",
@@ -352,6 +400,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card17f.png",
+    "back_image": "/image/golden_cards/golden_card2b.png",
+
     "is_gold": true,
     "type": "PLANT",
     "tl_corner": "EMPTY",
@@ -371,6 +422,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card18f.png",
+    "back_image": "/image/golden_cards/golden_card2b.png",
+
     "is_gold": true,
     "type": "PLANT",
     "tl_corner": "SCROLL",
@@ -390,6 +444,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card19f.png",
+    "back_image": "/image/golden_cards/golden_card2b.png",
+
     "is_gold": true,
     "type": "PLANT",
     "tl_corner": "HIDDEN",
@@ -409,6 +466,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card20f.png",
+    "back_image": "/image/golden_cards/golden_card2b.png",
+
     "is_gold": true,
     "type": "PLANT",
     "tl_corner": "EMPTY",
@@ -428,6 +488,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card21f.png",
+    "back_image": "/image/golden_cards/golden_card3b.png",
+
     "is_gold": true,
     "type": "ANIMAL",
     "tl_corner": "INK",
@@ -451,6 +514,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card22f.png",
+    "back_image": "/image/golden_cards/golden_card3b.png",
+
     "is_gold": true,
     "type": "ANIMAL",
     "tl_corner": "HIDDEN",
@@ -474,6 +540,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card23f.png",
+    "back_image": "/image/golden_cards/golden_card3b.png",
+
     "is_gold": true,
     "type": "ANIMAL",
     "tl_corner": "EMPTY",
@@ -497,6 +566,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card24f.png",
+    "back_image": "/image/golden_cards/golden_card3b.png",
+
     "is_gold": true,
     "type": "ANIMAL",
     "tl_corner": "EMPTY",
@@ -520,6 +592,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card25f.png",
+    "back_image": "/image/golden_cards/golden_card3b.png",
+
     "is_gold": true,
     "type": "ANIMAL",
     "tl_corner": "EMPTY",
@@ -543,6 +618,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card26f.png",
+    "back_image": "/image/golden_cards/golden_card3b.png",
+
     "is_gold": true,
     "type": "ANIMAL",
     "tl_corner": "HIDDEN",
@@ -566,6 +644,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card27f.png",
+    "back_image": "/image/golden_cards/golden_card3b.png",
+
     "is_gold": true,
     "type": "ANIMAL",
     "tl_corner": "EMPTY",
@@ -585,6 +666,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card28f.png",
+    "back_image": "/image/golden_cards/golden_card3b.png",
+
     "is_gold": true,
     "type": "ANIMAL",
     "tl_corner": "EMPTY",
@@ -604,6 +688,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card29f.png",
+    "back_image": "/image/golden_cards/golden_card3b.png",
+
     "is_gold": true,
     "type": "ANIMAL",
     "tl_corner": "HIDDEN",
@@ -623,6 +710,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card30f.png",
+    "back_image": "/image/golden_cards/golden_card3b.png",
+
     "is_gold": true,
     "type": "ANIMAL",
     "tl_corner": "HIDDEN",
@@ -642,6 +732,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card31f.png",
+    "back_image": "/image/golden_cards/golden_card4b.png",
+
     "is_gold": true,
     "type": "INSECT",
     "tl_corner": "EMPTY",
@@ -665,6 +758,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card32f.png",
+    "back_image": "/image/golden_cards/golden_card4b.png",
+
     "is_gold": true,
     "type": "INSECT",
     "tl_corner": "EMPTY",
@@ -688,6 +784,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card33f.png",
+    "back_image": "/image/golden_cards/golden_card4b.png",
+
     "is_gold": true,
     "type": "INSECT",
     "tl_corner": "HIDDEN",
@@ -711,6 +810,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card34f.png",
+    "back_image": "/image/golden_cards/golden_card4b.png",
+
     "is_gold": true,
     "type": "INSECT",
     "tl_corner": "EMPTY",
@@ -734,6 +836,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card35f.png",
+    "back_image": "/image/golden_cards/golden_card4b.png",
+
     "is_gold": true,
     "type": "INSECT",
     "tl_corner": "EMPTY",
@@ -757,6 +862,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card36f.png",
+    "back_image": "/image/golden_cards/golden_card4b.png",
+
     "is_gold": true,
     "type": "INSECT",
     "tl_corner": "EMPTY",
@@ -780,6 +888,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card37f.png",
+    "back_image": "/image/golden_cards/golden_card4b.png",
+
     "is_gold": true,
     "type": "INSECT",
     "tl_corner": "INK",
@@ -799,6 +910,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card38f.png",
+    "back_image": "/image/golden_cards/golden_card4b.png",
+
     "is_gold": true,
     "type": "INSECT",
     "tl_corner": "EMPTY",
@@ -818,6 +932,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card39f.png",
+    "back_image": "/image/golden_cards/golden_card4b.png",
+
     "is_gold": true,
     "type": "INSECT",
     "tl_corner": "HIDDEN",
@@ -837,6 +954,9 @@
     ]
   },
   {
+    "front_image": "/image/golden_cards/golden_card40f.png",
+    "back_image": "/image/golden_cards/golden_card4b.png",
+
     "is_gold": true,
     "type": "INSECT",
     "tl_corner": "EMPTY",

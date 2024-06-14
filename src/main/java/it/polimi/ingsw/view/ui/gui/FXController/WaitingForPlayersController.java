@@ -19,46 +19,39 @@ import java.util.List;
 import java.util.Objects;
 
 public class WaitingForPlayersController extends GUIScene {
-
-
     public ImageView blue;
     public ImageView red;
     public ImageView yellow;
     public ImageView green;
     public AnchorPane chatContainer;
-    @FXML
-    private ImageView BackArrow;
 
     @FXML
-    private ImageView codexWallpaper;
+    private Label player1;
 
     @FXML
-    private Label player1= new Label();
+    private Label player2;
 
     @FXML
-    private Label player2= new Label();
+    private Label player3;
 
     @FXML
-    private Label player3= new Label();
-
-    @FXML
-    private Label player4= new Label();
+    private Label player4;
 
     private Label[] playerLabels;
 
     @FXML
-    void GoBackToLobby(MouseEvent event) throws IOException {
+    public void initialize() {
+        playerLabels = new Label[]{player1, player2, player3, player4};
+
+        this.update();
+    }
+
+    @FXML
+    void goBackToLobby(MouseEvent event) throws IOException {
         Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/Lobby.fxml")));
         Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         window.setScene(new Scene(nextPageParent));
         window.show();
-    }
-
-    @FXML
-    public void initialize() {
-        this.playerLabels = new Label[]{player1, player2, player3, player4};
-
-        this.update();
     }
 
     @Override
@@ -110,7 +103,7 @@ public class WaitingForPlayersController extends GUIScene {
         else yellow.setOpacity(1);
     }
 
-    public void SelectRed(MouseEvent mouseEvent) {
+    public void selectRed(MouseEvent mouseEvent) {
         if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.RED)) {
             return;
         }
@@ -119,7 +112,7 @@ public class WaitingForPlayersController extends GUIScene {
         Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.RED));
     }
 
-    public void SelectBlue(MouseEvent mouseEvent) {
+    public void selectBlue(MouseEvent mouseEvent) {
         if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.BLUE)) {
             return;
         }
@@ -128,7 +121,7 @@ public class WaitingForPlayersController extends GUIScene {
         Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.BLUE));
     }
 
-    public void SelectYellow(MouseEvent mouseEvent) {
+    public void selectYellow(MouseEvent mouseEvent) {
         if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.YELLOW)) {
             return;
         }
@@ -137,7 +130,7 @@ public class WaitingForPlayersController extends GUIScene {
         Client.getInstance().getServerHandler().sendMessage(new SelectColorMessage(PlayerColor.YELLOW));
     }
 
-    public void SelectGreen(MouseEvent mouseEvent) {
+    public void selectGreen(MouseEvent mouseEvent) {
         if (!Client.getInstance().getView().getAvailableColors().contains(PlayerColor.GREEN)) {
             return;
         }

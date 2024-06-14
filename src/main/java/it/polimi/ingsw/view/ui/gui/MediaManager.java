@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.ui.gui;
 
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.CardSlot;
+import it.polimi.ingsw.model.goals.Goal;
 import javafx.scene.image.Image;
 
 import java.util.HashMap;
@@ -45,6 +46,8 @@ public class MediaManager {
     }
 
     public Image getImage(String path) {
+        if(path == null) return altImage;
+
         if(!loadedContent.containsKey(path)) {
             try {
                 loadedContent.put(path,
@@ -62,4 +65,8 @@ public class MediaManager {
         return loadedContent.get(path);
     }
 
+    public Image getImage(Goal privateGoal) {
+        if (privateGoal == null) return altImage;
+        return getImage(privateGoal.getPath());
+    }
 }

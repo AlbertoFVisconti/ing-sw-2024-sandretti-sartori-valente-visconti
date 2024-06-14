@@ -15,6 +15,15 @@ public enum PlayerColor {
             case GREEN -> Color.color(0, 1, 0);
             case BLUE -> Color.color(0, 0, 1);
         };
-
     }
+
+    public static String playerColorToImagePath(PlayerColor color) {
+        return switch (color) {
+            case RED -> "/image/RedCircle.png";
+            case YELLOW -> "/image/YellowCircle.png";
+            case GREEN -> "/image/GreenCircle.png";
+            case BLUE -> "/image/BlueCircle.png";
+        };
+    }
+
 }

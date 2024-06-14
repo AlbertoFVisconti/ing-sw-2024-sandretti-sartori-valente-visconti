@@ -5,9 +5,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="TablePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="it.polimi.ingsw.view.ui.gui.FXController.StartingCardController">
+            fx:controller="it.polimi.ingsw.view.ui.gui.FXController.StartingCardController"
+            stylesheets="@Style.css">
    <ImageView fitHeight="406.0" fitWidth="600.0" layoutY="-2.0">
       <Image url="@../image/CodexWallpaper.png"/>
    </ImageView>
@@ -16,9 +17,9 @@
          <Font name="Bangla MN" size="18.0"/>
       </font>
    </Label>
-   <ImageView fx:id="startingcardfront" fitHeight="88.0" fitWidth="149.0" layoutX="101.0" layoutY="147.0"
+   <ImageView fx:id="startingCardFront" fitHeight="88.0" fitWidth="149.0" layoutX="101.0" layoutY="147.0"
               onMouseClicked="#SelectFront" pickOnBounds="true" preserveRatio="true"/>
-   <ImageView fx:id="startingcardback" fitHeight="88.0" fitWidth="149.0" layoutX="101.0" layoutY="253.0"
+   <ImageView fx:id="startingCardBack" fitHeight="88.0" fitWidth="149.0" layoutX="101.0" layoutY="253.0"
               onMouseClicked="#SelectBack" pickOnBounds="true" preserveRatio="true"/>
 
    <AnchorPane fx:id="chatContainer" layoutX="363.0" layoutY="11.0" prefHeight="379.0" prefWidth="233.0"/>

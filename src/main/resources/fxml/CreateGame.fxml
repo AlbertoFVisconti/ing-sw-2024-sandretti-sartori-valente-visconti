@@ -7,25 +7,25 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
             prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="it.polimi.ingsw.view.ui.gui.FXController.CreateGameController">
-    <ImageView fx:id="codexWallpaper" fitHeight="414.0" fitWidth="613.0" layoutX="-6.0" layoutY="-7.0">
+    <ImageView fitHeight="414.0" fitWidth="613.0" layoutX="-6.0" layoutY="-7.0">
         <effect>
             <Blend/>
         </effect>
         <Image url="@../image/CodexWallpaper.png"/>
     </ImageView>
-    <Button fx:id="CreateButton" layoutX="273.0" layoutY="304.0" mnemonicParsing="false" onAction="#CreateGameFX"
+    <Button layoutX="273.0" layoutY="304.0" mnemonicParsing="false" onAction="#createGame"
             text="Create" stylesheets="@Style.css"/>
-    <ChoiceBox fx:id="ExpectedPlayersComboBox" layoutX="345.0" layoutY="254.0" prefWidth="50.0"
+    <ChoiceBox fx:id="expectedPlayersChoiceBox" layoutX="345.0" layoutY="254.0" prefWidth="50.0"
                stylesheets="@Style.css"/>
-    <Label fx:id="NumberofPlayersLabel" layoutX="222.0" layoutY="258.0" text="Number of Players:" textFill="4b1616"/>
-    <TextField fx:id="NicknameField" layoutX="220.0" layoutY="207.0"/>
-    <Label fx:id="InsertNicknameLabel" layoutX="255.0" layoutY="183.0" text="Insert Nickname:" textFill="4b1616"/>
-    <ImageView fx:id="codexLogo" fitHeight="200.0" fitWidth="150.0" layoutX="224.0" layoutY="21.0" pickOnBounds="true"
+    <Label layoutX="222.0" layoutY="258.0" text="Number of Players:" textFill="4b1616"/>
+    <TextField fx:id="nicknameFieldText" layoutX="220.0" layoutY="207.0"/>
+    <Label layoutX="255.0" layoutY="183.0" text="Insert Nickname:" textFill="4b1616"/>
+    <ImageView fitHeight="200.0" fitWidth="150.0" layoutX="224.0" layoutY="21.0" pickOnBounds="true"
                preserveRatio="true">
         <Image url="@../image/LogoCodex.png"/>
     </ImageView>
-    <ImageView fx:id="BackArrow" fitHeight="26.0" fitWidth="54.0" layoutX="21.0" layoutY="14.0" pickOnBounds="true"
-               preserveRatio="true" onMouseClicked='#GoBackToLobby'>
+    <ImageView fitHeight="26.0" fitWidth="54.0" layoutX="21.0" layoutY="14.0" pickOnBounds="true"
+               preserveRatio="true" onMouseClicked='#goBackToLobby'>
         <Image url="@../image/BackArrowButton.png"/>
     </ImageView>
 </AnchorPane>

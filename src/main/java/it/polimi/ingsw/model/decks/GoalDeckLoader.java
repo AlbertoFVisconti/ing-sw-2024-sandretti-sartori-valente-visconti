@@ -48,6 +48,8 @@ public class GoalDeckLoader extends DeckLoader<Goal> {
             Resource[][] pattern;
             ItemCollection items;
 
+            String imagePath = json.getString("image");
+
             switch (goalType) {
                 case "pattern":
                     JSONArray patternJson = json.getJSONArray("pattern");
@@ -70,7 +72,7 @@ public class GoalDeckLoader extends DeckLoader<Goal> {
                     }
 
                     goals.add(
-                            new PatternGoal(pattern, scorePerMatch, "/image/goal" + (i+1) +".png")
+                            new PatternGoal(pattern, scorePerMatch, imagePath)
                     );
                     break;
                 case "items":
@@ -86,7 +88,7 @@ public class GoalDeckLoader extends DeckLoader<Goal> {
                     }
 
                     goals.add(
-                            new ItemGoal(items, scorePerMatch, "/image/goal" + (i+1) + ".png")
+                            new ItemGoal(items, scorePerMatch, imagePath)
                     );
                     break;
             }

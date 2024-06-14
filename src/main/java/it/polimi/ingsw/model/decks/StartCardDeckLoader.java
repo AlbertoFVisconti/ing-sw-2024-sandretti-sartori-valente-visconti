@@ -49,6 +49,9 @@ public class StartCardDeckLoader extends DeckLoader<StartCard> {
                     backBottomLeft = null,
                     backBottomRight = null;
 
+            String frontPath = json.getString("front_image");
+            String backPath = json.getString("back_image");
+
             String cornerString = json.getString("tl_front_corner");
             if (!cornerString.equals("HIDDEN")) frontTopLeft = Corner.valueOf(cornerString);
 
@@ -84,7 +87,7 @@ public class StartCardDeckLoader extends DeckLoader<StartCard> {
 
             cards.add(
                     new StartCard(
-                            "start_card" + (i+1), "/image/start_card" + (i+1) +"f.png", "/image/start_card" + (i+1) +"b.png",
+                            "start_card" + (i+1), frontPath, backPath,
                             frontTopLeft, frontTopRight, frontBottomLeft, frontBottomRight,
                             backTopLeft, backTopRight, backBottomLeft, backBottomRight,
                             permanentResources

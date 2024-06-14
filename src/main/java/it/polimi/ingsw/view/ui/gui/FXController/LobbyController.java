@@ -6,8 +6,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -15,39 +13,24 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class LobbyController extends GUIScene{
-
-    @FXML
-    private Button CreateGameButton;
-
-    @FXML
-    private Button JoinGameButton;
-
-    @FXML
-    private ImageView codexLogo;
-    @FXML
-    private Button RulesButton;
-
-    @FXML
-    private ImageView codexWallpaper;
-
     private Stage window;
     private Parent nextPageParent;
 
     //CreateGamefx allows the user to change Pane to CreateGame.fxml
     @FXML
-    void CreateGamefx(ActionEvent event) throws IOException {
+    void createGamefx(ActionEvent event) throws IOException {
         Client.getInstance().getView().getUserInterface().setCreateGameScene();
     }
 
     //JoinGamefx allows the user to change Pane to JoinGame.fxml
     @FXML
-    void JoinGamefx(ActionEvent event) throws IOException {
+    void joinGame(ActionEvent event) throws IOException {
         Client.getInstance().getView().getUserInterface().setJoinGameScene();
     }
 
     //GoToRules allows the user to change Pane to RulesPage1.fxml
     @FXML
-    void GoToRules(ActionEvent event) throws IOException {
+    void goToRules(ActionEvent event) throws IOException {
         System.err.println("TODO" /* TODO */);
         nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/RulesPage1.fxml")));
         window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();

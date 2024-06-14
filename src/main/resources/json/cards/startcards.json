@@ -1,5 +1,8 @@
 [
   {
+    "front_image": "/image/start_cards/start_card1f.png",
+    "back_image": "/image/start_cards/start_card1b.png",
+
     "tl_front_corner": "FUNGUS",
     "tr_front_corner": "PLANT",
     "bl_front_corner": "INSECT",
@@ -13,6 +16,9 @@
     ]
   },
   {
+    "front_image": "/image/start_cards/start_card2f.png",
+    "back_image": "/image/start_cards/start_card2b.png",
+
     "tl_front_corner": "PLANT",
     "tr_front_corner": "ANIMAL",
     "bl_front_corner": "FUNGUS",
@@ -26,6 +32,9 @@
     ]
   },
   {
+    "front_image": "/image/start_cards/start_card3f.png",
+    "back_image": "/image/start_cards/start_card3b.png",
+
     "tl_front_corner": "INSECT",
     "tr_front_corner": "ANIMAL",
     "bl_front_corner": "FUNGUS",
@@ -40,6 +49,9 @@
     ]
   },
   {
+    "front_image": "/image/start_cards/start_card4f.png",
+    "back_image": "/image/start_cards/start_card4b.png",
+
     "tl_front_corner": "PLANT",
     "tr_front_corner": "INSECT",
     "bl_front_corner": "ANIMAL",
@@ -54,6 +66,9 @@
     ]
   },
   {
+    "front_image": "/image/start_cards/start_card5f.png",
+    "back_image": "/image/start_cards/start_card5b.png",
+
     "tl_front_corner": "INSECT",
     "tr_front_corner": "FUNGUS",
     "bl_front_corner": "PLANT",
@@ -69,6 +84,9 @@
     ]
   },
   {
+    "front_image": "/image/start_cards/start_card6f.png",
+    "back_image": "/image/start_cards/start_card6b.png",
+
     "tl_front_corner": "FUNGUS",
     "tr_front_corner": "ANIMAL",
     "bl_front_corner": "PLANT",

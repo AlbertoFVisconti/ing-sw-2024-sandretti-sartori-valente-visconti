@@ -5,8 +5,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -16,11 +14,7 @@ import java.util.Objects;
 
 public class RulesPage3Controller extends GUIScene {
     @FXML
-    private Button GoBackButton;
-    private ImageView RulesPage1;
-
-    @FXML
-    void GoBackToLobby(MouseEvent event) throws IOException {
+    void goBackToLobby(MouseEvent event) throws IOException {
         Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/Lobby.fxml")));
         Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         window.setScene(new Scene(nextPageParent));
@@ -28,7 +22,7 @@ public class RulesPage3Controller extends GUIScene {
     }
 
     @FXML
-    void NextPage(ActionEvent event) throws IOException {
+    void nextPage(ActionEvent event) throws IOException {
         Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/RulesPage4.fxml")));
         Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         window.setScene(new Scene(nextPageParent));
@@ -36,7 +30,7 @@ public class RulesPage3Controller extends GUIScene {
     }
 
     @FXML
-    void PreviousPage(ActionEvent event) throws IOException {
+    void previousPage(ActionEvent event) throws IOException {
         Parent nextPageParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/RulesPage2.fxml")));
         Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         window.setScene(new Scene(nextPageParent));

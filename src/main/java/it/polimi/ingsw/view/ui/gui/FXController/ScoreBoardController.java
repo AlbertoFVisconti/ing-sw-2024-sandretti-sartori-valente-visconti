@@ -8,21 +8,28 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 import java.awt.*;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ScoreBoardController extends GUIScene{
 
-    public AnchorPane ScorePane;
-    public ImageView redpawn;
-    public ImageView greenpawn;
-    public ImageView yellowpawn;
-    public ImageView bluepwan;
+    public AnchorPane scorePane;
+    public ImageView redPawn;
+    public ImageView greenPawn;
+    public ImageView yellowPawn;
+    public ImageView bluePawn;
 
-    public Map<Integer, Point> scoreMap = new HashMap<>();
+
+    private final Map<Integer, Point> scoreMap = new HashMap<>();
+    private final EnumMap<PlayerColor, ImageView> colorToPawn = new EnumMap<>(PlayerColor.class);
 
     @FXML
     public void initialize() {
+        colorToPawn.put(PlayerColor.RED, redPawn);
+        colorToPawn.put(PlayerColor.GREEN, greenPawn);
+        colorToPawn.put(PlayerColor.YELLOW, yellowPawn);
+        colorToPawn.put(PlayerColor.BLUE, bluePawn);
 
         scoreMap.put(0, new Point(93, 731));
         scoreMap.put(1, new Point(190, 731));
@@ -54,64 +61,26 @@ public class ScoreBoardController extends GUIScene{
         scoreMap.put(27, new Point(334, 127));
         scoreMap.put(28, new Point(334, 128));
         scoreMap.put(29, new Point(190, 146));
-        yellowpawn.setVisible(false);
-        greenpawn.setVisible(false);
-        redpawn.setVisible(false);
-        bluepwan.setVisible(false);
 
-        for (Player player: Client.getInstance().getView().getGameModel().getPlayers()) {
-            PlayerColor color = player.getColor();
-            int score = Client.getInstance().getView().getGameModel().getScoreBoard().getScore(player.getNickname());
-            score=score%30;
-            switch (color){
-                case RED:
-                    redpawn.setVisible(true);
-                    redpawn.setLayoutX(scoreMap.get(score).getX());
-                    redpawn.setLayoutY(scoreMap.get(score).getY());
-                    break;
-                case GREEN:
-                    greenpawn.setVisible(true);
-                    greenpawn.setLayoutX(scoreMap.get(score).getX());
-                    greenpawn.setLayoutY(scoreMap.get(score).getY());
-                    break;
-                case YELLOW:
-                    yellowpawn.setVisible(true);
-                    yellowpawn.setLayoutX(scoreMap.get(score).getX());
-                    yellowpawn.setLayoutY(scoreMap.get(score).getY());
-                    break;
-                case BLUE:
-                    bluepwan.setVisible(true);
-                    bluepwan.setLayoutX(scoreMap.get(score).getX());
-                    bluepwan.setLayoutY(scoreMap.get(score).getY());
-                    break;
-            }
-        }
+        yellowPawn.setVisible(false);
+        greenPawn.setVisible(false);
+        redPawn.setVisible(false);
+        bluePawn.setVisible(false);
+
+        update();
     }
 
     @Override
     public void update() {
         for (Player player: Client.getInstance().getView().getGameModel().getPlayers()) {
-            PlayerColor color = player.getColor();
             int score = Client.getInstance().getView().getGameModel().getScoreBoard().getScore(player.getNickname());
             score=score%30;
-            switch (color){
-                case RED:
-                    redpawn.setLayoutX(scoreMap.get(score).getX());
-                    redpawn.setLayoutY(scoreMap.get(score).getY());
-                    break;
-                case GREEN:
-                    greenpawn.setLayoutX(scoreMap.get(score).getX());
-                    greenpawn.setLayoutY(scoreMap.get(score).getY());
-                    break;
-                case YELLOW:
-                    yellowpawn.setLayoutX(scoreMap.get(score).getX());
-                    yellowpawn.setLayoutY(scoreMap.get(score).getY());
-                    break;
-                case BLUE:
-                    bluepwan.setLayoutX(scoreMap.get(score).getX());
-                    bluepwan.setLayoutY(scoreMap.get(score).getY());
-                    break;
-            }
+
+            ImageView pawn = colorToPawn.get(player.getColor());
+
+            pawn.setVisible(true);
+            pawn.setLayoutX(scoreMap.get(score).getX());
+            pawn.setLayoutY(scoreMap.get(score).getY());
         }
     }
     @Override

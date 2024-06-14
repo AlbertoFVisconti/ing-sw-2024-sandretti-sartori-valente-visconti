@@ -4,32 +4,26 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="ScorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="806.0" prefWidth="422.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.ui.gui.FXController.ScoreBoardController">
-   <children>
-      <ImageView fitHeight="824.0" fitWidth="432.0">
-         <image>
-            <Image url="@../image/plateau_score.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="redpawn" fitHeight="55.0" fitWidth="52.0" layoutX="93.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="93.0">
-         <image>
-            <Image url="@../image/RedCircle.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="greenpawn" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../image/GreenCircle.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="yellowpawn" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../image/YellowCircle.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="bluepwan" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../image/BlueCircle.png" />
-         </image>
-      </ImageView>
-   </children>
+<AnchorPane fx:id="scorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="806.0" prefWidth="422.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="it.polimi.ingsw.view.ui.gui.FXController.ScoreBoardController">
+   <ImageView fitHeight="824.0" fitWidth="432.0">
+      <Image url="@../image/plateau_score.jpg"/>
+   </ImageView>
+   <ImageView fx:id="redPawn" fitHeight="55.0" fitWidth="52.0" layoutX="93.0" layoutY="731.0" pickOnBounds="true"
+              preserveRatio="true" AnchorPane.leftAnchor="93.0">
+      <Image url="@../image/RedCircle.png"/>
+   </ImageView>
+   <ImageView fx:id="greenPawn" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true"
+              preserveRatio="true">
+      <Image url="@../image/GreenCircle.png"/>
+   </ImageView>
+   <ImageView fx:id="yellowPawn" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true"
+              preserveRatio="true">
+      <Image url="@../image/YellowCircle.png"/>
+   </ImageView>
+   <ImageView fx:id="bluePawn" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true"
+              preserveRatio="true">
+      <Image url="@../image/BlueCircle.png"/>
+   </ImageView>
 </AnchorPane>

@@ -9,11 +9,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
-import java.io.IOException;
 import java.util.HashSet;
 
 public class JoinGameController extends GUIScene {
@@ -24,28 +22,18 @@ public class JoinGameController extends GUIScene {
     public Button joinButton;
     public Label noGamesAvailable;
     public Button refreshButton;
-    @FXML
-    private Label AvailableGamesLabel;
 
     @FXML
-    private ImageView codexLogo;
-
-    @FXML
-    private ImageView codexWallpaper;
-    @FXML
-    private Button GoBackButton;
-
-    @FXML
-    void GoBackToLobby(MouseEvent event) throws IOException {
+    void goBackToLobby(MouseEvent event) {
         Client.getInstance().getView().getUserInterface().setStartingScene();
     }
 
     @FXML
-    public void JoinGameX(ActionEvent event) throws IOException {
+    public void joinGame(ActionEvent event) {
         Client.getInstance().getServerHandler().sendMessage(new JoinGameMessage(selectGame.getValue(), false, 0, nicknameField.getText()));
     }
 
-    public void RefreshGame(ActionEvent actionEvent) {
+    public void refreshGame(ActionEvent actionEvent) {
         Client.getInstance().getServerHandler().sendMessage(new GameListRequestMessage());
     }
 

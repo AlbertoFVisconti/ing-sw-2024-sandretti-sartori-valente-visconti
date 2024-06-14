@@ -6,10 +6,10 @@ package it.polimi.ingsw.model.cards.corners;
  * matching Corner object.
  */
 public enum Resource {
-    FUNGUS(Corner.FUNGUS, "/image/resource_card1b.png", "/image/golden_card1b.png"),
-    PLANT(Corner.PLANT, "/image/resource_card2b.png", "/image/golden_card2b.png"),
-    ANIMAL(Corner.ANIMAL, "/image/resource_card3b.png", "/image/golden_card3b.png"),
-    INSECT(Corner.INSECT, "/image/resource_card4b.png", "/image/golden_card4b.png");
+    FUNGUS(Corner.FUNGUS, "/image/resource_cards/resource_card1b.png", "/image/golden_cards/golden_card1b.png"),
+    PLANT(Corner.PLANT, "/image/resource_cards/resource_card2b.png", "/image/golden_cards/golden_card2b.png"),
+    ANIMAL(Corner.ANIMAL, "/image/resource_cards/resource_card3b.png", "/image/golden_cards/golden_card3b.png"),
+    INSECT(Corner.INSECT, "/image/resource_cards/resource_card4b.png", "/image/golden_cards/golden_card4b.png");
 
     private final Corner equivalentCorner;
     private final String backpath;

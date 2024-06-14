@@ -2,46 +2,38 @@ package it.polimi.ingsw.view.ui.gui.FXController;
 
 import it.polimi.ingsw.events.messages.client.PlaceStartCardMessage;
 import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.view.ui.gui.MediaManager;
 import javafx.fxml.FXML;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
-import java.io.IOException;
-import java.util.Objects;
-
 public class StartingCardController extends GUIScene {
-
-    public ImageView startingcardback;
-    public ImageView startingcardfront;
+    public ImageView startingCardBack;
+    public ImageView startingCardFront;
     public AnchorPane chatContainer;
     boolean selected = false;
-    @FXML
-    private AnchorPane TablePane;
 
     @FXML
     public void initialize()  {
-        try {
-            startingcardfront.setImage(new Image(
-                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getStartCard().getFrontpath())).toString()
-            ));
-            startingcardback.setImage(new Image(
-                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getStartCard().getBackpath())).toString()
-            ));
-        }
-        catch (NullPointerException ignored){}
+        startingCardFront.getStyleClass().add("clickable");
+        startingCardBack.getStyleClass().add("clickable");
+
+        startingCardFront.setImage(MediaManager.getInstance().getImage(
+                Client.getInstance().getView().getLocalPlayer().getStartCard().getFrontpath()
+        ));
+        startingCardBack.setImage(MediaManager.getInstance().getImage(
+                Client.getInstance().getView().getLocalPlayer().getStartCard().getBackpath()
+        ));
     }
     @FXML
-    void SelectFront(MouseEvent event) throws IOException {
+    void SelectFront(MouseEvent event) {
         selected = true;
-        Client.getInstance().getView().setSelectedside(0);
         Client.getInstance().getServerHandler().sendMessage(new PlaceStartCardMessage(false));
     }
     @FXML
-    void SelectBack(MouseEvent event) throws IOException {
+    void SelectBack(MouseEvent event) {
         selected = true;
-        Client.getInstance().getView().setSelectedside(1);
         Client.getInstance().getServerHandler().sendMessage(new PlaceStartCardMessage(true));
     }
 

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatController extends AnchorPane {
-
     @FXML
     public ChoiceBox<String> selectChat;
     @FXML
@@ -29,9 +28,7 @@ public class ChatController extends AnchorPane {
     private String currentlyDisplayedChat = null;
 
     public void initialize() {
-        messageVBox.heightProperty().addListener((observable, oldValue, newValue) -> {
-            scrollPane.setVvalue(1.0);
-        });
+        messageVBox.heightProperty().addListener((observable, oldValue, newValue) -> scrollPane.setVvalue(1.0));
 
         sendButton.setOnAction(event -> handleSendMessage());
         selectChat.getSelectionModel().selectedItemProperty().addListener( (ObservableValue<? extends String> observable, String oldValue, String newValue) -> setCurrentlyDisplayedChat(newValue) );
@@ -50,6 +47,8 @@ public class ChatController extends AnchorPane {
     public void updateChat() {
         List<Player> players = Client.getInstance().getView().getGameModel().getPlayers();
         List<String> currentNicks = new ArrayList<>( selectChat.getItems());
+
+        if(Client.getInstance().getView().getLocalPlayer() == null) return;
 
         for (Player p : players) {
             if(Client.getInstance().getView().getLocalPlayerName().equals(p.nickName)) continue;
