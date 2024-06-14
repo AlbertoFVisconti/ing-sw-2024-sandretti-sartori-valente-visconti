@@ -7,7 +7,6 @@ import it.polimi.ingsw.events.messages.server.JoinConfirmationMessage;
 import it.polimi.ingsw.events.messages.server.ServerErrorMessage;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.ScoreBoard;
-import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.decks.Deck;
 import it.polimi.ingsw.model.goals.Goal;
@@ -491,49 +490,10 @@ public class GameController extends Observable implements VirtualController, Run
             }
         }
 
-        // updating the player's inventory
-        updateInventory(player, new CardLocation(0, 0));
-
 
         System.err.println(this.game.getIdGame() + ": " + player.nickName + " placed their starting card");
         // update status
         updateStatus();
-    }
-
-    /**
-     * Helper method that updates a player inventory after a placement occurred.
-     *
-     * @param player   the player whose inventory needs to be updated.
-     * @param location the location where the placement occurred.
-     */
-    private synchronized void updateInventory(Player player, CardLocation location) {
-        // retrieving the card that was placed and adding its items in the player's inventory
-        CardSlot placedCard = player.getPlacedCardSlot(location);
-        player.addItems(placedCard.collectItems());
-
-        // removing the item covered by the card in the top left neighbour
-        CardSlot t = player.getPlacedCardSlot(location.topLeftNeighbour());
-        if (t != null) {
-            player.removeItem(t.getBottomRightCorner());
-        }
-
-        // removing the item covered by the card in the top right neighbour
-        t = player.getPlacedCardSlot(location.topRightNeighbour());
-        if (t != null) {
-            player.removeItem(t.getBottomLeftCorner());
-        }
-
-        // removing the item covered by the card in the bottom left neighbour
-        t = player.getPlacedCardSlot(location.bottomLeftNeighbour());
-        if (t != null) {
-            player.removeItem(t.getTopRightCorner());
-        }
-
-        // removing the item covered by the card in the bottom right neighbour
-        t = player.getPlacedCardSlot(location.bottomRightNeighbour());
-        if (t != null) {
-            player.removeItem(t.getTopLeftCorner());
-        }
     }
 
     /**
@@ -584,8 +544,6 @@ public class GameController extends Observable implements VirtualController, Run
                 player.placeCard(player.getPlayerCard(index), onBackSide, location);
                 player.setPlayerCard(null, index);
 
-                // updating the player's inventory
-                updateInventory(player, location);
 
                 if (!onBackSide) {
                     // evaluating the card scoring strategy (only if placed on the front side)

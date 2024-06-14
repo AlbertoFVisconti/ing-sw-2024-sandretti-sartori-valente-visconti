@@ -73,6 +73,42 @@ public class Player extends Observable {
     }
 
     /**
+     * Helper method that updates the player's inventory after a placement occurred.
+     *
+     * @param location the location where the placement occurred.
+     */
+    private void updateInventory(CardLocation location) {
+        // retrieving the card that was placed and adding its items in the player's inventory
+        CardSlot placedCard = this.getPlacedCardSlot(location);
+        this.addItems(placedCard.collectItems());
+
+        // removing the item covered by the card in the top left neighbour
+        CardSlot t = this.getPlacedCardSlot(location.topLeftNeighbour());
+        if (t != null) {
+            this.removeItem(t.getBottomRightCorner());
+        }
+
+        // removing the item covered by the card in the top right neighbour
+        t = this.getPlacedCardSlot(location.topRightNeighbour());
+        if (t != null) {
+            this.removeItem(t.getBottomLeftCorner());
+        }
+
+        // removing the item covered by the card in the bottom left neighbour
+        t = this.getPlacedCardSlot(location.bottomLeftNeighbour());
+        if (t != null) {
+            this.removeItem(t.getTopRightCorner());
+        }
+
+        // removing the item covered by the card in the bottom right neighbour
+        t = this.getPlacedCardSlot(location.bottomRightNeighbour());
+        if (t != null) {
+            this.removeItem(t.getTopLeftCorner());
+        }
+    }
+
+
+    /**
      * Retrieves the Player's data in a format that can be loaded by another Player object.
      *
      * @return PlayerSaving object containing the Player's data
@@ -182,11 +218,11 @@ public class Player extends Observable {
      */
     public void placeCard(Card card, boolean onBackSide, CardLocation location) throws InvalidParameterException {
         if (this.getPlacedCardSlot(location) != null || card == null) throw new InvalidParameterException();
-        else {
-            CardSlot cardSlot = new CardSlot(card, onBackSide, this.turnCounter++);
 
-            board.put(location, cardSlot);
-        }
+        CardSlot cardSlot = new CardSlot(card, onBackSide, this.turnCounter++);
+        board.put(location, cardSlot);
+
+        updateInventory(location);
 
         this.notifyObservers(new PlayersBoardUpdateMessage(this.nickName, board.get(location), location));
     }
@@ -203,6 +239,8 @@ public class Player extends Observable {
 
         board.put(new CardLocation(0, 0), new CardSlot(startCard, onBackside, 0));
         startCard = null;
+
+        this.updateInventory(new CardLocation(0,0));
 
         this.notifyObservers(new PlayersBoardUpdateMessage(this.nickName, board.get(new CardLocation(0, 0)), new CardLocation(0, 0)));
     }

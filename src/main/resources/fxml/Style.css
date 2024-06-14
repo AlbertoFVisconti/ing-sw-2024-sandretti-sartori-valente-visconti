@@ -36,3 +36,7 @@
 .clickable:hover {
     -fx-opacity: 0.5;
 }
+
+.placed_card {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}

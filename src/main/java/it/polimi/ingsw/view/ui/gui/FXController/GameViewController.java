@@ -5,6 +5,7 @@ import it.polimi.ingsw.events.messages.client.DrawCardMessage;
 import it.polimi.ingsw.events.messages.client.PlaceCardMessage;
 import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.cards.PlayCard;
+import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.Client;
@@ -28,6 +29,27 @@ public class GameViewController extends GUIScene {
 
     private final static double CARD_CORNER_HEIGHT = (265.0/662.0) * CARD_HEIGHT;
     private final static double CARD_CORNER_WIDTH = (219.0/993.0) * CARD_WIDTH;
+    public ImageView tableBackground;
+
+
+    private String currentlyDisplayedPlayer;
+
+    @FXML
+    public Label fungusLabel;
+    @FXML
+    public Label plantLabel;
+    @FXML
+    public Label animalLabel;
+    @FXML
+    public Label insectLabel;
+    @FXML
+    public Label featherLabel;
+    @FXML
+    public Label inkLabel;
+    @FXML
+    public Label scrollLabel;
+
+    private EnumMap<Corner, Label> cornerToLabel;
 
     @FXML
     public ImageView resourceDeck;
@@ -89,18 +111,18 @@ public class GameViewController extends GUIScene {
     public ImageView startingCard;
 
     @FXML
-    public Label playerNickname1;
+    public Button playerNickname1;
 
     @FXML
-    public Label playerNickname2;
+    public Button playerNickname2;
 
     @FXML
-    public Label playerNickname3;
+    public Button playerNickname3;
 
     @FXML
-    public Label playerNickname4;
+    public Button playerNickname4;
 
-    private Label[] playerNicknameLabels;
+    private Button[] playerNicknameLabels;
 
     @FXML
     public Label scorePlayer1;
@@ -125,11 +147,23 @@ public class GameViewController extends GUIScene {
 
     @FXML
     public void initialize() {
+        this.currentlyDisplayedPlayer = Client.getInstance().getView().getLocalPlayerName();
+
         drawableCards = new ImageView[]{resourceDeck, goldDeck, visibleCard1, visibleCard2, visibleCard3, visibleCard4};
         scoreLabels = new Label[]{scorePlayer1, scorePlayer2, scorePlayer3, scorePlayer4};
-        playerNicknameLabels = new Label[]{playerNickname1, playerNickname2, playerNickname3, playerNickname4};
+        playerNicknameLabels = new Button[]{playerNickname1, playerNickname2, playerNickname3, playerNickname4};
         playerColors = new ImageView[]{playerColor1, playerColor2, playerColor3, playerColor4};
         hand = new ImageView[]{handCard1, handCard2, handCard3};
+
+        cornerToLabel = new EnumMap<>(Corner.class);
+        cornerToLabel.put(Corner.FUNGUS, fungusLabel);
+        cornerToLabel.put(Corner.PLANT, plantLabel);
+        cornerToLabel.put(Corner.ANIMAL, animalLabel);
+        cornerToLabel.put(Corner.INSECT, insectLabel);
+        cornerToLabel.put(Corner.FEATHER, featherLabel);
+        cornerToLabel.put(Corner.INK, inkLabel);
+        cornerToLabel.put(Corner.SCROLL, scrollLabel);
+
 
         TablePane.getStylesheets().add((Objects.requireNonNull(getClass().getResource("/fxml/Style.css")).toExternalForm()));
 
@@ -237,6 +271,8 @@ public class GameViewController extends GUIScene {
 
         boardCardImages.put(cl, cardImage);
 
+        cardImage.getStyleClass().add("placed_card");
+
         TablePane.getChildren().add(cardImage);
         cardImage.setVisible(true);
     }
@@ -317,29 +353,48 @@ public class GameViewController extends GUIScene {
 
         ArrayList<CardLocation> newCardsOnBoard = new ArrayList<>();
 
-        Map<CardLocation,CardSlot> playerBoard = Client.getInstance().getView().getLocalPlayer().getBoard();
+        Player displayedPlayer = null;
+
+        MediaManager mediaManager = MediaManager.getInstance();
+        View view = Client.getInstance().getView();
+
+        for(Player p : view.getGameModel().getPlayers()) {
+            if(p.nickName.equals(currentlyDisplayedPlayer)) {
+                displayedPlayer = p;
+                break;
+            }
+        }
+        if(displayedPlayer == null) displayedPlayer = Client.getInstance().getView().getLocalPlayer();
+
+        boolean localPlayerBoard = view.getLocalPlayer().nickName.equals(displayedPlayer.nickName);
+
+
+        Map<CardLocation,CardSlot> playerBoard = displayedPlayer.getBoard();
         for(CardLocation cardLocation : playerBoard.keySet()) {
             if(!boardCardImages.containsKey(cardLocation)) {
                 newCardsOnBoard.add(cardLocation);
             }
         }
 
-        newCardsOnBoard.sort(Comparator.comparingInt((CardLocation cl) -> playerBoard.get(cl).placementTurn()));
+        // update inventory
+        for(Corner item : cornerToLabel.keySet()) {
+            cornerToLabel.get(item).setText(String.valueOf(displayedPlayer.getInventory().count(item)));
+        }
 
+        newCardsOnBoard.sort(Comparator.comparingInt((CardLocation cl) -> playerBoard.get(cl).placementTurn()));
         for(CardLocation cardLocation: newCardsOnBoard) {
             this.addCardSlot(playerBoard.get(cardLocation),cardLocation);
         }
 
-        MediaManager mediaManager = MediaManager.getInstance();
-        View view = Client.getInstance().getView();
 
-        PlayCard[] playerCards =  view.getLocalPlayer().getPlayerCards();
+
+        PlayCard[] playerCards =  displayedPlayer.getPlayerCards();
         for(int i = 0; i < hand.length; i++) {
             hand[i].setImage(mediaManager.getImage(playerCards[i], false));
         }
 
         resourceDeck.setImage(mediaManager.getImage(view.getGameModel().getResourceCardsDeck().getTopOfTheStack().getPath()));
-        goldDeck.setImage(mediaManager.getImage(view.getGameModel().getResourceCardsDeck().getTopOfTheStack().getGoldenPath()));
+        goldDeck.setImage(mediaManager.getImage(view.getGameModel().getGoldCardsDeck().getTopOfTheStack().getGoldenPath()));
 
         for(int i = 2; i < drawableCards.length; i++) {
             drawableCards[i].setImage(mediaManager.getImage(view.getGameModel().getVisibleCards()[i-2], false));
@@ -349,27 +404,39 @@ public class GameViewController extends GUIScene {
             if (view.getTurnStatus().equals(TurnStatus.PLACE)) {
                 turnWarningLabel.setText(view.getLocalPlayer().getNickname() + " it's your turn to place a card!");
                 //cards again clickable
-                for(int i = 0; i < hand.length; i++) {
+
+                for (int i = 0; i < hand.length; i++) {
                     int finalI = i;
-                    hand[finalI].setOnMouseClicked((MouseEvent mouseEvent) -> {
-                        sel = finalI;
-                        for(int j = 0; j < hand.length; j++) {
-                            if(finalI == j)hand[finalI].setOpacity(0.5);
-                            else hand[j].setOpacity(1);
-                        }
-                    });
+                    if(localPlayerBoard) {
+                        hand[finalI].setOnMouseClicked((MouseEvent mouseEvent) -> {
+                            sel = finalI;
+                            for (int j = 0; j < hand.length; j++) {
+                                if (finalI == j) hand[finalI].setOpacity(0.5);
+                                else hand[j].setOpacity(1);
+                            }
+                        });
+                    }
+                    else {
+                        hand[finalI].setOnMouseClicked(null);
+                    }
+
                     hand[i].setOpacity(1);
                 }
 
                 disableDecks();
 
-                addPlaceHolder(new CardLocation(0,0), new HashSet<>());
+                if(localPlayerBoard) addPlaceHolder(new CardLocation(0,0), new HashSet<>());
 
             } else if (view.getTurnStatus().equals(TurnStatus.DRAW)) {
                 for(int i = 0; i < drawableCards.length; i++) {
                     drawableCards[i].setOpacity(1);
                     int finalI = i;
-                    drawableCards[i].setOnMouseClicked((MouseEvent mouseEvent) -> Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(finalI)));
+                    if(localPlayerBoard) {
+                        drawableCards[i].setOnMouseClicked((MouseEvent mouseEvent) -> Client.getInstance().getServerHandler().sendMessage(new DrawCardMessage(finalI)));
+                    }
+                    else {
+                        drawableCards[i].setOnMouseClicked(null);
+                    }
                 }
 
                 turnWarningLabel.setText(view.getLocalPlayer().getNickname() + " it's your turn to pick up a card!");
@@ -392,5 +459,38 @@ public class GameViewController extends GUIScene {
     @Override
     protected AnchorPane getChatContainer() {
         return chatContainer;
+    }
+
+    public void viewPlayer1(ActionEvent actionEvent) {
+        viewPlayer(1);
+    }
+    public void viewPlayer2(ActionEvent actionEvent) {
+        viewPlayer(2);
+    }
+    public void viewPlayer3(ActionEvent actionEvent) {
+        viewPlayer(3);
+    }
+    public void viewPlayer4(ActionEvent actionEvent) {
+        viewPlayer(4);
+    }
+
+    private void viewPlayer(int playerID) {
+        String nickname;
+        try {
+            nickname = playerNicknameLabels[playerID - 1].getText();
+        } catch (Exception e) {
+            return;
+        }
+
+        if(!nickname.equals(currentlyDisplayedPlayer)) {
+            this.currentlyDisplayedPlayer = nickname;
+
+            this.boardCardImages.clear();
+            this.TablePane.getChildren().clear();
+            this.TablePane.getChildren().add(tableBackground);
+            this.placeCardButtons.clear();
+
+            this.update();
+        }
     }
 }
