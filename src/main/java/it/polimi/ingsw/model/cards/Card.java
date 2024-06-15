@@ -25,16 +25,18 @@ public abstract class Card implements Drawable, Serializable {
      * Since Card is an abstract class, this constructor is only used by subclasses.
      *
      * @param cardID      the unique ID that identifies the card
+     * @param frontPath           path to the image that represents the front side of the card
+     * @param backPath            path to the image that represents the back side of the card
      * @param topLeft     the front top-left corner of the card
      * @param topRight    the front top-right corner of the card
      * @param bottomLeft  the front bottom-left corner of the card
      * @param bottomRight the front bottom-right corner of the card
      */
-    protected Card(String cardID, String frontpath, String backpath, Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight) {
+    protected Card(String cardID, String frontPath, String backPath, Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight) {
         this.cardID = cardID;
         this.corners = new Corner[]{topLeft, topRight, bottomLeft, bottomRight};
-        this.frontpath=frontpath;
-        this.backpath=backpath;
+        this.frontpath=frontPath;
+        this.backpath=backPath;
     }
 
     /**

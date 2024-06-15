@@ -160,7 +160,7 @@ public class View extends Thread implements VirtualView {
     }
 
     @Override
-    public void setPublicGoal(Goal[] goals) throws RemoteException {
+    public void setCommonGoals(Goal[] goals) throws RemoteException {
         gameModel.setCommonGoals(goals);
     }
 

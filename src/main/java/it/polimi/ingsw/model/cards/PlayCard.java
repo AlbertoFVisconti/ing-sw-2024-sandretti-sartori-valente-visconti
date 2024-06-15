@@ -23,6 +23,8 @@ public class PlayCard extends Card {
      * Constructs a PlayCard object with specified corners, placement constraint and scoring strategy.
      *
      * @param cardID              the card identifier
+     * @param frontPath           path to the image that represents the front side of the card
+     * @param backPath            path to the image that represents the back side of the card
      * @param topLeft             the top-left corner on the front side.
      * @param topRight            the top-right corner on the front side.
      * @param bottomLeft          the bottom-left corner on the front side.
@@ -32,13 +34,13 @@ public class PlayCard extends Card {
      * @param placementConstraint ItemCollection representing the items the player needs to have in order to place the card.
      * @param scoringStrategy     ScoringStrategy to evaluate the score to award the player with upon placement.
      */
-    private PlayCard(String cardID, String frontpath, String backpath,
+    private PlayCard(String cardID, String frontPath, String backPath,
                         Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight,
                         Resource resourceType,
                         boolean isGold,
                         ItemCollection placementConstraint,
                         ScoringStrategy scoringStrategy) {
-        super(cardID, frontpath, backpath, topLeft, topRight, bottomLeft, bottomRight);
+        super(cardID, frontPath, backPath, topLeft, topRight, bottomLeft, bottomRight);
         this.isGold = isGold;
 
         if (isGold) this.constraint = new ItemCollection(placementConstraint);
@@ -55,8 +57,8 @@ public class PlayCard extends Card {
      * one with invalid data.
      *
      * @param cardID              the card's identifier
-     * @param frontPath
-     * @param backPath
+     * @param frontPath           path to the image that represents the front side of the card
+     * @param backPath            path to the image that represents the back side of the card
      * @param topLeft             the top-left corner on the front side of the card.
      * @param topRight            the top-right corner on the front side of the card.
      * @param bottomLeft          the bottom-left corner on the front side of the card.
@@ -84,8 +86,8 @@ public class PlayCard extends Card {
      * one with invalid data.
      *
      * @param cardID             the card's identifier
-     * @param frontPath
-     * @param backPath
+     * @param frontPath           path to the image that represents the front side of the card
+     * @param backPath            path to the image that represents the back side of the card
      * @param topLeft            the top-left corner on the front side of the card.
      * @param topRight           the top-right corner on the front side of the card.
      * @param bottomLeft         the bottom-left corner on the front side of the card.
@@ -153,17 +155,6 @@ public class PlayCard extends Card {
         return new ItemCollection().add(this.getType().getCorner());
     }
 
-
-    /**
-     * Allows decks to ask for the resource on the back of the card.
-     *
-     * @return the resource on the back of the card (the type of the card)
-     */
-    @Override
-    public Resource getCardResourceType() {
-        return this.getType();
-    }
-
     /**
      * Allows to check whether the card is a golden card.
      *
@@ -180,5 +171,10 @@ public class PlayCard extends Card {
                 "type = " + type + "\n" +
                 "constraint = " + constraint.toString() + "\n" +
                 "scoringStrategy = " + scoringStrategy.toString();
+    }
+
+    @Override
+    public Resource getResourceType() {
+        return this.type;
     }
 }

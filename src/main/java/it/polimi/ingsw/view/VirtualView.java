@@ -56,7 +56,7 @@ public interface VirtualView extends Remote {
      * @param goals a list of Goal objects that represents the public goals for the current game.
      * @throws RemoteException in case of error with the remote communication.
      */
-    void setPublicGoal(Goal[] goals) throws RemoteException;
+    void setCommonGoals(Goal[] goals) throws RemoteException;
 
     /**
      * Allows the server to give the player the available private goals.

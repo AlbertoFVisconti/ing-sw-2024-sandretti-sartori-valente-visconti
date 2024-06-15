@@ -9,7 +9,7 @@ import java.rmi.RemoteException;
 /**
  * Message that the Server sends to a Client to provide the public goals
  */
-public class PublicGoalsUpdateMessage extends ServerMessage {
+public class CommonGoalsUpdateMessage extends ServerMessage {
     private final Goal[] goals;
 
     /**
@@ -17,7 +17,7 @@ public class PublicGoalsUpdateMessage extends ServerMessage {
      *
      * @param goals an array of goal objects that represents the public goals for the current game.
      */
-    public PublicGoalsUpdateMessage(Goal[] goals) {
+    public CommonGoalsUpdateMessage(Goal[] goals) {
         super(MessageType.MODEL_UPDATE_MESSAGE);
         this.goals = goals;
     }
@@ -30,7 +30,7 @@ public class PublicGoalsUpdateMessage extends ServerMessage {
     @Override
     public void updateView(VirtualView view) {
         try {
-            view.setPublicGoal(goals);
+            view.setCommonGoals(goals);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

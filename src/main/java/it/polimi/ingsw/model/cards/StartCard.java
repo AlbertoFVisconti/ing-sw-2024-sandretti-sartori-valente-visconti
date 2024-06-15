@@ -52,14 +52,6 @@ public class StartCard extends Card {
     }
 
     /**
-     * @return {@code null}
-     */
-    @Override
-    public Resource getCardResourceType() {
-        return null;
-    }
-
-    /**
      * Retrieves the required corner on the back side of the card
      *
      * @param index the index of the desired corner
@@ -91,5 +83,15 @@ public class StartCard extends Card {
         return super.toString() +
                 "backCorners = " + Arrays.toString(backCorners) + "\n" +
                 "permanentResources = " + permanentResources.toString();
+    }
+
+    /**
+     * startcards have no type
+     *
+     * @return {@code null}
+     */
+    @Override
+    public Resource getResourceType() {
+        return null;
     }
 }

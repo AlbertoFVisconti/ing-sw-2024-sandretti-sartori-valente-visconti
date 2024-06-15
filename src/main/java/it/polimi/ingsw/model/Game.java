@@ -2,7 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.events.Observable;
 import it.polimi.ingsw.events.messages.server.PlayersListUpdateMessage;
-import it.polimi.ingsw.events.messages.server.PublicGoalsUpdateMessage;
+import it.polimi.ingsw.events.messages.server.CommonGoalsUpdateMessage;
 import it.polimi.ingsw.events.messages.server.VisibleCardUpdateMessage;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
@@ -290,7 +290,7 @@ public class Game extends Observable {
         if (this.isStarted) throw new RuntimeException("Game has already started");
         this.commonGoals = goals.clone();
 
-        this.notifyObservers(new PublicGoalsUpdateMessage(commonGoals));
+        this.notifyObservers(new CommonGoalsUpdateMessage(commonGoals));
     }
 
     /**
