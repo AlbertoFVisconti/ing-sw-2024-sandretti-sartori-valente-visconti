@@ -15,7 +15,9 @@ import it.polimi.ingsw.view.ui.gui.MediaManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Label;
@@ -144,6 +146,9 @@ public class GameViewController extends GUIScene {
     private final HashMap<CardLocation, ImageView> placeCardButtons = new HashMap<>();
     //hashmap to store the image of the cards that are placed on the board
     private final HashMap<CardLocation, ImageView> boardCardImages = new HashMap<>();
+    long lastClickTime;
+    long DOUBLE_CLICK_THRESHOLD=300;
+    boolean[] isflipped={false,false,false};
 
     @FXML
     public void initialize() {
@@ -201,6 +206,18 @@ public class GameViewController extends GUIScene {
         }
 
         update();
+    }
+
+    public void SelectCard(int id){
+        if (!Client.getInstance().getView().getGameModel().getTurn().equals(Client.getInstance().getView().getLocalPlayer())|| !Client.getInstance().getView().getTurnStatus().equals(TurnStatus.PLACE)){
+        }else{
+            sel=id;
+            for(int i=0; i<hand.length;i++){
+                hand[i].setOpacity(1);
+                if (i==id)
+                    hand[i].setOpacity(0.5);
+            }
+        }
     }
 
     @FXML
@@ -311,7 +328,8 @@ public class GameViewController extends GUIScene {
 
     private void placeMessage(CardLocation cardLocation) {
         try {
-            Client.getInstance().getServerHandler().sendMessage(new PlaceCardMessage(sel, false, new CardLocation(cardLocation.getX() , cardLocation.getY() )));
+            Client.getInstance().getServerHandler().sendMessage(new PlaceCardMessage(sel, isflipped[sel], new CardLocation(cardLocation.getX() , cardLocation.getY() )));
+            //isflipped= new boolean[]{false, false, false};//after placing all the card a now front-facing
             for (ImageView s : placeCardButtons.values()) {
                 s.setVisible(false);
                 s.setOnMouseClicked(null);
@@ -346,6 +364,19 @@ public class GameViewController extends GUIScene {
         TablePane.getChildren().add(shape);
         shape.setOnMouseClicked((MouseEvent mouseEvent) -> placeMessage(cl));
     }
+    public void flipCard(int i) {
+        isflipped[i]=!isflipped[i];
+        if (isflipped[i]) {
+            hand[i].setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[i].getBackpath())).toString()
+            ));
+        } else {
+            hand[i].setImage(new Image(
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[i].getFrontpath())).toString()
+            ));
+        }
+    }
+
 
     @Override
     public void update() {
@@ -390,7 +421,7 @@ public class GameViewController extends GUIScene {
 
         PlayCard[] playerCards =  displayedPlayer.getPlayerCards();
         for(int i = 0; i < hand.length; i++) {
-            hand[i].setImage(mediaManager.getImage(playerCards[i], false));
+            hand[i].setImage(mediaManager.getImage(playerCards[i], isflipped[i]));
         }
 
         resourceDeck.setImage(mediaManager.getImage(view.getGameModel().getResourceCardsDeck().getTopOfTheStack().getPath()));
@@ -411,7 +442,21 @@ public class GameViewController extends GUIScene {
                         hand[finalI].setOnMouseClicked((MouseEvent mouseEvent) -> {
                             sel = finalI;
                             for (int j = 0; j < hand.length; j++) {
-                                if (finalI == j) hand[finalI].setOpacity(0.5);
+                                if (finalI == j){
+                                    hand[finalI].setOpacity(0.5);
+
+                                    if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+                                        long clickTime = System.currentTimeMillis();
+                                        if (clickTime - lastClickTime < DOUBLE_CLICK_THRESHOLD) {
+                                            flipCard(finalI);
+                                        } else {
+                                            SelectCard(finalI);
+                                        }
+                                        System.out.println(isflipped[0]+" "+isflipped[1]+" "+ isflipped[2]);
+                                        lastClickTime = clickTime;
+                                    }
+
+                                }
                                 else hand[j].setOpacity(1);
                             }
                         });
