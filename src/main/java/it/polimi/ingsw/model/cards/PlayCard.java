@@ -12,11 +12,16 @@ import it.polimi.ingsw.utils.ItemCollection;
  * (The StartCard is never actually "played", the player just choose the side)
  */
 public class PlayCard extends Card {
+    // Items-count constraint that is required to place the card
     private final ItemCollection constraint;
 
+    // method that allows to evaluate the placement
     private final ScoringStrategy scoringStrategy;
 
+    // Resource type of the card (i.e. the permanent resource on the back)
     private final Resource type;
+
+    // golden card flag
     protected final boolean isGold;
 
     /**
@@ -173,6 +178,11 @@ public class PlayCard extends Card {
                 "scoringStrategy = " + scoringStrategy.toString();
     }
 
+    /**
+     * Allows to retrieve the card type (the permanent resource on the back).
+     *
+     * @return the card's Resource type
+     */
     @Override
     public Resource getResourceType() {
         return this.type;

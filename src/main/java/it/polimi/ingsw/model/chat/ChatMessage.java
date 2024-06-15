@@ -6,16 +6,24 @@ import java.io.Serializable;
  * ChatMessage represents a message sent from a player to another (or broadcast)
  */
 public class ChatMessage implements Serializable {
-    private final String text; // The text content of the message
-    private final Long timestamp; // The timestamp when the message was created
-    private final String senderNick; // The nickname of the message sender
-    private final String receiverNick; // The nickname of the message receiver
+    // The text content of the message
+    private final String text;
+
+    // The timestamp when the message was created
+    private final Long timestamp;
+
+    // The nickname of the message sender
+    private final String senderNick;
+
+    // The nickname of the message receiver
+    private final String receiverNick;
 
     /**
      * Constructs a new ChatMessage object.
      *
      * @param text       The text content of the message.
      * @param senderNick The nickname of the message sender.
+     * @param receiverNick The nickname of the message receiver.
      */
     public ChatMessage(String text, String senderNick, String receiverNick) {
         this.text = text;

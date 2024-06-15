@@ -25,7 +25,7 @@ public class ScoreBoard extends Observable implements Serializable {
         scores = new HashMap<>();
 
         for (Player p : players) {
-            scores.put(p.nickName, 0);
+            scores.put(p.nickname, 0);
         }
     }
 

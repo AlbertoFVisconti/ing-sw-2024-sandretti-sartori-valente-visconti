@@ -259,7 +259,7 @@ public class PatternGoal extends Goal {
      */
     private boolean conflict(CardLocation a, CardLocation b) {
         CardLocation dist = a.sub(b);
-        if (Math.abs(dist.x) >= this.pattern[0].length) return false;
+        if (Math.abs(dist.x()) >= this.pattern[0].length) return false;
 
         // this can be improved, just a naive implementation to speed things up
         Set<CardLocation> locations = new HashSet<>();

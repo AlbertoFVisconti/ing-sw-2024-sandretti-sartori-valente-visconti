@@ -106,6 +106,7 @@ public interface VirtualView extends Remote {
      *
      * @param playerNickName the nickname of the player whose board needs to be updated.
      * @param cardSlot       the CardSlot that contains the card that was placed.
+     * @param location       the location where the CardSlot needs to be placed.
      * @throws RemoteException in case of error with the remote communication
      */
     void placeCardOnPlayersBoard(String playerNickName, CardSlot cardSlot, CardLocation location) throws RemoteException;

@@ -8,7 +8,7 @@ import it.polimi.ingsw.utils.CardLocation;
  * The score obtained remains constant regardless of the placement location on the game board.
  */
 public class FreeScoreScoringStrategy implements ScoringStrategy {
-
+    // the amount of points that the player obtains upon placing the card carrying this ScoringStrategy
     private final int freeScore;
 
     /**

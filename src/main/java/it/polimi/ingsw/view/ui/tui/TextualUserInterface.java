@@ -53,7 +53,7 @@ public class TextualUserInterface implements UserInterface {
                     }
                     else {
                         for(Player p : Client.getInstance().getView().getGameModel().getPlayers()) {
-                            if(p.nickName.equals(tokens[1])) {
+                            if(p.nickname.equals(tokens[1])) {
                                 userInterface.setPlayerBoardScene(p);
                                 return;
                             }
@@ -75,7 +75,7 @@ public class TextualUserInterface implements UserInterface {
                     }
                     else {
                         for(Player p : Client.getInstance().getView().getGameModel().getPlayers()) {
-                            if(p.nickName.equals(tokens[1])) {
+                            if(p.nickname.equals(tokens[1])) {
                                 userInterface.setChatScene(p);
                                 return;
                             }
@@ -185,7 +185,7 @@ public class TextualUserInterface implements UserInterface {
     @Override
     public void setGameStatus(GameStatus gameStatus, TurnStatus turnStatus, String playerTurn) {
         Player p = Client.getInstance().getView().getLocalPlayer();
-        boolean isLocalPlayersTurn = (p.nickName.equals(playerTurn));
+        boolean isLocalPlayersTurn = (p.nickname.equals(playerTurn));
 
         switch (gameStatus) {
             default:break;

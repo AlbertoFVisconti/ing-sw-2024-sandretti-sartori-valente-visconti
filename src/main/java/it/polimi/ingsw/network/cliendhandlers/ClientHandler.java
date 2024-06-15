@@ -210,7 +210,7 @@ public abstract class ClientHandler implements Observer {
 
             if (gameController != null) {
                 // the client was playing a game: rejoining
-                String nickname = MainController.getInstance().getPlayer(this.getPlayerIdentifier()).nickName;
+                String nickname = MainController.getInstance().getPlayer(this.getPlayerIdentifier()).nickname;
                 this.gameController.handleReconnection(nickname, this, null);
             }
         } else {

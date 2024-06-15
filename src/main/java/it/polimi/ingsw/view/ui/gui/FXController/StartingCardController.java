@@ -20,10 +20,10 @@ public class StartingCardController extends GUIScene {
         startingCardBack.getStyleClass().add("clickable");
 
         startingCardFront.setImage(MediaManager.getInstance().getImage(
-                Client.getInstance().getView().getLocalPlayer().getStartCard().getFrontpath()
+                Client.getInstance().getView().getLocalPlayer().getStartCard().getFrontPath()
         ));
         startingCardBack.setImage(MediaManager.getInstance().getImage(
-                Client.getInstance().getView().getLocalPlayer().getStartCard().getBackpath()
+                Client.getInstance().getView().getLocalPlayer().getStartCard().getBackPath()
         ));
     }
     @FXML

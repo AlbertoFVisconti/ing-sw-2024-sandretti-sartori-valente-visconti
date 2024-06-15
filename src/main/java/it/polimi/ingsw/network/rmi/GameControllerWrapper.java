@@ -14,6 +14,7 @@ import java.rmi.server.UnicastRemoteObject;
  * forwarded to the GameController and then processed asynchronously.
  */
 public class GameControllerWrapper extends UnicastRemoteObject implements VirtualController {
+    // wrapped GameController
     private final GameController gameController;
 
     /**

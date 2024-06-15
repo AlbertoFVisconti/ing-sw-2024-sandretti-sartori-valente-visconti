@@ -13,8 +13,10 @@ import java.util.Arrays;
  * compared to PlayCards.
  */
 public class StartCard extends Card {
+    // array of Corners that represent the corners on the back side of the start card
     private final Corner[] backCorners;
 
+    // collection of items that represent the set of permanent resources on the back of the card
     private final ItemCollection permanentResources;
 
     /**
@@ -23,6 +25,8 @@ public class StartCard extends Card {
      * the constructor needs two sets of corners.
      *
      * @param cardID             the card's identifier
+     * @param frontPath           path to the image that represents the front side of the card
+     * @param backPath            path to the image that represents the back side of the card
      * @param frontTopLeft       the top-left corner on the front side of the card.
      * @param frontTopRight      the top-right corner on the front side of the card.
      * @param frontBottomLeft    the bottom-left corner on the front side of the card.
@@ -33,17 +37,17 @@ public class StartCard extends Card {
      * @param backBottomRight    the bottom-right corner on the back side of the card.
      * @param permanentResources ItemCollection representing the set of permanent resources on the back of the card.
      */
-    public StartCard(String cardID, String frontpath, String backpath,
+    public StartCard(String cardID, String frontPath, String backPath,
                         Corner frontTopLeft, Corner frontTopRight, Corner frontBottomLeft, Corner frontBottomRight,
                         Corner backTopLeft, Corner backTopRight, Corner backBottomLeft, Corner backBottomRight,
                         ItemCollection permanentResources) {
-        super(cardID, frontpath, backpath, frontTopLeft, frontTopRight, frontBottomLeft, frontBottomRight);
+        super(cardID, frontPath, backPath, frontTopLeft, frontTopRight, frontBottomLeft, frontBottomRight);
         this.backCorners = new Corner[]{backTopLeft, backTopRight, backBottomLeft, backBottomRight};
         this.permanentResources = new ItemCollection(permanentResources);
     }
 
     /**
-     * Retrieves the startcard's permanent resources
+     * Retrieves the StartCard's permanent resources
      *
      * @return ItemCollection containing the card's permanent resources
      */
@@ -86,7 +90,7 @@ public class StartCard extends Card {
     }
 
     /**
-     * startcards have no type
+     * StartCards have no type
      *
      * @return {@code null}
      */

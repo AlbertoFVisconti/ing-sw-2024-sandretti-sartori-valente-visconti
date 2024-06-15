@@ -22,7 +22,7 @@ public class GameTest {
         Player p1 = new Player("pippo1", null);
         Player p2 = new Player("pippo2", null);
         //initialize parameters for game
-        int id = 1;
+        String id = "1";
         int expectedPlayers = 2;
         GoalDeckLoader goalDeckLoader = new GoalDeckLoader("src/main/resources/json/goals.json");
         PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");
@@ -53,7 +53,7 @@ public class GameTest {
         assertFalse(g.getResourceCardsDeck().isEmpty());
 
         for (Player p : g.getPlayers()) {
-            if (!Objects.equals(p.nickName, p1.nickName) && !Objects.equals(p.nickName, p2.nickName)) {
+            if (!Objects.equals(p.nickname, p1.nickname) && !Objects.equals(p.nickname, p2.nickname)) {
                 fail();
             }
 
@@ -88,7 +88,7 @@ public class GameTest {
         Player p1 = new Player("pippo1", null);
         Player p2 = new Player("pippo2", null);
         //initialize parameters for game
-        int id = 1;
+        String id = "1";
         int expectedPlayers = 2;
         GoalDeckLoader goalDeckLoader = new GoalDeckLoader("src/main/resources/json/goals.json");
         PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");
@@ -119,7 +119,7 @@ public class GameTest {
         Player p1 = new Player("pippo1", null);
         Player p2 = new Player("pippo2", null);
         //initialize parameters for game
-        int id = 1;
+        String id = "1";
         int expectedPlayers = 2;
         GoalDeckLoader goalDeckLoader = new GoalDeckLoader("src/main/resources/json/goals.json");
         PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");

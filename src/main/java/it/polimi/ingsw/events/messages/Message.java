@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Generic message that allows the server and clients to share data
  */
 public abstract class Message implements Serializable {
+    // the MessageType constant that better describes the message content
     final public MessageType messageType;
 
     /**

@@ -196,7 +196,7 @@ public class GameViewController extends GUIScene {
         }
 
         for(int i = 0; i < players.size(); i++) {
-            playerNicknameLabels[i].setText(players.get(i).nickName);
+            playerNicknameLabels[i].setText(players.get(i).nickname);
             scoreLabels[i].setVisible(true);
         }
 
@@ -260,7 +260,7 @@ public class GameViewController extends GUIScene {
         players = Client.getInstance().getView().getPlayersList();
 
         for(int i = 0; i < players.size(); i++) {
-            scoreLabels[i].setText(Integer.toString(Client.getInstance().getView().getGameModel().getScoreBoard().getScore(players.get(i).nickName)));
+            scoreLabels[i].setText(Integer.toString(Client.getInstance().getView().getGameModel().getScoreBoard().getScore(players.get(i).nickname)));
         }
     }
 
@@ -283,8 +283,8 @@ public class GameViewController extends GUIScene {
         cardImage.setFitHeight(CARD_HEIGHT);
         cardImage.setFitWidth(CARD_WIDTH);
 
-        cardImage.setLayoutX(startingCard.getLayoutX() + (cl.getX() * (CARD_WIDTH - CARD_CORNER_WIDTH)));
-        cardImage.setLayoutY(startingCard.getLayoutY() + (-cl.getY() * (CARD_HEIGHT - CARD_CORNER_HEIGHT)));
+        cardImage.setLayoutX(startingCard.getLayoutX() + (cl.x() * (CARD_WIDTH - CARD_CORNER_WIDTH)));
+        cardImage.setLayoutY(startingCard.getLayoutY() + (-cl.y() * (CARD_HEIGHT - CARD_CORNER_HEIGHT)));
 
         boardCardImages.put(cl, cardImage);
 
@@ -315,7 +315,7 @@ public class GameViewController extends GUIScene {
         if(boardCardImages.containsKey(cl)){
             for(int i: POSS){
                 for(int j: POSS){
-                    CardLocation p = new CardLocation(cl.getX() + i, cl.getY() + j);
+                    CardLocation p = new CardLocation(cl.x() + i, cl.y() + j);
                     if (!seen.contains(p)) {
                         seen.add(p);
                         if(placeable(p)) addShape(p);
@@ -328,7 +328,7 @@ public class GameViewController extends GUIScene {
 
     private void placeMessage(CardLocation cardLocation) {
         try {
-            Client.getInstance().getServerHandler().sendMessage(new PlaceCardMessage(sel, isflipped[sel], new CardLocation(cardLocation.getX() , cardLocation.getY() )));
+            Client.getInstance().getServerHandler().sendMessage(new PlaceCardMessage(sel, isflipped[sel], new CardLocation(cardLocation.x() , cardLocation.y() )));
             //isflipped= new boolean[]{false, false, false};//after placing all the card a now front-facing
             for (ImageView s : placeCardButtons.values()) {
                 s.setVisible(false);
@@ -357,8 +357,8 @@ public class GameViewController extends GUIScene {
         shape.setFitWidth(CARD_WIDTH);
         shape.getStyleClass().add("cardshape");
 
-        shape.setLayoutX(startingCard.getLayoutX() + (cl.getX() * (CARD_WIDTH-CARD_CORNER_WIDTH)));
-        shape.setLayoutY(startingCard.getLayoutY() + (-cl.getY() * (CARD_HEIGHT-CARD_CORNER_HEIGHT)));
+        shape.setLayoutX(startingCard.getLayoutX() + (cl.x() * (CARD_WIDTH-CARD_CORNER_WIDTH)));
+        shape.setLayoutY(startingCard.getLayoutY() + (-cl.y() * (CARD_HEIGHT-CARD_CORNER_HEIGHT)));
 
         shape.setVisible(true);
         TablePane.getChildren().add(shape);
@@ -368,11 +368,11 @@ public class GameViewController extends GUIScene {
         isflipped[i]=!isflipped[i];
         if (isflipped[i]) {
             hand[i].setImage(new Image(
-                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[i].getBackpath())).toString()
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[i].getBackPath())).toString()
             ));
         } else {
             hand[i].setImage(new Image(
-                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[i].getFrontpath())).toString()
+                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[i].getFrontPath())).toString()
             ));
         }
     }
@@ -390,14 +390,14 @@ public class GameViewController extends GUIScene {
         View view = Client.getInstance().getView();
 
         for(Player p : view.getGameModel().getPlayers()) {
-            if(p.nickName.equals(currentlyDisplayedPlayer)) {
+            if(p.nickname.equals(currentlyDisplayedPlayer)) {
                 displayedPlayer = p;
                 break;
             }
         }
         if(displayedPlayer == null) displayedPlayer = Client.getInstance().getView().getLocalPlayer();
 
-        boolean localPlayerBoard = view.getLocalPlayer().nickName.equals(displayedPlayer.nickName);
+        boolean localPlayerBoard = view.getLocalPlayer().nickname.equals(displayedPlayer.nickname);
 
 
         Map<CardLocation,CardSlot> playerBoard = displayedPlayer.getBoard();
@@ -431,9 +431,9 @@ public class GameViewController extends GUIScene {
             drawableCards[i].setImage(mediaManager.getImage(view.getGameModel().getVisibleCards()[i-2], false));
         }
 
-        if((view.getPlayersTurn().equals(view.getLocalPlayer().getNickname()))) {
+        if((view.getPlayersTurn().equals(view.getLocalPlayer().nickname))) {
             if (view.getTurnStatus().equals(TurnStatus.PLACE)) {
-                turnWarningLabel.setText(view.getLocalPlayer().getNickname() + " it's your turn to place a card!");
+                turnWarningLabel.setText(view.getLocalPlayer().nickname + " it's your turn to place a card!");
                 //cards again clickable
 
                 for (int i = 0; i < hand.length; i++) {
@@ -484,7 +484,7 @@ public class GameViewController extends GUIScene {
                     }
                 }
 
-                turnWarningLabel.setText(view.getLocalPlayer().getNickname() + " it's your turn to pick up a card!");
+                turnWarningLabel.setText(view.getLocalPlayer().nickname + " it's your turn to pick up a card!");
                 for(ImageView s : placeCardButtons.values()){
                     s.setVisible(false);
                     s.setOnMouseClicked(null);

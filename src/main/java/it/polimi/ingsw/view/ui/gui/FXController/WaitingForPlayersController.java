@@ -44,7 +44,7 @@ public class WaitingForPlayersController extends GUIScene {
     }
 
     @FXML
-    void goBackToLobby(MouseEvent event) throws IOException {
+    void goBackToLobby(MouseEvent event) {
         Client.getInstance().getServerHandler().sendMessage(new LeaveGameMessage());
         Client.getInstance().getView().getUserInterface().setStartingScene();
     }
@@ -61,11 +61,11 @@ public class WaitingForPlayersController extends GUIScene {
 
         int labelIndex = 0;
         for (Player player : players) {
-            if (Client.getInstance().getView().getLocalPlayer() != null && Client.getInstance().getView().getLocalPlayer().nickName.equals(player.nickName)) {
-                playerLabels[labelIndex].setText(player.getNickname() + " (you)");
+            if (Client.getInstance().getView().getLocalPlayer() != null && Client.getInstance().getView().getLocalPlayer().nickname.equals(player.nickname)) {
+                playerLabels[labelIndex].setText(player.nickname + " (you)");
             }
             else {
-                playerLabels[labelIndex].setText(player.getNickname());
+                playerLabels[labelIndex].setText(player.nickname);
             }
 
             if(player.getColor() != null) {

@@ -1,12 +1,15 @@
 package it.polimi.ingsw.utils;
 
 import java.io.Serializable;
-import java.util.Objects;
 
-public class CardLocation implements Serializable {
-    public final int x;
-    public final int y;
-
+/**
+ * Record that allows to describe the location on the player's board of a placed card.
+ * It can only contain legal coordinates.
+ *
+ * @param x the horizontal coordinate of the card's location
+ * @param y the vertical coordinate of the card's location
+ */
+public record CardLocation(int x, int y) implements Serializable {
     /**
      * Builds a new CardLocation element.
      * Because of how the cards are represented on the board, two coordinates are a valid cards location
@@ -16,11 +19,9 @@ public class CardLocation implements Serializable {
      * @param y the vertical coordinate of the card's location
      * @throws IllegalArgumentException if the provided coordinates are not valid
      */
-    public CardLocation(int x, int y) {
+    public CardLocation {
         if ((Math.abs(x) % 2) != (Math.abs(y) % 2))
             throw new IllegalArgumentException("Card location invalid: card location's coordinates should be both even or bot odd");
-        this.x = x;
-        this.y = y;
     }
 
     /**
@@ -114,23 +115,4 @@ public class CardLocation implements Serializable {
         return "{" + x + "," + y + "}";
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CardLocation that = (CardLocation) o;
-        return x == that.x && y == that.y;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y);
-    }
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
 }

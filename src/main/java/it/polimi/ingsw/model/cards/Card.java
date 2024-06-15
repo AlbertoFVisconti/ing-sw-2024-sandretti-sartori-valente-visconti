@@ -14,11 +14,16 @@ import java.util.Arrays;
  * and reuse the same set of object for all the games.
  */
 public abstract class Card implements Drawable, Serializable {
+    // string that identifies a particular card, used to check for equality
     private final String cardID;
 
+    // array of corners on the front side of the card
     private final Corner[] corners;
-    private final String frontpath;
-    private final String backpath;
+
+    // path to the image that represents the front side of the card
+    private final String frontPath;
+    // path to the image that represents the back side of the card
+    private final String backPath;
 
     /**
      * Stores the front face's corners in an array.
@@ -35,17 +40,8 @@ public abstract class Card implements Drawable, Serializable {
     protected Card(String cardID, String frontPath, String backPath, Corner topLeft, Corner topRight, Corner bottomLeft, Corner bottomRight) {
         this.cardID = cardID;
         this.corners = new Corner[]{topLeft, topRight, bottomLeft, bottomRight};
-        this.frontpath=frontPath;
-        this.backpath=backPath;
-    }
-
-    /**
-     * Retrieves the card's ID
-     *
-     * @return the card's ID
-     */
-    public String getCardID() {
-        return cardID;
+        this.frontPath =frontPath;
+        this.backPath =backPath;
     }
 
     /**
@@ -178,16 +174,16 @@ public abstract class Card implements Drawable, Serializable {
      * Retrieves the path to the image that represents the front side of the card
      * @return the path to the image that represents the front side of the card
      */
-    public String getFrontpath() {
-        return frontpath;
+    public String getFrontPath() {
+        return frontPath;
     }
 
     /**
      * Retrieves the path to the image that represents the back side of the card
      * @return the path to the image that represents the back side of the card
      */
-    public String getBackpath() {
-        return backpath;
+    public String getBackPath() {
+        return backPath;
     }
 
 }

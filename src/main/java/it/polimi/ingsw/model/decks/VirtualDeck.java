@@ -1,12 +1,13 @@
 package it.polimi.ingsw.model.decks;
 
+import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.corners.Resource;
 
 /**
  * VirtualDeck allows the client's view to hold an object that looks like an actual Deck,
  * but doesn't actually contain any data regarding the cards inside the matching server's deck.
  */
-public class VirtualDeck<T extends Drawable> extends Deck<T> {
+public class VirtualDeck extends Deck<PlayCard> {
     private Resource shownResource;
 
     /**
@@ -30,7 +31,7 @@ public class VirtualDeck<T extends Drawable> extends Deck<T> {
      * @throws UnsupportedOperationException since this kind of deck doesn't allow drawing.
      */
     @Override
-    public T draw() {
+    public PlayCard draw() {
         throw new UnsupportedOperationException("This is a virtual deck, it doesn't allow drawing");
     }
 

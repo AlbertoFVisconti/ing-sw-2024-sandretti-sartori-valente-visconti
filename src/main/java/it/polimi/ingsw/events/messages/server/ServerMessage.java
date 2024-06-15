@@ -9,7 +9,9 @@ import it.polimi.ingsw.view.VirtualView;
  * Allows to update the client's view.
  */
 public abstract class ServerMessage extends Message {
-    private final String addressee;
+    // identifier of the player that needs to receive the message.
+    // can be set to null if the message needs to be broadcast
+    private final String addresseeIdentifier;
 
     /**
      * Builds a ServerMessage with a specified type.
@@ -20,7 +22,7 @@ public abstract class ServerMessage extends Message {
      */
     public ServerMessage(MessageType messageType, String addresseeIdentifier) {
         super(messageType);
-        this.addressee = addresseeIdentifier;
+        this.addresseeIdentifier = addresseeIdentifier;
     }
 
     /**
@@ -30,11 +32,16 @@ public abstract class ServerMessage extends Message {
      */
     public ServerMessage(MessageType messageType) {
         super(messageType);
-        this.addressee = null;
+        this.addresseeIdentifier = null;
     }
 
+    /**
+     * Retrieves the message addressee's identifier.
+     *
+     * @return addressee's playerIdentifier, {@code null} if the message has no specific addressee
+     */
     public String getAddresseeIdentifier() {
-        return addressee;
+        return addresseeIdentifier;
     }
 
     /**

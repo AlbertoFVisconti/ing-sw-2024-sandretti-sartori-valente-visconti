@@ -33,6 +33,6 @@ public class ChatTUIScene implements TUIScene{
         }
 
         if(this.player == null) Client.getInstance().getServerHandler().sendMessage(new ClientChatMsgMessage(msgText.toString()));
-        else Client.getInstance().getServerHandler().sendMessage(new ClientChatMsgMessage(msgText.toString(), player.nickName));
+        else Client.getInstance().getServerHandler().sendMessage(new ClientChatMsgMessage(msgText.toString(), player.nickname));
     }
 }

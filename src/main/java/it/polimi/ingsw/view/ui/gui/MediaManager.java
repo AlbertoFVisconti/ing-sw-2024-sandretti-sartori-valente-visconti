@@ -38,10 +38,10 @@ public class MediaManager {
         if(card == null) return altImage;
 
         if(backSide) {
-            return getImage(card.getBackpath());
+            return getImage(card.getBackPath());
         }
         else {
-            return getImage(card.getFrontpath());
+            return getImage(card.getFrontPath());
         }
     }
 

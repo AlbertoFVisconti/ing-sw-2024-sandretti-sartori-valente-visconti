@@ -313,10 +313,10 @@ public final class Printer {
         for (CardLocation cardLocation : board.keySet()) {
             t.put(board.get(cardLocation).placementTurn(), cardLocation);
 
-            if (cardLocation.x < left) left = cardLocation.x;
-            if (cardLocation.x > right) right = cardLocation.x;
-            if (cardLocation.y < bottom) bottom = cardLocation.y;
-            if (cardLocation.y > top) top = cardLocation.y;
+            if (cardLocation.x() < left) left = cardLocation.x();
+            if (cardLocation.x() > right) right = cardLocation.x();
+            if (cardLocation.y() < bottom) bottom = cardLocation.y();
+            if (cardLocation.y() > top) top = cardLocation.y();
         }
 
         int dx = right - left;
@@ -328,8 +328,8 @@ public final class Printer {
 
         while (t.get(i) != null) {
             int x, y;
-            x = t.get(i).x - left;
-            y = top - t.get(i).y;
+            x = t.get(i).x() - left;
+            y = top - t.get(i).y();
 
             canvas.putCanvas(
                     getCardCanvas(board.get(t.get(i)).card(), board.get(t.get(i)).onBackSide()),
@@ -370,8 +370,8 @@ public final class Printer {
 
         int lmax = 0;
         for (Player p : players) {
-            nicknames.add(p.nickName);
-            if (lmax < p.nickName.length()) lmax = p.nickName.length();
+            nicknames.add(p.nickname);
+            if (lmax < p.nickname.length()) lmax = p.nickname.length();
         }
 
 
@@ -405,8 +405,8 @@ public final class Printer {
 
     public static void printChat(Chat chat, Player localPlayer, Player remotePlayer) {
         List<ChatMessage> messages;
-        if(remotePlayer != null) messages= chat.getMessagesChat(localPlayer.nickName, remotePlayer.nickName);
-        else messages = chat.getMessagesChat(localPlayer.nickName, null);
+        if(remotePlayer != null) messages= chat.getMessagesChat(localPlayer.nickname, remotePlayer.nickname);
+        else messages = chat.getMessagesChat(localPlayer.nickname, null);
 
         System.out.println("Messages:");
         for (ChatMessage msg : messages) {

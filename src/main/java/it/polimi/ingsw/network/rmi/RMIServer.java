@@ -22,13 +22,10 @@ public class RMIServer {
      * @throws AlreadyBoundException in case of error with the remote object biding
      */
     public static void setup(int registryPort) throws RemoteException, AlreadyBoundException {
-
         MainControllerWrapper mainController = new MainControllerWrapper();
-        //GameControllerWrapper gameControllerWrapper = new GameControllerWrapper();
 
         Registry registry = LocateRegistry.createRegistry(registryPort);
         registry.bind(MAIN_CONTROLLER_OBJECT_NAME, mainController);
-        //registry.bind(GAME_CONTROLLER_OBJECT_NAME, gameControllerWrapper);
 
         System.out.println("RMI Server ready");
     }

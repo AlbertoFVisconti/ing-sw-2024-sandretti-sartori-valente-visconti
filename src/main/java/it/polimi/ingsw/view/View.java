@@ -55,8 +55,8 @@ public class View extends Thread implements VirtualView {
 
         try {
             gameModel = new Game(
-                    new VirtualDeckLoader<>(),
-                    new VirtualDeckLoader<>(),
+                    new VirtualDeckLoader(),
+                    new VirtualDeckLoader(),
                     null,
                     null,
                     null,
@@ -181,7 +181,7 @@ public class View extends Thread implements VirtualView {
     @Override
     public void setPlayersCard(String playerNickname, PlayCard card, int index) throws RemoteException {
         for (Player p : gameModel.getPlayers()) {
-            if (p.nickName.equals(playerNickname)) {
+            if (p.nickname.equals(playerNickname)) {
                 p.setPlayerCard(card, index);
                 break;
             }
@@ -209,11 +209,11 @@ public class View extends Thread implements VirtualView {
 
     @Override
     public void setDeckTopResource(Resource resource, int index) throws RemoteException {
-        VirtualDeck<PlayCard> deck;
+        VirtualDeck deck;
         if (index == 0) {
-            deck = (VirtualDeck<PlayCard>) gameModel.getResourceCardsDeck();
+            deck = (VirtualDeck) gameModel.getResourceCardsDeck();
         } else {
-            deck = (VirtualDeck<PlayCard>) gameModel.getGoldCardsDeck();
+            deck = (VirtualDeck) gameModel.getGoldCardsDeck();
         }
 
         deck.setTopOfTheStack(resource);
@@ -224,7 +224,7 @@ public class View extends Thread implements VirtualView {
         boolean found = false;
 
         for (Player p : gameModel.getPlayers()) {
-            if (p.nickName.equals(playerNickname)) {
+            if (p.nickname.equals(playerNickname)) {
                 if (location.equals(new CardLocation(0, 0))) {
                     try {
                         p.setStartCard((StartCard) cardSlot.card());
@@ -243,7 +243,7 @@ public class View extends Thread implements VirtualView {
 
         if(!found) throw new RuntimeException("unknown player");
 
-        if(playerNickname.equals(this.localPlayer.nickName) && this.gameStatus == GameStatus.GAME_CREATION & this.localPlayer.getPrivateGoal() == null) {
+        if(playerNickname.equals(this.localPlayer.nickname) && this.gameStatus == GameStatus.GAME_CREATION & this.localPlayer.getPrivateGoal() == null) {
             this.userInterface.setSelectGoalScene();
         }
     }
@@ -264,7 +264,7 @@ public class View extends Thread implements VirtualView {
         List<Player> currPlayer = gameModel.getPlayers();
         if (currPlayer != null) {
             for (Player player : currPlayer) {
-                if (player.nickName.equals(localPlayer.nickName)) {
+                if (player.nickname.equals(localPlayer.nickname)) {
                     this.localPlayer = player;
                     break;
                 }
@@ -287,7 +287,7 @@ public class View extends Thread implements VirtualView {
             gameModel.addPlayer(new Player(nicknames[i], null));
             gameModel.getPlayers().get(i).setColor(colors[i]);
 
-            if (localPlayer != null && nicknames[i].equals(localPlayer.nickName)) {
+            if (localPlayer != null && nicknames[i].equals(localPlayer.nickname)) {
 
                 this.localPlayer = gameModel.getPlayers().get(i);
             }
@@ -343,13 +343,13 @@ public class View extends Thread implements VirtualView {
     public void sendChatMsg(ChatMessage chatMessage, boolean isPrivate) throws RemoteException {
         if (isPrivate) {
             String remoteNickname;
-            if (chatMessage.getSenderNick().equals(this.localPlayer.nickName)) {
+            if (chatMessage.getSenderNick().equals(this.localPlayer.nickname)) {
                 remoteNickname = chatMessage.getReceiverNick();
             } else {
                 remoteNickname = chatMessage.getSenderNick();
             }
 
-            this.gameModel.getChat().appendMessage(chatMessage, remoteNickname, this.localPlayer.nickName);
+            this.gameModel.getChat().appendMessage(chatMessage, remoteNickname, this.localPlayer.nickname);
         } else this.gameModel.getChat().appendMessage(chatMessage, null, null);
     }
 
@@ -364,7 +364,7 @@ public class View extends Thread implements VirtualView {
         return gameModel.getPlayers();
     }
     public String getLocalPlayerName() {
-        return localPlayer.nickName;
+        return localPlayer.nickname;
     }
 
     public Game getGameModel() {

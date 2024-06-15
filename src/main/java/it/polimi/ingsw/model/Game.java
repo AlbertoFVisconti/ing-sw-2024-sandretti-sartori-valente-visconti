@@ -172,7 +172,7 @@ public class Game extends Observable {
         PlayerColor[] colors = new PlayerColor[players.size()];
 
         for (int i = 0; i < players.size(); i++) {
-            nicknames[i] = players.get(i).nickName;
+            nicknames[i] = players.get(i).nickname;
             colors[i] = players.get(i).getColor();
         }
 

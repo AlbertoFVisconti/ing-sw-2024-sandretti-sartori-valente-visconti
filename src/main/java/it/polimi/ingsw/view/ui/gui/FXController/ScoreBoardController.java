@@ -73,7 +73,7 @@ public class ScoreBoardController extends GUIScene{
     @Override
     public void update() {
         for (Player player: Client.getInstance().getView().getGameModel().getPlayers()) {
-            int score = Client.getInstance().getView().getGameModel().getScoreBoard().getScore(player.getNickname());
+            int score = Client.getInstance().getView().getGameModel().getScoreBoard().getScore(player.nickname);
             score=score%30;
 
             ImageView pawn = colorToPawn.get(player.getColor());

@@ -11,6 +11,7 @@ import java.rmi.RemoteException;
  * through RMI (Remote Method Invocation).
  */
 public class RMIClientHandler extends ClientHandler {
+    // Client's View remote object that allows to call method on the client's view
     private VirtualView view;
 
     /**

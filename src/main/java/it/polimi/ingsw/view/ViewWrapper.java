@@ -154,46 +154,107 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView {
         view.forwardMessage(new DeckUpdateMessage(resource, index));
     }
 
+    /**
+     * Asynchronously places a card on a player's board.
+     *
+     * @param playerNickName the nickname of the player whose board needs to be updated.
+     * @param cardSlot       the CardSlot that contains the card that was placed.
+     * @param location      the location where the CardSlot needs to be placed
+     * @throws RemoteException if an error occurs during remote communication
+     */
     @Override
     public void placeCardOnPlayersBoard(String playerNickName, CardSlot cardSlot, CardLocation location) throws RemoteException {
         view.forwardMessage(new PlayersBoardUpdateMessage(playerNickName, cardSlot, location));
     }
 
+    /**
+     * Asynchronously updates the local list of available games.
+     *
+     * @param availableGames a set of integer, each integer represents the ID of an available game
+     * @throws RemoteException if an error occurs during remote communication
+     */
     @Override
     public void updateGameList(Set<String> availableGames) throws RemoteException {
         view.forwardMessage(new GameListMessage(availableGames));
     }
 
+    /**
+     * Asynchronously tells the view that a game was successfully joined.
+     *
+     * @param nickname the nickname that the clients chose when they joined the game.
+     * @param savings  if the player is rejoining a game, this ClientGameSaving object contains all data that the player need
+     * @throws RemoteException if an error occurs during remote communication
+     */
     @Override
     public void confirmJoin(String nickname, ClientGameSaving savings) throws RemoteException {
         view.forwardMessage(new JoinConfirmationMessage(nickname, savings));
     }
 
+    /**
+     * Asynchronously updates the local list of players connected to the same game as the local player.
+     *
+     * @param nicknames the array of nicknames of the players in the game.
+     * @param colors    the array of colors of the players in the game.
+     * @throws RemoteException if an error occurs during remote communication
+     */
     @Override
     public void updatePlayersList(String[] nicknames, PlayerColor[] colors) throws RemoteException {
         view.forwardMessage(new PlayersListUpdateMessage(nicknames, colors));
     }
 
+    /**
+     * Asynchronously tells the local View the current state of the game and the current turn (if the game has started)
+     *
+     * @param gameStatus  the current game phase
+     * @param turnStatus  the current turn status (either DRAW or PLACE)
+     * @param playersTurn the nickname of the player that needs to play.
+     * @throws RemoteException if an error occurs during remote communication
+     */
     @Override
     public void updateGameStatus(GameStatus gameStatus, TurnStatus turnStatus, String playersTurn) throws RemoteException {
         view.forwardMessage(new GameStatusUpdateMessage(gameStatus, turnStatus, playersTurn));
     }
 
+    /**
+     * Asynchronously report errors (usually caused directly by the player or the client).
+     *
+     * @param exception a RuntimeException containing the error that needs to be reported.
+     * @throws RemoteException  if an error occurs during remote communication
+     */
     @Override
     public void reportError(RuntimeException exception) throws RemoteException {
         view.forwardMessage(new ServerErrorMessage(exception));
     }
 
+    /**
+     * Asynchronously updates the scoreboard for the game the local player's playing.
+     *
+     * @param scoreBoard the updated scoreboard
+     * @throws RemoteException if an error occurs during remote communication
+     */
     @Override
     public void updateScore(ScoreBoard scoreBoard) throws RemoteException {
         view.forwardMessage(new ScoreUpdateMessage(scoreBoard));
     }
 
+    /**
+     * Allows to perform an asynchronous ping request/answer to the Client's View.
+     *
+     * @param isAnswer {@code true} if the server is answering to a previous ping message, {@code false} if the server is checking on the client.
+     * @throws RemoteException if an error occurs during remote communication
+     */
     @Override
     public void ping(boolean isAnswer) throws RemoteException {
         view.forwardMessage(new ServerToClientPingMessage(isAnswer));
     }
 
+    /**
+     * Allows to forward a chat message to the client's View.
+     *
+     * @param chatMessage the ChatMessage object that contains info about the message
+     * @param isPrivate {@code true} if the message is private, {@code false} otherwise
+     * @throws RemoteException  if an error occurs during remote communication
+     */
     @Override
     public void sendChatMsg(ChatMessage chatMessage, boolean isPrivate) throws RemoteException {
         view.forwardMessage(new ServerChatMsgMessage(chatMessage, isPrivate));

@@ -14,7 +14,7 @@ public class StatusManager {
         String filename = game.getIdGame() + ".ser";
         ArrayList<PlayerSaving> playerSavingArray = new ArrayList<>();
         for (Player p : game.getPlayers()) {
-            PlayerSaving playerSaving = new PlayerSaving(p.getNickname(), p.getColor(),
+            PlayerSaving playerSaving = new PlayerSaving(p.nickname, p.getColor(),
                     p.getBoard(), p.getPlayerCards(), p.getPrivateGoal(), p.getInventory(), p.getStartCard(), p.getAvailableGoals());
             playerSavingArray.add(playerSaving);
         }

@@ -57,7 +57,7 @@ public class Chat extends Observable {
         HashSet<String> playersSet;
 
         if (receiver != null) {
-            playersSet = new HashSet<>(Arrays.asList(sender.nickName, receiver.nickName));
+            playersSet = new HashSet<>(Arrays.asList(sender.nickname, receiver.nickname));
         } else {
             playersSet = new HashSet<>();
         }
@@ -65,7 +65,7 @@ public class Chat extends Observable {
         if (!messages.containsKey(playersSet))
             this.messages.put(playersSet, new ArrayList<>());
 
-        ChatMessage message = new ChatMessage(message_text, sender.nickName, (receiver != null ? receiver.nickName : null));
+        ChatMessage message = new ChatMessage(message_text, sender.nickname, (receiver != null ? receiver.nickname : null));
         messages.get(playersSet).add(message);
 
         if (receiver == null) {

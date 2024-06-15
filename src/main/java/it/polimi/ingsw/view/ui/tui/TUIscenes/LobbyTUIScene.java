@@ -13,7 +13,7 @@ public class LobbyTUIScene implements TUIScene{
     public void render(String statusMessage) {
         System.out.println("Connected Players:");
         for(Player p : Client.getInstance().getView().getPlayersList()) {
-            System.out.print("\t" + p.nickName);
+            System.out.print("\t" + p.nickname);
 
             if(p.getColor() != null) {
                 System.out.print("\t\t\t" + p.getColor().toString());

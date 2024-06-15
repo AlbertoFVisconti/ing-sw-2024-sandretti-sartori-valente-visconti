@@ -16,9 +16,13 @@ import java.util.List;
  * @param <T> the type of elements contained by the deck
  */
 public class Deck<T extends Drawable> extends Observable implements Serializable {
+    // the deck's content
     private final List<T> remaining;
+
+    // the next element that wil be drawn (null if the deck's empty)
     private T topOfTheStack;
 
+    // the deck's numerical ID
     protected int deckIdentifier;
 
     /**

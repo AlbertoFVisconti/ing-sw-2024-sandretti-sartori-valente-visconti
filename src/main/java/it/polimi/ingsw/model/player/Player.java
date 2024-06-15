@@ -23,17 +23,40 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Player extends Observable {
-    public final String nickName;
+    /*
+     player's nickname, must be unique within the game.
+     The game creator nickname must be unique within all game creators
+     since their nickname will be used to advertise the game in the
+     game list message
+     */
+    public final String nickname;
+
+    // the player's client handler
     private ClientHandler clientHandler;
+
+    // the player's color, must be unique within the game
     private PlayerColor color;
+
+    // the player's starting card (when it hasn't been placed yet)
     private StartCard startCard;
+
+    // the player's hand
     private final PlayCard[] playerCards;
+
+    // the player's private goal
     private Goal privateGoal;
+
+    // the player's available private goals. The player is requested to choose one of those when the game starts
     private Goal[] availableGoals;
 
+    // the player's board of placed cards
     private final HashMap<CardLocation, CardSlot> board;
+
+    // the player's inventory. It could be computed from the player's board, but it is useful to keep
+    // an updated version that can be used instantly when necessary
     private final ItemCollection inventory;
 
+    // Internally counts the turns in order to specify the placementTurn parameter in the CardSlots when a card is placed.
     private int turnCounter;
 
     /**
@@ -43,7 +66,7 @@ public class Player extends Observable {
      * @param clientHandler player's client handler
      */
     public Player(String name, ClientHandler clientHandler) {
-        this.nickName = name;
+        this.nickname = name;
         this.clientHandler = clientHandler;
         this.startCard = null;
         this.color = null;
@@ -60,7 +83,7 @@ public class Player extends Observable {
      * @param psm Player's data
      */
     public Player(PlayerSaving psm) {
-        this.nickName = psm.getNick();
+        this.nickname = psm.getNick();
         this.color = psm.getPlayerColor();
         this.board = (HashMap<CardLocation, CardSlot>) psm.getBoard();
         this.playerCards = psm.getPlayerHand();
@@ -114,7 +137,7 @@ public class Player extends Observable {
      * @return PlayerSaving object containing the Player's data
      */
     public PlayerSaving getSaving() {
-        return new PlayerSaving(nickName, color, this.board, playerCards, privateGoal, inventory, startCard, availableGoals);
+        return new PlayerSaving(nickname, color, this.board, playerCards, privateGoal, inventory, startCard, availableGoals);
     }
 
     /**
@@ -126,9 +149,9 @@ public class Player extends Observable {
      * @return ClientPlayerSaving object containing the Player's data that the receiving player is authorized to receive.
      */
     public ClientPlayerSaving getClientSaving(String clientNickname) {
-        if (clientNickname.equals(this.nickName))
-            return new ClientPlayerSaving(nickName, color, this.board, playerCards, privateGoal, inventory, startCard, availableGoals);
-        else return new ClientPlayerSaving(nickName, color, board, playerCards, null, inventory, null, null);
+        if (clientNickname.equals(this.nickname))
+            return new ClientPlayerSaving(nickname, color, this.board, playerCards, privateGoal, inventory, startCard, availableGoals);
+        else return new ClientPlayerSaving(nickname, color, board, playerCards, null, inventory, null, null);
     }
 
     /**
@@ -191,7 +214,7 @@ public class Player extends Observable {
         if (index < 0 || index > 2) throw new InvalidParameterException("cannot place a card here");
         else playerCards[index] = card;
 
-        this.notifyObservers(new PlayersHandUpdateMessage(this.nickName, card, index));
+        this.notifyObservers(new PlayersHandUpdateMessage(this.nickname, card, index));
     }
 
     /**
@@ -224,7 +247,7 @@ public class Player extends Observable {
 
         updateInventory(location);
 
-        this.notifyObservers(new PlayersBoardUpdateMessage(this.nickName, board.get(location), location));
+        this.notifyObservers(new PlayersBoardUpdateMessage(this.nickname, board.get(location), location));
     }
 
     /**
@@ -242,7 +265,7 @@ public class Player extends Observable {
 
         this.updateInventory(new CardLocation(0,0));
 
-        this.notifyObservers(new PlayersBoardUpdateMessage(this.nickName, board.get(new CardLocation(0, 0)), new CardLocation(0, 0)));
+        this.notifyObservers(new PlayersBoardUpdateMessage(this.nickname, board.get(new CardLocation(0, 0)), new CardLocation(0, 0)));
     }
 
     /**
@@ -366,7 +389,7 @@ public class Player extends Observable {
             if (playerCards[i] == null) {
                 playerCards[i] = card;
 
-                this.notifyObservers(new PlayersHandUpdateMessage(this.nickName, card, i));
+                this.notifyObservers(new PlayersHandUpdateMessage(this.nickname, card, i));
                 return;
             }
         }
@@ -408,14 +431,5 @@ public class Player extends Observable {
      */
     public PlayCard getPlayerCard(int index) {
         return playerCards[index];
-    }
-
-    /**
-     * Retrieves the player's nickname.
-     *
-     * @return the player's nickname.
-     */
-    public String getNickname() {
-        return nickName;
     }
 }

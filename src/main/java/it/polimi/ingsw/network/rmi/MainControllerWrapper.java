@@ -14,6 +14,7 @@ import java.rmi.server.UnicastRemoteObject;
  * and forward them to the GameSelector, that will answer with another invocation.
  */
 public class MainControllerWrapper extends UnicastRemoteObject implements VirtualMainController {
+    // MainController that needs to be wrapped
     private final MainController mainController;
 
     /**

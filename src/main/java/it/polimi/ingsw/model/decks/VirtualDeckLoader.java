@@ -1,13 +1,13 @@
 package it.polimi.ingsw.model.decks;
 
+import it.polimi.ingsw.model.cards.PlayCard;
+
 import java.util.List;
 
 /**
  * Allows the client to force the local Game object to create VirtualDeck object.
- *
- * @param <T> the type of "Card" that the generated VirtualDecks "held"
  */
-public class VirtualDeckLoader<T extends Drawable> extends DeckLoader<T> {
+public class VirtualDeckLoader extends DeckLoader<PlayCard> {
     /**
      * Builds a new VirtualDeckLoader.
      */
@@ -21,8 +21,8 @@ public class VirtualDeckLoader<T extends Drawable> extends DeckLoader<T> {
      * @return a new VirtualDeck object.
      */
     @Override
-    public Deck<T> getDeck() {
-        return new VirtualDeck<>();
+    public Deck<PlayCard> getDeck() {
+        return new VirtualDeck();
     }
 
     /**
@@ -30,7 +30,7 @@ public class VirtualDeckLoader<T extends Drawable> extends DeckLoader<T> {
      *
      * @return null
      */
-    protected List<T> load() {
+    protected List<PlayCard> load() {
         return null;
     }
 }

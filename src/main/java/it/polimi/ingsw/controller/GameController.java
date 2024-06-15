@@ -135,7 +135,7 @@ public class GameController extends Observable implements VirtualController, Run
             boolean isCurrentPlayer = false;
 
             synchronized (this) {
-                System.err.println(player.nickName + " has disconnected");
+                System.err.println(player.nickname + " has disconnected");
 
                 this.unsubscribe(clientHandler);
                 this.game.unsubscribe(clientHandler);
@@ -181,7 +181,7 @@ public class GameController extends Observable implements VirtualController, Run
 
         synchronized (this) {
             for (Player player : game.getPlayers()) {
-                if (player.nickName.equals(nickname)) {
+                if (player.nickname.equals(nickname)) {
                     connectingPlayer = player;
                     break;
                 }
@@ -246,7 +246,7 @@ public class GameController extends Observable implements VirtualController, Run
 
                     System.err.println("ExpectedPlayers amount reached, game starts. Connected players:");
                     for (Player p : game.getPlayers()) {
-                        System.err.println("\t" + p.nickName);
+                        System.err.println("\t" + p.nickname);
                     }
 
                     this.connectedPlayers = game.getPlayers().size();
@@ -282,8 +282,8 @@ public class GameController extends Observable implements VirtualController, Run
                 } else if (gameStatus == GameStatus.NORMAL_TURN) {
                     boolean flag = true;
                     for (Player p : game.getPlayers()) {
-                        if (game.getScoreBoard().getScore(p.nickName) >= 20) {
-                            System.err.println(p.nickName + "reached 20 points, last turn starts");
+                        if (game.getScoreBoard().getScore(p.nickname) >= 20) {
+                            System.err.println(p.nickname + "reached 20 points, last turn starts");
                             this.gameStatus = GameStatus.LAST_TURN;
                             flag = false;
                             break;
@@ -306,7 +306,7 @@ public class GameController extends Observable implements VirtualController, Run
 
         System.out.println("update status");
 
-        notifyObservers(new GameStatusUpdateMessage(gameStatus, turnStatus, game.getTurn().nickName));
+        notifyObservers(new GameStatusUpdateMessage(gameStatus, turnStatus, game.getTurn().nickname));
     }
 
     /**
@@ -407,10 +407,10 @@ public class GameController extends Observable implements VirtualController, Run
         for (Player p : game.getPlayers()) {
             for (Goal g : game.getCommonGoals()) {
                 // evaluating the common goal
-                scoreBoard.addScore(p.nickName, g.evaluate(p));
+                scoreBoard.addScore(p.nickname, g.evaluate(p));
             }
             // evaluating the private goal
-            scoreBoard.addScore(p.nickName, p.getPrivateGoal().evaluate(p));
+            scoreBoard.addScore(p.nickname, p.getPrivateGoal().evaluate(p));
         }
     }
 
@@ -452,7 +452,7 @@ public class GameController extends Observable implements VirtualController, Run
         }
 
 
-        System.err.println(this.game.getIdGame() + ": " + player.nickName + " selected their goal");
+        System.err.println(this.game.getIdGame() + ": " + player.nickname + " selected their goal");
         // status update
         updateStatus();
     }
@@ -491,7 +491,7 @@ public class GameController extends Observable implements VirtualController, Run
         }
 
 
-        System.err.println(this.game.getIdGame() + ": " + player.nickName + " placed their starting card");
+        System.err.println(this.game.getIdGame() + ": " + player.nickname + " placed their starting card");
         // update status
         updateStatus();
     }
@@ -552,7 +552,7 @@ public class GameController extends Observable implements VirtualController, Run
                     // since it is certain to come from the player's hand
                     int score = ((PlayCard) player.getPlacedCardSlot(location).card()).getScoringStrategy().evaluate(player, location);
                     ScoreBoard scoreBoard = game.getScoreBoard();
-                    scoreBoard.addScore(player.nickName, score);
+                    scoreBoard.addScore(player.nickname, score);
                 }
 
             } catch (InvalidParameterException e) {
@@ -564,7 +564,7 @@ public class GameController extends Observable implements VirtualController, Run
 
         advanceTurn();
 
-        System.err.println(this.game.getIdGame() + ": " + player.nickName + " placed a card");
+        System.err.println(this.game.getIdGame() + ": " + player.nickname + " placed a card");
 
         // update status
         updateStatus();
@@ -647,7 +647,7 @@ public class GameController extends Observable implements VirtualController, Run
         // card successfully drawn
         advanceTurn();
 
-        System.err.println(this.game.getIdGame() + ": " + player.nickName + " picked up a card");
+        System.err.println(this.game.getIdGame() + ": " + player.nickname + " picked up a card");
     }
 
     /**
@@ -706,7 +706,7 @@ public class GameController extends Observable implements VirtualController, Run
             }
         }
 
-        System.err.println(this.game.getIdGame() + ": " + player.nickName + " selected " + color + " as their color");
+        System.err.println(this.game.getIdGame() + ": " + player.nickname + " selected " + color + " as their color");
         updateStatus();
     }
 
@@ -790,7 +790,7 @@ public class GameController extends Observable implements VirtualController, Run
      */
     public synchronized Player getPlayerByNickname(String nickname) {
         for (Player p : this.game.getPlayers()) {
-            if (p.nickName.equals(nickname)) {
+            if (p.nickname.equals(nickname)) {
                 return p;
             }
         }
@@ -806,7 +806,7 @@ public class GameController extends Observable implements VirtualController, Run
      */
     public synchronized boolean isNicknameAvailable(String nickname) {
         for (Player p : this.game.getPlayers()) {
-            if (p.nickName.equalsIgnoreCase(nickname)) {
+            if (p.nickname.equalsIgnoreCase(nickname)) {
                 return false;
             }
         }
