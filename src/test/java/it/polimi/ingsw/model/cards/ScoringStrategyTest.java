@@ -1,7 +1,5 @@
-package it.polimi.ingsw.model.Card;
+package it.polimi.ingsw.model.cards;
 
-import it.polimi.ingsw.model.cards.PlayCard;
-import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.cards.scoring.CoveredCornersScoringStrategy;
@@ -19,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  **/
 public class ScoringStrategyTest {
     @Test
-    void ItemCountTest1() throws Exception {
+    void ItemCountTest1() {
         ItemCountScoringStrategy Strategy1 = new ItemCountScoringStrategy(Corner.FEATHER, 1);
         ItemCountScoringStrategy Strategy2 = new ItemCountScoringStrategy(Corner.INK, 2);
         ItemCountScoringStrategy Strategy3 = new ItemCountScoringStrategy(Corner.FUNGUS, 1);
@@ -59,15 +57,13 @@ public class ScoringStrategyTest {
         Player p1 = new Player("pippo123", null);
         ItemCollection permanent = new ItemCollection();
         permanent.add(Corner.INSECT);
-        p1.setStartCard(new StartCard("", Corner.FUNGUS, Corner.PLANT, Corner.INSECT, Corner.ANIMAL, Corner.EMPTY, Corner.PLANT, Corner.INSECT, Corner.EMPTY, permanent));
+        p1.setStartCard(new StartCard("", "", "", Corner.FUNGUS, Corner.PLANT, Corner.INSECT, Corner.ANIMAL, Corner.EMPTY, Corner.PLANT, Corner.INSECT, Corner.EMPTY, permanent));
         p1.placeStartingCard(true);
-        PlayCard card1 = PlayCard.generateResourceCard("", Corner.FUNGUS, Corner.EMPTY, Corner.FUNGUS, null, Resource.FUNGUS, 0);
+        PlayCard card1 = PlayCard.generateResourceCard("" , "", "", Corner.FUNGUS, Corner.EMPTY, Corner.FUNGUS, null, Resource.FUNGUS, 0);
         p1.addPlayerCard(card1);
         CardLocation cl = new CardLocation(-1, 1);
-        p1.placeCard(0, false, cl);
+        p1.placeCard(p1.getPlayerCard(0), false, cl);
         assertEquals(Strategy1.evaluate(p1, cl), 2);
-
-
     }
 }
 

@@ -25,6 +25,7 @@ module it.polimi.ingsw {
     exports it.polimi.ingsw.network.cliendhandlers;
     exports it.polimi.ingsw.model.chat;
     exports it.polimi.ingsw.model.cards.scoring;
+    exports it.polimi.ingsw.events.messages;
 
     opens it.polimi.ingsw.view.ui to javafx.fxml;
     opens it.polimi.ingsw.view.ui.gui.FXController to javafx.fxml;

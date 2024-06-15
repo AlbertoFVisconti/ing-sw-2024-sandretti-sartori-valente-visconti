@@ -17,10 +17,9 @@ public class ItemCountScoringStrategy implements ScoringStrategy {
      *
      * @param itemType     the Corner that contains the specific item to count in the player's inventory.
      * @param scorePerItem the score awarded per item.
-     * @throws Exception if the provided Corner is null or empty (thus contains no item).
      */
-    public ItemCountScoringStrategy(Corner itemType, int scorePerItem) throws Exception {
-        if (itemType == null || itemType == Corner.EMPTY) throw new Exception("itemType must be a valid item");
+    public ItemCountScoringStrategy(Corner itemType, int scorePerItem) {
+        if (itemType == null || itemType == Corner.EMPTY) throw new RuntimeException("itemType must be a valid item");
 
         this.itemToCount = itemType;
         this.scorePerItem = scorePerItem;

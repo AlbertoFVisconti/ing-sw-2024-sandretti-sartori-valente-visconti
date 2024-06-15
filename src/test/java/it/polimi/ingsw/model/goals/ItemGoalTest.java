@@ -34,7 +34,7 @@ class ItemGoalTest {
         // the player obtains 1 point for each FUNGUS they have
         //      ==> the player has 100 FUNGI, thus they should obtain
         //          1*100 = 100 points
-        ItemGoal goal1 = new ItemGoal(goalConstraint, 1);
+        ItemGoal goal1 = new ItemGoal(goalConstraint, 1, "");
 
         goalConstraint = new ItemCollection();
         goalConstraint.add(Corner.ANIMAL, 6);
@@ -43,7 +43,7 @@ class ItemGoalTest {
         //      ==> the player has 300 ANIMALs, thus they should obtain
         //          300 / 6 = 50 sets
         //          50 * 2 = 100 points
-        ItemGoal goal2 = new ItemGoal(goalConstraint, 2);
+        ItemGoal goal2 = new ItemGoal(goalConstraint, 2, "");
 
         goalConstraint = new ItemCollection();
         goalConstraint.add(Corner.FUNGUS, 2)
@@ -55,7 +55,7 @@ class ItemGoalTest {
         //          200 / 2 = 100 sets of 2 PLANTS
         //          we are constraint by the 50 sets of FUNGI, thus
         //          50 * 10 = 500 points
-        ItemGoal goal3 = new ItemGoal(goalConstraint, 10);
+        ItemGoal goal3 = new ItemGoal(goalConstraint, 10, "");
 
         goalConstraint = new ItemCollection();
         goalConstraint.add(Corner.FEATHER, 5)
@@ -69,7 +69,7 @@ class ItemGoalTest {
         //          300 / 1 = 300 sets of 1 ANIMAL
         //          we are constraint by the 2 sets of FEATHERs (or INSECTs), thus
         //          2 * 1 = 2 points
-        ItemGoal goal4 = new ItemGoal(goalConstraint, 1);
+        ItemGoal goal4 = new ItemGoal(goalConstraint, 1, "");
 
         assertEquals(100, goal1.evaluate(player));
         assertEquals(100, goal2.evaluate(player));
@@ -104,7 +104,7 @@ class ItemGoalTest {
         // the player obtains 1 point for each FUNGUS they have
         //      ==> the player has 0 FUNGI, thus they should obtain
         //          0 points
-        ItemGoal goal1 = new ItemGoal(goalConstraint, 1);
+        ItemGoal goal1 = new ItemGoal(goalConstraint, 1, "");
 
         goalConstraint = new ItemCollection();
         goalConstraint.add(Corner.INK, 4);
@@ -113,7 +113,7 @@ class ItemGoalTest {
         //      ==> the player has 13 INKs, thus they should obtain
         //          13 / 4 = 3 sets
         //          3 * 33 = 99 points
-        ItemGoal goal2 = new ItemGoal(goalConstraint, 33);
+        ItemGoal goal2 = new ItemGoal(goalConstraint, 33, "");
 
         goalConstraint = new ItemCollection();
         goalConstraint.add(Corner.INK, 2)
@@ -125,7 +125,7 @@ class ItemGoalTest {
         //          1000 / 250 = 4 sets of 2 FEATHERs
         //          we are constraint by the 4 sets of FEATHERs, thus
         //          4 * 1000 = 4000 points
-        ItemGoal goal3 = new ItemGoal(goalConstraint, 1000);
+        ItemGoal goal3 = new ItemGoal(goalConstraint, 1000, "");
 
         goalConstraint = new ItemCollection();
         goalConstraint.add(Corner.PLANT, 1)
@@ -138,7 +138,7 @@ class ItemGoalTest {
         // the player obtains 4 point for each set that contains every single item (except FUNGI) they have
         //      ==> among the required items, the ones the player lacks the most, are INSECTS:
         //          2 * 4 = 8 points
-        ItemGoal goal4 = new ItemGoal(goalConstraint, 4);
+        ItemGoal goal4 = new ItemGoal(goalConstraint, 4, "");
 
         assertEquals(0, goal1.evaluate(player));
         assertEquals(99, goal2.evaluate(player));
