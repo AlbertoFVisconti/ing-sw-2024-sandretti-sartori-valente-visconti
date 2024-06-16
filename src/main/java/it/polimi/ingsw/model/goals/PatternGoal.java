@@ -98,9 +98,6 @@ public class PatternGoal extends Goal {
         List<List<GraphNode>> groups = splitInConnectedGroups(matches);
 
         for (List<GraphNode> group : groups) {
-            if (group.size() > 30) {
-                System.err.println("A large (" + group.size() + ") group of conflicting matches has been found; long elaboration time's is to be expected (you might want to kill if the size is beyond 50)");
-            }
             minimumVertexSize(group, 0, new HashSet<>());
             validMatches += (group.size() - bound);
         }
@@ -211,11 +208,6 @@ public class PatternGoal extends Goal {
         private GraphNode(CardLocation matchStartingCard) {
             this.matchStartingCard = matchStartingCard;
             this.conflictingNodes = new ArrayList<>();
-        }
-
-        @Override
-        public String toString() {
-            return matchStartingCard.toString() + " {" + conflictingNodes.stream().map((GraphNode n) -> n.matchStartingCard.toString()).reduce("", String::concat) + "}";
         }
     }
 

@@ -5,6 +5,8 @@ import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.cards.scoring.CoveredCornersScoringStrategy;
 import it.polimi.ingsw.model.cards.scoring.FreeScoreScoringStrategy;
 import it.polimi.ingsw.model.cards.scoring.ItemCountScoringStrategy;
+import it.polimi.ingsw.model.decks.VirtualDeck;
+import it.polimi.ingsw.model.goals.ItemGoal;
 import it.polimi.ingsw.utils.ItemCollection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -564,6 +566,9 @@ class CardTest {
                 if (i == j) assertEquals(cards[i], cards[j]);
                 else assertNotEquals(cards[i], cards[j]);
             }
+            assertNotEquals(cards[i], new FreeScoreScoringStrategy(0));
+            assertNotEquals(cards[i], new ItemGoal(new ItemCollection().add(Corner.PLANT), 2, ""));
+            assertNotEquals(cards[i], new VirtualDeck());
         }
     }
 
@@ -579,5 +584,75 @@ class CardTest {
         for(int i = 0; i < cards.length; i++) {
             assertEquals(cards[i].getBackPath(), "back_" + (i + 1));
         }
+    }
+
+    @Test
+    void testToString() {
+        String c1String = c1.toString();
+        String c2String = c2.toString();
+        String c3String = c3.toString();
+        String c4String = c4.toString();
+        String c5String = c5.toString();
+        String c6String = c6.toString();
+        String c7String = c7.toString();
+        String c8String = c8.toString();
+        String c9String = c9.toString();
+        String c10String = c10.toString();
+
+        assertTrue(c1String.contains("frontCorners = [EMPTY, ANIMAL, INSECT, null]"));
+        assertTrue(c1String.contains("isGold = false"));
+        assertTrue(c1String.contains("type = FUNGUS"));
+        assertTrue(c1String.contains("constraint = {FUNGUS=0, PLANT=0, ANIMAL=0, INSECT=0, INK=0, SCROLL=0, FEATHER=0}"));
+        assertTrue(c1String.contains("scoringStrategy = 1 pt"));
+
+        assertTrue(c2String.contains("frontCorners = [EMPTY, EMPTY, EMPTY, EMPTY]"));
+        assertTrue(c2String.contains("isGold = false"));
+        assertTrue(c2String.contains("type = PLANT"));
+        assertTrue(c2String.contains("constraint = {FUNGUS=0, PLANT=0, ANIMAL=0, INSECT=0, INK=0, SCROLL=0, FEATHER=0}"));
+        assertTrue(c2String.contains("scoringStrategy = 2 pt"));
+
+        assertTrue(c3String.contains("frontCorners = [INSECT, null, INSECT, null]"));
+        assertTrue(c3String.contains("isGold = false"));
+        assertTrue(c3String.contains("type = ANIMAL"));
+        assertTrue(c3String.contains("constraint = {FUNGUS=0, PLANT=0, ANIMAL=0, INSECT=0, INK=0, SCROLL=0, FEATHER=0}"));
+        assertTrue(c3String.contains("scoringStrategy = 3 pt"));
+
+        assertTrue(c4String.contains("frontCorners = [EMPTY, ANIMAL, EMPTY, EMPTY]"));
+        assertTrue(c4String.contains("isGold = false"));
+        assertTrue(c4String.contains("type = INSECT"));
+        assertTrue(c4String.contains("constraint = {FUNGUS=0, PLANT=0, ANIMAL=0, INSECT=0, INK=0, SCROLL=0, FEATHER=0}"));
+        assertTrue(c4String.contains("scoringStrategy = 4 pt"));
+
+        assertTrue(c5String.contains("frontCorners = [null, ANIMAL, null, null]"));
+        assertTrue(c5String.contains("isGold = true"));
+        assertTrue(c5String.contains("type = FUNGUS"));
+        assertTrue(c5String.contains("constraint = {FUNGUS=0, PLANT=0, ANIMAL=0, INSECT=3, INK=0, SCROLL=0, FEATHER=0}"));
+        assertTrue(c5String.contains("scoringStrategy = 2 x corner"));
+
+        assertTrue(c6String.contains("frontCorners = [PLANT, EMPTY, PLANT, null]"));
+        assertTrue(c6String.contains("isGold = true"));
+        assertTrue(c6String.contains("type = PLANT"));
+        assertTrue(c6String.contains("constraint = {FUNGUS=0, PLANT=0, ANIMAL=2, INSECT=3, INK=0, SCROLL=0, FEATHER=0}"));
+        assertTrue(c6String.contains("scoringStrategy = 1000 pt"));
+
+        assertTrue(c7String.contains("frontCorners = [EMPTY, null, INSECT, EMPTY]"));
+        assertTrue(c7String.contains("isGold = true"));
+        assertTrue(c7String.contains("type = ANIMAL"));
+        assertTrue(c7String.contains("constraint = {FUNGUS=0, PLANT=2, ANIMAL=3, INSECT=0, INK=0, SCROLL=0, FEATHER=0}"));
+        assertTrue(c7String.contains("scoringStrategy = 10 x FEATHER"));
+
+        assertTrue(c8String.contains("frontCorners = [FUNGUS, null, FUNGUS, FUNGUS]"));
+        assertTrue(c8String.contains("isGold = true"));
+        assertTrue(c8String.contains("type = INSECT"));
+        assertTrue(c8String.contains("constraint = {FUNGUS=3, PLANT=2, ANIMAL=1, INSECT=0, INK=0, SCROLL=0, FEATHER=0}"));
+        assertTrue(c8String.contains("scoringStrategy = 3 x corner"));
+
+        assertTrue(c9String.contains("frontCorners = [ANIMAL, EMPTY, EMPTY, PLANT]"));
+        assertTrue(c9String.contains("backCorners = [ANIMAL, PLANT, FUNGUS, INSECT]"));
+        assertTrue(c9String.contains("permanentResources = {FUNGUS=2, PLANT=1, ANIMAL=0, INSECT=0, INK=0, SCROLL=0, FEATHER=0}"));
+
+        assertTrue(c10String.contains("frontCorners = [PLANT, null, INSECT, PLANT]"));
+        assertTrue(c10String.contains("backCorners = [null, INSECT, EMPTY, null]"));
+        assertTrue(c10String.contains("permanentResources = {FUNGUS=0, PLANT=0, ANIMAL=2, INSECT=1, INK=0, SCROLL=0, FEATHER=0}"));
     }
 }

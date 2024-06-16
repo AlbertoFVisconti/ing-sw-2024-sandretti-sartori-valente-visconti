@@ -167,7 +167,9 @@ public abstract class Card implements Drawable, Serializable {
     public boolean equals(Object obj) {
         if (obj instanceof Card objCard) {
             return objCard.cardID.equals(this.cardID);
-        } else return false;
+        } else {
+            return false;
+        }
     }
 
     /**
