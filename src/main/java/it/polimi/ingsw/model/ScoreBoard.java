@@ -89,8 +89,8 @@ public class ScoreBoard extends Observable implements Serializable {
 
     @Override
     public String toString() {
+        if(this.scores == null) return "";
         StringBuilder s = new StringBuilder();
-
         for (String nickname : this.scores.keySet()) {
             s.append(nickname).append(": ").append(scores.get(nickname)).append("\n");
         }

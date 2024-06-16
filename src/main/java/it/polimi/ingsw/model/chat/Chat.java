@@ -81,7 +81,7 @@ public class Chat extends Observable {
             // that will cause the sender to see the message in the chat
             // that also means that if the player don't see the message means that
             // something went wrong otherwise, the player can assume that the other player received the message as well
-            this.notifyObservers(new ServerChatMsgMessage(sender.getClientHandler().getPlayerIdentifier(), message));
+            if(sender.getClientHandler() != null) this.notifyObservers(new ServerChatMsgMessage(sender.getClientHandler().getPlayerIdentifier(), message));
         }
 
     }
@@ -104,14 +104,5 @@ public class Chat extends Observable {
             this.messages.put(playersSet, new ArrayList<>());
 
         messages.get(playersSet).add(message);
-    }
-
-    /**
-     * Deletes a message from the chat.
-     *
-     * @param message the message to be deleted
-     */
-    public void deleteMessage(ChatMessage message) {
-        // Implementation for deleting a message can be added here
     }
 }

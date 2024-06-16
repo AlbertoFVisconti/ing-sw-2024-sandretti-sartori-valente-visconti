@@ -138,4 +138,135 @@ public class GameTest {
         assertFalse(g.getVisibleCards()[0].isGold() && g.getVisibleCards()[1].isGold());
     }
 
+    @Test
+    void getSaving() {
+    }
+
+    @Test
+    void getClientSaving() {
+    }
+
+    @Test
+    void updateAvailableColors() {
+    }
+
+    @Test
+    void resetPlayers() {
+    }
+
+    @Test
+    void addPlayer() {
+    }
+
+    @Test
+    void removePlayer() {
+    }
+
+    @Test
+    void getTurn() {
+    }
+
+    @Test
+    void nextTurn() {
+    }
+
+    @Test
+    void setFinalRound() {
+    }
+
+    @Test
+    void isFinalRound() {
+    }
+
+    @Test
+    void shufflePlayers() {
+    }
+
+    @Test
+    void getChat() {
+    }
+
+    @Test
+    void setCommonGoals() {
+    }
+
+    @Test
+    void getCommonGoals() {
+    }
+
+    @Test
+    void setupScoreBoard() {
+    }
+
+    @Test
+    void startGame() {
+    }
+
+    @Test
+    void getPlayers() {
+    }
+
+    @Test
+    void getExpectedPlayers() {
+    }
+
+    @Test
+    void getAvailableColor() {
+    }
+
+    @Test
+    void getScoreBoard() {
+    }
+
+    @Test
+    void getResourceCardsDeck() {
+    }
+
+    @Test
+    void getGoldCardsDeck() {
+    }
+
+    @Test
+    void getVisibleCards() {
+    }
+
+    @Test
+    void resetVisibleCards() {
+    }
+
+    @Test
+    void refillVisibleCards() {
+    }
+
+    @Test
+    void isFirstPlayersTurn() {
+    }
+
+    @Test
+    void getIdGame() {
+    }
+
+    @Test
+    void emptyDecks() {
+    }
+
+    @Test
+    void subscribeCommonObservers() {
+    }
+
+    @Test
+    void testSubscribeCommonObservers() {
+    }
+
+    @Test
+    void unsubscribeFromCommonObservable() {
+    }
+
+    @Test
+    void getStartCardsDeck() {
+    }
+
+    @Test
+    void getGoalsDeck() {
+    }
 }
