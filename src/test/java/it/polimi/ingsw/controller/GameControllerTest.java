@@ -27,12 +27,14 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.BlockingQueue;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -572,6 +574,18 @@ class GameControllerTest {
         p2.setPrivateGoal(g.getGoalsDeck().draw());
         p2.placeStartingCard(true);
         gc.updateStatus();
+
+        //get the message queue to see if the ping msg arrived
+        Field privateValueField2 = GameController.class.getDeclaredField("messageQueue");
+        privateValueField2.setAccessible(true);
+        BlockingQueue<ClientMessage> messageQueue=(BlockingQueue<ClientMessage>)privateValueField2.get(gc);
+        for(int i=0;i<5;i++) messageQueue.put(new ClientToServerPingMessage(false));
+
+        Thread thread= new Thread(()->gc.run());
+        thread.start();
+        Thread.sleep(1000);
+
+        assertEquals(0,messageQueue.size());
 
         //final turn once a player has hit 20 points
         g.getScoreBoard().setScore("massimo",21);

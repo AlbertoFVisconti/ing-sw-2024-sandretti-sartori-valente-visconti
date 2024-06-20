@@ -50,7 +50,7 @@ public class MainController extends Thread implements VirtualMainController {
     private static MainController instance = null;
 
     /**
-     * Construct the GameSelector object (only one since it's a singleton).
+     * Construct the GameSelector object (only once since it's a singleton).
      * It's a private method because only the getInstance() method should be used
      * to get the instance.
      * Upon being created, the GameSelector instance starts processing messages
@@ -141,7 +141,7 @@ public class MainController extends Thread implements VirtualMainController {
      * @param gameId the gameID of the game whose GameController is needed.
      * @return a reference to the GameController that handles the specified game, {@code null} if there's no game with the provided GameID.
      */
-    public GameController getGameController(String gameId) {
+    public GameController getGameController(String gameId) throws NullPointerException{
         return this.gameControllerWrappers.get(gameId).getGameController();
     }
 
