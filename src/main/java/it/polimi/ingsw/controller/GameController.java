@@ -666,6 +666,8 @@ public class GameController extends Observable implements VirtualController, Run
                 throw new RuntimeException("There's no card to draw in the provided location");
             }
         }
+
+        this.saveGameBackup();
     }
 
     /**
@@ -697,7 +699,6 @@ public class GameController extends Observable implements VirtualController, Run
 
         // card successfully drawn
         advanceTurn();
-        this.saveGameBackup();
 
         System.err.println(this.game.getIdGame() + ": " + player.nickname + " picked up a card");
     }
