@@ -23,6 +23,8 @@ import it.polimi.ingsw.utils.GameBackupManager;
 
 import java.rmi.RemoteException;
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -168,16 +170,33 @@ public class GameController extends Observable implements VirtualController, Run
                 if (this.connectedPlayers < GameController.MINIMUM_PLAYER_TO_RUN_GAME) {
                     this.paused = true;
                 }
+
+                if (this.game.getTurn().hasDisconnected()) isCurrentPlayer = true;
+
+                if(!paused && isCurrentPlayer) {
+                    if(turnStatus == TurnStatus.DRAW) {
+                        // the player has just placed a card
+                        // in order to prevent cheating, the player should receive a random card
+                        drawRandomCard(player);
+                    }
+                    advanceTurn();
+                }
             }
-
-            if (this.game.getTurn().hasDisconnected()) isCurrentPlayer = true;
-
-
-            if(!paused && isCurrentPlayer) {
-                advanceTurn();
-            }
-
         }
+    }
+
+    private void drawRandomCard(Player player) {
+        ArrayList<Integer> availableCards = new ArrayList<>();
+        if(!game.getResourceCardsDeck().isEmpty()) availableCards.add(0);
+        if(!game.getGoldCardsDeck().isEmpty()) availableCards.add(1);
+
+        for(int i = 0; i < game.getVisibleCards().length; i++)
+            if(game.getVisibleCards()[i] != null) availableCards.add(2+i);
+
+        if(!availableCards.isEmpty()) {
+            this.drawCardHelper(player, availableCards.get(new Random().nextInt(availableCards.size())));
+        }
+
     }
 
     /**
@@ -599,31 +618,7 @@ public class GameController extends Observable implements VirtualController, Run
         this.saveGameBackup();
     }
 
-    /**
-     * Allows to a player to pick up one of the visible cards or to draw from the decks.
-     * <p>
-     * This operation is only valid if the game is in NORMAL_TURN status,
-     * if the player exists, if it's their turn and if they have already placed a card in the current turn.
-     *
-     * @param playerIdentifier the identifier of player who is drawing.
-     * @param index            the index of the cards that the player wants to pick up.
-     */
-    @Override
-    public synchronized void drawCard(String playerIdentifier, int index) {
-        // retrieving the player's object (also checking if it is this player's turn)
-        Player player = turnCheck(playerIdentifier);
-
-
-        // checking if the player's expected to draw
-        if (this.turnStatus != TurnStatus.DRAW) {
-            throw new RuntimeException("the player must place a card before they can draw");
-        }
-
-        // checking if the provided index is valid
-        if (index < 0 || index > 5) {
-            throw new RuntimeException("index out of range");
-        }
-
+    private void drawCardHelper(Player player, int index) {
         if (index == 0) {
             // drawing from resource card deck
             Deck<PlayCard> deck = game.getResourceCardsDeck();
@@ -671,7 +666,34 @@ public class GameController extends Observable implements VirtualController, Run
                 throw new RuntimeException("There's no card to draw in the provided location");
             }
         }
+    }
 
+    /**
+     * Allows to a player to pick up one of the visible cards or to draw from the decks.
+     * <p>
+     * This operation is only valid if the game is in NORMAL_TURN status,
+     * if the player exists, if it's their turn and if they have already placed a card in the current turn.
+     *
+     * @param playerIdentifier the identifier of player who is drawing.
+     * @param index            the index of the cards that the player wants to pick up.
+     */
+    @Override
+    public synchronized void drawCard(String playerIdentifier, int index) {
+        // retrieving the player's object (also checking if it is this player's turn)
+        Player player = turnCheck(playerIdentifier);
+
+
+        // checking if the player's expected to draw
+        if (this.turnStatus != TurnStatus.DRAW) {
+            throw new RuntimeException("the player must place a card before they can draw");
+        }
+
+        // checking if the provided index is valid
+        if (index < 0 || index > 5) {
+            throw new RuntimeException("index out of range");
+        }
+
+        this.drawCardHelper(player, index);
 
         // card successfully drawn
         advanceTurn();
