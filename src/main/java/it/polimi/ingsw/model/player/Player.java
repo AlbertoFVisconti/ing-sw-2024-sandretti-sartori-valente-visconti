@@ -41,7 +41,7 @@ public class Player extends Observable {
     private StartCard startCard;
 
     // the player's hand
-    private final PlayCard[] playerCards;
+    private PlayCard[] playerCards;
 
     // the player's private goal
     private Goal privateGoal;
@@ -50,11 +50,11 @@ public class Player extends Observable {
     private Goal[] availableGoals;
 
     // the player's board of placed cards
-    private final HashMap<CardLocation, CardSlot> board;
+    private Map<CardLocation, CardSlot> board;
 
     // the player's inventory. It could be computed from the player's board, but it is useful to keep
     // an updated version that can be used instantly when necessary
-    private final ItemCollection inventory;
+    private ItemCollection inventory;
 
     // Internally counts the turns in order to specify the placementTurn parameter in the CardSlots when a card is placed.
     private int turnCounter;
@@ -85,7 +85,7 @@ public class Player extends Observable {
     public Player(PlayerSaving psm) {
         this.nickname = psm.getNick();
         this.color = psm.getPlayerColor();
-        this.board = (HashMap<CardLocation, CardSlot>) psm.getBoard();
+        this.board = psm.getBoard();
         this.playerCards = psm.getPlayerHand();
         this.privateGoal = psm.getPrivateGoal();
         this.inventory = psm.getInventory();
@@ -130,6 +130,17 @@ public class Player extends Observable {
         }
     }
 
+    public void loadPlayer(PlayerSaving playerData) {
+        this.color = playerData.getPlayerColor();
+        this.startCard = playerData.getStartCard();
+        this.availableGoals = playerData.getAvailableGoal();
+        this.privateGoal = playerData.getPrivateGoal();
+        this.playerCards = playerData.getPlayerHand();
+        this.inventory = playerData.getInventory();
+        this.board = playerData.getBoard();
+
+        this.turnCounter = board.size();
+    }
 
     /**
      * Retrieves the Player's data in a format that can be loaded by another Player object.

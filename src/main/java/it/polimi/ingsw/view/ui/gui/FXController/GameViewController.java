@@ -418,7 +418,6 @@ public class GameViewController extends GUIScene {
         }
 
 
-
         PlayCard[] playerCards =  displayedPlayer.getPlayerCards();
         for(int i = 0; i < hand.length; i++) {
             hand[i].setImage(mediaManager.getImage(playerCards[i], isflipped[i]));

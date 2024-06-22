@@ -29,6 +29,6 @@ public class ClientGameSaving extends GameSaving {
      * @param publicGoal the public goal of the saved game
      */
     public ClientGameSaving(ArrayList<ClientPlayerSaving> players, String gameId, Resource goldCardsDeckTopResource, Resource resourceCardsDeckTopResource, PlayCard[] visibleCards, ScoreBoard scoreBoard, Goal[] publicGoal) {
-        super(-1, new ArrayList<>(players), gameId, new VirtualDeck(goldCardsDeckTopResource), new VirtualDeck(resourceCardsDeckTopResource), visibleCards, scoreBoard, publicGoal, null, null);
+        super(-1, new ArrayList<>(players), gameId, new VirtualDeck(goldCardsDeckTopResource), new VirtualDeck(resourceCardsDeckTopResource), visibleCards, scoreBoard, publicGoal, null, null, 0);
     }
 }

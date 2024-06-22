@@ -12,14 +12,15 @@ import it.polimi.ingsw.model.decks.DeckLoader;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
-import it.polimi.ingsw.model.saving.ClientGameSaving;
-import it.polimi.ingsw.model.saving.ClientPlayerSaving;
-import it.polimi.ingsw.model.saving.GameSaving;
-import it.polimi.ingsw.model.saving.PlayerSaving;
+import it.polimi.ingsw.model.saving.*;
 import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The Game class represents a game session of the Codex Naturalis game
@@ -33,13 +34,13 @@ public class Game extends Observable {
 
     private Goal[] commonGoals;
 
-    private final Deck<PlayCard> goldCardsDeck;
-    private final Deck<PlayCard> resourceCardsDeck;
+    private Deck<PlayCard> goldCardsDeck;
+    private Deck<PlayCard> resourceCardsDeck;
 
     private PlayCard[] visibleCards;
 
-    private final Deck<StartCard> startCardsDeck;
-    private final Deck<Goal> goalsDeck;
+    private Deck<StartCard> startCardsDeck;
+    private Deck<Goal> goalsDeck;
     private ScoreBoard scoreBoard;
     private final String idGame;
     private final int expectedPlayers;
@@ -93,6 +94,8 @@ public class Game extends Observable {
         this.chat = new Chat();
     }
 
+
+
     /**
      * Constructs a new Game object from existing data
      *
@@ -116,7 +119,8 @@ public class Game extends Observable {
         this.startCardsDeck = gsm.getStartCardsDeck();
         this.goalsDeck = gsm.getGoalsDeck();
         this.visibleCards = gsm.getVisibleCards();
-        // TODO: this.chat = gsm.getChat();
+        this.currentTurn = gsm.getCurrentTurn();
+
         this.chat = new Chat();
     }
 
@@ -131,7 +135,7 @@ public class Game extends Observable {
             playerSavings.add(p.getSaving());
         }
 
-        return new GameSaving(expectedPlayers, playerSavings, idGame, this.goldCardsDeck, this.resourceCardsDeck, visibleCards, scoreBoard, commonGoals, startCardsDeck, goalsDeck);
+        return new GameSaving(expectedPlayers, playerSavings, idGame, this.goldCardsDeck, this.resourceCardsDeck, visibleCards, scoreBoard, commonGoals, startCardsDeck, goalsDeck, this.currentTurn);
     }
 
     /**
@@ -177,6 +181,28 @@ public class Game extends Observable {
         }
 
         notifyObservers(new PlayersListUpdateMessage(nicknames, colors));
+    }
+
+    public String getBackupKey() {
+        String[] nicknames = new String[players.size()];
+
+        for (int i = 0; i < players.size(); i++) {
+            nicknames[i] = players.get(i).nickname;
+        }
+
+        String s = Arrays.stream(nicknames).sorted().collect(Collectors.joining("\n"));
+
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA-1");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+
+        md.update(s.getBytes());
+        byte[] digest = md.digest();
+
+        return String.format("%032X", new BigInteger(1, digest));
     }
 
     /**
@@ -310,6 +336,48 @@ public class Game extends Observable {
     public void setupScoreBoard() {
         if (isStarted) throw new UnsupportedOperationException("setupScoreBoard shouldn't be used after a game starts");
         this.scoreBoard = new ScoreBoard(players);
+    }
+
+    public void loadGame(GameSaving gameSaving) {
+        if (isStarted) throw new UnsupportedOperationException("cannot load game data on a started game");
+
+        ArrayList<PlayerSaving> playerListBackup = gameSaving.getPlayers();
+
+        if(this.players.size() != playerListBackup.size()) throw new RuntimeException("players lists incompatible");
+
+        for(int i = 0; i < this.players.size(); i++) {
+            for(int j = 0; j < this.players.size(); j++) {
+                if(this.players.get(j).nickname.equals(playerListBackup.get(i).getNick())) {
+                    Collections.swap(this.players, i,j);
+                    break;
+                }
+            }
+
+            if(!this.players.get(i).nickname.equals(playerListBackup.get(i).getNick())) throw new RuntimeException("players list incompatible");
+            this.players.get(i).loadPlayer(playerListBackup.get(i));
+        }
+
+        this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE, PlayerColor.GREEN, PlayerColor.RED, PlayerColor.YELLOW));
+
+        for (Player p : this.players) {
+            availableColor.remove(p.getColor());
+        }
+
+        this.scoreBoard = gameSaving.getScoreBoard();
+
+        this.commonGoals = gameSaving.getPublicGoal();
+
+        this.goldCardsDeck = gameSaving.getGoldCardsDeck();
+
+        this.resourceCardsDeck = gameSaving.getResourceCardsDeck();
+        this.startCardsDeck = gameSaving.getStartCardsDeck();
+        this.goalsDeck = gameSaving.getGoalsDeck();
+        this.visibleCards = gameSaving.getVisibleCards();
+        this.currentTurn = gameSaving.getCurrentTurn();
+
+        this.isStarted = true;
+
+        this.subscribeCommonObservers();
     }
 
     /**

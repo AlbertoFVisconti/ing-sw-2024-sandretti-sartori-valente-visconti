@@ -17,7 +17,7 @@ import it.polimi.ingsw.model.decks.VirtualDeckLoader;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
-import it.polimi.ingsw.model.saving.ClientGameSaving;
+import it.polimi.ingsw.model.saving.GameSaving;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.utils.CardLocation;
@@ -254,7 +254,7 @@ public class View extends Thread implements VirtualView {
     }
 
     @Override
-    public void confirmJoin(String nickname, ClientGameSaving savings) throws RemoteException {
+    public void confirmJoin(String nickname, GameSaving savings) throws RemoteException {
         this.localPlayer = new Player(nickname, null);
 
         if (savings != null) {

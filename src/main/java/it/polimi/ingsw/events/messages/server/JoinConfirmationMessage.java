@@ -1,7 +1,7 @@
 package it.polimi.ingsw.events.messages.server;
 
 import it.polimi.ingsw.events.messages.MessageType;
-import it.polimi.ingsw.model.saving.ClientGameSaving;
+import it.polimi.ingsw.model.saving.GameSaving;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
@@ -9,7 +9,7 @@ import java.rmi.RemoteException;
 public class JoinConfirmationMessage extends ServerMessage {
     private final String nickname;
 
-    private final ClientGameSaving savings;
+    private final GameSaving savings;
 
 
     /**
@@ -30,7 +30,7 @@ public class JoinConfirmationMessage extends ServerMessage {
      * @param nickname the nickname that the player used to join the game
      * @param savings the game data
      */
-    public JoinConfirmationMessage(String nickname, ClientGameSaving savings) {
+    public JoinConfirmationMessage(String nickname, GameSaving savings) {
         super(MessageType.CONNECT_JOIN_MESSAGE);
         this.nickname = nickname;
         this.savings = savings;

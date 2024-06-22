@@ -10,7 +10,7 @@ import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.chat.ChatMessage;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.PlayerColor;
-import it.polimi.ingsw.model.saving.ClientGameSaving;
+import it.polimi.ingsw.model.saving.GameSaving;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.utils.CardLocation;
 
@@ -127,7 +127,7 @@ public interface VirtualView extends Remote {
      * @param savings  if the player is rejoining a game, this ClientGameSaving object contains all data that the player need
      * @throws RemoteException in case of error with the remote communication.
      */
-    void confirmJoin(String nickname, ClientGameSaving savings) throws RemoteException;
+    void confirmJoin(String nickname, GameSaving savings) throws RemoteException;
 
     /**
      * Allows the server to provide an updated version of the players list with nicknames and colors.

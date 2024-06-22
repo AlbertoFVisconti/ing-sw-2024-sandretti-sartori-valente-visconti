@@ -2,6 +2,7 @@ package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.network.rmi.RMIServer;
 import it.polimi.ingsw.network.socket.SocketServer;
+import it.polimi.ingsw.utils.GameBackupManager;
 
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
@@ -22,6 +23,8 @@ public class Server {
      * @param args command line arguments
      */
     public static void main(String[] args) {
+        GameBackupManager.enableBackup();
+
         try {
             RMIServer.setup(RMI_SERVER_PORT);
         } catch (RemoteException | AlreadyBoundException e) {

@@ -20,11 +20,12 @@ public class GameSaving implements Serializable {
     private final Goal[] publicGoal;
     private final Deck<StartCard> startCardsDeck;
     private final Deck<Goal> goalsDeck;
+    private final int currentTurn;
 
     public GameSaving(int expectedPlayers, ArrayList<PlayerSaving> players, String gameId,
                       Deck<PlayCard> goldCardsDeck, Deck<PlayCard> resourceCardsDeck,
                       PlayCard[] visibleCards, ScoreBoard scoreBoard, Goal[] publicGoal,
-                      Deck<StartCard> startCardsDeck, Deck<Goal> goalsDeck) {
+                      Deck<StartCard> startCardsDeck, Deck<Goal> goalsDeck, int currentTurn) {
         this.expectedPlayers = expectedPlayers;
         this.players = players;
         this.gameId = gameId;
@@ -35,6 +36,7 @@ public class GameSaving implements Serializable {
         this.visibleCards = visibleCards;
         this.startCardsDeck = startCardsDeck;
         this.goalsDeck = goalsDeck;
+        this.currentTurn = currentTurn;
     }
 
     public int getExpectedPlayers() {
@@ -75,5 +77,9 @@ public class GameSaving implements Serializable {
 
     public Deck<StartCard> getStartCardsDeck() {
         return startCardsDeck;
+    }
+
+    public int getCurrentTurn() {
+        return currentTurn;
     }
 }

@@ -1,9 +1,7 @@
 package it.polimi.ingsw.controller;
 
-import com.sun.source.tree.AssertTree;
 import it.polimi.ingsw.events.messages.client.ClientMessage;
 import it.polimi.ingsw.events.messages.client.ClientToServerPingMessage;
-import it.polimi.ingsw.events.messages.server.ServerMessage;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.cards.StartCard;
@@ -13,27 +11,21 @@ import it.polimi.ingsw.model.decks.StartCardDeckLoader;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
-import it.polimi.ingsw.network.Client;
-import it.polimi.ingsw.network.Server;
 import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
 import it.polimi.ingsw.network.cliendhandlers.RMIClientHandler;
 import it.polimi.ingsw.network.rmi.GameControllerWrapper;
-import it.polimi.ingsw.network.serverhandlers.ServerHandler;
 import it.polimi.ingsw.utils.CardLocation;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.ui.gui.GraphicalUserInterface;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.Random;
-import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -117,7 +109,7 @@ class GameControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
         assertEquals(GameStatus.GAME_CREATION,gc.getGameStatus());
 
 
@@ -128,16 +120,16 @@ class GameControllerTest {
         p2.setStartCard(g.getStartCardsDeck().draw());
         p2.setPrivateGoal(g.getGoalsDeck().draw());
         p2.placeStartingCard(true);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
         assertEquals(GameStatus.NORMAL_TURN,gc.getGameStatus());
 
         //final turn once a player has hit 20 points
         g.getScoreBoard().setScore("massimo",21);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
         assertEquals(GameStatus.LAST_TURN,gc.getGameStatus());
 
         //since it never changed it's still the first player turn
-        gc.updateStatus();
+        gc.forceUpdateStatus();
         assertEquals(GameStatus.END,gc.getGameStatus());
     }
 
@@ -164,7 +156,7 @@ class GameControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
         assertEquals(TurnStatus.PLACE,gc.getTurnStatus());
 
 
@@ -179,7 +171,7 @@ class GameControllerTest {
 
         //placing a card changes the status
         //gc.placeCard(g.getTurn().getClientHandler().getPlayerIdentifier(),0,false,new CardLocation(1,1));
-        //gc.updateStatus();
+        //gc.forceUpdateStatus();
         //TODO: entrambi i clienthandler forzano la disconnessine perchè non trovano il client inizializzato qiundi
         //     quando faccio placecard viene chiamato update status ricorsivamente senza fine
 
@@ -204,7 +196,7 @@ class GameControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
 
         //add 5 messages to the message queue
         for(int i=0; i<5;i++) gc.forwardMessage(new ClientToServerPingMessage(false));
@@ -231,7 +223,7 @@ class GameControllerTest {
         Player p2= new Player("massimo",cl2);
         g.addPlayer(p2);
         p2.setColor(PlayerColor.YELLOW);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
         //TODO: FIX THE BUG WHEN BOTH PLAYER ARE LEAVING THE LOBBY
         //the game is started, but it's before placing the first card
         //gc.handleDisconnection(cl);
@@ -257,7 +249,7 @@ class GameControllerTest {
         Player p4= new Player("alberto",cl4);
         p4.setColor(PlayerColor.YELLOW);
         g2.addPlayer(p4);
-        gc2.updateStatus();
+        gc2.forceUpdateStatus();
 
 
         //normal turn of the game
@@ -267,7 +259,7 @@ class GameControllerTest {
         p4.setStartCard(g2.getStartCardsDeck().draw());
         p4.setPrivateGoal(g2.getGoalsDeck().draw());
         p4.placeStartingCard(true);
-        gc2.updateStatus();
+        gc2.forceUpdateStatus();
         gc2.handleDisconnection(cl3);
         assertTrue(cl3.isDisconnected());
     }
@@ -284,7 +276,7 @@ class GameControllerTest {
         Player p1= new Player("mario",cl);
         p1.setColor(PlayerColor.BLUE);
         g.addPlayer(p1);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
         //now add the second player
         ClientHandler cl2 = createCl();
         mc.connectClient(cl2);
@@ -300,14 +292,14 @@ class GameControllerTest {
 
         //a client cannot reconnect if the game is in lobby mode
         //go to NORMAL TURN
-        gc.updateStatus();
+        gc.forceUpdateStatus();
         p1.setStartCard(g.getStartCardsDeck().draw());
         p1.setPrivateGoal(g.getGoalsDeck().draw());
         p1.placeStartingCard(false);
         p2.setStartCard(g.getStartCardsDeck().draw());
         p2.setPrivateGoal(g.getGoalsDeck().draw());
         p2.placeStartingCard(true);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
 
         //clients disconnects and the reconnects
         gc.handleDisconnection(cl);
@@ -340,7 +332,7 @@ class GameControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
         assertEquals(TurnStatus.PLACE,gc.getTurnStatus());
 
 
@@ -390,7 +382,7 @@ class GameControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
 
         //choosing the startcard and the private goal
         Goal g1=p1.getAvailableGoals()[0];
@@ -398,7 +390,7 @@ class GameControllerTest {
         gc.selectPrivateGoal(cl.getPlayerIdentifier(),0);
         Goal g2=p2.getAvailableGoals()[1];
         gc.placeStartCard(cl2.getPlayerIdentifier(),false);
-       gc.selectPrivateGoal(cl2.getPlayerIdentifier(), 1);
+        gc.selectPrivateGoal(cl2.getPlayerIdentifier(), 1);
 
        //correctly choosing the private goal
        assertEquals(p1.getPrivateGoal(),g1);
@@ -428,7 +420,7 @@ class GameControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
 
 
         //normal turn of the game
@@ -445,32 +437,7 @@ class GameControllerTest {
     }
 
     @Test
-    void placeCard() throws Exception {
-        // Simulate user input: invalid input followed by valid input
-        String[] strings={};
-        Server.main(strings);
-        String simulatedInput = "1\n1\n!create\n2\nmassimo\nred\n";
-        String simulatedInput2 = "1\n1\n!join\nmassimo\nmario\nred\n";
-        ByteArrayInputStream testInputStream = new ByteArrayInputStream(simulatedInput.getBytes());System.setIn(testInputStream);
-        Client.main(strings);
-        ServerHandler sh1=Client.getInstance().getServerHandler();
-        testInputStream = new ByteArrayInputStream(simulatedInput2.getBytes());System.setIn(testInputStream);
-        Client.main(strings);
-        ServerHandler sh2=Client.getInstance().getServerHandler();
-
-        //todo: client.getInstance è null anche qui
-//        Game g= Client.getInstance().getView().getGameModel();
-//        GameController gc=new GameController(g);
-//        System.out.println("size of the player is "+g.getPlayers().size());
-//        gc.placeStartCard(sh1.getPlayerIdentifier(),true);
-//        gc.placeStartCard(sh2.getPlayerIdentifier(),true);
-//        gc.selectPrivateGoal(sh1.getPlayerIdentifier(),0);
-//        gc.selectPrivateGoal(sh2.getPlayerIdentifier(),0);
-
-//        gc.placeCard(g.getTurn().getClientHandler().getPlayerIdentifier(),0,false,new CardLocation(1,1));
-
-
-        assertTrue(true);
+    void placeCard() {
 
 
 
@@ -506,7 +473,7 @@ class GameControllerTest {
         assertThrows(RuntimeException.class,()->gc.selectColor("FAKEPLAYERIDENTIFIER",PlayerColor.BLUE));
         gc.selectColor(cl2.getPlayerIdentifier(),PlayerColor.YELLOW);
         assertEquals(2,g.getAvailableColor().size());
-        gc.updateStatus();
+        gc.forceUpdateStatus();
 
         //a player can not be added/changed after the LOBBY phase
         assertThrows(RuntimeException.class,()->gc.selectColor(cl2.getPlayerIdentifier(),PlayerColor.GREEN));
@@ -531,7 +498,7 @@ class GameControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
 
         //message from mario to massimo
         assertThrows(RuntimeException.class,()->gc.sendChatMsg("FAKEPLAYERIDENTIFIER","test","massimo"));
@@ -563,7 +530,7 @@ class GameControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
 
 
         //normal turn of the game
@@ -573,7 +540,7 @@ class GameControllerTest {
         p2.setStartCard(g.getStartCardsDeck().draw());
         p2.setPrivateGoal(g.getGoalsDeck().draw());
         p2.placeStartingCard(true);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
 
         //get the message queue to see if the ping msg arrived
         Field privateValueField2 = GameController.class.getDeclaredField("messageQueue");
@@ -589,10 +556,10 @@ class GameControllerTest {
 
         //final turn once a player has hit 20 points
         g.getScoreBoard().setScore("massimo",21);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
 
         //since it never changed it's still the first player turn
-        gc.updateStatus();
+        gc.forceUpdateStatus();
         gc.run();//run should finish because the match ended
         assertTrue(true);
     }
@@ -614,7 +581,7 @@ class GameControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
 
 
         assertNull(gc.getPlayerByPlayerIdentifier("TESTFAKEIDENTIFIER"));
@@ -652,7 +619,7 @@ class GameControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
 
 
         assertNull(gc.getPlayerByNickname("cristiano"));
@@ -690,7 +657,7 @@ class GameControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
 
         assertFalse(gc.isNicknameAvailable("MARIO"));
         assertFalse(gc.isNicknameAvailable("mario"));

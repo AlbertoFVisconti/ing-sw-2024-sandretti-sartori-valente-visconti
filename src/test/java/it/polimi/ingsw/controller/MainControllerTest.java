@@ -1,6 +1,5 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.events.messages.client.ClientChatMsgMessage;
 import it.polimi.ingsw.events.messages.client.ClientMessage;
 import it.polimi.ingsw.events.messages.client.ClientToServerPingMessage;
 import it.polimi.ingsw.model.Game;
@@ -9,8 +8,6 @@ import it.polimi.ingsw.model.decks.PlayCardDeckLoader;
 import it.polimi.ingsw.model.decks.StartCardDeckLoader;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
-import it.polimi.ingsw.network.Client;
-import it.polimi.ingsw.network.Server;
 import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
 import it.polimi.ingsw.network.cliendhandlers.RMIClientHandler;
 import it.polimi.ingsw.network.rmi.GameControllerWrapper;
@@ -19,7 +16,6 @@ import it.polimi.ingsw.view.ui.gui.GraphicalUserInterface;
 import it.polimi.ingsw.view.ui.tui.TextualUserInterface;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
@@ -142,7 +138,7 @@ class MainControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
         assertEquals(GameStatus.GAME_CREATION,gc.getGameStatus());
         //normal turn of the game
         p1.setStartCard(g.getStartCardsDeck().draw());
@@ -151,7 +147,7 @@ class MainControllerTest {
         p2.setStartCard(g.getStartCardsDeck().draw());
         p2.setPrivateGoal(g.getGoalsDeck().draw());
         p2.placeStartingCard(true);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
         games[0]=g;
         gameControllers[0]=gc;
         gameControllerWrappers.put(g.getIdGame(), new GameControllerWrapper(gc));
@@ -218,7 +214,7 @@ class MainControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
         assertEquals(GameStatus.GAME_CREATION,gc.getGameStatus());
         //normal turn of the game
         p1.setStartCard(g.getStartCardsDeck().draw());
@@ -227,7 +223,7 @@ class MainControllerTest {
         p2.setStartCard(g.getStartCardsDeck().draw());
         p2.setPrivateGoal(g.getGoalsDeck().draw());
         p2.placeStartingCard(true);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
         playerIdentifierToGameController.put(cl.getPlayerIdentifier(),gc );
         playerIdentifierToGameController.put(cl2.getPlayerIdentifier(),gc );
         //crea il secondo gioco
@@ -280,7 +276,7 @@ class MainControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
 
         assertEquals(mc.getPlayersClientHandler(cl.getPlayerIdentifier()),cl);
         assertNull(mc.getPlayersClientHandler("FAKEIDTEST"));
@@ -316,7 +312,7 @@ class MainControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
         assertEquals(GameStatus.GAME_CREATION,gc.getGameStatus());
         //normal turn of the game
         p1.setStartCard(g.getStartCardsDeck().draw());
@@ -325,7 +321,7 @@ class MainControllerTest {
         p2.setStartCard(g.getStartCardsDeck().draw());
         p2.setPrivateGoal(g.getGoalsDeck().draw());
         p2.placeStartingCard(true);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
         playerIdentifierToGameController.put(cl.getPlayerIdentifier(),gc );
         playerIdentifierToGameController.put(cl2.getPlayerIdentifier(),gc );
         //crea il secondo gioco
@@ -456,7 +452,7 @@ class MainControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
 
         mc.leaveGame("FAKEPLAYERIDTEST");
         assertEquals(2,g.getPlayers().size());
@@ -495,7 +491,7 @@ class MainControllerTest {
         Player p2= new Player("massimo",cl2);
         p2.setColor(PlayerColor.YELLOW);
         g.addPlayer(p2);
-        gc.updateStatus();
+        gc.forceUpdateStatus();
 
         assertEquals(mc.getPlayersClientHandler(cl.getPlayerIdentifier()),cl);
 
