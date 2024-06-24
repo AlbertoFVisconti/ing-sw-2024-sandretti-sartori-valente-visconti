@@ -98,7 +98,7 @@ class MainControllerTest {
         gameControllerWrappers.put(g.getIdGame(),new GameControllerWrapper(gc));
 
         assertTrue(gameControllerWrappers.containsKey(g.getIdGame()));
-        mc.RemoveGame(g.getIdGame());
+        mc.removeGame(g.getIdGame());
 
         assertFalse(gameControllerWrappers.containsKey(g.getIdGame()));
 

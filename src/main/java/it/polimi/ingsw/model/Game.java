@@ -356,7 +356,10 @@ public class Game extends Observable {
             }
 
             if(!this.players.get(i).nickname.equals(playerListBackup.get(i).getNick())) throw new RuntimeException("players list incompatible");
+
+            PlayerColor currentPlayerColor = this.players.get(i).getColor();
             this.players.get(i).loadPlayer(playerListBackup.get(i));
+            this.players.get(i).setColor(currentPlayerColor);
         }
 
         this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE, PlayerColor.GREEN, PlayerColor.RED, PlayerColor.YELLOW));

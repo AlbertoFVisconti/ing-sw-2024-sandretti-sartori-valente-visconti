@@ -63,22 +63,26 @@ public class MainController extends Thread implements VirtualMainController {
         this.messageQueue = new ArrayBlockingQueue<>(100);
         this.start();
 
-        try (ScheduledExecutorService disconnectionCheckerExecutor = Executors.newSingleThreadScheduledExecutor()) {
-            disconnectionCheckerExecutor.scheduleAtFixedRate(new Thread(this::cleanUp), 0, CLEANUP_PROCEDURE_TIMER, TimeUnit.MILLISECONDS);
-        }
+
+        ScheduledExecutorService disconnectionCheckerExecutor = Executors.newSingleThreadScheduledExecutor();
+        disconnectionCheckerExecutor.scheduleAtFixedRate(new Thread(this::cleanUp), 0, CLEANUP_PROCEDURE_TIMER, TimeUnit.MILLISECONDS);
+
 
     }
 
     /**
      * Removes ended games and inactive players
      */
-    private void cleanUp() {
-        // removing ended games' wrappers
+    private synchronized void cleanUp() {
+        // removing inactive games (no connected players)
+        /*
         for (String gameID : gameControllerWrappers.keySet()) {
-            if (gameControllerWrappers.get(gameID).getGameController().getGameStatus() == GameStatus.END) {
+            if (gameControllerWrappers.get(gameID).getGameController().getConnectedPlayers() == 0) {
                 gameControllerWrappers.remove(gameID);
             }
         }
+        */
+
 
         // removing inactive players' client handlers
         for (String playerID : playerIdentifierToClientHandler.keySet()) {
@@ -128,10 +132,8 @@ public class MainController extends Thread implements VirtualMainController {
      *
      * @param idGame the id of the game that needs to be removed.
      */
-    public void RemoveGame(String idGame) {
-        synchronized (this.gameControllerWrappers) {
-            gameControllerWrappers.remove(idGame);
-        }
+    public synchronized void removeGame(String idGame) {
+        gameControllerWrappers.remove(idGame);
     }
 
 
@@ -141,7 +143,7 @@ public class MainController extends Thread implements VirtualMainController {
      * @param gameId the gameID of the game whose GameController is needed.
      * @return a reference to the GameController that handles the specified game, {@code null} if there's no game with the provided GameID.
      */
-    public GameController getGameController(String gameId) throws NullPointerException{
+    public synchronized GameController getGameController(String gameId) throws NullPointerException{
         return this.gameControllerWrappers.get(gameId).getGameController();
     }
 
@@ -152,10 +154,8 @@ public class MainController extends Thread implements VirtualMainController {
      * @param playerIdentifier the identifier of the player whose GameController is needed.
      * @return a reference to the GameController that handles the player's game, {@code null} if the player wasn't recognised.
      */
-    public GameController getPlayersGameController(String playerIdentifier) {
-        synchronized (playerIdentifierToGameController) {
-            return playerIdentifierToGameController.get(playerIdentifier);
-        }
+    public synchronized GameController getPlayersGameController(String playerIdentifier) {
+        return playerIdentifierToGameController.get(playerIdentifier);
     }
 
     /**
@@ -165,10 +165,8 @@ public class MainController extends Thread implements VirtualMainController {
      * @param playerIdentifier the identifier of the player whose ClientHandler is needed
      * @return a reference to the ClientHandler that handles the client of the player, {@code null} if the player wasn't recognised.
      */
-    public ClientHandler getPlayersClientHandler(String playerIdentifier) {
-        synchronized (playerIdentifierToClientHandler) {
-            return playerIdentifierToClientHandler.get(playerIdentifier);
-        }
+    public synchronized ClientHandler getPlayersClientHandler(String playerIdentifier) {
+        return playerIdentifierToClientHandler.get(playerIdentifier);
     }
 
     /**
@@ -177,12 +175,8 @@ public class MainController extends Thread implements VirtualMainController {
      * @param playerIdentifier the identifier of the player whose object is needed.
      * @return a reference to the Player with the specified playerIdentifier, {@code null} if the player wasn't recognised.
      */
-    public Player getPlayer(String playerIdentifier) {
-        GameController controller;
-        synchronized (playerIdentifierToGameController) {
-            controller = playerIdentifierToGameController.get(playerIdentifier);
-        }
-
+    public synchronized Player getPlayer(String playerIdentifier) {
+        GameController controller = playerIdentifierToGameController.get(playerIdentifier);
         if (controller == null) return null;
 
         return controller.getPlayerByPlayerIdentifier(playerIdentifier);
@@ -231,7 +225,7 @@ public class MainController extends Thread implements VirtualMainController {
      * @throws RemoteException in case of errors during the remote communication
      */
     @Override
-    public void joinGame(String playerIdentifier, String IDGame, String nickname) throws RemoteException {
+    public synchronized void joinGame(String playerIdentifier, String IDGame, String nickname) throws RemoteException {
         // retrieving the player's client handler
         ClientHandler clientHandler = this.getPlayersClientHandler(playerIdentifier);
         if (clientHandler == null) throw new RuntimeException("player was not recognized");
@@ -239,35 +233,34 @@ public class MainController extends Thread implements VirtualMainController {
         // retrieving GameControllerWrapper and GameController
         GameControllerWrapper gameControllerWrapper;
         GameController controller;
-        synchronized (gameControllerWrappers) {
-            gameControllerWrapper = this.gameControllerWrappers.get(IDGame);
-            if (gameControllerWrapper == null) throw new RuntimeException("the selected game does not exist");
-            controller = gameControllerWrapper.getGameController();
+
+        gameControllerWrapper = this.gameControllerWrappers.get(IDGame);
+        if (gameControllerWrapper == null) throw new RuntimeException("the selected game does not exist");
+        controller = gameControllerWrapper.getGameController();
+
+
+        // no need to lock the GameController: if the GameStatus
+        // wasn't lobby in the first place, it cannot go back to Lobby
+        // if it was lobby and then changed it means that the player
+        // tried to join a game that was filled just before they could
+        // join: an exception will be raised by GameController.addNewPlayer() and
+        // it will be reported to the user: the joining process will fail
+        if (controller.getGameStatus() == GameStatus.LOBBY) {
+            // game is in lobby ==> the player is NOT rejoining, it is a new player
+
+            // checking if the selected nickname is available for this game
+            if (!controller.isNicknameAvailable(nickname))
+                throw new RuntimeException("the selected nickname is unavailable");
+
+            // adding the new player to the game (might cause an exception to be thrown)
+            controller.addNewPlayer(nickname, clientHandler, gameControllerWrapper);
+        } else {
+            // game is running ==> the player might be trying to rejoin
+            // making the player rejoin the game (might cause an exception to be thrown)
+            controller.handleReconnection(nickname, clientHandler, gameControllerWrapper);
         }
 
-        synchronized (controller) {
-            if (controller.getGameStatus() == GameStatus.LOBBY) {
-                // game is in lobby ==> the player is NOT rejoining, it is a new player
-
-                // checking if the selected nickname is available for this game
-                if (!controller.isNicknameAvailable(nickname))
-                    throw new RuntimeException("the selected nickname is unavailable");
-
-                // providing the game controller to the player
-                clientHandler.setController(gameControllerWrapper);
-
-                // adding the new player to the game (might cause an exception to be thrown)
-                controller.addNewPlayer(nickname, clientHandler);
-            } else {
-                // game is running ==> the player might be trying to rejoin
-                // making the player rejoin the game (might cause an exception to be thrown)
-                controller.handleReconnection(nickname, clientHandler, gameControllerWrapper);
-            }
-        }
-
-        synchronized (playerIdentifierToGameController) {
-            this.playerIdentifierToGameController.put(clientHandler.getPlayerIdentifier(), controller);
-        }
+        this.playerIdentifierToGameController.put(clientHandler.getPlayerIdentifier(), controller);
 
         System.err.println(nickname + " joined the game");
     }
@@ -278,7 +271,7 @@ public class MainController extends Thread implements VirtualMainController {
      * @param playerIdentifier the identifier of the client that is creating a game
      */
     @Override
-    public void getAvailableGames(String playerIdentifier) throws RemoteException {
+    public synchronized void getAvailableGames(String playerIdentifier) throws RemoteException {
         ClientHandler clientHandler = this.playerIdentifierToClientHandler.get(playerIdentifier);
         if (clientHandler != null) {
             clientHandler.sendMessage(new GameListMessage(this.gameControllerWrappers.keySet()));
@@ -302,7 +295,7 @@ public class MainController extends Thread implements VirtualMainController {
      * @param isAnswer         {@code true} if the server is answering to a previous ping message, {@code false} if the server is checking on the client.
      */
     @Override
-    public void ping(String playerIdentifier, boolean isAnswer) throws RemoteException {
+    public synchronized void ping(String playerIdentifier, boolean isAnswer) throws RemoteException {
         ClientHandler clientHandler = this.getPlayersClientHandler(playerIdentifier);
 
         if (clientHandler != null) {
@@ -311,17 +304,12 @@ public class MainController extends Thread implements VirtualMainController {
     }
 
     @Override
-    public void leaveGame(String playerIdentifier) {
-        GameController gameController;
-        synchronized (playerIdentifierToGameController) {
-            gameController = playerIdentifierToGameController.get(playerIdentifier);
-        }
+    public synchronized void leaveGame(String playerIdentifier) {
+        GameController gameController = playerIdentifierToGameController.get(playerIdentifier);
 
         if(gameController != null) {
             ClientHandler clientHandler = this.getPlayersClientHandler(playerIdentifier);
             gameController.handleDisconnection(clientHandler);
-
-            clientHandler.resetController();
         }
     }
 
@@ -333,10 +321,8 @@ public class MainController extends Thread implements VirtualMainController {
      * @param nick             The nickname of the player creating the game
      */
     @Override
-    public void createGame(String playerIdentifier, int expectedPlayers, String nick) throws RemoteException {
-        synchronized (gameControllerWrappers) {
-            if(gameControllerWrappers.containsKey(nick)) throw new RuntimeException("Game creators needs to have unique names and this one was already taken");
-        }
+    public synchronized void createGame(String playerIdentifier, int expectedPlayers, String nick) throws RemoteException {
+        if(gameControllerWrappers.containsKey(nick)) throw new RuntimeException("Game creators needs to have unique names and this one was already taken");
 
         Game g;
         try {
@@ -347,9 +333,7 @@ public class MainController extends Thread implements VirtualMainController {
         GameController controller = new GameController(g);
         GameControllerWrapper controllerWrapper = new GameControllerWrapper(controller);
 
-        synchronized (gameControllerWrappers) {
-            gameControllerWrappers.put(nick, controllerWrapper);
-        }
+        gameControllerWrappers.put(nick, controllerWrapper);
 
         joinGame(playerIdentifier, nick, nick);
     }
@@ -360,7 +344,7 @@ public class MainController extends Thread implements VirtualMainController {
      *
      * @param clientHandler the client handler of the client whose connection needs to be completed
      */
-    public void connectClient(ClientHandler clientHandler) {
+    public synchronized void connectClient(ClientHandler clientHandler) {
         Random rand = new Random();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String t = timestamp.toString() + rand.nextInt(0, 1000000);
@@ -377,9 +361,7 @@ public class MainController extends Thread implements VirtualMainController {
 
         String playerIdentifier = String.format("%032X", new BigInteger(1, digest));
 
-        synchronized (playerIdentifierToClientHandler) {
-            this.playerIdentifierToClientHandler.put(playerIdentifier, clientHandler);
-        }
+        this.playerIdentifierToClientHandler.put(playerIdentifier, clientHandler);
 
         clientHandler.setPlayerIdentifier(playerIdentifier);
         clientHandler.sendMessage(new ConnectionConfirmationMessage(playerIdentifier));

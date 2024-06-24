@@ -148,6 +148,7 @@ public abstract class ClientHandler implements Observer {
      * @param gameControllerWrapper GameControllerWrapper that wraps the GameController of the game the client's playing
      */
     final public void setController(GameControllerWrapper gameControllerWrapper) {
+        if(gameControllerWrapper == null) return;
         this.gameController = gameControllerWrapper.getGameController();
 
         // linking the controller to the ClientHandler (this procedure depends on the protocol used)

@@ -85,10 +85,10 @@ class GameControllerTest {
         ClientHandler cl = createCl();
 
         //aggiungi i giocatori
-        gc.addNewPlayer("mario",cl);
-        gc.addNewPlayer("massimo",cl);
-        gc.addNewPlayer("cristiano",cl);
-        gc.addNewPlayer("alberto",cl);
+        gc.addNewPlayer("mario",cl, null);
+        gc.addNewPlayer("massimo",cl, null);
+        gc.addNewPlayer("cristiano",cl, null);
+        gc.addNewPlayer("alberto",cl, null);
 
 
         //test if the players have been inserted correctly
@@ -97,7 +97,7 @@ class GameControllerTest {
         assertEquals("cristiano",g.getPlayers().get(2).nickname);
         assertEquals("alberto",g.getPlayers().get(3).nickname);
         //throws an exception if we try to add a 5th player
-        assertThrows(RuntimeException.class,()->gc.addNewPlayer("5th",cl));
+        assertThrows(RuntimeException.class,()->gc.addNewPlayer("5th",cl, null));
     }
 
     @Test
@@ -853,7 +853,7 @@ class GameControllerTest {
 
     }
 
-    private class HelperClientHandler extends ClientHandler {
+    private static class HelperClientHandler extends ClientHandler {
 
         public HelperClientHandler(String identifier) {
            this.setPlayerIdentifier(identifier);

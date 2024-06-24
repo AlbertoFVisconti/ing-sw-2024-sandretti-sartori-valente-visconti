@@ -89,16 +89,19 @@ public class GameController extends Observable implements VirtualController, Run
     /**
      * Add a new player to the game.
      *
-     * @param nickname the nickname of the joining player
-     * @param clientHandler the client handler of the joining player
+     * @param nickname              the nickname of the joining player
+     * @param clientHandler         the client handler of the joining player
+     * @param gameControllerWrapper the remote object that wraps the GameController
      * @throws UnsupportedOperationException if the game is already started
      */
-    public synchronized void addNewPlayer(String nickname, ClientHandler clientHandler) {
+    public synchronized void addNewPlayer(String nickname, ClientHandler clientHandler, GameControllerWrapper gameControllerWrapper) {
         if (this.gameStatus != GameStatus.LOBBY) {
             throw new UnsupportedOperationException("Cannot add a new player to a running game");
         } else {
             game.addPlayer(new Player(nickname, clientHandler));
         }
+
+        clientHandler.setController(gameControllerWrapper);
 
         this.game.getChat().subscribe(clientHandler);
 
@@ -124,6 +127,10 @@ public class GameController extends Observable implements VirtualController, Run
      */
     public synchronized TurnStatus getTurnStatus() {
         return turnStatus;
+    }
+
+    public synchronized int getConnectedPlayers() {
+        return connectedPlayers;
     }
 
     /**
@@ -152,6 +159,7 @@ public class GameController extends Observable implements VirtualController, Run
         Player player = this.helperGetPlayerByPlayerIdentifier(clientHandler.getPlayerIdentifier());
 
         if (player != null && this.game.getPlayers().contains(player)) {
+            clientHandler.resetController();
             boolean isCurrentPlayer = false;
 
             System.err.println(player.nickname + " has disconnected");
@@ -183,6 +191,11 @@ public class GameController extends Observable implements VirtualController, Run
                 }
             }
         }
+
+        if(connectedPlayers == 0) {
+            MainController.getInstance().removeGame(this.game.getIdGame());
+            this.gameStatus = GameStatus.DELETED;
+        }
     }
 
     private void drawRandomCard(Player player) {
@@ -195,6 +208,7 @@ public class GameController extends Observable implements VirtualController, Run
 
         if(!availableCards.isEmpty()) {
             this.drawCardHelper(player, availableCards.get(new Random().nextInt(availableCards.size())));
+
         }
 
     }
@@ -666,8 +680,6 @@ public class GameController extends Observable implements VirtualController, Run
                 throw new RuntimeException("There's no card to draw in the provided location");
             }
         }
-
-        this.saveGameBackup();
     }
 
     /**
@@ -699,6 +711,7 @@ public class GameController extends Observable implements VirtualController, Run
 
         // card successfully drawn
         advanceTurn();
+        this.saveGameBackup();
 
         System.err.println(this.game.getIdGame() + ": " + player.nickname + " picked up a card");
     }
@@ -791,7 +804,7 @@ public class GameController extends Observable implements VirtualController, Run
     public void run() {
         MainController selector = MainController.getInstance();
         ClientMessage message;
-        while (this.gameStatus != GameStatus.END) {
+        while (this.getGameStatus() != GameStatus.DELETED) {
             try {
                 message = this.messageQueue.take();
             } catch (InterruptedException e) {

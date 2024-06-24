@@ -8,5 +8,7 @@ public enum GameStatus {
     GAME_CREATION,
     NORMAL_TURN,
     LAST_TURN,
-    END
+    END,
+
+    DELETED
 }
