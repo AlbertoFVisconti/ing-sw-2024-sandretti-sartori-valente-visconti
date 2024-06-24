@@ -24,7 +24,7 @@ public class Client {
      */
     private Client() {}
 
-    public void setup(View view) {
+    void setup(View view) {
         this.view = view;
 
         boolean done = false;

@@ -24,10 +24,10 @@ public class GameTest {
         //initialize parameters for game
         String id = "1";
         int expectedPlayers = 2;
-        GoalDeckLoader goalDeckLoader = new GoalDeckLoader("src/main/resources/json/goals.json");
-        PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");
-        PlayCardDeckLoader goldCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/goldcards.json");
-        StartCardDeckLoader startCardDeckLoader = new StartCardDeckLoader("src/main/resources/json/cards/startcards.json");
+        GoalDeckLoader goalDeckLoader = new GoalDeckLoader("/json/goals.json");
+        PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("/json/cards/resourcecards.json");
+        PlayCardDeckLoader goldCardDeckLoader = new PlayCardDeckLoader("/json/cards/goldcards.json");
+        StartCardDeckLoader startCardDeckLoader = new StartCardDeckLoader("/json/cards/startcards.json");
         //create game
         Game g = new Game(goldCardDeckLoader, resourceCardDeckLoader, startCardDeckLoader, goalDeckLoader, id, expectedPlayers);
         //add players
@@ -90,10 +90,10 @@ public class GameTest {
         //initialize parameters for game
         String id = "1";
         int expectedPlayers = 2;
-        GoalDeckLoader goalDeckLoader = new GoalDeckLoader("src/main/resources/json/goals.json");
-        PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");
-        PlayCardDeckLoader goldCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/goldcards.json");
-        StartCardDeckLoader startCardDeckLoader = new StartCardDeckLoader("src/main/resources/json/cards/startcards.json");
+        GoalDeckLoader goalDeckLoader = new GoalDeckLoader("/json/goals.json");
+        PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("/json/cards/resourcecards.json");
+        PlayCardDeckLoader goldCardDeckLoader = new PlayCardDeckLoader("/json/cards/goldcards.json");
+        StartCardDeckLoader startCardDeckLoader = new StartCardDeckLoader("/json/cards/startcards.json");
         //create game
         Game g = new Game(goldCardDeckLoader, resourceCardDeckLoader, startCardDeckLoader, goalDeckLoader, id, expectedPlayers);
         //add players
@@ -121,10 +121,10 @@ public class GameTest {
         //initialize parameters for game
         String id = "1";
         int expectedPlayers = 2;
-        GoalDeckLoader goalDeckLoader = new GoalDeckLoader("src/main/resources/json/goals.json");
-        PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");
-        PlayCardDeckLoader goldCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/goldcards.json");
-        StartCardDeckLoader startCardDeckLoader = new StartCardDeckLoader("src/main/resources/json/cards/startcards.json");
+        GoalDeckLoader goalDeckLoader = new GoalDeckLoader("/json/goals.json");
+        PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("/json/cards/resourcecards.json");
+        PlayCardDeckLoader goldCardDeckLoader = new PlayCardDeckLoader("/json/cards/goldcards.json");
+        StartCardDeckLoader startCardDeckLoader = new StartCardDeckLoader("/json/cards/startcards.json");
         //create game
         Game g = new Game(goldCardDeckLoader, resourceCardDeckLoader, startCardDeckLoader, goalDeckLoader, id, expectedPlayers);
         //add players

@@ -42,10 +42,10 @@ public class MainController extends Thread implements VirtualMainController {
     private final BlockingQueue<ClientMessage> messageQueue;
 
     // Default deck loaders ready to build decks for all game (thus accessing the files only once)
-    GoalDeckLoader goalDeckLoader = new GoalDeckLoader("src/main/resources/json/goals.json");
-    PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");
-    PlayCardDeckLoader goldCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/goldcards.json");
-    StartCardDeckLoader startCardDeckLoader = new StartCardDeckLoader("src/main/resources/json/cards/startcards.json");
+    GoalDeckLoader goalDeckLoader = new GoalDeckLoader("/json/goals.json");
+    PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("/json/cards/resourcecards.json");
+    PlayCardDeckLoader goldCardDeckLoader = new PlayCardDeckLoader("/json/cards/goldcards.json");
+    StartCardDeckLoader startCardDeckLoader = new StartCardDeckLoader("/json/cards/startcards.json");
 
     private static MainController instance = null;
 

@@ -2,8 +2,8 @@ package it.polimi.ingsw.model.decks;
 
 import org.json.JSONArray;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,14 +76,16 @@ public abstract class DeckLoader<T extends Drawable> {
      * @throws IOException if there's a problem when trying to read the file.
      */
     protected static JSONArray buildJSONArrayFromFile(String fileName) throws IOException {
-        FileReader reader = new FileReader(fileName);
+        InputStream inputStream = DeckLoader.class.getResourceAsStream(fileName);
+        if(inputStream == null) throw new IOException();
+
         StringBuilder jsonString = new StringBuilder();
 
         int c;
-        while ((c = reader.read()) != -1) {
+        while ((c = inputStream.read()) != -1) {
             jsonString.append((char) c);
         }
-        reader.close();
+        inputStream.close();
 
         return new JSONArray(jsonString.toString());
     }

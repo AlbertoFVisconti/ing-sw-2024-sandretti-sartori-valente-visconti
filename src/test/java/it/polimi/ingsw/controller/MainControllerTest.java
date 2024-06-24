@@ -55,10 +55,10 @@ class MainControllerTest {
         return new RMIClientHandler(new View(new GraphicalUserInterface()));
     }
     private Game createGame(String id, int ep) throws IOException {
-        GoalDeckLoader goalDeckLoader = new GoalDeckLoader("src/main/resources/json/goals.json");
-        PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/resourcecards.json");
-        PlayCardDeckLoader goldCardDeckLoader = new PlayCardDeckLoader("src/main/resources/json/cards/goldcards.json");
-        StartCardDeckLoader startCardDeckLoader = new StartCardDeckLoader("src/main/resources/json/cards/startcards.json");
+        GoalDeckLoader goalDeckLoader = new GoalDeckLoader("/json/goals.json");
+        PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("/json/cards/resourcecards.json");
+        PlayCardDeckLoader goldCardDeckLoader = new PlayCardDeckLoader("/json/cards/goldcards.json");
+        StartCardDeckLoader startCardDeckLoader = new StartCardDeckLoader("/json/cards/startcards.json");
         return new Game(goldCardDeckLoader, resourceCardDeckLoader, startCardDeckLoader, goalDeckLoader, id, ep);
 
     }
