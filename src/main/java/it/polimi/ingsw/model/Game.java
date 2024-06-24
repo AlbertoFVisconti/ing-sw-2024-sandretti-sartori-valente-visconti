@@ -92,6 +92,8 @@ public class Game extends Observable {
         scoreBoard = new ScoreBoard();
 
         this.chat = new Chat();
+
+        this.visibleCards = new PlayCard[4];
     }
 
 
@@ -397,7 +399,6 @@ public class Game extends Observable {
         });
 
         // Draws the visible cards
-        this.visibleCards = new PlayCard[4];
         refillVisibleCards();
 
 

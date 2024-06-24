@@ -7,7 +7,6 @@ import it.polimi.ingsw.model.player.Player;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * The ScoreBoard class represents a scoreboard that tracks players' score throughout the game.
@@ -46,7 +45,8 @@ public class ScoreBoard extends Observable implements Serializable {
      * @return The score of the specified player.
      */
     public int getScore(String nickName) {
-        if (!scores.containsKey(nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
+        if(scores == null || !scores.containsKey(nickName)) return 0;
+
         return scores.get(nickName);
     }
 
@@ -55,10 +55,9 @@ public class ScoreBoard extends Observable implements Serializable {
      *
      * @param nickName the nickname of the Player whose score needs to be set.
      * @param score    the new score to set for the player.
-     * @throws NoSuchElementException if the provided player is not in the scoreboard
      */
     public void setScore(String nickName, int score) {
-        if (!scores.containsKey(nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
+        if(scores == null || !scores.containsKey(nickName)) return;
         scores.put(nickName, score);
 
         notifyObservers(new ScoreUpdateMessage(this));
@@ -71,16 +70,17 @@ public class ScoreBoard extends Observable implements Serializable {
      * @param scoreDelta the amount to add to the Player's score.
      */
     public void addScore(String nickName, int scoreDelta) {
-        if (!scores.containsKey(nickName)) throw new NoSuchElementException("This player is not in the scoreboard");
+        if(scores == null || !scores.containsKey(nickName)) return;
         this.setScore(nickName, scores.get(nickName) + scoreDelta);
     }
 
     /**
-     * Copy the current ScoreBoard's content in another ScoreBoard object.
+     * Copy the given scoreboard data in this scoreboard object
      *
      * @param scoreBoard ScoreBoard that needs to be overridden.
      */
     public void copyScore(ScoreBoard scoreBoard) {
+        if(scoreBoard.scores == null) return;
         this.scores = new HashMap<>();
         for (String nickname : scoreBoard.scores.keySet()) {
             this.scores.put(nickname, scoreBoard.scores.get(nickname));

@@ -266,10 +266,10 @@ public class Player extends Observable {
      * The orientation of the cards is also required
      *
      * @param onBackside {@code true} if the card should show the back side, {@code false} otherwise
-     * @throws Exception if the players has no StartCard to place
+     * @throws RuntimeException if the players has no StartCard to place
      */
-    public void placeStartingCard(boolean onBackside) throws Exception {
-        if (startCard == null) throw new Exception("no start card found");
+    public void placeStartingCard(boolean onBackside) {
+        if (startCard == null) throw new RuntimeException("no start card found");
 
         board.put(new CardLocation(0, 0), new CardSlot(startCard, onBackside, 0));
         startCard = null;
