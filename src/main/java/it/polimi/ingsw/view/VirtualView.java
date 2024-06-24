@@ -79,6 +79,7 @@ public interface VirtualView extends Remote {
      *
      * @param playerNickname the nickname of the player whose board needs to be updated.
      * @param card           the PlayCard object representing the new card to put in the player's hand.
+     * @param index          the index of the player's hand array that needs to be updated
      * @throws RemoteException in case of error with the remote communication.
      */
     void setPlayersCard(String playerNickname, PlayCard card, int index) throws RemoteException;

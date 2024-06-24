@@ -698,6 +698,7 @@ class GameControllerTest {
 
     @Test
     void run() throws Exception {
+
         //setup of variables
         Game g = createGame("1",2);
         GameController gc=new GameController(g);
@@ -748,7 +749,11 @@ class GameControllerTest {
 
         //since it never changed it's still the first player turn
         gc.forceUpdateStatus();
-        gc.run();//run should finish because the match ended
+
+        gc.handleDisconnection(cl);
+        gc.handleDisconnection(cl2);
+
+        gc.run();//run should finish because all the player have left
         assertTrue(true);
     }
 

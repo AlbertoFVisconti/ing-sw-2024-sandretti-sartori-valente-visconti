@@ -222,10 +222,9 @@ public class MainController extends Thread implements VirtualMainController {
      * @param playerIdentifier the identifier of the client that is joining the game
      * @param IDGame           The numerical identifier of the game, chosen among the available ones
      * @param nickname         The players nickname, unique for the game
-     * @throws RemoteException in case of errors during the remote communication
      */
     @Override
-    public synchronized void joinGame(String playerIdentifier, String IDGame, String nickname) throws RemoteException {
+    public synchronized void joinGame(String playerIdentifier, String IDGame, String nickname) {
         // retrieving the player's client handler
         ClientHandler clientHandler = this.getPlayersClientHandler(playerIdentifier);
         if (clientHandler == null) throw new RuntimeException("player was not recognized");
@@ -271,7 +270,7 @@ public class MainController extends Thread implements VirtualMainController {
      * @param playerIdentifier the identifier of the client that is creating a game
      */
     @Override
-    public synchronized void getAvailableGames(String playerIdentifier) throws RemoteException {
+    public synchronized void getAvailableGames(String playerIdentifier) {
         ClientHandler clientHandler = this.playerIdentifierToClientHandler.get(playerIdentifier);
         if (clientHandler != null) {
             clientHandler.sendMessage(new GameListMessage(this.gameControllerWrappers.keySet()));
@@ -284,7 +283,7 @@ public class MainController extends Thread implements VirtualMainController {
      * @param view a reference to the client's view (remote object)
      */
     @Override
-    public void connect(VirtualView view) throws RemoteException {
+    public void connect(VirtualView view) {
         this.connectClient(new RMIClientHandler(view));
     }
 
@@ -295,7 +294,7 @@ public class MainController extends Thread implements VirtualMainController {
      * @param isAnswer         {@code true} if the server is answering to a previous ping message, {@code false} if the server is checking on the client.
      */
     @Override
-    public synchronized void ping(String playerIdentifier, boolean isAnswer) throws RemoteException {
+    public synchronized void ping(String playerIdentifier, boolean isAnswer) {
         ClientHandler clientHandler = this.getPlayersClientHandler(playerIdentifier);
 
         if (clientHandler != null) {
@@ -319,6 +318,7 @@ public class MainController extends Thread implements VirtualMainController {
      * @param playerIdentifier the identifier of the client that is creating a game
      * @param expectedPlayers  The number of players the game is expected to handle
      * @param nick             The nickname of the player creating the game
+     * @throws RemoteException if an error occurs while setting up the remote object that wraps the GameController
      */
     @Override
     public synchronized void createGame(String playerIdentifier, int expectedPlayers, String nick) throws RemoteException {

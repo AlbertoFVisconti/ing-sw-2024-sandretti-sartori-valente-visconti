@@ -21,7 +21,6 @@ import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.utils.CardLocation;
 import it.polimi.ingsw.utils.GameBackupManager;
 
-import java.rmi.RemoteException;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -127,10 +126,6 @@ public class GameController extends Observable implements VirtualController, Run
      */
     public synchronized TurnStatus getTurnStatus() {
         return turnStatus;
-    }
-
-    public synchronized int getConnectedPlayers() {
-        return connectedPlayers;
     }
 
     /**
@@ -780,7 +775,7 @@ public class GameController extends Observable implements VirtualController, Run
      * @param addressee the nickname of the player that needs to receive this message, {@code null} for public messages
      */
     @Override
-    public synchronized void sendChatMsg(String playerIdentifier, String message, String addressee) throws RemoteException {
+    public synchronized void sendChatMsg(String playerIdentifier, String message, String addressee) {
         Player senderPlayer = this.helperGetPlayerByPlayerIdentifier(playerIdentifier);
         if (senderPlayer == null) throw new RuntimeException("chat msg fail: unknown sender");
 
