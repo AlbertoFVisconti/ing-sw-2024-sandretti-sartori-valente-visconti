@@ -8,7 +8,7 @@ import it.polimi.ingsw.network.Client;
 import java.security.InvalidParameterException;
 import java.util.Set;
 
-public class LobbyTUIScene implements TUIScene{
+public class LobbyTUIScene extends TUIScene{
     @Override
     public void render(String statusMessage) {
         System.out.println("Connected Players:");

@@ -24,6 +24,7 @@ public class TextualUserInterface implements UserInterface {
         commandParser.start();
 
         this.statusMessage = "";
+        Client.getInstance().confirmUIInitialized();
     }
 
     private static void loadCommands(CommandParser commandParser) {
@@ -91,13 +92,11 @@ public class TextualUserInterface implements UserInterface {
         this.currentScene.processInput(inputString);
     }
 
-
-//        // displaying error messages
-//        if (serverErrorMessage != null)
-//            System.out.println("\033[0;31m" + "Server Error: " + serverErrorMessage + "\033[0m");
-//        if (syntaxErrorMessage != null)
-//            System.out.println("\033[0;33m" + "Syntax Error: " + syntaxErrorMessage + "\033[0m");
-//
+    @Override
+    public void setProtocolScene() {
+        this.currentScene = new ProtocolTUIScene();
+        this.update();
+    }
 
     @Override
     public void setStartingScene() {
@@ -169,17 +168,13 @@ public class TextualUserInterface implements UserInterface {
     @Override
     public void reportError(RuntimeException exception) {
         this.errorMessage = "\n\nError: " + exception.getMessage();
+        if(currentScene != null) currentScene.reset();
         this.update();
     }
 
     @Override
     public void resetError() {
         this.errorMessage = "";
-    }
-
-    @Override
-    public void init() {
-        this.currentScene = new MainScreenTUIScene();
     }
 
     @Override

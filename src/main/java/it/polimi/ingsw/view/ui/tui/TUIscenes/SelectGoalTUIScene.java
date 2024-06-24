@@ -6,7 +6,7 @@ import it.polimi.ingsw.network.Client;
 import java.security.InvalidParameterException;
 import java.util.Arrays;
 
-public class SelectGoalTUIScene implements TUIScene{
+public class SelectGoalTUIScene extends TUIScene{
     @Override
     public void render(String statusMessage) {
         System.out.println("\n\n" + statusMessage + "\n\n");

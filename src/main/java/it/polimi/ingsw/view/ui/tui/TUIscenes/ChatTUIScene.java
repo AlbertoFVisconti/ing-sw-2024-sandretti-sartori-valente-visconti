@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.view.ui.tui.Printer;
 
-public class ChatTUIScene implements TUIScene{
+public class ChatTUIScene extends TUIScene{
 
     private Player player;
 

@@ -7,7 +7,7 @@ import it.polimi.ingsw.view.ui.tui.Printer;
 
 import java.security.InvalidParameterException;
 
-public class DrawTUIScene implements TUIScene{
+public class DrawTUIScene extends TUIScene{
     @Override
     public void render(String statusMessage) {
         View view = Client.getInstance().getView();

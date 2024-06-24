@@ -31,7 +31,7 @@ import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class View extends Thread implements VirtualView {
+public class View implements VirtualView {
     private final UserInterface userInterface;
 
     private Game gameModel;
@@ -50,8 +50,6 @@ public class View extends Thread implements VirtualView {
         this.userInterface = userInterface;
         messageQueue = new ArrayBlockingQueue<>(100);
         gameMessages = new ArrayBlockingQueue<>(100);
-
-        userInterface.init();
 
         try {
             gameModel = new Game(

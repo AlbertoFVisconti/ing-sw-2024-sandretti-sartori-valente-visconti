@@ -5,6 +5,7 @@ import it.polimi.ingsw.controller.TurnStatus;
 import it.polimi.ingsw.model.player.Player;
 
 public interface UserInterface {
+    void setProtocolScene();
     void setStartingScene();
     void setCreateGameScene();
     void setJoinGameScene();
@@ -22,6 +23,5 @@ public interface UserInterface {
     void reportError(RuntimeException exception);
     void resetError();
 
-    void init();
     void setGameStatus(GameStatus gameStatus, TurnStatus turnStatus, String playerTurn);
 }

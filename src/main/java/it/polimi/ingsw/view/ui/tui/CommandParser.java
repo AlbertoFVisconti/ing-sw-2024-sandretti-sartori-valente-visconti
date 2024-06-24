@@ -1,5 +1,7 @@
 package it.polimi.ingsw.view.ui.tui;
 
+import it.polimi.ingsw.network.Client;
+
 import java.security.InvalidParameterException;
 import java.util.*;
 
@@ -38,6 +40,9 @@ public class CommandParser extends Thread {
         if (tokens.length == 0) return;
 
         if(commandString.startsWith("!")) {
+            // the user is not allowed to switch interface if the protocol hasn't been chosen
+            if(Client.getInstance().getServerHandler() == null) return;
+
             Command command = this.registeredCommands.get(tokens[0]);
             if(command == null) throw new UnsupportedOperationException("unknown command");
             else {

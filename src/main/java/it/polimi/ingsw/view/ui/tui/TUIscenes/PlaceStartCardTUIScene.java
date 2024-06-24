@@ -7,7 +7,7 @@ import it.polimi.ingsw.view.ui.tui.Printer;
 
 import java.security.InvalidParameterException;
 
-public class PlaceStartCardTUIScene implements TUIScene{
+public class PlaceStartCardTUIScene extends TUIScene{
     @Override
     public void render(String statusMessage) {
         Player localPlayer = Client.getInstance().getView().getLocalPlayer();

@@ -8,7 +8,7 @@ import it.polimi.ingsw.view.ui.tui.Printer;
 
 import java.security.InvalidParameterException;
 
-public class PlayerBoardTUIScene implements TUIScene{
+public class PlayerBoardTUIScene extends TUIScene{
 
     private Player player;
 

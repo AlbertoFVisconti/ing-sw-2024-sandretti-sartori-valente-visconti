@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.ui.gui;
 import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.controller.TurnStatus;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.view.ui.UserInterface;
 import it.polimi.ingsw.view.ui.gui.FXController.ChatController;
 import it.polimi.ingsw.view.ui.gui.FXController.GUIScene;
@@ -30,7 +31,7 @@ public class GraphicalUserInterface extends Application implements UserInterface
     @Override
     public void start(Stage stage) throws Exception {
         window = new Stage();
-        this.setStartingScene();
+        Client.getInstance().confirmUIInitialized();
     }
 
     @Override
@@ -39,11 +40,13 @@ public class GraphicalUserInterface extends Application implements UserInterface
     }
 
     @Override
-    public void init() {}
-
-    @Override
     public synchronized void setGameStatus(GameStatus gameStatus, TurnStatus turnStatus, String playerTurn) {
 
+    }
+
+    @Override
+    public void setProtocolScene() {
+        changeScene("/fxml/Protocol.fxml");
     }
 
     @Override
