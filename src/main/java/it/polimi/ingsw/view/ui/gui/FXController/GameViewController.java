@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.ui.gui.FXController;
 
+import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.controller.TurnStatus;
 import it.polimi.ingsw.events.messages.client.DrawCardMessage;
 import it.polimi.ingsw.events.messages.client.PlaceCardMessage;
@@ -430,9 +431,23 @@ public class GameViewController extends GUIScene {
             drawableCards[i].setImage(mediaManager.getImage(view.getGameModel().getVisibleCards()[i-2], false));
         }
 
+        if(view.getGameStatus().equals(GameStatus.END)) {
+            turnWarningLabel.setText("Game Over!");
+            disableDecks();
+            disableCards();
+            showScoreBoard.fire();
+
+            return;
+        }
+
+
         if((view.getPlayersTurn().equals(view.getLocalPlayer().nickname))) {
             if (view.getTurnStatus().equals(TurnStatus.PLACE)) {
-                turnWarningLabel.setText(view.getLocalPlayer().nickname + " it's your turn to place a card!");
+                if(view.getGameStatus().equals(GameStatus.LAST_TURN)) {
+                    turnWarningLabel.setText(view.getLocalPlayer().nickname + " it's your LAST turn to place a card!");
+                } else {
+                    turnWarningLabel.setText(view.getLocalPlayer().nickname + " it's your turn to place a card!");
+                }
                 //cards again clickable
 
                 for (int i = 0; i < hand.length; i++) {

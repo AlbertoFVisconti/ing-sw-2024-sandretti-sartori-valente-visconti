@@ -1,29 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="scorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="806.0" prefWidth="422.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="it.polimi.ingsw.view.ui.gui.FXController.ScoreBoardController">
+<AnchorPane fx:id="scorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="822.0" prefWidth="688.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.ui.gui.FXController.ScoreBoardController">
    <ImageView fitHeight="824.0" fitWidth="432.0">
-      <Image url="@../image/plateau_score.jpg"/>
+      <Image url="@../image/plateau_score.jpg" />
    </ImageView>
-   <ImageView fx:id="redPawn" fitHeight="55.0" fitWidth="52.0" layoutX="93.0" layoutY="731.0" pickOnBounds="true"
-              preserveRatio="true" AnchorPane.leftAnchor="93.0">
-      <Image url="@../image/RedCircle.png"/>
+   <ImageView fx:id="redPawn" fitHeight="55.0" fitWidth="52.0" layoutX="93.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="93.0">
+      <Image url="@../image/RedCircle.png" />
    </ImageView>
-   <ImageView fx:id="greenPawn" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true"
-              preserveRatio="true">
-      <Image url="@../image/GreenCircle.png"/>
+   <ImageView fx:id="greenPawn" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@../image/GreenCircle.png" />
    </ImageView>
-   <ImageView fx:id="yellowPawn" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true"
-              preserveRatio="true">
-      <Image url="@../image/YellowCircle.png"/>
+   <ImageView fx:id="yellowPawn" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@../image/YellowCircle.png" />
    </ImageView>
-   <ImageView fx:id="bluePawn" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true"
-              preserveRatio="true">
-      <Image url="@../image/BlueCircle.png"/>
+   <ImageView fx:id="bluePawn" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@../image/BlueCircle.png" />
    </ImageView>
+   <ImageView fx:id="panel" fitHeight="875.0" fitWidth="319.0" layoutX="429.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../image/scorePanel.png" />
+      </image>
+   </ImageView>
+   <Label fx:id="playerNickname1" layoutX="465.0" layoutY="80.0" prefHeight="33.0" prefWidth="113.0" text="Player 1:" textFill="#b6b28d">
+      <font>
+         <Font name="Bangla MN" size="14.0" />
+      </font>
+   </Label>
+   <Label fx:id="playerNickname2" layoutX="465.0" layoutY="120.0" prefHeight="33.0" prefWidth="113.0" text="Player 2:" textFill="#b6b28d">
+      <font>
+         <Font name="Bangla MN" size="14.0" />
+      </font>
+   </Label>
+   <Label fx:id="playerNickname3" layoutX="465.0" layoutY="160.0" prefHeight="33.0" prefWidth="113.0" text="Player 3:" textFill="#b6b28d">
+      <font>
+         <Font name="Bangla MN" size="14.0" />
+      </font>
+   </Label>
+   <Label fx:id="playerNickname4" layoutX="465.0" layoutY="200.0" prefHeight="33.0" prefWidth="113.0" text="Player 4:" textFill="#b6b28d">
+      <font>
+         <Font name="Bangla MN" size="14.0" />
+      </font>
+   </Label>
+   <ImageView fx:id="playerColor1" fitHeight="27.0" fitWidth="25.0" layoutX="574.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="playerColor2" fitHeight="27.0" fitWidth="25.0" layoutX="574.0" layoutY="120.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="playerColor3" fitHeight="27.0" fitWidth="25.0" layoutX="574.0" layoutY="159.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="playerColor4" fitHeight="27.0" fitWidth="25.0" layoutX="574.0" layoutY="198.0" pickOnBounds="true" preserveRatio="true" />
+   <Label fx:id="scorePlayer1" layoutX="543.0" layoutY="78.0" text="0" textFill="#b6b28d">
+      <font>
+         <Font name="Bangla MN" size="16.0" />
+      </font>
+   </Label>
+   <Label fx:id="scorePlayer2" layoutX="543.0" layoutY="118.0" text="0" textFill="#b6b28d">
+      <font>
+         <Font name="Bangla MN" size="16.0" />
+      </font>
+   </Label>
+   <Label fx:id="scorePlayer3" layoutX="543.0" layoutY="198.0" text="0" textFill="#b6b28d">
+      <font>
+         <Font name="Bangla MN" size="16.0" />
+      </font>
+   </Label>
+   <Label fx:id="scorePlayer4" layoutX="543.0" layoutY="158.0" text="0" textFill="#b6b28d">
+      <font>
+         <Font name="Bangla MN" size="16.0" />
+      </font>
+   </Label>
+   <Label fx:id="announcement" layoutX="490.0" layoutY="352.0" prefHeight="55.0" prefWidth="150.0" text="The winner is:" textFill="#b6b28d">
+      <font>
+         <Font name="Bangla MN" size="20.0" />
+      </font>
+   </Label>
+   <Label fx:id="winner" layoutX="535.0" layoutY="420.0" prefHeight="33.0" prefWidth="64.0" text="Winner" textFill="#b6b28d">
+      <font>
+         <Font name="Bangla MN" size="14.0" />
+      </font>
+   </Label>
 </AnchorPane>
