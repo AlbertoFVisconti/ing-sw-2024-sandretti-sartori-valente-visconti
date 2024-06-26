@@ -5,10 +5,21 @@ import it.polimi.ingsw.network.Client;
 
 import java.security.InvalidParameterException;
 
+/**
+ * JoinGameTUIScene handles the interface that allows the TUI user to
+ * join one of the available games
+ */
 public class JoinGameTUIScene extends TUIScene{
+    // input fields
     private String gameID;
     private String nickname;
 
+    /**
+     * Displays the list of available games and asks the user to input data in order to join
+     * one of them
+     *
+     * @param statusMessage String that contains a Message that the TUI wants the user to read
+     */
     @Override
     public void render(String statusMessage) {
         System.out.println("Available Games:");
@@ -30,6 +41,11 @@ public class JoinGameTUIScene extends TUIScene{
         System.out.print(this.nickname + "\n");
     }
 
+    /**
+     * Allows to provide the data inputted by the user to the interface in order to join game.
+     *
+     * @param tokens user inputted tokens
+     */
     @Override
     public void processInput(String[] tokens) {
         if(tokens.length == 0) return;

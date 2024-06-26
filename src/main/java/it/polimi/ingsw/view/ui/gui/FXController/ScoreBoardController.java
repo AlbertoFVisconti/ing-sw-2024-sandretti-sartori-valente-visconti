@@ -6,7 +6,6 @@ import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.view.ui.gui.MediaManager;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -15,8 +14,11 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+/**
+ * ScoreBoardController allows to check the current scores displayed on the physical game
+ * scoreboard. It also displays the leaderboard.
+ */
 public class ScoreBoardController extends GUIScene{
-
     public AnchorPane scorePane;
     public ImageView redPawn;
     public ImageView greenPawn;
@@ -48,6 +50,9 @@ public class ScoreBoardController extends GUIScene{
     private final Map<Integer, Point> scoreMap = new HashMap<>();
     private final EnumMap<PlayerColor, ImageView> colorToPawn = new EnumMap<>(PlayerColor.class);
 
+    /**
+     * When the interface is loaded it sets up its data
+     */
     @FXML
     public void initialize() {
         winner.setVisible(false);
@@ -117,8 +122,13 @@ public class ScoreBoardController extends GUIScene{
         update();
     }
 
+    /**
+     * Allows the View to request an update of the displayed scoreboard.
+     */
     @Override
     public void update() {
+        refreshScoreboard();
+
         for (Player player: Client.getInstance().getView().getGameModel().getPlayers()) {
             int score = Client.getInstance().getView().getGameModel().getScoreBoard().getScore(player.nickname);
             score=score%30;
@@ -128,25 +138,25 @@ public class ScoreBoardController extends GUIScene{
             pawn.setVisible(true);
             pawn.setLayoutX(scoreMap.get(score).getX());
             pawn.setLayoutY(scoreMap.get(score).getY());
+        }
 
-            refreshScoreboard();
 
-            if(Client.getInstance().getView().getGameStatus().equals(GameStatus.END)){
-                announcement.setVisible(true);
-                int winnerScore = 0;
-                for(Player p : Client.getInstance().getView().getGameModel().getPlayers()){
-                    if(Client.getInstance().getView().getGameModel().getScoreBoard().getScore(p.nickname) > winnerScore){
-                        winnerScore = Client.getInstance().getView().getGameModel().getScoreBoard().getScore(p.nickname);
-                        winner.setText(p.nickname);
-                    }
+        if(Client.getInstance().getView().getGameStatus().equals(GameStatus.END)){
+            announcement.setVisible(true);
+            int winnerScore = 0;
+            for(Player p : Client.getInstance().getView().getGameModel().getPlayers()){
+                if(Client.getInstance().getView().getGameModel().getScoreBoard().getScore(p.nickname) > winnerScore){
+                    winnerScore = Client.getInstance().getView().getGameModel().getScoreBoard().getScore(p.nickname);
+                    winner.setText(p.nickname);
                 }
-                winner.setVisible(true);
-
-
             }
+            winner.setVisible(true);
         }
     }
 
+    /**
+     * Refreshes the labels in the scoreboard interface
+     */
     public void refreshScoreboard() {
         List<Player> players;
         players = Client.getInstance().getView().getPlayersList();
@@ -155,6 +165,12 @@ public class ScoreBoardController extends GUIScene{
             scoreLabels[i].setText(Integer.toString(Client.getInstance().getView().getGameModel().getScoreBoard().getScore(players.get(i).nickname)));
         }
     }
+
+    /**
+     * Scoreboard interface doesn't support chat
+     *
+     * @return {@code null}
+     */
     @Override
     protected AnchorPane getChatContainer() {
         return null;

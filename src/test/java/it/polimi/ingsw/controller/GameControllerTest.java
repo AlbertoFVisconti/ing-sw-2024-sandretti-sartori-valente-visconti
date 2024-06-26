@@ -21,8 +21,8 @@ import it.polimi.ingsw.model.goals.ItemGoal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.model.saving.GameBackup;
-import it.polimi.ingsw.model.saving.GameSaving;
-import it.polimi.ingsw.model.saving.PlayerSaving;
+import it.polimi.ingsw.model.saving.GameData;
+import it.polimi.ingsw.model.saving.PlayerData;
 import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
 import it.polimi.ingsw.network.cliendhandlers.RMIClientHandler;
 import it.polimi.ingsw.network.rmi.GameControllerWrapper;
@@ -590,19 +590,19 @@ class GameControllerTest {
         game.addPlayer(p3);
         game.addPlayer(p4);
 
-        ArrayList<PlayerSaving> playerSavings = new ArrayList<>();
-        playerSavings.add(p1.getSaving());
-        playerSavings.add(p2.getSaving());
-        playerSavings.add(p3.getSaving());
-        playerSavings.add(p4.getSaving());
+        ArrayList<PlayerData> playerData = new ArrayList<>();
+        playerData.add(p1.getSaving());
+        playerData.add(p2.getSaving());
+        playerData.add(p3.getSaving());
+        playerData.add(p4.getSaving());
 
         game.getVisibleCards()[0] = (PlayCard) c1;
         game.getVisibleCards()[1] = (PlayCard)c2;
         game.getVisibleCards()[2] = (PlayCard)c5;
         game.getVisibleCards()[3] = (PlayCard)c6;
 
-        GameSaving gameSaving = game.getSaving();
-        GameBackup gameBackup = new GameBackup(gameSaving, GameStatus.NORMAL_TURN, TurnStatus.PLACE);
+        GameData gameData = game.getSaving();
+        GameBackup gameBackup = new GameBackup(gameData, GameStatus.NORMAL_TURN, TurnStatus.PLACE);
 
         gameController.loadBackup(gameBackup);
 

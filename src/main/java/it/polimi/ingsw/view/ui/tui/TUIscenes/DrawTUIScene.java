@@ -7,7 +7,16 @@ import it.polimi.ingsw.view.ui.tui.Printer;
 
 import java.security.InvalidParameterException;
 
+/**
+ * DrawTUIScene handles the interface that allows the TUI user to pick
+ * up one of the drawable cards.
+ */
 public class DrawTUIScene extends TUIScene{
+    /**
+     * Displays the drawable cards and asks the user to select the card to draw/pick up
+     *
+     * @param statusMessage String that contains a Message that the TUI wants the user to read
+     */
     @Override
     public void render(String statusMessage) {
         View view = Client.getInstance().getView();
@@ -18,6 +27,11 @@ public class DrawTUIScene extends TUIScene{
         System.out.print("\n\nSelect Card to pick up: ");
     }
 
+    /**
+     * Allows to provide the user selection.
+     *
+     * @param tokens user inputted tokens
+     */
     @Override
     public void processInput(String[] tokens) {
         if(tokens.length == 0) return;

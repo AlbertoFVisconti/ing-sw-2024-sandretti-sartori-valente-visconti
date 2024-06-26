@@ -9,10 +9,21 @@ import it.polimi.ingsw.view.ViewWrapper;
 import java.rmi.RemoteException;
 import java.security.InvalidParameterException;
 
+/**
+ * ProtocolTUIScene handles the interface that allows the TUI user to
+ * connect to the server by providing IP, port and protocol
+ */
 public class ProtocolTUIScene extends TUIScene{
+    // input fields
     int protocol;
     String ip;
     int port;
+
+    /**
+     * Asks the user to provide the data required to connect to the server
+     *
+     * @param statusMessage String that contains a Message that the TUI wants the user to read
+     */
     @Override
     public void render(String statusMessage) {
         System.out.println("Please select the desired protocol:");
@@ -31,6 +42,12 @@ public class ProtocolTUIScene extends TUIScene{
 
     }
 
+    /**
+     * Allows to provide the data inputted by the user to the TUI scene in order
+     * to connect to the server.
+     *
+     * @param tokens user inputted tokens
+     */
     @Override
     public void processInput(String[] tokens) {
         if(tokens == null || tokens.length == 0) return;

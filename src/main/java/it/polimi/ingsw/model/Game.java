@@ -103,11 +103,11 @@ public class Game extends Observable {
      *
      * @param gsm game data
      */
-    public Game(GameSaving gsm) {
+    public Game(GameData gsm) {
         players = new ArrayList<>();
         this.availableColor = new HashSet<>();
         this.availableColor.addAll(Arrays.asList(PlayerColor.BLUE, PlayerColor.GREEN, PlayerColor.RED, PlayerColor.YELLOW));
-        for (PlayerSaving psm : gsm.getPlayers()) {
+        for (PlayerData psm : gsm.getPlayers()) {
             Player p = new Player(psm);
             players.add(p);
             availableColor.remove(p.getColor());
@@ -115,7 +115,7 @@ public class Game extends Observable {
         this.expectedPlayers = gsm.getExpectedPlayers();
         this.idGame = gsm.getGameId();
         this.scoreBoard = gsm.getScoreBoard();
-        this.commonGoals = gsm.getPublicGoal();
+        this.commonGoals = gsm.getPublicGoals();
         this.goldCardsDeck = gsm.getGoldCardsDeck();
         this.resourceCardsDeck = gsm.getResourceCardsDeck();
         this.startCardsDeck = gsm.getStartCardsDeck();
@@ -129,15 +129,15 @@ public class Game extends Observable {
     /**
      * Retrieves the Game's data in a format that can be loaded by another Game object.
      *
-     * @return GameSaving object containing the Game's data
+     * @return GameData object containing the Game's data
      */
-    public GameSaving getSaving() {
-        ArrayList<PlayerSaving> playerSavings = new ArrayList<>();
+    public GameData getSaving() {
+        ArrayList<PlayerData> playerData = new ArrayList<>();
         for (Player p : this.players) {
-            playerSavings.add(p.getSaving());
+            playerData.add(p.getSaving());
         }
 
-        return new GameSaving(expectedPlayers, playerSavings, idGame, this.goldCardsDeck, this.resourceCardsDeck, visibleCards, scoreBoard, commonGoals, startCardsDeck, goalsDeck, this.currentTurn);
+        return new GameData(expectedPlayers, playerData, idGame, this.goldCardsDeck, this.resourceCardsDeck, visibleCards, scoreBoard, commonGoals, startCardsDeck, goalsDeck, this.currentTurn);
     }
 
     /**
@@ -146,15 +146,15 @@ public class Game extends Observable {
      * that is authorized to receive such information.
      *
      * @param clientNickname the nickname of the client that will receive the requested data
-     * @return ClientGameSaving object containing the Game's data that the receiving player is authorized to receive.
+     * @return ClientGameData object containing the Game's data that the receiving player is authorized to receive.
      */
-    public ClientGameSaving getClientSaving(String clientNickname) {
-        ArrayList<ClientPlayerSaving> playerSavings = new ArrayList<>();
+    public ClientGameData getClientSaving(String clientNickname) {
+        ArrayList<ClientPlayerData> playerSavings = new ArrayList<>();
         for (Player p : this.players) {
             playerSavings.add(p.getClientSaving(clientNickname));
         }
 
-        return new ClientGameSaving(playerSavings, idGame, this.goldCardsDeck.getTopOfTheStack(), this.resourceCardsDeck.getTopOfTheStack(), visibleCards, scoreBoard, commonGoals);
+        return new ClientGameData(playerSavings, idGame, this.goldCardsDeck.getTopOfTheStack(), this.resourceCardsDeck.getTopOfTheStack(), visibleCards, scoreBoard, commonGoals);
     }
 
     /**
@@ -340,22 +340,22 @@ public class Game extends Observable {
         this.scoreBoard = new ScoreBoard(players);
     }
 
-    public void loadGame(GameSaving gameSaving) {
+    public void loadGame(GameData gameData) {
         if (isStarted) throw new UnsupportedOperationException("cannot load game data on a started game");
 
-        ArrayList<PlayerSaving> playerListBackup = gameSaving.getPlayers();
+        ArrayList<PlayerData> playerListBackup = gameData.getPlayers();
 
         if(this.players.size() != playerListBackup.size()) throw new RuntimeException("players lists incompatible");
 
         for(int i = 0; i < this.players.size(); i++) {
             for(int j = 0; j < this.players.size(); j++) {
-                if(this.players.get(j).nickname.equals(playerListBackup.get(i).getNick())) {
+                if(this.players.get(j).nickname.equals(playerListBackup.get(i).getNickname())) {
                     Collections.swap(this.players, i,j);
                     break;
                 }
             }
 
-            if(!this.players.get(i).nickname.equals(playerListBackup.get(i).getNick())) throw new RuntimeException("players list incompatible");
+            if(!this.players.get(i).nickname.equals(playerListBackup.get(i).getNickname())) throw new RuntimeException("players list incompatible");
 
             PlayerColor currentPlayerColor = this.players.get(i).getColor();
             this.players.get(i).loadPlayer(playerListBackup.get(i));
@@ -368,17 +368,17 @@ public class Game extends Observable {
             availableColor.remove(p.getColor());
         }
 
-        this.scoreBoard = gameSaving.getScoreBoard();
+        this.scoreBoard = gameData.getScoreBoard();
 
-        this.commonGoals = gameSaving.getPublicGoal();
+        this.commonGoals = gameData.getPublicGoals();
 
-        this.goldCardsDeck = gameSaving.getGoldCardsDeck();
+        this.goldCardsDeck = gameData.getGoldCardsDeck();
 
-        this.resourceCardsDeck = gameSaving.getResourceCardsDeck();
-        this.startCardsDeck = gameSaving.getStartCardsDeck();
-        this.goalsDeck = gameSaving.getGoalsDeck();
-        this.visibleCards = gameSaving.getVisibleCards();
-        this.currentTurn = gameSaving.getCurrentTurn();
+        this.resourceCardsDeck = gameData.getResourceCardsDeck();
+        this.startCardsDeck = gameData.getStartCardsDeck();
+        this.goalsDeck = gameData.getGoalsDeck();
+        this.visibleCards = gameData.getVisibleCards();
+        this.currentTurn = gameData.getCurrentTurn();
 
         this.isStarted = true;
 

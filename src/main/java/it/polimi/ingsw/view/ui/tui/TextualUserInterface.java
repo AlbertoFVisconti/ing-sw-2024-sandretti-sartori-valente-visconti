@@ -13,11 +13,25 @@ import it.polimi.ingsw.view.ui.tui.TUIscenes.*;
 import java.security.InvalidParameterException;
 import java.util.Scanner;
 
+/**
+ * TextualUserInterface allows to present the game's data to the User (and catch the user's input)
+ * through the console.
+ */
 public class TextualUserInterface implements UserInterface {
+    // currently displayed TUI scene
     private TUIScene currentScene;
+
+    // current status message
     private String statusMessage;
+
+    // current error message
     private String errorMessage;
 
+    /**
+     * Builds a new TextualUserInterface that reads user input from a provided scanner
+     *
+     * @param scanner Scanner where the user input are read
+     */
     public TextualUserInterface(Scanner scanner) {
         CommandParser commandParser = new CommandParser(scanner, this);
         loadCommands(commandParser);
@@ -27,26 +41,42 @@ public class TextualUserInterface implements UserInterface {
         Client.getInstance().confirmUIInitialized();
     }
 
+    /**
+     * Allows to register command in the provided command parser.
+     *
+     * @param commandParser CommandParser where the commands need to be registered
+     */
     private static void loadCommands(CommandParser commandParser) {
         commandParser.setContextualCommandExecutor(
                 TextualUserInterface::forwardInputToScene
         );
 
+        // join command -> sets the "join game" scene
         commandParser.registerCommand("!join",
                 (userInterface, tokens) -> userInterface.setJoinGameScene()
         );
+
+        // create command -> sets the "create game" scene
         commandParser.registerCommand("!create",
                 (userInterface, tokens) -> userInterface.setCreateGameScene()
         );
+
+        // place_start command -> sets the "place starting card" scene
         commandParser.registerCommand("!place_start",
                 (userInterface, tokens) -> userInterface.setPlaceStartScene()
         );
+
+        // sel_goal command -> sets the "select goal" scene
         commandParser.registerCommand("!sel_goal",
                 (userInterface, tokens) -> userInterface.setSelectGoalScene()
         );
+
+        // set_color command -> sets the "lobby" scene
         commandParser.registerCommand("!set_color",
                 (userInterface, tokens) -> userInterface.setWaitPlayersScene()
         );
+
+        // board command -> sets the "board" scene
         commandParser.registerCommand("!board",
                 (userInterface, tokens) -> {
                     if(tokens.length == 1) {
@@ -63,12 +93,18 @@ public class TextualUserInterface implements UserInterface {
                     }
                 }
         );
+
+        // draw command -> sets the "draw" scene
         commandParser.registerCommand("!draw",
                 (userInterface, tokens) -> userInterface.setDrawScene()
         );
+
+        // score command -> sets the "scoreboard" scene
         commandParser.registerCommand("!score",
                 (userInterface, tokens) -> userInterface.setScoreScene()
         );
+
+        // chat command -> sets the "chat" scene
         commandParser.registerCommand("!chat",
                 (userInterface, tokens) -> {
                     if(tokens.length == 1) {
@@ -87,29 +123,46 @@ public class TextualUserInterface implements UserInterface {
         );
     }
 
-
-    public void forwardInputToScene(String[] inputString) {
-        this.currentScene.processInput(inputString);
+    /**
+     * Allows to forward user input to the currently displayed scene
+     * input processing method.
+     *
+     * @param inputTokens user input that needs to be forwarded
+     */
+    public void forwardInputToScene(String[] inputTokens) {
+        this.currentScene.processInput(inputTokens);
     }
 
+    /**
+     * Sets the TUI scene that allows the user to connect to the server
+     */
     @Override
-    public void setProtocolScene() {
+    public void setConnectionScene() {
         this.currentScene = new ProtocolTUIScene();
         this.update();
     }
 
+    /**
+     * Sets the TUI scene that represents the main scene of the game
+     */
     @Override
-    public void setStartingScene() {
+    public void setMainScene() {
         this.currentScene = new MainScreenTUIScene();
         this.update();
     }
 
+    /**
+     * Sets the TUI scene that allows to create a game
+     */
     @Override
     public void setCreateGameScene() {
         this.currentScene = new CreateGameTUIScene();
         this.update();
     }
 
+    /**
+     * Sets the TUI scene that allows to join a game
+     */
     @Override
     public void setJoinGameScene() {
         Client.getInstance().getServerHandler().sendMessage(new GameListRequestMessage());
@@ -117,54 +170,96 @@ public class TextualUserInterface implements UserInterface {
         this.update();
     }
 
+    /**
+     * Sets the TUI scene that allows the user to select color and view the list of connected players
+     */
     @Override
     public void setWaitPlayersScene() {
         this.currentScene = new LobbyTUIScene();
         this.update();
     }
 
+    /**
+     *  Sets the TUI scene that allows the user to place the starting card
+     */
     @Override
     public void setPlaceStartScene() {
         this.currentScene = new PlaceStartCardTUIScene();
         this.update();
     }
 
+    /**
+     * Sets the TUI scene that allows the user to select the private goal
+     */
     @Override
     public void setSelectGoalScene() {
         this.currentScene = new SelectGoalTUIScene();
         this.update();
     }
 
+    /**
+     * Sets the TUI scene that allows the user to draw/pick up a card
+     */
     @Override
     public void setDrawScene() {
         this.currentScene = new DrawTUIScene();
         this.update();
     }
 
+    /**
+     * Sets the TUI scene that allows to view the board of
+     * one of the players playing the same game as the local player.
+     *
+     * @param player Player whose board needs to be displayed.
+     */
     @Override
     public void setPlayerBoardScene(Player player) {
         this.currentScene = new PlayerBoardTUIScene(player);
         this.update();
     }
 
+    /**
+     * Sets the TUI scene that allows to read and send chat messages
+     *
+     * @param player Player whose chat with the local player needs to be displayed, {@code null} to display the public chat
+     */
     @Override
     public void setChatScene(Player player) {
         this.currentScene = new ChatTUIScene(player);
         this.update();
     }
 
+    /**
+     * Sets the TUI scene that allows to view the game scoreboard
+     */
     @Override
     public void setScoreScene() {
         this.currentScene = new GameResultsTUIScene();
         this.update();
     }
 
+    /**
+     * Sets the TUI scene that allows to read the game rules
+     */
+    @Override
+    public void setRuleScene() {}
+
+    /**
+     * Allows view to request the YUI to be updated.
+     * It forward the update request to the currently displayed scene
+     */
     @Override
     public void update() {
         System.out.println(System.lineSeparator().repeat(50));
         this.currentScene.render(this.statusMessage + errorMessage);
     }
 
+    /**
+     * Allows to display an error through the TUI.
+     * It forward the report request to the currently displayed scene
+     *
+     * @param exception RuntimeException that carries the error data
+     */
     @Override
     public void reportError(RuntimeException exception) {
         this.errorMessage = "\n\nError: " + exception.getMessage();
@@ -172,11 +267,22 @@ public class TextualUserInterface implements UserInterface {
         this.update();
     }
 
+    /**
+     * Allows to reset the error message
+     */
     @Override
     public void resetError() {
         this.errorMessage = "";
     }
 
+    /**
+     * Allows to provide the current game status data to the TUI.
+     * This is mostly used to compose the status message.
+     *
+     * @param gameStatus current GameStatus phase
+     * @param turnStatus current TurnStatus (PLACE/DRAW)
+     * @param playerTurn the nickname of the player that needs to play
+     */
     @Override
     public void setGameStatus(GameStatus gameStatus, TurnStatus turnStatus, String playerTurn) {
         Player p = Client.getInstance().getView().getLocalPlayer();

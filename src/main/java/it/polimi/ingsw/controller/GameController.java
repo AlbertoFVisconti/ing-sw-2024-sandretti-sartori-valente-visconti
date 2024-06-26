@@ -12,9 +12,9 @@ import it.polimi.ingsw.model.decks.Deck;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
-import it.polimi.ingsw.model.saving.ClientGameSaving;
+import it.polimi.ingsw.model.saving.ClientGameData;
 import it.polimi.ingsw.model.saving.GameBackup;
-import it.polimi.ingsw.model.saving.GameSaving;
+import it.polimi.ingsw.model.saving.GameData;
 import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
 import it.polimi.ingsw.network.rmi.GameControllerWrapper;
 import it.polimi.ingsw.network.rmi.VirtualController;
@@ -71,9 +71,9 @@ public class GameController extends Observable implements VirtualController, Run
     }
 
     public synchronized void loadBackup(GameBackup gameBackup) {
-        this.gameStatus = gameBackup.getGameStatus();
-        this.turnStatus = gameBackup.getTurnStatus();
-        this.game.loadGame(gameBackup.getGameData());
+        this.gameStatus = gameBackup.gameStatus();
+        this.turnStatus = gameBackup.turnStatus();
+        this.game.loadGame(gameBackup.gameData());
     }
 
     public synchronized GameBackup getBackup() {
@@ -222,7 +222,7 @@ public class GameController extends Observable implements VirtualController, Run
      */
     public synchronized void handleReconnection(String nickname, ClientHandler clientHandler, GameControllerWrapper gameControllerWrapper) {
         Player connectingPlayer = null;
-        ClientGameSaving saving;
+        ClientGameData saving;
 
         for (Player player : game.getPlayers()) {
             if (player.nickname.equals(nickname)) {
@@ -311,8 +311,8 @@ public class GameController extends Observable implements VirtualController, Run
                     this.loadBackup(backup);
 
                     for(Player p : game.getPlayers()) {
-                        GameSaving gameSaving = game.getClientSaving(p.nickname);
-                        p.getClientHandler().sendMessage(new JoinConfirmationMessage(p.nickname, gameSaving));
+                        GameData gameData = game.getClientSaving(p.nickname);
+                        p.getClientHandler().sendMessage(new JoinConfirmationMessage(p.nickname, gameData));
                     }
                 }
             }

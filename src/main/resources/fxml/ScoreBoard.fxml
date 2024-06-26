@@ -10,22 +10,21 @@
    <ImageView fitHeight="824.0" fitWidth="432.0">
       <Image url="@../image/plateau_score.jpg" />
    </ImageView>
-   <ImageView fx:id="redPawn" fitHeight="55.0" fitWidth="52.0" layoutX="93.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="93.0">
+   <ImageView fx:id="redPawn" fitHeight="52.0" fitWidth="52.0" layoutX="93.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="93.0">
       <Image url="@../image/RedCircle.png" />
    </ImageView>
-   <ImageView fx:id="greenPawn" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
+   <ImageView fx:id="greenPawn" fitHeight="52.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@../image/GreenCircle.png" />
    </ImageView>
-   <ImageView fx:id="yellowPawn" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
+   <ImageView fx:id="yellowPawn" fitHeight="52.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@../image/YellowCircle.png" />
    </ImageView>
-   <ImageView fx:id="bluePawn" fitHeight="55.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
+   <ImageView fx:id="bluePawn" fitHeight="52.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@../image/BlueCircle.png" />
    </ImageView>
-   <ImageView fx:id="panel" fitHeight="875.0" fitWidth="319.0" layoutX="429.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@../image/scorePanel.png" />
-      </image>
+   <ImageView fitHeight="875.0" fitWidth="319.0" layoutX="429.0" layoutY="-1.0" pickOnBounds="true"
+              preserveRatio="true">
+      <Image url="@../image/scorePanel.png"/>
    </ImageView>
    <Label fx:id="playerNickname1" layoutX="465.0" layoutY="80.0" prefHeight="33.0" prefWidth="113.0" text="Player 1:" textFill="#b6b28d">
       <font>

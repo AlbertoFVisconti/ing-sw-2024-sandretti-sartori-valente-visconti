@@ -1,6 +1,15 @@
 package it.polimi.ingsw.view.ui.tui.TUIscenes;
 
+/**
+ * MainScreenTUIScene handles the interface that the TUI user is presented to upon
+ * connecting to the server
+ */
 public class MainScreenTUIScene extends TUIScene {
+    /**
+     * Renders the main scene of the game
+     *
+     * @param statusMessage String that contains a Message that the TUI wants the user to read
+     */
     @Override
     public void render(String statusMessage) {
         System.out.println("""
@@ -19,8 +28,12 @@ public class MainScreenTUIScene extends TUIScene {
                 \t -!create        to create a new game""");
     }
 
+    /**
+     * MainScreenTUIScene doesn't need any data to be inputted.
+     * This method does nothing.
+     *
+     * @param tokens user inputted tokens
+     */
     @Override
-    public void processInput(String[] tokens) {
-
-    }
+    public void processInput(String[] tokens) {}
 }

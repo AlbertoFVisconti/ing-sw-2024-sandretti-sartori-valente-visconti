@@ -5,10 +5,20 @@ import it.polimi.ingsw.network.Client;
 
 import java.security.InvalidParameterException;
 
+/**
+ * CreateGameTUIScene handles the interface that allows the TUI user to create a new
+ * game.
+ */
 public class CreateGameTUIScene extends TUIScene{
+    // input fields
     int expectedPlayers;
     String nickname;
 
+    /**
+     * Display the input requests for the user to create a game
+     *
+     * @param statusMessage String that contains a Message that the TUI wants the user to read
+     */
     @Override
     public void render(String statusMessage) {
         System.out.print("Create a game:\n");
@@ -22,6 +32,11 @@ public class CreateGameTUIScene extends TUIScene{
         System.out.print(this.nickname + "\n");
     }
 
+    /**
+     * Provide user inputted data that allows to provide data in order to create a game.
+     *
+     * @param tokens user inputted tokens
+     */
     @Override
     public void processInput(String[] tokens) {
         if(tokens.length == 0) return;

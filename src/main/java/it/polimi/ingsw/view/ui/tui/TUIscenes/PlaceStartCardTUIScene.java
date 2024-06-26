@@ -7,7 +7,16 @@ import it.polimi.ingsw.view.ui.tui.Printer;
 
 import java.security.InvalidParameterException;
 
+/**
+ * PlaceStartCardTUIScene handles the interface that allows the TUI user to
+ * place the starting card.
+ */
 public class PlaceStartCardTUIScene extends TUIScene{
+    /**
+     * Displays the starting card and asks the user to select the side.
+     *
+     * @param statusMessage String that contains a Message that the TUI wants the user to read
+     */
     @Override
     public void render(String statusMessage) {
         Player localPlayer = Client.getInstance().getView().getLocalPlayer();
@@ -23,6 +32,11 @@ public class PlaceStartCardTUIScene extends TUIScene{
         System.out.println("\nSelect the starting card side (0 -> front, 1 -> back): ");
     }
 
+    /**
+     * Allows to provide the user selection in order to place the starting card.
+     *
+     * @param tokens user inputted tokens
+     */
     @Override
     public void processInput(String[] tokens) {
         int selection;

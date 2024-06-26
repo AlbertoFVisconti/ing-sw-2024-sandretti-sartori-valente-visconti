@@ -31,7 +31,7 @@ public class Client {
         while (!done) {
             synchronized (this) {
                 if (this.uiInitialized) {
-                    view.getUserInterface().setProtocolScene();
+                    view.getUserInterface().setConnectionScene();
                     done = true;
                 }
             }
@@ -77,7 +77,7 @@ public class Client {
         }
 
         if(this.serverHandler != null)
-            view.getUserInterface().setStartingScene();
+            view.getUserInterface().setMainScene();
         else {
             this.view.getUserInterface().reportError(new RuntimeException("Connection Failed"));
         }

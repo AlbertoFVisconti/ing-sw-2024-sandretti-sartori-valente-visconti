@@ -11,8 +11,8 @@ import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
 import it.polimi.ingsw.model.goals.Goal;
-import it.polimi.ingsw.model.saving.ClientPlayerSaving;
-import it.polimi.ingsw.model.saving.PlayerSaving;
+import it.polimi.ingsw.model.saving.ClientPlayerData;
+import it.polimi.ingsw.model.saving.PlayerData;
 import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
 import it.polimi.ingsw.utils.CardLocation;
 import it.polimi.ingsw.utils.ItemCollection;
@@ -82,15 +82,15 @@ public class Player extends Observable {
      *
      * @param psm Player's data
      */
-    public Player(PlayerSaving psm) {
-        this.nickname = psm.getNick();
+    public Player(PlayerData psm) {
+        this.nickname = psm.getNickname();
         this.color = psm.getPlayerColor();
         this.board = psm.getBoard();
         this.playerCards = psm.getPlayerHand();
         this.privateGoal = psm.getPrivateGoal();
         this.inventory = psm.getInventory();
         this.startCard = psm.getStartCard();
-        this.availableGoals = psm.getAvailableGoal();
+        this.availableGoals = psm.getAvailableGoals();
 
         this.turnCounter = this.board.size();
     }
@@ -130,10 +130,10 @@ public class Player extends Observable {
         }
     }
 
-    public void loadPlayer(PlayerSaving playerData) {
+    public void loadPlayer(PlayerData playerData) {
         this.color = playerData.getPlayerColor();
         this.startCard = playerData.getStartCard();
-        this.availableGoals = playerData.getAvailableGoal();
+        this.availableGoals = playerData.getAvailableGoals();
         this.privateGoal = playerData.getPrivateGoal();
         this.playerCards = playerData.getPlayerHand();
         this.inventory = playerData.getInventory();
@@ -145,10 +145,10 @@ public class Player extends Observable {
     /**
      * Retrieves the Player's data in a format that can be loaded by another Player object.
      *
-     * @return PlayerSaving object containing the Player's data
+     * @return PlayerData object containing the Player's data
      */
-    public PlayerSaving getSaving() {
-        return new PlayerSaving(nickname, color, this.board, playerCards, privateGoal, inventory, startCard, availableGoals);
+    public PlayerData getSaving() {
+        return new PlayerData(nickname, color, this.board, playerCards, privateGoal, inventory, startCard, availableGoals);
     }
 
     /**
@@ -157,12 +157,12 @@ public class Player extends Observable {
      * that this object represents.
      *
      * @param clientNickname the nickname of the client that will receive the requested data
-     * @return ClientPlayerSaving object containing the Player's data that the receiving player is authorized to receive.
+     * @return ClientPlayerData object containing the Player's data that the receiving player is authorized to receive.
      */
-    public ClientPlayerSaving getClientSaving(String clientNickname) {
+    public ClientPlayerData getClientSaving(String clientNickname) {
         if (clientNickname.equals(this.nickname))
-            return new ClientPlayerSaving(nickname, color, this.board, playerCards, privateGoal, inventory, startCard, availableGoals);
-        else return new ClientPlayerSaving(nickname, color, board, playerCards, null, inventory, null, null);
+            return new ClientPlayerData(nickname, color, this.board, playerCards, privateGoal, inventory, startCard, availableGoals);
+        else return new ClientPlayerData(nickname, color, board, playerCards, null, inventory, null, null);
     }
 
     /**

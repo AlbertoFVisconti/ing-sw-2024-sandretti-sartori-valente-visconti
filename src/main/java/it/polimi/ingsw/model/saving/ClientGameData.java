@@ -9,13 +9,13 @@ import it.polimi.ingsw.model.goals.Goal;
 import java.util.ArrayList;
 
 /**
- * ClientGameSaving class allows to create objects that contain
+ * ClientGameData class allows to create objects that contain
  * all the information that is needed to recreate a game representation object
  * on the client's View. It also makes sure that the data delivered
  * to the client only contains information that the player is allowed
  * to receive.
  */
-public class ClientGameSaving extends GameSaving {
+public class ClientGameData extends GameData {
 
     /**
      * Creates an object that contains all the basic information that is needed to recreate a game object on the client's View.
@@ -28,7 +28,7 @@ public class ClientGameSaving extends GameSaving {
      * @param scoreBoard the scoreboard of the saved game
      * @param publicGoal the public goal of the saved game
      */
-    public ClientGameSaving(ArrayList<ClientPlayerSaving> players, String gameId, Resource goldCardsDeckTopResource, Resource resourceCardsDeckTopResource, PlayCard[] visibleCards, ScoreBoard scoreBoard, Goal[] publicGoal) {
+    public ClientGameData(ArrayList<ClientPlayerData> players, String gameId, Resource goldCardsDeckTopResource, Resource resourceCardsDeckTopResource, PlayCard[] visibleCards, ScoreBoard scoreBoard, Goal[] publicGoal) {
         super(-1, new ArrayList<>(players), gameId, new VirtualDeck(goldCardsDeckTopResource), new VirtualDeck(resourceCardsDeckTopResource), visibleCards, scoreBoard, publicGoal, null, null, 0);
     }
 }

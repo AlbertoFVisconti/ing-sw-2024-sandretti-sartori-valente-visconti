@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="591.0"
+            prefWidth="962.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="it.polimi.ingsw.view.ui.gui.FXController.RulesController">
+    <ImageView fitHeight="597.0" fitWidth="968.0">
+        <Image url="@../image/CodexWallpaper.png"/>
+    </ImageView>
+    <ImageView fx:id="rulesImage" fitHeight="439.0" fitWidth="866.0" layoutX="48.0" layoutY="76.0">
+    </ImageView>
+    <ImageView fitHeight="26.0" fitWidth="54.0" layoutX="21.0" layoutY="14.0" onMouseClicked="#goBackToLobby"
+               pickOnBounds="true" preserveRatio="true">
+        <Image url="@../image/BackArrowButton.png"/>
+    </ImageView>
+    <ImageView fx:id="previousPageButton" fitHeight="49.0" fitWidth="49.0" layoutX="10.0" layoutY="271.0"
+               onMouseClicked="#previousPage" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../image/BackArrowButton.png"/>
+    </ImageView>
+    <ImageView fx:id="nextPageButton" fitHeight="49.0" fitWidth="49.0" layoutX="906.0" layoutY="271.0"
+               onMouseClicked="#nextPage" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+        <Image url="@../image/BackArrowButton.png"/>
+    </ImageView>
+</AnchorPane>

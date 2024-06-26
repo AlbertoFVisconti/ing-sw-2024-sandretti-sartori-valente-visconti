@@ -8,7 +8,16 @@ import it.polimi.ingsw.network.Client;
 import java.security.InvalidParameterException;
 import java.util.Set;
 
+/**
+ * LobbyTUIScene handles the interface that allows the TUI user to select its color
+ * and view the list of connected players
+ */
 public class LobbyTUIScene extends TUIScene{
+    /**
+     * Display the list of connected players and the list of available colors
+     *
+     * @param statusMessage String that contains a Message that the TUI wants the user to read
+     */
     @Override
     public void render(String statusMessage) {
         System.out.println("Connected Players:");
@@ -20,11 +29,9 @@ public class LobbyTUIScene extends TUIScene{
             }
 
             System.out.print("\n");
-
         }
 
         System.out.println("\n\n" + statusMessage + "\n\n");
-
 
         Set<PlayerColor> availableColors = Client.getInstance().getView().getAvailableColors();
         if(availableColors != null) {
@@ -35,6 +42,11 @@ public class LobbyTUIScene extends TUIScene{
         System.out.println("Insert your color: ");
     }
 
+    /**
+     * Allows to provide the user input in order to select color
+     *
+     * @param tokens user inputted tokens
+     */
     @Override
     public void processInput(String[] tokens) {
         if(tokens.length == 0) return;

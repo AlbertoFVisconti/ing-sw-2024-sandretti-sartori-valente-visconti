@@ -8,24 +8,43 @@ import it.polimi.ingsw.view.ui.tui.Printer;
 
 import java.security.InvalidParameterException;
 
+/**
+ * PlayerBoardTUIScene handles the interface that allows the user to view
+ * a player's board and to place cards.
+ */
 public class PlayerBoardTUIScene extends TUIScene{
-
+    // player whose board needs to be displayed
     private Player player;
 
+    // input fields
     int card;
     int side;
     int x;
     int y;
-    int providedInput = 0;
 
+    /**
+     * Builds a PlayerBoardTUIScene that displays the given player's board
+     *
+     * @param player Player whose board needs to be displayed
+     */
     public PlayerBoardTUIScene(Player player) {
         this.player = player;
     }
 
+    /**
+     * Allow to change the Player whose board is displayed.
+     *
+     * @param player Player whose board needs to be displayed
+     */
     public void setPlayer(Player player) {
         this.player = player;
     }
 
+    /**
+     * Displays the board and asks the data required to place a card (if placement is possible)
+     *
+     * @param statusMessage String that contains a Message that the TUI wants the user to read
+     */
     @Override
     public void render(String statusMessage) {
         Printer.printBoard(player.getBoard());
@@ -49,6 +68,11 @@ public class PlayerBoardTUIScene extends TUIScene{
         System.out.print(y + "\n\n");
     }
 
+    /**
+     * Allows to provide the user inputted data that are required to place a card.
+     *
+     * @param tokens user inputted tokens
+     */
     @Override
     public void processInput(String[] tokens) {
         switch (providedInput) {

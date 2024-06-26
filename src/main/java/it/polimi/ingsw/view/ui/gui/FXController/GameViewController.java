@@ -13,7 +13,6 @@ import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.utils.CardLocation;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.ui.gui.MediaManager;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -379,11 +378,25 @@ public class GameViewController extends GUIScene {
     }
 
 
+    private void updateBoard(Player displayedPlayer) {
+        ArrayList<CardLocation> newCardsOnBoard = new ArrayList<>();
+
+        Map<CardLocation,CardSlot> playerBoard = displayedPlayer.getBoard();
+        for(CardLocation cardLocation : playerBoard.keySet()) {
+            if(!boardCardImages.containsKey(cardLocation)) {
+                newCardsOnBoard.add(cardLocation);
+            }
+        }
+
+        newCardsOnBoard.sort(Comparator.comparingInt((CardLocation cl) -> playerBoard.get(cl).placementTurn()));
+        for(CardLocation cardLocation: newCardsOnBoard) {
+            this.addCardSlot(playerBoard.get(cardLocation),cardLocation);
+        }
+    }
+
     @Override
     public void update() {
         refreshScoreboard();
-
-        ArrayList<CardLocation> newCardsOnBoard = new ArrayList<>();
 
         Player displayedPlayer = null;
 
@@ -400,33 +413,24 @@ public class GameViewController extends GUIScene {
 
         boolean localPlayerBoard = view.getLocalPlayer().nickname.equals(displayedPlayer.nickname);
 
-
-        Map<CardLocation,CardSlot> playerBoard = displayedPlayer.getBoard();
-        for(CardLocation cardLocation : playerBoard.keySet()) {
-            if(!boardCardImages.containsKey(cardLocation)) {
-                newCardsOnBoard.add(cardLocation);
-            }
-        }
+        updateBoard(displayedPlayer);
 
         // update inventory
         for(Corner item : cornerToLabel.keySet()) {
             cornerToLabel.get(item).setText(String.valueOf(displayedPlayer.getInventory().count(item)));
         }
 
-        newCardsOnBoard.sort(Comparator.comparingInt((CardLocation cl) -> playerBoard.get(cl).placementTurn()));
-        for(CardLocation cardLocation: newCardsOnBoard) {
-            this.addCardSlot(playerBoard.get(cardLocation),cardLocation);
-        }
-
-
+        // update player's hand
         PlayCard[] playerCards =  displayedPlayer.getPlayerCards();
         for(int i = 0; i < hand.length; i++) {
             hand[i].setImage(mediaManager.getImage(playerCards[i], isflipped[i]));
         }
 
+        // update decks
         resourceDeck.setImage(mediaManager.getImage(view.getGameModel().getResourceCardsDeck().getTopOfTheStack().getPath()));
         goldDeck.setImage(mediaManager.getImage(view.getGameModel().getGoldCardsDeck().getTopOfTheStack().getGoldenPath()));
 
+        // update visible cards
         for(int i = 2; i < drawableCards.length; i++) {
             drawableCards[i].setImage(mediaManager.getImage(view.getGameModel().getVisibleCards()[i-2], false));
         }
@@ -466,7 +470,7 @@ public class GameViewController extends GUIScene {
                                         } else {
                                             SelectCard(finalI);
                                         }
-                                        System.out.println(isflipped[0]+" "+isflipped[1]+" "+ isflipped[2]);
+
                                         lastClickTime = clickTime;
                                     }
 
@@ -511,7 +515,7 @@ public class GameViewController extends GUIScene {
         }
     }
 
-    public void showScoreboard(ActionEvent event) {
+    public void showScoreboard() {
         Client.getInstance().getView().getUserInterface().setScoreScene();
     }
 
@@ -520,16 +524,16 @@ public class GameViewController extends GUIScene {
         return chatContainer;
     }
 
-    public void viewPlayer1(ActionEvent actionEvent) {
+    public void viewPlayer1() {
         viewPlayer(1);
     }
-    public void viewPlayer2(ActionEvent actionEvent) {
+    public void viewPlayer2() {
         viewPlayer(2);
     }
-    public void viewPlayer3(ActionEvent actionEvent) {
+    public void viewPlayer3() {
         viewPlayer(3);
     }
-    public void viewPlayer4(ActionEvent actionEvent) {
+    public void viewPlayer4() {
         viewPlayer(4);
     }
 

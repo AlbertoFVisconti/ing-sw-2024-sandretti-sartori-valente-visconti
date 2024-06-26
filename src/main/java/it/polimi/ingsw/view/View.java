@@ -17,7 +17,7 @@ import it.polimi.ingsw.model.decks.VirtualDeckLoader;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
-import it.polimi.ingsw.model.saving.GameSaving;
+import it.polimi.ingsw.model.saving.GameData;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.utils.CardLocation;
@@ -253,6 +253,9 @@ public class View implements VirtualView {
         if(this.localPlayer.getPlacedCardSlot(new CardLocation(0,0)) == null) {
             this.userInterface.setPlaceStartScene();
         }
+        else {
+            this.userInterface.setPlayerBoardScene(localPlayer);
+        }
     }
 
     /**
@@ -369,10 +372,10 @@ public class View implements VirtualView {
      * It also allows to provide game data that to rebuild the local model.
      *
      * @param nickname the nickname that the clients chose when they joined the game.
-     * @param savings  if the player is rejoining a game, this ClientGameSaving object contains all data that the player need
+     * @param savings  if the player is rejoining a game, this ClientGameData object contains all data that the player need
      */
     @Override
-    public void confirmJoin(String nickname, GameSaving savings) {
+    public void confirmJoin(String nickname, GameData savings) {
         this.localPlayer = new Player(nickname, null);
 
         // load data if provided

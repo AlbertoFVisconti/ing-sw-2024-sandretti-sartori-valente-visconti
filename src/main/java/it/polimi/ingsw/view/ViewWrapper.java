@@ -11,7 +11,7 @@ import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.chat.ChatMessage;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.PlayerColor;
-import it.polimi.ingsw.model.saving.GameSaving;
+import it.polimi.ingsw.model.saving.GameData;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.network.serverhandlers.RMIServerHandler;
@@ -182,11 +182,11 @@ public class ViewWrapper extends UnicastRemoteObject implements VirtualView {
      * Asynchronously tells the view that a game was successfully joined.
      *
      * @param nickname the nickname that the clients chose when they joined the game.
-     * @param savings  if the player is rejoining a game, this ClientGameSaving object contains all data that the player need
+     * @param savings  if the player is rejoining a game, this ClientGameData object contains all data that the player need
      * @throws RemoteException if an error occurs during remote communication
      */
     @Override
-    public void confirmJoin(String nickname, GameSaving savings) throws RemoteException {
+    public void confirmJoin(String nickname, GameData savings) throws RemoteException {
         view.forwardMessage(new JoinConfirmationMessage(nickname, savings));
     }
 
