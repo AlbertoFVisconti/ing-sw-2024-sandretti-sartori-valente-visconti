@@ -22,6 +22,10 @@
 
 .button:hover {
     -fx-background-color: #8a4242;
+    -fx-border-color: #000000; /* Assicurati che i bordi siano gli stessi */
+    -fx-border-radius: 5px; /* Assicurati che il bordo arrotondato sia lo stesso */
+    -fx-background-radius: 5px; /* Assicurati che il background arrotondato sia lo stesso */
+    -fx-padding: 5px; /* Assicurati che il padding sia lo stesso */
 }
 
 .cardshape {
@@ -40,3 +44,4 @@
 .placed_card {
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
 }
+

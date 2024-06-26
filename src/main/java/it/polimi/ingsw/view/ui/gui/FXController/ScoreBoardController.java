@@ -7,6 +7,7 @@ import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.view.ui.gui.MediaManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
@@ -55,6 +56,13 @@ public class ScoreBoardController extends GUIScene{
      */
     @FXML
     public void initialize() {
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(10.0);
+        dropShadow.setSpread(0.0);
+        dropShadow.setOffsetX(0.0);
+        dropShadow.setOffsetY(0.0);
+        dropShadow.setColor(javafx.scene.paint.Color.rgb(0, 0, 0, 0.8));
+
         winner.setVisible(false);
         announcement.setVisible(false);
         scoreLabels = new Label[]{scorePlayer1, scorePlayer2, scorePlayer3, scorePlayer4};
@@ -98,9 +106,13 @@ public class ScoreBoardController extends GUIScene{
         scoreMap.put(29, new Point(190, 146));
 
         yellowPawn.setVisible(false);
+        yellowPawn.setEffect(dropShadow);
         greenPawn.setVisible(false);
+        greenPawn.setEffect(dropShadow);
         redPawn.setVisible(false);
+        redPawn.setEffect(dropShadow);
         bluePawn.setVisible(false);
+        bluePawn.setEffect(dropShadow);
 
         List<Player> players = Client.getInstance().getView().getGameModel().getPlayers();
 

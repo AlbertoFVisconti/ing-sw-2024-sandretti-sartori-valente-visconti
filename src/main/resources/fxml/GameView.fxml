@@ -1,236 +1,207 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="900.0" minWidth="1500.0" prefHeight="984.0"
-            prefWidth="1508.0" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="it.polimi.ingsw.view.ui.gui.FXController.GameViewController">
-   <ScrollPane hmax="0.99" hmin="0.01" hvalue="0.5" layoutX="519.0" prefHeight="981.0" prefWidth="989.0" vmax="0.99"
-               vmin="0.01" vvalue="0.5">
-      <AnchorPane fx:id="TablePane" prefHeight="2066.0" prefWidth="3157.0">
-         <ImageView fx:id="tableBackground" fitHeight="2369.0" fitWidth="3575.0" layoutX="-298.0" layoutY="-261.0"
-                    pickOnBounds="true" preserveRatio="true">
-            <Image url="@../image/CodexWallpaper.png"/>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="900.0" minWidth="1500.0" prefHeight="984.0" prefWidth="1508.0" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.ui.gui.FXController.GameViewController">
+   <ScrollPane fx:id="scrollPane" hmax="0.99" hmin="0.01" hvalue="0.5" layoutX="519.0" prefHeight="981.0" prefWidth="989.0" vmax="0.99" vmin="0.01" vvalue="0.5">
+      <AnchorPane fx:id="TablePane" prefHeight="5583.6" prefWidth="10834.2">
+         <ImageView fx:id="tableBackground" fitHeight="6002.0" fitWidth="10842.0" layoutX="-12.0" layoutY="-232.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../image/gameWallPaper.png" />
          </ImageView>
-         <ImageView fx:id="startingCard" fitHeight="124.0" fitWidth="171.0" layoutX="1563.0" layoutY="1001.0"
-                    pickOnBounds="true" preserveRatio="true"/>
+         <ImageView fx:id="startingCard" fitHeight="124.0" fitWidth="171.0" layoutX="5482.0" layoutY="2876.0" pickOnBounds="true" preserveRatio="true" />
       </AnchorPane>
    </ScrollPane>
    <AnchorPane layoutX="-2.0" layoutY="-1.0" prefHeight="978.0" prefWidth="519.0">
-      <ImageView fitHeight="987.0" fitWidth="648.0" layoutX="-15.0" layoutY="-1.0" pickOnBounds="true"
-                 preserveRatio="true">
-         <Image url="@../image/controlwp.png"/>
+      <ImageView fitHeight="987.0" fitWidth="648.0" layoutX="-15.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+         <Image url="@../image/controlwp.png" />
       </ImageView>
-      <ImageView fx:id="handCard1" fitHeight="86.0" fitWidth="137.0" layoutX="31.0" layoutY="751.0"
-                 onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true"/>
-      <ImageView fx:id="handCard2" fitHeight="86.0" fitWidth="137.0" layoutX="277.0" layoutY="755.0"
-                 onMouseClicked="#SelectCard2" pickOnBounds="true" preserveRatio="true"/>
-      <ImageView fx:id="handCard3" fitHeight="86.0" fitWidth="137.0" layoutX="144.0" layoutY="850.0"
-                 onMouseClicked="#SelectCard3" pickOnBounds="true" preserveRatio="true"/>
-      <ImageView fx:id="privateGoal" fitHeight="75.0" fitWidth="113.0" layoutX="46.0" layoutY="71.0"
-                 pickOnBounds="true" preserveRatio="true"/>
-      <Label layoutX="46.0" layoutY="173.0" prefHeight="50.0" prefWidth="160.0" text="Scoreboard:"
-             textFill="#b6b28d">
+      <ImageView fx:id="handCard1" fitHeight="86.0" fitWidth="137.0" layoutX="31.0" layoutY="751.0" onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="handCard2" fitHeight="86.0" fitWidth="137.0" layoutX="277.0" layoutY="755.0" onMouseClicked="#SelectCard2" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="handCard3" fitHeight="86.0" fitWidth="137.0" layoutX="144.0" layoutY="850.0" onMouseClicked="#SelectCard3" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="privateGoal" fitHeight="75.0" fitWidth="113.0" layoutX="46.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true" />
+      <Label layoutX="46.0" layoutY="173.0" prefHeight="50.0" prefWidth="160.0" text="Scoreboard:" textFill="#b6b28d">
          <font>
-            <Font name="Bangla MN" size="19.0"/>
+            <Font name="Bangla MN" size="19.0" />
          </font>
       </Label>
 
-      <Button fx:id="playerNickname1" layoutX="63.0" layoutY="228.0" onAction="#viewPlayer1" text="Player 1:"
-              textFill="#b6b28d">
+      <Button fx:id="playerNickname1" layoutX="63.0" layoutY="228.0" onAction="#viewPlayer1" text="Player 1:" textFill="#b6b28d">
          <font>
-            <Font name="Bangla MN" size="14.0"/>
+            <Font name="Bangla MN" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="playerNickname2" layoutX="63.0" layoutY="268.0" onAction="#viewPlayer2" text="Player 2:"
-              textFill="#b6b28d">
+      <Button fx:id="playerNickname2" layoutX="63.0" layoutY="268.0" onAction="#viewPlayer2" text="Player 2:" textFill="#b6b28d">
          <font>
-            <Font name="Bangla MN" size="14.0"/>
+            <Font name="Bangla MN" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="playerNickname3" layoutX="63.0" layoutY="308.0" onAction="#viewPlayer3" text="Player 3:"
-              textFill="#b6b28d">
+      <Button fx:id="playerNickname3" layoutX="63.0" layoutY="308.0" onAction="#viewPlayer3" text="Player 3:" textFill="#b6b28d">
          <font>
-            <Font name="Bangla MN" size="14.0"/>
+            <Font name="Bangla MN" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="playerNickname4" layoutX="63.0" layoutY="348.0" onAction="#viewPlayer4" text="Player 4:"
-              textFill="#b6b28d">
+      <Button fx:id="playerNickname4" layoutX="63.0" layoutY="348.0" onAction="#viewPlayer4" text="Player 4:" textFill="#b6b28d">
          <font>
-            <Font name="Bangla MN" size="14.0"/>
+            <Font name="Bangla MN" size="14.0" />
          </font>
       </Button>
 
       <Label fx:id="scorePlayer1" layoutX="150.0" layoutY="228.0" text="0" textFill="#b6b28d">
          <font>
-            <Font name="Bangla MN" size="16.0"/>
+            <Font name="Bangla MN" size="16.0" />
          </font>
       </Label>
       <Label fx:id="scorePlayer2" layoutX="150.0" layoutY="268.0" text="0" textFill="#b6b28d">
          <font>
-            <Font name="Bangla MN" size="16.0"/>
+            <Font name="Bangla MN" size="16.0" />
          </font>
       </Label>
       <Label fx:id="scorePlayer3" layoutX="150.0" layoutY="348.0" text="0" textFill="#b6b28d">
          <font>
-            <Font name="Bangla MN" size="16.0"/>
+            <Font name="Bangla MN" size="16.0" />
          </font>
       </Label>
       <Label fx:id="scorePlayer4" layoutX="150.0" layoutY="308.0" text="0" textFill="#b6b28d">
          <font>
-            <Font name="Bangla MN" size="16.0"/>
+            <Font name="Bangla MN" size="16.0" />
          </font>
       </Label>
       <Label layoutX="43.0" layoutY="703.0" text="Your Hand:" textFill="#b6b28d">
          <font>
-            <Font name="Bangla MN" size="19.0"/>
+            <Font name="Bangla MN" size="19.0" />
          </font>
       </Label>
-      <ImageView fx:id="visibleCard1" fitHeight="86.0" fitWidth="137.0" layoutX="46.0" layoutY="431.0"
-                 onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true"/>
-      <ImageView fx:id="visibleCard3" fitHeight="86.0" fitWidth="137.0" layoutX="307.0" layoutY="431.0"
-                 onMouseClicked="#SelectCard2" pickOnBounds="true" preserveRatio="true"/>
-      <ImageView fx:id="visibleCard2" fitHeight="86.0" fitWidth="137.0" layoutX="46.0" layoutY="525.0"
-                 onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true"/>
-      <ImageView fx:id="visibleCard4" fitHeight="86.0" fitWidth="137.0" layoutX="307.0" layoutY="525.0"
-                 onMouseClicked="#SelectCard2" pickOnBounds="true" preserveRatio="true"/>
+      <ImageView fx:id="visibleCard1" fitHeight="86.0" fitWidth="137.0" layoutX="46.0" layoutY="431.0" onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="visibleCard3" fitHeight="86.0" fitWidth="137.0" layoutX="307.0" layoutY="431.0" onMouseClicked="#SelectCard2" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="visibleCard2" fitHeight="86.0" fitWidth="137.0" layoutX="46.0" layoutY="525.0" onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="visibleCard4" fitHeight="86.0" fitWidth="137.0" layoutX="307.0" layoutY="525.0" onMouseClicked="#SelectCard2" pickOnBounds="true" preserveRatio="true" />
       <Label layoutX="46.0" layoutY="394.0" text="Resource Deck:" textFill="#b6b28d">
          <font>
-            <Font name="Bangla MN" size="19.0"/>
+            <Font name="Bangla MN" size="19.0" />
          </font>
       </Label>
       <Label layoutX="307.0" layoutY="394.0" text="Gold Deck:" textFill="#b6b28d">
          <font>
-            <Font name="Bangla MN" size="19.0"/>
+            <Font name="Bangla MN" size="19.0" />
          </font>
       </Label>
-      <Label layoutX="46.0" layoutY="27.0" prefHeight="33.0" prefWidth="113.0" text="Private Goal:"
-             textFill="#b6b28d">
+      <Label layoutX="46.0" layoutY="27.0" prefHeight="33.0" prefWidth="113.0" text="Private Goal:" textFill="#b6b28d">
          <font>
-            <Font name="Bangla MN" size="14.0"/>
+            <Font name="Bangla MN" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="307.0" layoutY="27.0" prefHeight="33.0" prefWidth="137.0" text="Common Goal:"
-             textFill="#b6b28d">
+      <Label layoutX="307.0" layoutY="27.0" prefHeight="33.0" prefWidth="137.0" text="Common Goal:" textFill="#b6b28d">
          <font>
-            <Font name="Bangla MN" size="14.0"/>
+            <Font name="Bangla MN" size="14.0" />
          </font>
       </Label>
-      <ImageView fx:id="commonGoal1" fitHeight="75.0" fitWidth="113.0" layoutX="240.0" layoutY="71.0"
-                 pickOnBounds="true" preserveRatio="true"/>
-      <ImageView fx:id="commonGoal2" fitHeight="75.0" fitWidth="113.0" layoutX="388.0" layoutY="71.0"
-                 pickOnBounds="true" preserveRatio="true"/>
-      <ImageView fx:id="resourceDeck" fitHeight="86.0" fitWidth="137.0" layoutX="46.0" layoutY="619.0"
-                 onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true"/>
-      <ImageView fx:id="goldDeck" fitHeight="86.0" fitWidth="137.0" layoutX="307.0" layoutY="619.0"
-                 onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true"/>
-      <Button fx:id="showScoreBoard" layoutX="182.0" layoutY="185.0" mnemonicParsing="false"
-              onAction="#showScoreboard" prefHeight="16.0" prefWidth="53.0" text="Show"/>
-      <ImageView fx:id="playerColor1" fitHeight="27.0" fitWidth="25.0" layoutX="195.0" layoutY="234.0"
-                 pickOnBounds="true" preserveRatio="true"/>
-      <ImageView fx:id="playerColor2" fitHeight="27.0" fitWidth="25.0" layoutX="195.0" layoutY="273.0"
-                 pickOnBounds="true" preserveRatio="true"/>
-      <ImageView fx:id="playerColor3" fitHeight="27.0" fitWidth="25.0" layoutX="195.0" layoutY="312.0"
-                 pickOnBounds="true" preserveRatio="true"/>
-      <ImageView fx:id="playerColor4" fitHeight="27.0" fitWidth="25.0" layoutX="195.0" layoutY="351.0"
-                 pickOnBounds="true" preserveRatio="true"/>
+      <ImageView fx:id="commonGoal1" fitHeight="75.0" fitWidth="113.0" layoutX="240.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="commonGoal2" fitHeight="75.0" fitWidth="113.0" layoutX="388.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="resourceDeck" fitHeight="86.0" fitWidth="137.0" layoutX="46.0" layoutY="619.0" onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="goldDeck" fitHeight="86.0" fitWidth="137.0" layoutX="307.0" layoutY="619.0" onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true" />
+      <Button fx:id="showScoreBoard" layoutX="182.0" layoutY="185.0" mnemonicParsing="false" onAction="#showScoreboard" prefHeight="16.0" prefWidth="53.0" text="Show" />
+      <ImageView fx:id="playerColor1" fitHeight="27.0" fitWidth="25.0" layoutX="195.0" layoutY="234.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="playerColor2" fitHeight="27.0" fitWidth="25.0" layoutX="195.0" layoutY="273.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="playerColor3" fitHeight="27.0" fitWidth="25.0" layoutX="195.0" layoutY="312.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="playerColor4" fitHeight="27.0" fitWidth="25.0" layoutX="195.0" layoutY="351.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="playerColor11" fitHeight="27.0" fitWidth="25.0" layoutX="15.0" layoutY="234.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/BlackCircle.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="leaveGameButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="935.0" mnemonicParsing="false" onAction="#leaveGame" text="Leave Game" />
    </AnchorPane>
-   <AnchorPane fx:id="chatContainer" layoutX="1250.0" layoutY="580.0" prefHeight="379.0" prefWidth="233.0"/>
+   <AnchorPane fx:id="chatContainer" layoutX="1250.0" layoutY="580.0" prefHeight="379.0" prefWidth="233.0" />
    <AnchorPane layoutX="225.0" layoutY="250.0" prefHeight="106.0" prefWidth="350.0">
       <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="100.0" layoutY="50.0">
-         <Image url="@../image/items/animal.png"/>
+         <Image url="@../image/items/animal.png" />
       </ImageView>
       <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="200.0" layoutY="50.0">
-         <Image url="@../image/items/feather.png"/>
+         <Image url="@../image/items/feather.png" />
       </ImageView>
       <ImageView fitHeight="50.0" fitWidth="50.0" layoutY="50.0">
-         <Image url="@../image/items/fungus.png"/>
+         <Image url="@../image/items/fungus.png" />
       </ImageView>
       <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="250.0" layoutY="50.0">
-         <Image url="@../image/items/ink.png"/>
+         <Image url="@../image/items/ink.png" />
       </ImageView>
       <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="150.0" layoutY="50.0">
-         <Image url="@../image/items/insect.png"/>
+         <Image url="@../image/items/insect.png" />
       </ImageView>
       <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="50.0" layoutY="50.0">
-         <Image url="@../image/items/plant.png"/>
+         <Image url="@../image/items/plant.png" />
       </ImageView>
       <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="300.0" layoutY="50.0">
-         <Image url="@../image/items/scroll.png"/>
+         <Image url="@../image/items/scroll.png" />
       </ImageView>
-      <Label fx:id="fungusLabel" alignment="CENTER" layoutY="10.0" prefHeight="30.0" prefWidth="50.0"
-             textAlignment="CENTER" textFill="#b6b28d">
+      <Label fx:id="fungusLabel" alignment="CENTER" layoutY="10.0" prefHeight="30.0" prefWidth="50.0" textAlignment="CENTER" textFill="#b6b28d">
          <font>
-            <Font size="20.0"/>
+            <Font size="20.0" />
          </font>
          <cursor>
-            <Cursor fx:constant="DEFAULT"/>
+            <Cursor fx:constant="DEFAULT" />
          </cursor>
       </Label>
-      <Label fx:id="plantLabel" alignment="CENTER" layoutX="50.0" layoutY="10.0" prefHeight="30.0" prefWidth="50.0"
-             textAlignment="CENTER" textFill="#b6b28d">
+      <Label fx:id="plantLabel" alignment="CENTER" layoutX="50.0" layoutY="10.0" prefHeight="30.0" prefWidth="50.0" textAlignment="CENTER" textFill="#b6b28d">
          <cursor>
-            <Cursor fx:constant="DEFAULT"/>
+            <Cursor fx:constant="DEFAULT" />
          </cursor>
          <font>
-            <Font size="20.0"/>
+            <Font size="20.0" />
          </font>
       </Label>
-      <Label fx:id="animalLabel" alignment="CENTER" layoutX="100.0" layoutY="10.0" prefHeight="30.0" prefWidth="50.0"
-             textAlignment="CENTER" textFill="#b6b28d">
+      <Label fx:id="animalLabel" alignment="CENTER" layoutX="100.0" layoutY="10.0" prefHeight="30.0" prefWidth="50.0" textAlignment="CENTER" textFill="#b6b28d">
          <cursor>
-            <Cursor fx:constant="DEFAULT"/>
+            <Cursor fx:constant="DEFAULT" />
          </cursor>
          <font>
-            <Font size="20.0"/>
+            <Font size="20.0" />
          </font>
       </Label>
-      <Label fx:id="insectLabel" alignment="CENTER" layoutX="150.0" layoutY="10.0" prefHeight="30.0" prefWidth="50.0"
-             textAlignment="CENTER" textFill="#b6b28d">
+      <Label fx:id="insectLabel" alignment="CENTER" layoutX="150.0" layoutY="10.0" prefHeight="30.0" prefWidth="50.0" textAlignment="CENTER" textFill="#b6b28d">
          <cursor>
-            <Cursor fx:constant="DEFAULT"/>
+            <Cursor fx:constant="DEFAULT" />
          </cursor>
          <font>
-            <Font size="20.0"/>
+            <Font size="20.0" />
          </font>
       </Label>
-      <Label fx:id="featherLabel" alignment="CENTER" layoutX="200.0" layoutY="10.0" prefHeight="30.0"
-             prefWidth="50.0" textAlignment="CENTER" textFill="#b6b28d">
+      <Label fx:id="featherLabel" alignment="CENTER" layoutX="200.0" layoutY="10.0" prefHeight="30.0" prefWidth="50.0" textAlignment="CENTER" textFill="#b6b28d">
          <cursor>
-            <Cursor fx:constant="DEFAULT"/>
+            <Cursor fx:constant="DEFAULT" />
          </cursor>
          <font>
-            <Font size="20.0"/>
+            <Font size="20.0" />
          </font>
       </Label>
-      <Label fx:id="inkLabel" alignment="CENTER" layoutX="250.0" layoutY="10.0" prefHeight="30.0" prefWidth="50.0"
-             textAlignment="CENTER" textFill="#b6b28d">
+      <Label fx:id="inkLabel" alignment="CENTER" layoutX="250.0" layoutY="10.0" prefHeight="30.0" prefWidth="50.0" textAlignment="CENTER" textFill="#b6b28d">
          <cursor>
-            <Cursor fx:constant="DEFAULT"/>
+            <Cursor fx:constant="DEFAULT" />
          </cursor>
          <font>
-            <Font size="20.0"/>
+            <Font size="20.0" />
          </font>
       </Label>
-      <Label fx:id="scrollLabel" alignment="CENTER" layoutX="300.0" layoutY="10.0" prefHeight="30.0" prefWidth="50.0"
-             textAlignment="CENTER" textFill="#b6b28d">
+      <Label fx:id="scrollLabel" alignment="CENTER" layoutX="300.0" layoutY="10.0" prefHeight="30.0" prefWidth="50.0" textAlignment="CENTER" textFill="#b6b28d">
          <cursor>
-            <Cursor fx:constant="DEFAULT"/>
+            <Cursor fx:constant="DEFAULT" />
          </cursor>
          <font>
-            <Font size="20.0"/>
+            <Font size="20.0" />
          </font>
       </Label>
    </AnchorPane>
-   <Label fx:id="turnWarningLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="898.0" layoutY="100.0"
-          prefHeight="28.0" prefWidth="343.0" textAlignment="CENTER" textFill="#b6b28d" textOverrun="CLIP">
+   <Label fx:id="turnWarningLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="898.0" layoutY="100.0" prefHeight="28.0" prefWidth="390.0" textAlignment="CENTER" textFill="#b6b28d" textOverrun="CLIP">
       <font>
-         <Font name="Bangla MN" size="19.0"/>
+         <Font name="Bangla MN" size="19.0" />
       </font>
    </Label>
+   <Button fx:id="recenterButton" alignment="CENTER" contentDisplay="CENTER" layoutX="666.0" layoutY="923.0" mnemonicParsing="false" onAction="#centerScrollPane" text="Recenter" />
 </AnchorPane>

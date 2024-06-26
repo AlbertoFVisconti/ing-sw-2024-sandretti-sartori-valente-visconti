@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.ui.gui.FXController;
 import it.polimi.ingsw.controller.GameStatus;
 import it.polimi.ingsw.controller.TurnStatus;
 import it.polimi.ingsw.events.messages.client.DrawCardMessage;
+import it.polimi.ingsw.events.messages.client.LeaveGameMessage;
 import it.polimi.ingsw.events.messages.client.PlaceCardMessage;
 import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.cards.PlayCard;
@@ -13,14 +14,18 @@ import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.utils.CardLocation;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.ui.gui.MediaManager;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 
 import java.util.*;
 
@@ -32,6 +37,7 @@ public class GameViewController extends GUIScene {
     private final static double CARD_CORNER_HEIGHT = (265.0/662.0) * CARD_HEIGHT;
     private final static double CARD_CORNER_WIDTH = (219.0/993.0) * CARD_WIDTH;
     public ImageView tableBackground;
+    public ScrollPane scrollPane;
 
 
     private String currentlyDisplayedPlayer;
@@ -555,5 +561,18 @@ public class GameViewController extends GUIScene {
 
             this.update();
         }
+    }
+
+    public void centerScrollPane(ActionEvent event) {
+        scrollPane.setHvalue(scrollPane.getHmax() / 2);
+        scrollPane.setVvalue(scrollPane.getVmax() / 2);
+    }
+
+    public void leaveGame(ActionEvent event) {
+        Client.getInstance().getServerHandler().sendMessage(new LeaveGameMessage());
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.close();
+
+
     }
 }
