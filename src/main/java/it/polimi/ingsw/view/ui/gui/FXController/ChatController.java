@@ -109,6 +109,7 @@ public class ChatController extends AnchorPane {
         // adding messages to the chat
         for(ChatMessage chatMessage : Client.getInstance().getView().getGameModel().getChat().getMessagesChat(Client.getInstance().getView().getLocalPlayerName(), currentlyDisplayedChat)) {
             Label newMessage = new Label(chatMessage.getSenderNick() + ": " + chatMessage.getText());
+            newMessage.setTextFill(chatMessage.getDisplayColor());
             messageVBox.getChildren().add(newMessage);
         }
 
