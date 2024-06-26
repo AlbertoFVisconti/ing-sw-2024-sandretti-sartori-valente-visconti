@@ -20,7 +20,7 @@ public class GameBackupManager {
         if(!backupEnabled) return;
 
         // creating the directory (if needed)
-        if(!new File("saves").mkdirs()) return;
+        new File("saves").mkdirs();
 
         String filename = "saves/" + key + ".ser";
 
@@ -32,7 +32,9 @@ public class GameBackupManager {
             out.close();
             file.close();
         }
-        catch (IOException ignored){}
+        catch (IOException ignored){
+            System.out.println("\t failed to save");
+        }
     }
 
     /**

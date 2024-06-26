@@ -450,6 +450,10 @@ public class View implements VirtualView {
                     break;
                 case NORMAL_TURN: // first turn started
                     this.userInterface.setPlayerBoardScene(localPlayer);
+                    break;
+                case END:
+                    this.userInterface.setScoreScene();
+                    break;
             }
         }
 

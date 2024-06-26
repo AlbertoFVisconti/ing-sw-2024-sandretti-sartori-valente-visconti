@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.chat;
 
+import javafx.scene.paint.Color;
+
 import java.io.Serializable;
 
 /**
@@ -18,14 +20,41 @@ public class ChatMessage implements Serializable {
     // The nickname of the message receiver
     private final String receiverNick;
 
+    private final double displayColorRed;
+    private final double displayColorBlue;
+    private final double displayColorGreen;
+
     /**
-     * Constructs a new ChatMessage object.
+     * Constructs a new default (BLACK) ChatMessage object.
      *
      * @param text       The text content of the message.
      * @param senderNick The nickname of the message sender.
      * @param receiverNick The nickname of the message receiver.
      */
     public ChatMessage(String text, String senderNick, String receiverNick) {
+        this.displayColorRed = 0;
+        this.displayColorGreen = 0;
+        this.displayColorBlue = 0;
+
+        this.text = text;
+        this.senderNick = senderNick;
+        this.receiverNick = receiverNick;
+        timestamp = System.currentTimeMillis();
+    }
+
+    /**
+     * Constructs a new chat message with a certain color.
+     * Used to display system messages in the chat.
+     *
+     * @param text       The text content of the message.
+     * @param senderNick The nickname of the message sender.
+     * @param receiverNick The nickname of the message receiver.
+     */
+    public ChatMessage(String text, String senderNick, String receiverNick, Color color) {
+        this.displayColorRed = color.getRed();
+        this.displayColorGreen = color.getGreen();
+        this.displayColorBlue = color.getBlue();
+
         this.text = text;
         this.senderNick = senderNick;
         this.receiverNick = receiverNick;
@@ -66,5 +95,14 @@ public class ChatMessage implements Serializable {
      */
     public String getReceiverNick() {
         return receiverNick;
+    }
+
+    /**
+     * Retrieves the display color of the message
+     *
+     * @return message display color
+     */
+    public Color getDisplayColor() {
+        return Color.color(displayColorRed, displayColorGreen, displayColorBlue);
     }
 }

@@ -4,6 +4,7 @@ import it.polimi.ingsw.events.Observable;
 import it.polimi.ingsw.events.messages.server.ServerChatMsgMessage;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.network.cliendhandlers.ClientHandler;
+import javafx.scene.paint.Color;
 
 import java.util.*;
 
@@ -53,6 +54,20 @@ public class Chat extends Observable {
      *                                messages map
      */
     public void sendMessage(Player sender, Player receiver, String message_text) {
+        this.sendMessage(sender, receiver, message_text, Color.BLACK);
+    }
+
+    /**
+     * Sends a message from one player to another.
+     *
+     * @param sender       the player sending the message
+     * @param receiver     the player receiving the message
+     * @param message_text the text of the message
+     * @param displayColor the color that needs to be used to display the message
+     * @throws NoSuchElementException if the pair of players is not found in the
+     *                                messages map
+     */
+    public void sendMessage(Player sender, Player receiver, String message_text, Color displayColor) {
         if (sender == null) throw new RuntimeException("No sender provided");
         HashSet<String> playersSet;
 
@@ -65,7 +80,7 @@ public class Chat extends Observable {
         if (!messages.containsKey(playersSet))
             this.messages.put(playersSet, new ArrayList<>());
 
-        ChatMessage message = new ChatMessage(message_text, sender.nickname, (receiver != null ? receiver.nickname : null));
+        ChatMessage message = new ChatMessage(message_text, sender.nickname, (receiver != null ? receiver.nickname : null), displayColor);
         messages.get(playersSet).add(message);
 
         if (receiver == null) {

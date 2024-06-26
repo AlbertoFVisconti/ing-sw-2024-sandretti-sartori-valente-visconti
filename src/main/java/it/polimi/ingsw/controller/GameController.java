@@ -20,6 +20,7 @@ import it.polimi.ingsw.network.rmi.GameControllerWrapper;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.utils.CardLocation;
 import it.polimi.ingsw.utils.GameBackupManager;
+import javafx.scene.paint.Color;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -52,6 +53,8 @@ public class GameController extends Observable implements VirtualController, Run
     private final BlockingQueue<ClientMessage> messageQueue;
 
     private String backupKey;
+
+    private boolean newRoundStartedFlag = false;
 
     /**
      * Constructs a GameController that handles the provided game.
@@ -96,13 +99,15 @@ public class GameController extends Observable implements VirtualController, Run
     public synchronized void addNewPlayer(String nickname, ClientHandler clientHandler, GameControllerWrapper gameControllerWrapper) {
         if (this.gameStatus != GameStatus.LOBBY) {
             throw new UnsupportedOperationException("Cannot add a new player to a running game");
-        } else {
-            game.addPlayer(new Player(nickname, clientHandler));
         }
+        Player newPlayer = new Player(nickname, clientHandler);
+        game.addPlayer(newPlayer);
 
         clientHandler.setController(gameControllerWrapper);
 
         this.game.getChat().subscribe(clientHandler);
+
+        this.game.getChat().sendMessage(newPlayer, null, "has joined the game", Color.DARKGREEN);
 
         clientHandler.sendMessage(new JoinConfirmationMessage(nickname));
 
@@ -164,6 +169,7 @@ public class GameController extends Observable implements VirtualController, Run
             this.game.unsubscribeFromCommonObservable(clientHandler);
 
             this.game.getChat().unsubscribe(clientHandler);
+            this.game.getChat().sendMessage(player, null, "has disconnected", Color.DARKRED);
 
             if (gameStatus == GameStatus.LOBBY) {
                 game.removePlayer(player);
@@ -241,7 +247,7 @@ public class GameController extends Observable implements VirtualController, Run
         if (gameControllerWrapper != null) clientHandler.setController(gameControllerWrapper);
 
 
-        System.err.println(nickname + " rejoined the game");
+        System.err.println(nickname + " has rejoined the game");
 
         this.game.getChat().subscribe(clientHandler);
         connectingPlayer.setClientHandler(clientHandler);
@@ -253,6 +259,8 @@ public class GameController extends Observable implements VirtualController, Run
 
         this.subscribe(clientHandler);
         clientHandler.sendMessage(new JoinConfirmationMessage(nickname, saving));
+
+        this.game.getChat().sendMessage(connectingPlayer, null, "has re-joined the game", Color.DARKGREEN);
 
         this.connectedPlayers++;
 
@@ -330,7 +338,9 @@ public class GameController extends Observable implements VirtualController, Run
                 System.err.println("Players placed starting cards and selected goal, first turn starts");
                 gameStatus = GameStatus.NORMAL_TURN;
             }
-        } else if (game.isFirstPlayersTurn()) {
+        } else if (newRoundStartedFlag) {
+            newRoundStartedFlag = false;
+
             if (gameStatus == GameStatus.LAST_TURN) {
                 System.err.println("GAME FINISHED");
                 gameStatus = GameStatus.END;
@@ -375,10 +385,10 @@ public class GameController extends Observable implements VirtualController, Run
      * Allows advance the game turn.
      */
     private void advanceTurn() {
-        boolean needToSkipTurn, isItFirstPlayersTurn, newRoundStarted;
+        boolean needToSkipTurn, wasFirstPlayersTurn, newRoundStarted;
 
         // checking if the current turn was the first player's
-        isItFirstPlayersTurn = this.game.isFirstPlayersTurn() || (turnStatus == null);
+        wasFirstPlayersTurn = this.game.isFirstPlayersTurn() || (turnStatus == null);
 
         if (this.turnStatus == null) {
             // this is the first turn of the first round, the first player have to place a card
@@ -396,8 +406,9 @@ public class GameController extends Observable implements VirtualController, Run
         needToSkipTurn = !this.paused && this.game.getTurn().hasDisconnected();
 
         // checking if the current advance caused a new round to start
-        newRoundStarted = !isItFirstPlayersTurn && this.game.isFirstPlayersTurn();
+        newRoundStarted = !wasFirstPlayersTurn && this.game.isFirstPlayersTurn();
 
+        this.newRoundStartedFlag = newRoundStarted;
 
         if (needToSkipTurn) {
             // if the current turn is skipped, updateStatus is called only if a new round started
