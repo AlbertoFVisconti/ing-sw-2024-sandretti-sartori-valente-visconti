@@ -384,6 +384,17 @@ public final class Printer {
                 }
 
             }
+
+            Corner cardType = playCard.getType().getCorner();
+            canvas.setTextColor(cornerToColorMap.get(cardType));
+
+            canvas.putString(
+                    cardType.toString(),
+                    DEFAULT_CARD_WIDTH/2 - cardType.toString().length()/2,
+                    0
+            );
+
+            canvas.resetColor();
         }
 
 
@@ -407,16 +418,12 @@ public final class Printer {
      */
     public static void printHand(PlayCard[] cards) {
         final int SPACING_BETWEEN_CARDS = 2;
-        Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH * cards.length + SPACING_BETWEEN_CARDS * (cards.length - 1) + 2, 2 + DEFAULT_CARD_HEIGHT * 2 + 3);
+        Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH * cards.length + SPACING_BETWEEN_CARDS * (cards.length - 1) + 2, DEFAULT_CARD_HEIGHT + 2);
 
-        canvas.putString("Front:", 0, 0);
-        canvas.putString("Back:", 0, 2 + DEFAULT_CARD_HEIGHT + 1);
         for (int i = 0; i < cards.length; i++) {
             canvas.putString("Card n°" + i, (DEFAULT_CARD_WIDTH + SPACING_BETWEEN_CARDS) * i + DEFAULT_CARD_WIDTH / 2 - 4, 0);
 
             canvas.putCanvas(getCardCanvas(cards[i], false), (DEFAULT_CARD_WIDTH + SPACING_BETWEEN_CARDS) * i, 2);
-
-            canvas.putCanvas(getCardCanvas(cards[i], true), (DEFAULT_CARD_WIDTH + SPACING_BETWEEN_CARDS) * i, 2 + DEFAULT_CARD_HEIGHT + 3);
         }
 
         System.out.println(canvas);
