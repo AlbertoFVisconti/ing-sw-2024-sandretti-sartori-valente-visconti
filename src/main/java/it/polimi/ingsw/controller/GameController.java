@@ -368,7 +368,7 @@ public class GameController extends Observable implements VirtualController, Run
             } else if (gameStatus == GameStatus.NORMAL_TURN) {
                 boolean flag = true;
                 for (Player p : game.getPlayers()) {
-                    if (game.getScoreBoard().getScore(p.nickname) >= 2) {
+                    if (game.getScoreBoard().getScore(p.nickname) >= 20) {
                         System.err.println(p.nickname + "reached 20 points, last turn starts");
                         this.gameStatus = GameStatus.LAST_TURN;
                         flag = false;
