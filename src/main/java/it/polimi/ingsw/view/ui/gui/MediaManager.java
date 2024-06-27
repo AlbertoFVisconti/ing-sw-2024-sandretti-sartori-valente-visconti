@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.ui.gui;
 
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.CardSlot;
+import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.goals.Goal;
 import javafx.scene.image.Image;
 
@@ -124,5 +125,19 @@ public class MediaManager {
     public Image getImage(Goal goal) {
         if (goal == null) return altImage;
         return getImage(goal.getPath());
+    }
+
+    /**
+     * Allows to retrieve the image that represents
+     * a deck with a given resource on top of the stack.
+     *
+     * @param topOfTheStack Resource on top of the deck
+     * @param gold {@code true} if the gold card deck is needed, {@code false} otherwise
+     * @return the Image that represents the deck
+     */
+    public Image getImage(Resource topOfTheStack, boolean gold) {
+        if(topOfTheStack == null) return altImage;
+        if(gold) return getImage(topOfTheStack.getGoldenPath());
+        else return getImage(topOfTheStack.getPath());
     }
 }

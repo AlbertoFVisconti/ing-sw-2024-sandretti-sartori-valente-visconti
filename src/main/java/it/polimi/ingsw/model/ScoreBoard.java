@@ -106,6 +106,7 @@ public class ScoreBoard extends Observable implements Serializable {
      * @return list of Players representing the game's winners
      */
     public List<Player> getWinners() {
+        if(winners == null) return new ArrayList<>();
         return new ArrayList<>(winners);
     }
 

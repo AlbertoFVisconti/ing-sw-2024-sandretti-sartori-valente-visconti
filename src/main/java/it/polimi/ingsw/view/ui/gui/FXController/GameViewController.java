@@ -515,8 +515,8 @@ public class GameViewController extends GUIScene {
         }
 
         // update decks
-        resourceDeck.setImage(mediaManager.getImage(view.getGameModel().getResourceCardsDeck().getTopOfTheStack().getPath()));
-        goldDeck.setImage(mediaManager.getImage(view.getGameModel().getGoldCardsDeck().getTopOfTheStack().getGoldenPath()));
+        resourceDeck.setImage(mediaManager.getImage(view.getGameModel().getResourceCardsDeck().getTopOfTheStack(), false));
+        goldDeck.setImage(mediaManager.getImage(view.getGameModel().getGoldCardsDeck().getTopOfTheStack(), true));
 
         // update visible cards
         for(int i = 2; i < drawableCards.length; i++) {
