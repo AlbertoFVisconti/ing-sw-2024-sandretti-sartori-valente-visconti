@@ -98,6 +98,7 @@ public class GameController extends Observable implements VirtualController, Run
      * Allows to save this game content to file (if the GameBackupManager is enabled)
      */
     private void saveGameBackup() {
+        if(this.gameStatus == GameStatus.END) return;
         GameBackupManager.saveGame(backupKey, this.getBackup());
     }
 
@@ -367,7 +368,7 @@ public class GameController extends Observable implements VirtualController, Run
             } else if (gameStatus == GameStatus.NORMAL_TURN) {
                 boolean flag = true;
                 for (Player p : game.getPlayers()) {
-                    if (game.getScoreBoard().getScore(p.nickname) >= 20) {
+                    if (game.getScoreBoard().getScore(p.nickname) >= 2) {
                         System.err.println(p.nickname + "reached 20 points, last turn starts");
                         this.gameStatus = GameStatus.LAST_TURN;
                         flag = false;
@@ -427,24 +428,24 @@ public class GameController extends Observable implements VirtualController, Run
             }
         }
 
-        List<Player> winners = new ArrayList<>();
+        List<String> winners = new ArrayList<>();
         for(Player p : game.getPlayers()) {
             if(maxScore == game.getScoreBoard().getScore(p.nickname)) {
-                winners.add(p);
+                winners.add(p.nickname);
             }
         }
 
         if(winners.size() > 1) {
             maxScore = -1;
-            for(Player p : winners) {
-                if(nOfCompletedGoals.getScore(p.nickname) > maxScore) {
-                    maxScore = nOfCompletedGoals.getScore(p.nickname);
+            for(String p : winners) {
+                if(nOfCompletedGoals.getScore(p) > maxScore) {
+                    maxScore = nOfCompletedGoals.getScore(p);
                 }
             }
 
-            List<Player> actualWinners = new ArrayList<>();
-            for(Player p : winners) {
-                if(maxScore == nOfCompletedGoals.getScore(p.nickname)) {
+            List<String> actualWinners = new ArrayList<>();
+            for(String p : winners) {
+                if(maxScore == nOfCompletedGoals.getScore(p)) {
                     actualWinners.add(p);
                 }
             }
@@ -452,7 +453,10 @@ public class GameController extends Observable implements VirtualController, Run
             winners = actualWinners;
         }
 
+        System.out.println("winners: " + winners);
+
         game.getScoreBoard().setWinners(winners);
+
     }
 
     /**

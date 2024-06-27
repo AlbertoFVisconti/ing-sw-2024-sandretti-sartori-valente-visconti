@@ -24,6 +24,7 @@ import it.polimi.ingsw.utils.CardLocation;
 import it.polimi.ingsw.view.ui.UserInterface;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -597,5 +598,19 @@ public class View implements VirtualView {
      */
     public synchronized String getPlayersTurn() {
         return this.playersTurn;
+    }
+
+    /**
+     * Retrieves a chat from the local model
+     *
+     * @param nickname player whose chat with the local player needs to be retrieved. {@code null} if the public chat is required
+     * @return list of ChatMessage representing the messages sent between players on a chat
+     */
+    public synchronized List<ChatMessage> getMessagesChat(String nickname) {
+        return new ArrayList<>( getGameModel().getChat().getMessagesChat(localPlayer.nickname, nickname));
+    }
+
+    public synchronized List<String> getWinners() {
+        return new ArrayList<>( gameModel.getScoreBoard().getWinners());
     }
 }

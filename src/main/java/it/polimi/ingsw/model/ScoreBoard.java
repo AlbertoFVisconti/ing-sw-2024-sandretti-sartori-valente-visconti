@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class ScoreBoard extends Observable implements Serializable {
     private HashMap<String, Integer> scores;
-    private ArrayList<Player> winners;
+    private ArrayList<String> winners;
 
     /**
      * Construct a new ScoreBoard object for the given list of players.
@@ -82,6 +82,7 @@ public class ScoreBoard extends Observable implements Serializable {
      * @param scoreBoard ScoreBoard that needs to be overridden.
      */
     public void copyScore(ScoreBoard scoreBoard) {
+        if(scoreBoard.winners != null) this.winners = new ArrayList<>(scoreBoard.winners);
         if(scoreBoard.scores == null) return;
         this.scores = new HashMap<>();
         for (String nickname : scoreBoard.scores.keySet()) {
@@ -92,9 +93,9 @@ public class ScoreBoard extends Observable implements Serializable {
     /**
      * Allows to set the winning players list to the scoreboard
      *
-     * @param winners list of player representing the game's winners
+     * @param winners list of players' nicknames representing the game's winners
      */
-    public void setWinners(List<Player> winners) {
+    public void setWinners(List<String> winners) {
         this.winners = new ArrayList<>(winners);
 
         notifyObservers(new ScoreUpdateMessage(this));
@@ -103,9 +104,9 @@ public class ScoreBoard extends Observable implements Serializable {
     /**
      * Retrieves the list of winning players.
      *
-     * @return list of Players representing the game's winners
+     * @return list of Players' nicknames representing the game's winners
      */
-    public List<Player> getWinners() {
+    public List<String> getWinners() {
         if(winners == null) return new ArrayList<>();
         return new ArrayList<>(winners);
     }

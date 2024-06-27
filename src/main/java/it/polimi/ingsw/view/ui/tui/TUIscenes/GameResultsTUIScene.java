@@ -1,7 +1,6 @@
 package it.polimi.ingsw.view.ui.tui.TUIscenes;
 
 import it.polimi.ingsw.controller.GameStatus;
-import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.view.ui.tui.Printer;
 
@@ -23,13 +22,13 @@ public class GameResultsTUIScene extends TUIScene{
         System.out.println("\n\n");
 
         if(Client.getInstance().getView().getGameStatus() == GameStatus.END) {
-            List<Player> winningPlayers = Client.getInstance().getView().getGameModel().getScoreBoard().getWinners();
+            List<String> winningPlayers = Client.getInstance().getView().getWinners();
 
             if(winningPlayers != null && !winningPlayers.isEmpty()) {
                 System.out.println("Winners: ");
-                StringBuilder winnerLabelText = new StringBuilder(winningPlayers.getFirst().nickname);
+                StringBuilder winnerLabelText = new StringBuilder(winningPlayers.getFirst());
                 for(int i = 1; i < winningPlayers.size(); i++) {
-                    winnerLabelText.append("& ").append(winningPlayers.get(i).nickname);
+                    winnerLabelText.append("& ").append(winningPlayers.get(i));
                 }
 
                 System.out.println(winnerLabelText);

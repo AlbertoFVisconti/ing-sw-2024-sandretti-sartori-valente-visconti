@@ -16,7 +16,7 @@ public class GameBackupManager {
      * @param key the Key that uniquely represents the game (the set of players)
      * @param gameBackup the game data that needs to be saved
      */
-    public static void saveGame(String key, GameBackup gameBackup) {
+    public synchronized static void saveGame(String key, GameBackup gameBackup) {
         if(!backupEnabled) return;
 
         // creating the directory (if needed)
@@ -43,7 +43,7 @@ public class GameBackupManager {
      *
      * @param backupKey the Key that uniquely represents the game (the set of players)
      */
-    public static void deleteBackup(String backupKey) {
+    public synchronized static void deleteBackup(String backupKey) {
         if(!backupEnabled) return;
 
         String filename = "saves/" + backupKey + ".ser";

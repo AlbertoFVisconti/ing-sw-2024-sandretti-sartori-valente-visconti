@@ -1,12 +1,10 @@
 package it.polimi.ingsw.view.ui.gui.FXController;
 
 import it.polimi.ingsw.controller.GameStatus;
-import it.polimi.ingsw.model.ScoreBoard;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.view.ui.gui.MediaManager;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
@@ -162,11 +160,11 @@ public class ScoreBoardController extends GUIScene{
 
         if(Client.getInstance().getView().getGameStatus().equals(GameStatus.END)){
             announcement.setVisible(true);
-            List<Player> winnersPlayerList = Client.getInstance().getView().getGameModel().getScoreBoard().getWinners();
+            List<String> winnersPlayerList = Client.getInstance().getView().getWinners();
             if(winnersPlayerList != null && !winnersPlayerList.isEmpty()) {
-                StringBuilder winnerLabelText = new StringBuilder(winnersPlayerList.getFirst().nickname);
+                StringBuilder winnerLabelText = new StringBuilder(winnersPlayerList.getFirst());
                 for(int i = 1; i < winnersPlayerList.size(); i++) {
-                    winnerLabelText.append("& ").append(winnersPlayerList.get(i).nickname);
+                    winnerLabelText.append("& ").append(winnersPlayerList.get(i));
                 }
 
                 winner.setText(winnerLabelText.toString());
