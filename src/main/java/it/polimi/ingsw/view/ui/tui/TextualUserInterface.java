@@ -51,6 +51,12 @@ public class TextualUserInterface implements UserInterface {
                 TextualUserInterface::forwardInputToScene
         );
 
+        commandParser.registerCommand("!goals",
+                (userInterface, tokens) -> {
+                    if(Client.getInstance().getView().getLocalPlayer() == null) throw new UnsupportedOperationException("You need to be playing a game to view goals");
+                    userInterface.displayGoals();
+                }
+        );
         // leave command
         commandParser.registerCommand("!leave",
                 (userInterface, tokens) -> {
@@ -131,6 +137,14 @@ public class TextualUserInterface implements UserInterface {
                     }
                 }
         );
+    }
+
+    /**
+     * Allows to display goals
+     */
+    private synchronized void displayGoals() {
+        this.currentScene = new GoalsTUIScene();
+        this.update();
     }
 
     /**

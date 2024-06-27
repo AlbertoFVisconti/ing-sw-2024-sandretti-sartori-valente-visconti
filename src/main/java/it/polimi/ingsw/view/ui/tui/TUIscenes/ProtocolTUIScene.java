@@ -30,7 +30,7 @@ public class ProtocolTUIScene extends TUIScene{
         System.out.println("\t - 1: socket");
         System.out.println("\t - 2: RMI");
 
-        System.out.println("\n" + statusMessage + "\n");
+        if(statusMessage != null)System.out.println("\n" + statusMessage + "\n");
 
         System.out.print("\nYour selection: ");
         if(providedInput == 0) return;

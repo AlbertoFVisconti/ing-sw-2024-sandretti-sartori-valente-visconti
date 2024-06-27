@@ -24,6 +24,6 @@
     </ImageView>
     <Button layoutX="220.0" layoutY="347.0" mnemonicParsing="false" onAction="#connectRMI" prefHeight="29.0"
             prefWidth="149.0" stylesheets="@Style.css" text="Connect (RMI)"/>
-    <Label layoutX="267.0" layoutY="240.0" text="Insert port" textFill="4b1616"/>
+    <Label layoutX="200.0" layoutY="239.0" text="Insert port (leave empty for default)" textFill="4b1616"/>
     <TextField fx:id="portField" layoutX="220.0" layoutY="264.0"/>
 </AnchorPane>

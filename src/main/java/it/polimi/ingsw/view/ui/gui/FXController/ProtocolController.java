@@ -61,14 +61,18 @@ public class ProtocolController extends GUIScene {
      */
     public void connectSocket() {
         int port;
-        try {
-            // trying to extract the port number
-            port = Integer.parseInt(portField.getText());
-            port=1235;
-        } catch (NumberFormatException e) {
-            // failed to parse the portField
-            this.reportError(new RuntimeException("Invalid port number"));
-            return;
+        if(portField.getText().isEmpty()) {
+            port = 1235;
+        }
+        else {
+            try {
+                // trying to extract the port number
+                port = Integer.parseInt(portField.getText());
+            } catch (NumberFormatException e) {
+                // failed to parse the portField
+                this.reportError(new RuntimeException("Invalid port number"));
+                return;
+            }
         }
         // creating the server handler
         Client.getInstance().setServerHandler(
@@ -87,14 +91,18 @@ public class ProtocolController extends GUIScene {
      */
     public void connectRMI() {
         int port;
-        try {
-            // trying to extract the port number
-            port = Integer.parseInt(portField.getText());
-            port=1234;
-        } catch (NumberFormatException e) {
-            // failed to parse the portField
-            this.reportError(new RuntimeException("Invalid port number"));
-            return;
+        if(portField.getText().isEmpty()) {
+            port = 1234;
+        }
+        else {
+            try {
+                // trying to extract the port number
+                port = Integer.parseInt(portField.getText());
+            } catch (NumberFormatException e) {
+                // failed to parse the portField
+                this.reportError(new RuntimeException("Invalid port number"));
+                return;
+            }
         }
 
         ServerHandler serverHandler;

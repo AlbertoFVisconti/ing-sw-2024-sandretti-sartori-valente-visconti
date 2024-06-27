@@ -637,6 +637,7 @@ public final class Printer {
      */
     public static void printGoal(Goal goal) {
         Canvas canvas = getCardFrame();
+        if(goal == null) return;
 
         if(goal instanceof ItemGoal itemGoal) {
             List<Corner> items = itemGoal.getItems().toList();
@@ -673,6 +674,12 @@ public final class Printer {
                     DEFAULT_CARD_HEIGHT/2 - c.height/2
                     );
         }
+
+        String scoreString = goal.getGoalValue() + " points each";
+        canvas.putString(scoreString,
+                DEFAULT_CARD_WIDTH/2 - scoreString.length()/2,
+                0
+        );
 
         System.out.println(canvas);
     }
