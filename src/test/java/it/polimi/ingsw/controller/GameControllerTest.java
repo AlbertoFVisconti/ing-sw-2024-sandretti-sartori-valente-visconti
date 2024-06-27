@@ -1102,13 +1102,13 @@ class GameControllerTest {
         gameController.loadBackup(gameBackup);
 
         int i;
-        for (i = 1; i < 40 ;i++){
+        for (i = 1; i < 41 ;i++){
             gameController.placeCard("p1", 0, true, new CardLocation(i, i));
             gameController.drawCard("p1", 0);
             gameController.placeCard("p2", 0, true, new CardLocation(i, i));
             gameController.drawCard("p2", 1);
         }
-        gameController.placeCard("p1", 0, true, new CardLocation(40, 40));
+        gameController.placeCard("p1", 0, true, new CardLocation(41, 41));
 
         //decks are empty
         assertThrows(RuntimeException.class, () -> {
@@ -1125,8 +1125,10 @@ class GameControllerTest {
             gameController.drawCard("p1", 1);
         });
 
-        gameController.drawCard("p1", 3);
-        gameController.placeCard("p2", 0, true, new CardLocation(40, 40));
+        //gameController.drawCard("p1", 3);
+        assertEquals(GameStatus.LAST_TURN, gameController.getGameStatus());
+        gameController.placeCard("p2", 0, true, new CardLocation(41, 41));
+        assertEquals(GameStatus.END, gameController.getGameStatus());
 
         //no card in the provided location
         assertThrows(RuntimeException.class, () -> {

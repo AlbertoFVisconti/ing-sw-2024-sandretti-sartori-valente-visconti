@@ -91,6 +91,7 @@ public class Deck<T extends Drawable> extends Observable implements Serializable
      * @return the element that's on top of the stack {@code null} if the deck's empty
      */
     public Resource getTopOfTheStack() {
+        if(this.topOfTheStack == null) return null;
         return this.topOfTheStack.getResourceType();
     }
 
