@@ -33,24 +33,12 @@
       </Label>
 
       <Button fx:id="playerNickname1" layoutX="63.0" layoutY="228.0" onAction="#viewPlayer1" text="Player 1:" textFill="#b6b28d">
-         <font>
-            <Font name="Bangla MN" size="14.0" />
-         </font>
       </Button>
       <Button fx:id="playerNickname2" layoutX="63.0" layoutY="268.0" onAction="#viewPlayer2" text="Player 2:" textFill="#b6b28d">
-         <font>
-            <Font name="Bangla MN" size="14.0" />
-         </font>
       </Button>
       <Button fx:id="playerNickname3" layoutX="63.0" layoutY="308.0" onAction="#viewPlayer3" text="Player 3:" textFill="#b6b28d">
-         <font>
-            <Font name="Bangla MN" size="14.0" />
-         </font>
       </Button>
       <Button fx:id="playerNickname4" layoutX="63.0" layoutY="348.0" onAction="#viewPlayer4" text="Player 4:" textFill="#b6b28d">
-         <font>
-            <Font name="Bangla MN" size="14.0" />
-         </font>
       </Button>
 
       <Label fx:id="scorePlayer1" layoutX="150.0" layoutY="228.0" text="0" textFill="#b6b28d">

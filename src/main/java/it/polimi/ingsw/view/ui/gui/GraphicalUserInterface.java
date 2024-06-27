@@ -207,6 +207,7 @@ public class GraphicalUserInterface extends Application implements UserInterface
 
             scoreBoardScene = fxmlLoader.getController();
 
+            scoreBoardScene.update();
             stage.setTitle("Scoreboard");
             stage.setScene(new Scene(parent));
             stage.show();

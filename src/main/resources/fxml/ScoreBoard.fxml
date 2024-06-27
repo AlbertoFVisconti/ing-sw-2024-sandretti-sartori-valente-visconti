@@ -11,7 +11,7 @@
    <ImageView fitHeight="824.0" fitWidth="432.0">
       <Image url="@../image/plateau_score.jpg" />
    </ImageView>
-   <ImageView fx:id="redPawn" fitHeight="52.0" fitWidth="52.0" layoutX="93.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="93.0">
+   <ImageView fx:id="redPawn" fitHeight="52.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@../image/RedCircle.png" />
    </ImageView>
    <ImageView fx:id="greenPawn" fitHeight="52.0" fitWidth="52.0" layoutX="95.0" layoutY="731.0" pickOnBounds="true" preserveRatio="true">
