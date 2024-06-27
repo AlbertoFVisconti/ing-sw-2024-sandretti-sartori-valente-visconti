@@ -70,15 +70,15 @@
          <Font name="Bangla MN" size="16.0" />
       </font>
    </Label>
-   <Label fx:id="announcement" layoutX="490.0" layoutY="352.0" prefHeight="55.0" prefWidth="150.0" text="The winner is:" textFill="#b6b28d">
+   <Label fx:id="announcement" layoutX="437.0" layoutY="352.0" prefHeight="55.0" prefWidth="154.0" text="The winner is:" textFill="#b6b28d">
       <font>
          <Font name="Bangla MN" size="20.0" />
       </font>
    </Label>
-   <Label fx:id="winner" layoutX="535.0" layoutY="420.0" prefHeight="33.0" prefWidth="64.0" text="Winner" textFill="#b6b28d">
+   <Label fx:id="winner" layoutX="440.0" layoutY="411.0" prefHeight="33.0" prefWidth="240.0" text="Winner" textFill="#b6b28d">
       <font>
          <Font name="Bangla MN" size="14.0" />
       </font>
    </Label>
-   <Button fx:id="playAgainButton" layoutX="510.0" layoutY="757.0" mnemonicParsing="false" text="Play again" onAction="#playAgain"/>
+   <Button fx:id="playAgainButton" layoutX="510.0" layoutY="757.0" mnemonicParsing="false" onAction="#playAgain" text="Play again" stylesheets="Style.css" />
 </AnchorPane>
