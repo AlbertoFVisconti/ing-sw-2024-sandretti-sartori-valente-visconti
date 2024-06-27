@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.security.MessageDigest;
@@ -410,6 +412,15 @@ class MainControllerTest {
 
 
         assertEquals(1,playerIdentifierToClientHandler.size());
+    }
+    @Test
+    void cleanUp() throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        MainController mc=MainController.getInstance();
+
+
+        Method drc= mc.getClass().getDeclaredMethod("cleanUp");
+        drc.setAccessible(true);
+        drc.invoke(mc);
     }
 
     @Test

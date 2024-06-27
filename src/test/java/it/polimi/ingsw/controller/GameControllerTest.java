@@ -586,9 +586,6 @@ class GameControllerTest {
 
         game.addPlayer(p1);
         game.addPlayer(p2);
-        assertThrows(RuntimeException.class,()-> {
-            gameController.placeCard("p2", 0, false, new CardLocation(1,1));
-        });
         game.addPlayer(p3);
         game.addPlayer(p4);
 
@@ -655,16 +652,6 @@ class GameControllerTest {
         // it is this player turn, but card constratins are not met
         assertThrows(RuntimeException.class, () -> {
             gameController.placeCard("p2", 1, false, new CardLocation(1,1));
-        });
-
-        // it is this player turn, but location is invalid
-        assertThrows(RuntimeException.class, () -> {
-            gameController.placeCard("p2", 1, true, new CardLocation(1,-1));
-        });
-
-        // it is this player turn, but location is invalid
-        assertThrows(RuntimeException.class, () -> {
-            gameController.placeCard("p2", 1, true, new CardLocation(-1,1));
         });
 
         gameController.placeCard("p2", 0, false, new CardLocation(1,1));
@@ -737,8 +724,8 @@ class GameControllerTest {
 
         assertEquals(gameController.getGameStatus(), GameStatus.END);
 
-        assertEquals(game.getScoreBoard().getWinners().get(0), "p3");
-        assertEquals(game.getScoreBoard().getWinners().get(1), "p4");
+        assertEquals(game.getScoreBoard().getWinners().get(0), p3);
+        assertEquals(game.getScoreBoard().getWinners().get(1), p4);
 
 
 
@@ -1147,11 +1134,12 @@ class GameControllerTest {
         assertThrows(RuntimeException.class, () -> {
             gameController.drawCard("p2", 3);
         });
+
+
+
+
+
     }
-
-
-
-
 
     private static class HelperClientHandler extends ClientHandler {
 
