@@ -51,6 +51,16 @@ public class TextualUserInterface implements UserInterface {
                 TextualUserInterface::forwardInputToScene
         );
 
+        // leave command
+        commandParser.registerCommand("!leave",
+                (userInterface, tokens) -> {
+                    Client.getInstance().getServerHandler().sendMessage(new LeaveGameMessage());
+                    userInterface.setMainScene();
+                    Client.getInstance().getView().reset();
+                }
+            );
+
+
         // join command -> sets the "join game" scene
         commandParser.registerCommand("!join",
                 (userInterface, tokens) -> userInterface.setJoinGameScene()
@@ -129,7 +139,7 @@ public class TextualUserInterface implements UserInterface {
      *
      * @param inputTokens user input that needs to be forwarded
      */
-    public void forwardInputToScene(String[] inputTokens) {
+    public synchronized void forwardInputToScene(String[] inputTokens) {
         this.currentScene.processInput(inputTokens);
     }
 
@@ -137,7 +147,7 @@ public class TextualUserInterface implements UserInterface {
      * Sets the TUI scene that allows the user to connect to the server
      */
     @Override
-    public void setConnectionScene() {
+    public synchronized void setConnectionScene() {
         this.currentScene = new ProtocolTUIScene();
         this.update();
     }
@@ -146,7 +156,7 @@ public class TextualUserInterface implements UserInterface {
      * Sets the TUI scene that represents the main scene of the game
      */
     @Override
-    public void setMainScene() {
+    public synchronized void setMainScene() {
         this.currentScene = new MainScreenTUIScene();
         this.update();
     }
@@ -155,7 +165,7 @@ public class TextualUserInterface implements UserInterface {
      * Sets the TUI scene that allows to create a game
      */
     @Override
-    public void setCreateGameScene() {
+    public synchronized void setCreateGameScene() {
         this.currentScene = new CreateGameTUIScene();
         this.update();
     }
@@ -164,7 +174,7 @@ public class TextualUserInterface implements UserInterface {
      * Sets the TUI scene that allows to join a game
      */
     @Override
-    public void setJoinGameScene() {
+    public synchronized void setJoinGameScene() {
         Client.getInstance().getServerHandler().sendMessage(new GameListRequestMessage());
         this.currentScene = new JoinGameTUIScene();
         this.update();
@@ -174,7 +184,7 @@ public class TextualUserInterface implements UserInterface {
      * Sets the TUI scene that allows the user to select color and view the list of connected players
      */
     @Override
-    public void setWaitPlayersScene() {
+    public synchronized void setWaitPlayersScene() {
         this.currentScene = new LobbyTUIScene();
         this.update();
     }
@@ -183,7 +193,7 @@ public class TextualUserInterface implements UserInterface {
      *  Sets the TUI scene that allows the user to place the starting card
      */
     @Override
-    public void setPlaceStartScene() {
+    public synchronized void setPlaceStartScene() {
         this.currentScene = new PlaceStartCardTUIScene();
         this.update();
     }
@@ -192,7 +202,7 @@ public class TextualUserInterface implements UserInterface {
      * Sets the TUI scene that allows the user to select the private goal
      */
     @Override
-    public void setSelectGoalScene() {
+    public synchronized void setSelectGoalScene() {
         this.currentScene = new SelectGoalTUIScene();
         this.update();
     }
@@ -201,7 +211,7 @@ public class TextualUserInterface implements UserInterface {
      * Sets the TUI scene that allows the user to draw/pick up a card
      */
     @Override
-    public void setDrawScene() {
+    public synchronized void setDrawScene() {
         this.currentScene = new DrawTUIScene();
         this.update();
     }
@@ -213,7 +223,7 @@ public class TextualUserInterface implements UserInterface {
      * @param player Player whose board needs to be displayed.
      */
     @Override
-    public void setPlayerBoardScene(Player player) {
+    public synchronized void setPlayerBoardScene(Player player) {
         this.currentScene = new PlayerBoardTUIScene(player);
         this.update();
     }
@@ -224,7 +234,7 @@ public class TextualUserInterface implements UserInterface {
      * @param player Player whose chat with the local player needs to be displayed, {@code null} to display the public chat
      */
     @Override
-    public void setChatScene(Player player) {
+    public synchronized void setChatScene(Player player) {
         this.currentScene = new ChatTUIScene(player);
         this.update();
     }
@@ -233,7 +243,7 @@ public class TextualUserInterface implements UserInterface {
      * Sets the TUI scene that allows to view the game scoreboard
      */
     @Override
-    public void setScoreScene() {
+    public synchronized void setScoreScene() {
         this.currentScene = new GameResultsTUIScene();
         this.update();
     }
@@ -242,14 +252,14 @@ public class TextualUserInterface implements UserInterface {
      * Sets the TUI scene that allows to read the game rules
      */
     @Override
-    public void setRuleScene() {}
+    public synchronized void setRuleScene() {}
 
     /**
      * Allows view to request the YUI to be updated.
      * It forward the update request to the currently displayed scene
      */
     @Override
-    public void update() {
+    public synchronized void update() {
         System.out.println(System.lineSeparator().repeat(50));
         this.currentScene.render(this.statusMessage + errorMessage);
     }
@@ -261,7 +271,7 @@ public class TextualUserInterface implements UserInterface {
      * @param exception RuntimeException that carries the error data
      */
     @Override
-    public void reportError(RuntimeException exception) {
+    public synchronized void reportError(RuntimeException exception) {
         this.errorMessage = "\n\nError: " + exception.getMessage();
         if(currentScene != null) currentScene.reset();
         this.update();
@@ -271,7 +281,7 @@ public class TextualUserInterface implements UserInterface {
      * Allows to reset the error message
      */
     @Override
-    public void resetError() {
+    public synchronized void resetError() {
         this.errorMessage = "";
     }
 
@@ -284,7 +294,7 @@ public class TextualUserInterface implements UserInterface {
      * @param playerTurn the nickname of the player that needs to play
      */
     @Override
-    public void setGameStatus(GameStatus gameStatus, TurnStatus turnStatus, String playerTurn) {
+    public synchronized void setGameStatus(GameStatus gameStatus, TurnStatus turnStatus, String playerTurn) {
         Player p = Client.getInstance().getView().getLocalPlayer();
         boolean isLocalPlayersTurn = (p.nickname.equals(playerTurn));
 

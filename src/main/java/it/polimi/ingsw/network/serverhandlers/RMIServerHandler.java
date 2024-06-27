@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.serverhandlers;
 
 import it.polimi.ingsw.events.messages.client.ClientMessage;
+import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.network.rmi.VirtualController;
 import it.polimi.ingsw.network.rmi.VirtualMainController;
 import it.polimi.ingsw.view.ViewWrapper;
@@ -61,7 +62,12 @@ public class RMIServerHandler extends ServerHandler {
      */
     @Override
     protected void forwardMessage(ClientMessage message) {
-        message.execute(mainController, controller);
+        try {
+            message.execute(mainController, controller);
+        }
+        catch (RuntimeException e) {
+            Client.getInstance().disconnect();
+        }
     }
 
     /**

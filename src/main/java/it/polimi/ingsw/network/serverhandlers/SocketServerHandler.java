@@ -47,7 +47,7 @@ public class SocketServerHandler extends ServerHandler implements Runnable {
             outputStream.writeObject(message);
             outputStream.reset();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Client.getInstance().disconnect();
         }
     }
 
@@ -76,7 +76,9 @@ public class SocketServerHandler extends ServerHandler implements Runnable {
             try {
                 message = (Message) inputStream.readObject();
             } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                // cannot reach the server
+                Client.getInstance().disconnect();
+                return;
             }
 
             Client.getInstance().getView().forwardMessage((ServerMessage) message);

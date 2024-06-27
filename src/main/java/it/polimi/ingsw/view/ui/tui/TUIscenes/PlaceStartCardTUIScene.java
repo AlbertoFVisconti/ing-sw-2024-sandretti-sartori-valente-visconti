@@ -23,7 +23,6 @@ public class PlaceStartCardTUIScene extends TUIScene{
 
         System.out.println("\n\n" + statusMessage + "\n\n");
         System.out.println("Your starting card:\n");
-        System.out.println(localPlayer.getStartCard());
         System.out.println("\tFront:");
         Printer.printCard(localPlayer.getStartCard(), false);
         System.out.println("\tBack");

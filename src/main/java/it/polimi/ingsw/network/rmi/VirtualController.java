@@ -7,7 +7,8 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- *
+ * VirtualController allows to define an abstract GameController's interface that can be used
+ * by clients in order to perform RMI calls on methods that requires the GameController's execution
  */
 public interface VirtualController extends Remote {
 

@@ -22,6 +22,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Player object are used to handle a player's object within a game.
+ * A player is uniquely connected to a single game. A client can (virtually) be connected
+ * to multiple games, with multiple players, one for each game.
+ */
 public class Player extends Observable {
     /*
      player's nickname, must be unique within the game.
@@ -58,6 +63,8 @@ public class Player extends Observable {
 
     // Internally counts the turns in order to specify the placementTurn parameter in the CardSlots when a card is placed.
     private int turnCounter;
+
+    private boolean hasLeft = false;
 
     /**
      * Constructs a new Player object.
@@ -130,6 +137,11 @@ public class Player extends Observable {
         }
     }
 
+    /**
+     * Load Player's data inside the current player's object
+     *
+     * @param playerData PlayerData that contains data that needs to be loaded
+     */
     public void loadPlayer(PlayerData playerData) {
         this.color = playerData.getPlayerColor();
         this.startCard = playerData.getStartCard();
@@ -442,5 +454,28 @@ public class Player extends Observable {
      */
     public PlayCard getPlayerCard(int index) {
         return playerCards[index];
+    }
+
+    /**
+     * Checks whether a player has left the game or not
+     *
+     * @return {@code true} if the player has left the game, {@code false} otherwise
+     */
+    public boolean hasLeft() {
+        return hasLeft;
+    }
+
+    /**
+     * Allows to set the player as offline (left the game)
+     */
+    public void leftTheGame() {
+        hasLeft = true;
+    }
+
+    /**
+     * Allows to set the player as online (re joined the game)
+     */
+    public void rejoinTheGame() {
+        hasLeft = false;
     }
 }

@@ -6,6 +6,14 @@ import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
 
+/**
+ * JoinConfirmationMessage allows the server to confirm that a client joined a certain game.
+ * It carries the nickname that the players used to join the game.
+ * If the player's re-joining a game, the message will also contain a GameData object
+ * that contains the game's data (only data that the player is authorized to receive).
+ * This message is also used when a saved game needs to be reloaded. In this case the message
+ * will be received twice, when all the players selects their colors.
+ */
 public class JoinConfirmationMessage extends ServerMessage {
     private final String nickname;
 

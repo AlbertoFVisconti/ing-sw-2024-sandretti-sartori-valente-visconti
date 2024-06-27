@@ -155,12 +155,14 @@ public class ScoreBoardController extends GUIScene{
 
         if(Client.getInstance().getView().getGameStatus().equals(GameStatus.END)){
             announcement.setVisible(true);
-            int winnerScore = 0;
-            for(Player p : Client.getInstance().getView().getGameModel().getPlayers()){
-                if(Client.getInstance().getView().getGameModel().getScoreBoard().getScore(p.nickname) > winnerScore){
-                    winnerScore = Client.getInstance().getView().getGameModel().getScoreBoard().getScore(p.nickname);
-                    winner.setText(p.nickname);
+            List<Player> winnersPlayerList = Client.getInstance().getView().getGameModel().getScoreBoard().getWinners();
+            if(winnersPlayerList != null && !winnersPlayerList.isEmpty()) {
+                StringBuilder winnerLabelText = new StringBuilder(winnersPlayerList.getFirst().nickname);
+                for(int i = 1; i < winnersPlayerList.size(); i++) {
+                    winnerLabelText.append("& ").append(winnersPlayerList.get(i).nickname);
                 }
+
+                winner.setText(winnerLabelText.toString());
             }
             winner.setVisible(true);
         }

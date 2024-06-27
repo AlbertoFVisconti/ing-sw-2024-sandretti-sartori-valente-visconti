@@ -6,7 +6,8 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- *
+ * VirtualMainController allows to define an abstract VirtualMainController's interface that can be used
+ * by clients in order to perform RMI calls on methods that requires the VirtualMainController's execution
  */
 public interface VirtualMainController extends Remote {
 

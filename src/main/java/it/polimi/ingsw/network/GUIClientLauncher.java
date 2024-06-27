@@ -3,6 +3,9 @@ package it.polimi.ingsw.network;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.ui.gui.GraphicalUserInterface;
 
+/**
+ * Allows to launch a GUI client application to play the game through a graphical user interface
+ */
 public class GUIClientLauncher {
     /**
      * The main method to run the GUI client application.

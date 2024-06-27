@@ -155,6 +155,9 @@ public abstract class ClientHandler implements Observer {
         this.linkController(gameControllerWrapper);
     }
 
+    /**
+     * Sets the ClientHandler controller as null
+     */
     final public void resetController() {
         this.gameController = null;
         this.linkController(null);

@@ -225,6 +225,12 @@ public class ItemCollection implements Serializable {
         return this.content.get(corner);
     }
 
+    /**
+     * Retrieves the ItemCollection content as a list of Corners.
+     * Each Corner amounts in the list matches the amounts in the ItemCollection
+     *
+     * @return a List containing the ItemCollection's content
+     */
     public List<Corner> toList() {
         List<Corner> result = new ArrayList<>();
 

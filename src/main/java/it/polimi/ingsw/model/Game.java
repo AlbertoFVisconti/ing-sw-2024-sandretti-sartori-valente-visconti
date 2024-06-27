@@ -185,6 +185,11 @@ public class Game extends Observable {
         notifyObservers(new PlayersListUpdateMessage(nicknames, colors));
     }
 
+    /**
+     * Compute the unique backup key for the set of players that are playing this game
+     *
+     * @return the game's backup key
+     */
     public String getBackupKey() {
         String[] nicknames = new String[players.size()];
 
@@ -340,6 +345,11 @@ public class Game extends Observable {
         this.scoreBoard = new ScoreBoard(players);
     }
 
+    /**
+     * Reload a game from a GameData object
+     *
+     * @param gameData GameData that contains data regarding the game that needs to be loaded
+     */
     public void loadGame(GameData gameData) {
         if (isStarted) throw new UnsupportedOperationException("cannot load game data on a started game");
 
@@ -552,6 +562,12 @@ public class Game extends Observable {
                 }
             }
         }
+
+        for(int i = 0; i < visibleCards.length; i++) {
+            if(visibleCards[i] == null) {
+                this.notifyObservers(new VisibleCardUpdateMessage(null, i));
+            }
+        }
     }
 
     /**
@@ -643,6 +659,4 @@ public class Game extends Observable {
     public Deck<Goal> getGoalsDeck() {
         return goalsDeck;
     }
-
-
 }

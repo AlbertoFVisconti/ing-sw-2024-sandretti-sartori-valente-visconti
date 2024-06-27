@@ -22,9 +22,9 @@
       <ImageView fitHeight="987.0" fitWidth="648.0" layoutX="-15.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
          <Image url="@../image/controlwp.png" />
       </ImageView>
-      <ImageView fx:id="handCard1" fitHeight="86.0" fitWidth="137.0" layoutX="31.0" layoutY="751.0" onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="handCard2" fitHeight="86.0" fitWidth="137.0" layoutX="277.0" layoutY="755.0" onMouseClicked="#SelectCard2" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="handCard3" fitHeight="86.0" fitWidth="137.0" layoutX="144.0" layoutY="850.0" onMouseClicked="#SelectCard3" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="handCard1" fitHeight="86.0" fitWidth="137.0" layoutX="31.0" layoutY="751.0" onMouseClicked="#selectCard1" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="handCard2" fitHeight="86.0" fitWidth="137.0" layoutX="277.0" layoutY="755.0" onMouseClicked="#selectCard2" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="handCard3" fitHeight="86.0" fitWidth="137.0" layoutX="144.0" layoutY="850.0" onMouseClicked="#selectCard3" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="privateGoal" fitHeight="75.0" fitWidth="113.0" layoutX="46.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true" />
       <Label layoutX="46.0" layoutY="173.0" prefHeight="50.0" prefWidth="160.0" text="Scoreboard:" textFill="#b6b28d">
          <font>
@@ -78,10 +78,10 @@
             <Font name="Bangla MN" size="19.0" />
          </font>
       </Label>
-      <ImageView fx:id="visibleCard1" fitHeight="86.0" fitWidth="137.0" layoutX="46.0" layoutY="431.0" onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="visibleCard3" fitHeight="86.0" fitWidth="137.0" layoutX="307.0" layoutY="431.0" onMouseClicked="#SelectCard2" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="visibleCard2" fitHeight="86.0" fitWidth="137.0" layoutX="46.0" layoutY="525.0" onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="visibleCard4" fitHeight="86.0" fitWidth="137.0" layoutX="307.0" layoutY="525.0" onMouseClicked="#SelectCard2" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="visibleCard1" fitHeight="86.0" fitWidth="137.0" layoutX="46.0" layoutY="431.0" onMouseClicked="#selectCard1" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="visibleCard3" fitHeight="86.0" fitWidth="137.0" layoutX="307.0" layoutY="431.0" onMouseClicked="#selectCard2" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="visibleCard2" fitHeight="86.0" fitWidth="137.0" layoutX="46.0" layoutY="525.0" onMouseClicked="#selectCard1" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="visibleCard4" fitHeight="86.0" fitWidth="137.0" layoutX="307.0" layoutY="525.0" onMouseClicked="#selectCard2" pickOnBounds="true" preserveRatio="true" />
       <Label layoutX="46.0" layoutY="394.0" text="Resource Deck:" textFill="#b6b28d">
          <font>
             <Font name="Bangla MN" size="19.0" />
@@ -104,8 +104,8 @@
       </Label>
       <ImageView fx:id="commonGoal1" fitHeight="75.0" fitWidth="113.0" layoutX="240.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="commonGoal2" fitHeight="75.0" fitWidth="113.0" layoutX="388.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="resourceDeck" fitHeight="86.0" fitWidth="137.0" layoutX="46.0" layoutY="619.0" onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="goldDeck" fitHeight="86.0" fitWidth="137.0" layoutX="307.0" layoutY="619.0" onMouseClicked="#SelectCard1" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="resourceDeck" fitHeight="86.0" fitWidth="137.0" layoutX="46.0" layoutY="619.0" onMouseClicked="#selectCard1" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="goldDeck" fitHeight="86.0" fitWidth="137.0" layoutX="307.0" layoutY="619.0" onMouseClicked="#selectCard1" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="showScoreBoard" layoutX="182.0" layoutY="185.0" mnemonicParsing="false" onAction="#showScoreboard" prefHeight="16.0" prefWidth="53.0" text="Show" />
       <ImageView fx:id="playerColor1" fitHeight="27.0" fitWidth="25.0" layoutX="195.0" layoutY="234.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="playerColor2" fitHeight="27.0" fitWidth="25.0" layoutX="195.0" layoutY="273.0" pickOnBounds="true" preserveRatio="true" />

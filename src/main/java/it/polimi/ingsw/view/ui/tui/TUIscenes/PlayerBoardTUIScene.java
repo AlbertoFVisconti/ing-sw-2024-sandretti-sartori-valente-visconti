@@ -16,11 +16,15 @@ public class PlayerBoardTUIScene extends TUIScene{
     // player whose board needs to be displayed
     private Player player;
 
+    private boolean placing;
+
     // input fields
     int card;
     int side;
     int x;
     int y;
+
+    private int xOffset=0, yOffset =0;
 
     /**
      * Builds a PlayerBoardTUIScene that displays the given player's board
@@ -47,25 +51,36 @@ public class PlayerBoardTUIScene extends TUIScene{
      */
     @Override
     public void render(String statusMessage) {
-        Printer.printBoard(player.getBoard());
+        Printer.printBoard(player.getBoard(),xOffset,yOffset);
         System.out.println("\n\nYour Cards:");
         Printer.printHand(player.getPlayerCards());
         System.out.println("\n\n" + statusMessage + "\n\n");
 
 
-        System.out.print("Select a card to place: ");
-        if(providedInput == 0) return;
-        System.out.print(card+"\n");
-        System.out.print("Select side (0 -> front, 1 -> back): ");
-        if(providedInput == 1) return;
-        System.out.print(side+"\n");
-        System.out.print("Placing location:\n");
-        System.out.print("\tX: ");
-        if(providedInput == 2) return;
-        System.out.print(x+"\n");
-        System.out.print("\tY: ");
-        if(providedInput == 3) return;
-        System.out.print(y + "\n\n");
+        if(placing) {
+            System.out.print("Selected card: ");
+            if (providedInput == 0) return;
+            System.out.print(card + "\n");
+            System.out.print("Select side (0 -> front, 1 -> back): ");
+            if (providedInput == 1) return;
+            System.out.print(side + "\n");
+            System.out.print("Placing locatio!|n:\n");
+            System.out.print("\tX: ");
+            if (providedInput == 2) return;
+            System.out.print(x + "\n");
+            System.out.print("\tY: ");
+            if (providedInput == 3) return;
+            System.out.print(y + "\n\n");
+        }
+        else {
+            System.out.println("Use: u (up), d (down), l (left), r (right) to go through the board");
+
+            if(player.nickname.equals(Client.getInstance().getView().getLocalPlayerName())
+                    && player.nickname.equals(Client.getInstance().getView().getPlayersTurn())) {
+                System.out.println("input the card number to place it");
+            }
+            System.out.println("use !board [player name] to view another player's board");
+        }
     }
 
     /**
@@ -75,53 +90,78 @@ public class PlayerBoardTUIScene extends TUIScene{
      */
     @Override
     public void processInput(String[] tokens) {
-        switch (providedInput) {
-            default:
-                break;
-            case 0:
-                try {
-                    card = Integer.parseInt(tokens[0]);
-                } catch (NumberFormatException e) {
-                    throw new InvalidParameterException(e);
-                }
+        if(tokens == null || tokens.length == 0) return;
 
-                if (player.getPlayerCards().length <= card || card < 0) {
-                    throw new InvalidParameterException("invalid card");
-                }
-                providedInput++;
-                break;
-            case 1:
-                try {
-                    side = Integer.parseInt(tokens[0]);
-                } catch (NumberFormatException e) {
-                    throw new InvalidParameterException(e);
-                }
+        if(placing) {
+            switch (providedInput) {
+                default:
+                    break;
+                case 0:
 
-                if (side != 0 && side != 1) {
-                    throw new InvalidParameterException("invalid side");
-                }
-                providedInput++;
-                break;
-            case 2:
-                try {
-                    x = Integer.parseInt(tokens[0]);
-                } catch (NumberFormatException e) {
-                    throw new InvalidParameterException("Invalid x");
-                }
-                providedInput++;
-                break;
-            case 3:
-                try {
-                    y = Integer.parseInt(tokens[0]);
-                } catch (NumberFormatException e) {
-                    throw new InvalidParameterException("Invalid y");
-                }
-                providedInput++;
-                break;
+                    break;
+                case 1:
+                    try {
+                        side = Integer.parseInt(tokens[0]);
+                    } catch (NumberFormatException e) {
+                        throw new InvalidParameterException(e);
+                    }
+
+                    if (side != 0 && side != 1) {
+                        throw new InvalidParameterException("invalid side");
+                    }
+                    providedInput++;
+                    break;
+                case 2:
+                    try {
+                        x = Integer.parseInt(tokens[0]);
+                    } catch (NumberFormatException e) {
+                        throw new InvalidParameterException("Invalid x");
+                    }
+                    providedInput++;
+                    break;
+                case 3:
+                    try {
+                        y = Integer.parseInt(tokens[0]);
+                    } catch (NumberFormatException e) {
+                        throw new InvalidParameterException("Invalid y");
+                    }
+                    providedInput++;
+                    break;
+            }
+        }
+        else {
+            switch (tokens[0]) {
+                case "u":
+                    this.yOffset++;
+                    break;
+                case "d":
+                    this.yOffset--;
+                    break;
+                case "l":
+                    this.xOffset--;
+                    break;
+                case "r":
+                    this.xOffset++;
+                    break;
+                default:
+                    try {
+                        card = Integer.parseInt(tokens[0]);
+                    } catch (NumberFormatException e) {
+                        throw new InvalidParameterException("invalid input");
+                    }
+
+                    if (player.getPlayerCards().length <= card || card < 0) {
+                        throw new InvalidParameterException("invalid input");
+                    }
+                    providedInput = 1;
+                    placing = true;
+                    break;
+            }
         }
 
         if(providedInput == 4) {
             Client.getInstance().getServerHandler().sendMessage(new PlaceCardMessage(card, side == 1, new CardLocation(x,y)));
+            placing = false;
         }
     }
 }

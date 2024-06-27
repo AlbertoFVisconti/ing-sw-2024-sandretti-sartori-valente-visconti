@@ -302,6 +302,11 @@ public class MainController extends Thread implements VirtualMainController {
         }
     }
 
+    /**
+     * Allows to make a player leave a game (without the need for the client to disconnect from the server)
+     *
+     * @param playerIdentifier the identifier of the player who is leaving the game
+     */
     @Override
     public synchronized void leaveGame(String playerIdentifier) {
         GameController gameController = playerIdentifierToGameController.get(playerIdentifier);

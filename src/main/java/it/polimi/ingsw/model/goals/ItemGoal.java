@@ -34,6 +34,15 @@ public class ItemGoal extends Goal {
         return scorePerSet * player.getInventory().divide(this.items);
     }
 
+    /**
+     * Retrieves the goal's required items
+     *
+     * @return ItemCollection containing the goal's required items
+     */
+    public ItemCollection getItems() {
+        return new ItemCollection(items);
+    }
+
     @Override
     public String toString() {
         return "ItemGoal{" +

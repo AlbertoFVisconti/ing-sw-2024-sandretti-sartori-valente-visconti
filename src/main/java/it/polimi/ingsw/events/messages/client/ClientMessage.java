@@ -23,6 +23,13 @@ public abstract class ClientMessage extends Message {
         this.playerIdentifier = null;
     }
 
+    /**
+     * Sets the message playerIdentifier.
+     * Used by ServerHandlers that encapsulate the playerIdentifier in
+     * every outgoing message.
+     *
+     * @param playerIdentifier the sender's identifier
+     */
     public void setPlayerIdentifier(String playerIdentifier) {
         this.playerIdentifier = playerIdentifier;
     }

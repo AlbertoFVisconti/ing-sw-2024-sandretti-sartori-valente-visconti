@@ -8,7 +8,6 @@ import it.polimi.ingsw.network.Client;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 
@@ -74,6 +73,7 @@ public class WaitingForPlayersController extends GUIScene {
     void goBackToLobby() {
         Client.getInstance().getServerHandler().sendMessage(new LeaveGameMessage());
         Client.getInstance().getView().getUserInterface().setMainScene();
+        Client.getInstance().getView().reset();
     }
 
     /**

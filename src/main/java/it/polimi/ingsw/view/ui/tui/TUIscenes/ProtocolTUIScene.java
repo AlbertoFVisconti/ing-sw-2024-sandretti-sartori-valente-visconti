@@ -34,7 +34,7 @@ public class ProtocolTUIScene extends TUIScene{
 
         System.out.print("\nYour selection: ");
         if(providedInput == 0) return;
-        System.out.print(protocol+"\nInsert server IP [127.0.0.1]: ");
+        System.out.print(protocol+"\nInsert server IP: ");
         if(providedInput == 1) return;
         System.out.print(ip + "\nInsert server port: ");
         if(providedInput == 2) return;
@@ -65,8 +65,7 @@ public class ProtocolTUIScene extends TUIScene{
                 providedInput++;
                 break;
             case 1:
-                if(tokens[0].isEmpty()) this.ip = "127.0.0.1";
-                else this.ip = tokens[0];
+                this.ip = tokens[0];
 
                 providedInput++;
                 break;

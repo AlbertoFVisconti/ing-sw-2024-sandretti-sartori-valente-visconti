@@ -1,10 +1,11 @@
 package it.polimi.ingsw.view.ui.tui.TUIscenes;
 
 import it.polimi.ingsw.events.messages.client.SelectGoalMessage;
+import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.view.ui.tui.Printer;
 
 import java.security.InvalidParameterException;
-import java.util.Arrays;
 
 /**
  * SelectGoalTUIScene handles the interface that allows the TUI user to select the
@@ -20,10 +21,16 @@ public class SelectGoalTUIScene extends TUIScene{
     public void render(String statusMessage) {
         System.out.println("\n\n" + statusMessage + "\n\n");
 
-        // TODO
-        System.out.println(
-                Arrays.stream(Client.getInstance().getView().getLocalPlayer().getAvailableGoals()).toList()
-        );
+        Player p = Client.getInstance().getView().getLocalPlayer();
+
+        if(p == null || p.getAvailableGoals() == null) return;
+
+        System.out.println("Goal #0:");
+        Printer.printGoal(p.getAvailableGoals()[0]);
+
+        System.out.println("Goal #1");
+        Printer.printGoal(p.getAvailableGoals()[1]);
+
 
         System.out.println("\n\nSelect goal: ");
     }

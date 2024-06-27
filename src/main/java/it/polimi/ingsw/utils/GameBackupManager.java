@@ -32,8 +32,29 @@ public class GameBackupManager {
             out.close();
             file.close();
         }
-        catch (IOException ignored){
+        catch (IOException e){
             System.out.println("\t failed to save");
+        }
+    }
+
+    /**
+     * Allows to delete a game backup.
+     * This method is used when a game that was previously saved ends
+     *
+     * @param backupKey the Key that uniquely represents the game (the set of players)
+     */
+    public static void deleteBackup(String backupKey) {
+        if(!backupEnabled) return;
+
+        String filename = "saves/" + backupKey + ".ser";
+
+        try {
+            // trying to delete the game backup
+            File file = new File(filename);
+            file.delete();
+        }
+        catch (Exception e){
+            System.out.println("\t failed to delete the backup");
         }
     }
 

@@ -20,10 +20,28 @@ public class Client {
 
     /**
      * Builds a Client
-     *
      */
     private Client() {}
 
+    /**
+     * Allows report disconnection from the server to the user.
+     * This method bring the user to the connection interface so that
+     * they can retry connection.
+     */
+    public void disconnect() {
+        this.serverHandler = null;
+        this.view.getUserInterface().setConnectionScene();
+        this.view.getUserInterface().reportError(new RuntimeException(
+                "Failed to reach server!"
+        ));
+    }
+
+    /**
+     * Sets up the client's View.
+     * Blocks the client until the user interface is ready
+     *
+     * @param view the local player's view
+     */
     void setup(View view) {
         this.view = view;
 
@@ -66,6 +84,13 @@ public class Client {
         return serverHandler;
     }
 
+    /**
+     * Allows to set the Client's ServerHandler.
+     * Used when the player select the protocol and the server's data.
+     * If the connection fails, this method will report the error to the user.
+     *
+     * @param serverHandler ServerHandler that will manage communication with the server (mostly outbound)
+     */
     public void setServerHandler(ServerHandler serverHandler) {
         this.serverHandler = serverHandler;
 
@@ -83,6 +108,9 @@ public class Client {
         }
     }
 
+    /**
+     * Allows to let the Client know that the user interface has been successfully initialized
+     */
     public synchronized void confirmUIInitialized() {
         this.uiInitialized = true;
     }

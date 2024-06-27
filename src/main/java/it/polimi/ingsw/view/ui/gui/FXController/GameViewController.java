@@ -14,34 +14,41 @@ import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.utils.CardLocation;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.ui.gui.MediaManager;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
 
 import java.util.*;
 
+/**
+ * GameViewController handles the interface that allows the GUI player to play the game.
+ * It contains the actual board, a simple scoreboard, the inventory, the drawable cards, the
+ * player's cards and the goals.
+ */
 public class GameViewController extends GUIScene {
     public static final int[] POSS = {-1, 1};
+
+    // card size in pixel, on screen
     private final static double CARD_HEIGHT = 114;
     private final static double CARD_WIDTH = 171;
 
+    // card's corner size in pixel, on screen
     private final static double CARD_CORNER_HEIGHT = (265.0/662.0) * CARD_HEIGHT;
     private final static double CARD_CORNER_WIDTH = (219.0/993.0) * CARD_WIDTH;
+
+
     public ImageView tableBackground;
     public ScrollPane scrollPane;
 
-
+    // the player (nickname) whose board is currently displayed
     private String currentlyDisplayedPlayer;
 
+    // inventory
     @FXML
     public Label fungusLabel;
     @FXML
@@ -56,9 +63,9 @@ public class GameViewController extends GUIScene {
     public Label inkLabel;
     @FXML
     public Label scrollLabel;
-
     private EnumMap<Corner, Label> cornerToLabel;
 
+    // drawable cards
     @FXML
     public ImageView resourceDeck;
     @FXML
@@ -72,12 +79,13 @@ public class GameViewController extends GUIScene {
     @FXML
     public ImageView visibleCard4;
 
+    private ImageView[] drawableCards;
+
+    // common goals
     @FXML
     public ImageView commonGoal1;
     @FXML
     public ImageView commonGoal2;
-
-    private ImageView[] drawableCards;
 
     @FXML
     public Label turnWarningLabel;
@@ -156,8 +164,13 @@ public class GameViewController extends GUIScene {
     long DOUBLE_CLICK_THRESHOLD=300;
     boolean[] isflipped={false,false,false};
 
+    /**
+     * When the interface is loaded, it sets up the controller's data.
+     * Also, performs the first update.
+     */
     @FXML
     public void initialize() {
+        // setting up variables and containers
         this.currentlyDisplayedPlayer = Client.getInstance().getView().getLocalPlayerName();
 
         drawableCards = new ImageView[]{resourceDeck, goldDeck, visibleCard1, visibleCard2, visibleCard3, visibleCard4};
@@ -175,25 +188,30 @@ public class GameViewController extends GUIScene {
         cornerToLabel.put(Corner.INK, inkLabel);
         cornerToLabel.put(Corner.SCROLL, scrollLabel);
 
-
+        // adding stylesheet to tablepane
         TablePane.getStylesheets().add((Objects.requireNonNull(getClass().getResource("/fxml/Style.css")).toExternalForm()));
 
+        // retrieving useful objects for the next lines
         View view = Client.getInstance().getView();
         MediaManager mediaManager = MediaManager.getInstance();
 
+        // setup private goals images
         privateGoal.setImage(mediaManager.getImage(view.getLocalPlayer().getPrivateGoal()));
         commonGoal1.setImage(mediaManager.getImage(view.getGameModel().getCommonGoals()[0]));
         commonGoal2.setImage(mediaManager.getImage(view.getGameModel().getCommonGoals()[1]));
 
+        // load player's hand
         for(int i = 0; i < hand.length; i++) {
             hand[i].setImage(mediaManager.getImage(view.getLocalPlayer().getPlayerCard(i), false));
             hand[i].getStyleClass().add("clickable");
         }
 
+        // sets css class to drawable cards
         for(ImageView imageView : drawableCards) {
             imageView.getStyleClass().add("clickable");
         }
 
+        // matching colors to player nickname buttons
         List<Player> players = Client.getInstance().getView().getGameModel().getPlayers();
         for(int i = 0; i < players.size(); i++) {
             playerColors[i].setImage(MediaManager.getInstance().getImage(
@@ -201,19 +219,26 @@ public class GameViewController extends GUIScene {
             ));
         }
 
+        // sets up nickname labels
         for(int i = 0; i < players.size(); i++) {
             playerNicknameLabels[i].setText(players.get(i).nickname);
             scoreLabels[i].setVisible(true);
         }
 
+        // hiding unused labels
         for(int i = players.size(); i < playerNicknameLabels.length; i++) {
             playerNicknameLabels[i].setVisible(false);
             scoreLabels[i].setVisible(false);
         }
 
+        // first update
         update();
     }
 
+    /**
+     *
+     * @param id
+     */
     public void SelectCard(int id){
         if (!Client.getInstance().getView().getGameModel().getTurn().equals(Client.getInstance().getView().getLocalPlayer())|| !Client.getInstance().getView().getTurnStatus().equals(TurnStatus.PLACE)){
         }else{
@@ -226,8 +251,11 @@ public class GameViewController extends GUIScene {
         }
     }
 
+    /**
+     * Triggered when the user selects their first card
+     */
     @FXML
-    public void SelectCard1(MouseEvent mouseEvent) {
+    public void selectCard1() {
         if (!Client.getInstance().getView().getGameModel().getTurn().equals(Client.getInstance().getView().getLocalPlayer())|| !Client.getInstance().getView().getTurnStatus().equals(TurnStatus.PLACE)){
             //TODO: send a message to the client 'you can't place a card now'
         }else{
@@ -237,8 +265,12 @@ public class GameViewController extends GUIScene {
             handCard3.setOpacity(1);
         }
     }
+
+    /**
+     * Triggered when the user selects their second card
+     */
     @FXML
-    public void SelectCard2(MouseEvent mouseEvent) {
+    public void selectCard2() {
         if (!Client.getInstance().getView().getGameModel().getTurn().equals(Client.getInstance().getView().getLocalPlayer()) || !Client.getInstance().getView().getTurnStatus().equals(TurnStatus.PLACE)) {
             //TODO: send a message to the client 'you can't place a card now'
         }else{
@@ -249,8 +281,12 @@ public class GameViewController extends GUIScene {
         }
 
     }
+
+    /**
+     * Triggered when the user selects their third card
+     */
     @FXML
-    public void SelectCard3(MouseEvent mouseEvent) {
+    public void selectCard3() {
         if (!Client.getInstance().getView().getGameModel().getTurn().equals(Client.getInstance().getView().getLocalPlayer()) || !Client.getInstance().getView().getTurnStatus().equals(TurnStatus.PLACE)) {
             //TODO: send a message to the client 'you can't place a card now'
         }else{
@@ -261,6 +297,9 @@ public class GameViewController extends GUIScene {
         }
     }
 
+    /**
+     * Refresh the displayed scores
+     */
     public void refreshScoreboard() {
         List<Player> players;
         players = Client.getInstance().getView().getPlayersList();
@@ -270,6 +309,9 @@ public class GameViewController extends GUIScene {
         }
     }
 
+    /**
+     * Disable decks and lower their opacity
+     */
     public void disableDecks(){
         for(ImageView imageView : drawableCards) {
             imageView.setOnMouseClicked(null);
@@ -277,6 +319,9 @@ public class GameViewController extends GUIScene {
         }
     }
 
+    /**
+     * Disable player's cards and lower their opacity
+     */
     public void disableCards() {
         for(ImageView imageView : hand) {
             imageView.setOnMouseClicked(null);
@@ -284,6 +329,13 @@ public class GameViewController extends GUIScene {
         }
     }
 
+    /**
+     * Adds a cards image on the table (player's board) given a CardSlot
+     * that describe the card's state and its location.
+     *
+     * @param cardSlot the CardSlot that describe the card's state
+     * @param cl the location where the card is placed on the board
+     */
     private void addCardSlot(CardSlot cardSlot,CardLocation cl){
         ImageView cardImage = new ImageView(MediaManager.getInstance().getImage(cardSlot));
         cardImage.setFitHeight(CARD_HEIGHT);
@@ -300,6 +352,14 @@ public class GameViewController extends GUIScene {
         cardImage.setVisible(true);
     }
 
+    /**
+     * Checks whether a card is placeable on the player's board.
+     * It only uses the local player's board since this method is only
+     * used when displaying this player's board.
+     *
+     * @param cl the location that needs to be checked
+     * @return {@code true} if a card can be placed in the provided location, {@code false} otherwise
+     */
     private boolean placeable(CardLocation cl ){
         Map<CardLocation, CardSlot> board = Client.getInstance().getView().getLocalPlayer().getBoard();
 
@@ -317,44 +377,55 @@ public class GameViewController extends GUIScene {
         return !board.containsKey(cl.topRightNeighbour())
                 || board.get(cl.topRightNeighbour()).getBottomLeftCorner() != null;
     }
-    public void addPlaceHolder(CardLocation cl, Set<CardLocation> seen){
+
+    /**
+     * Recursively adds all needed placeholders (button that can be
+     * clicked to place a card in the matching location).
+     *
+     * @param cl location where the check needs to start
+     * @param seen an empty HashSet used to keep track of visited cards
+     */
+    public void addPlaceHolders(CardLocation cl, Set<CardLocation> seen){
         if(boardCardImages.containsKey(cl)){
             for(int i: POSS){
                 for(int j: POSS){
                     CardLocation p = new CardLocation(cl.x() + i, cl.y() + j);
                     if (!seen.contains(p)) {
                         seen.add(p);
-                        if(placeable(p)) addShape(p);
-                        addPlaceHolder(p, seen);
+                        if(placeable(p)) addPlaceCardButton(p);
+                        addPlaceHolders(p, seen);
                     }
                 }
             }
         }
     }
 
+    /**
+     * Sends the message that actually asks the server to place the selected card in the
+     * provided location.
+     *
+     * @param cardLocation the location where the card needs to be placed
+     */
     private void placeMessage(CardLocation cardLocation) {
-        try {
-            Client.getInstance().getServerHandler().sendMessage(new PlaceCardMessage(sel, isflipped[sel], new CardLocation(cardLocation.x() , cardLocation.y() )));
-            //isflipped= new boolean[]{false, false, false};//after placing all the card a now front-facing
-            for (ImageView s : placeCardButtons.values()) {
-                s.setVisible(false);
-                s.setOnMouseClicked(null);
-            }
-            handCard1.setOpacity(1);
-            handCard2.setOpacity(1);
-            handCard3.setOpacity(1);
-        } catch (RuntimeException e) {
-            reportError(e);
+        Client.getInstance().getServerHandler().sendMessage(new PlaceCardMessage(sel, isflipped[sel], new CardLocation(cardLocation.x() , cardLocation.y() )));
+
+        for (ImageView s : placeCardButtons.values()) {
+            s.setVisible(false);
+            s.setOnMouseClicked(null);
         }
     }
 
-    public void addShape(CardLocation cl){
+    /**
+     * Allows to add a single placeholder (place card button).
+     *
+     * @param cl location where the button needs to be placed
+     */
+    public void addPlaceCardButton(CardLocation cl){
         if(placeCardButtons.containsKey(cl)){
             placeCardButtons.get(cl).setVisible(true);
             placeCardButtons.get(cl).setOnMouseClicked((MouseEvent mouseEvent) -> placeMessage(cl));
             return;
         }
-
 
         ImageView shape = new ImageView();
         placeCardButtons.put(cl, shape);
@@ -370,20 +441,28 @@ public class GameViewController extends GUIScene {
         TablePane.getChildren().add(shape);
         shape.setOnMouseClicked((MouseEvent mouseEvent) -> placeMessage(cl));
     }
+
+    /**
+     * Graphically flips the card whose index is provided.
+     *
+     * @param i index of the card that needs to be flipped
+     */
     public void flipCard(int i) {
         isflipped[i]=!isflipped[i];
         if (isflipped[i]) {
-            hand[i].setImage(new Image(
-                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[i].getBackPath())).toString()
-            ));
+            hand[i].setImage(MediaManager.getInstance().getImage( Client.getInstance().getView().getLocalPlayer().getPlayerCards()[i].getBackPath()));
         } else {
-            hand[i].setImage(new Image(
-                    Objects.requireNonNull(getClass().getResource(Client.getInstance().getView().getLocalPlayer().getPlayerCards()[i].getFrontPath())).toString()
-            ));
+            hand[i].setImage(MediaManager.getInstance().getImage( Client.getInstance().getView().getLocalPlayer().getPlayerCards()[i].getFrontPath()));
         }
     }
 
 
+    /**
+     * Updates the displayed board with the updated version coming
+     * from the model
+     *
+     * @param displayedPlayer the player whose board needs to be displayed
+     */
     private void updateBoard(Player displayedPlayer) {
         ArrayList<CardLocation> newCardsOnBoard = new ArrayList<>();
 
@@ -400,6 +479,9 @@ public class GameViewController extends GUIScene {
         }
     }
 
+    /**
+     * Updates the interface content
+     */
     @Override
     public void update() {
         refreshScoreboard();
@@ -445,7 +527,6 @@ public class GameViewController extends GUIScene {
             turnWarningLabel.setText("Game Over!");
             disableDecks();
             disableCards();
-            showScoreBoard.fire();
 
             return;
         }
@@ -494,7 +575,7 @@ public class GameViewController extends GUIScene {
 
                 disableDecks();
 
-                if(localPlayerBoard) addPlaceHolder(new CardLocation(0,0), new HashSet<>());
+                if(localPlayerBoard) addPlaceHolders(new CardLocation(0,0), new HashSet<>());
 
             } else if (view.getTurnStatus().equals(TurnStatus.DRAW)) {
                 for(int i = 0; i < drawableCards.length; i++) {
@@ -521,28 +602,68 @@ public class GameViewController extends GUIScene {
         }
     }
 
+    /**
+     * Display the "extended" scoreboard as a pop-up window
+     */
     public void showScoreboard() {
         Client.getInstance().getView().getUserInterface().setScoreScene();
     }
 
+    /**
+     * Allows to provide a container where the chat can be put
+     *
+     * @return the AnchorPane where the chat needs to be displayed
+     */
     @Override
     protected AnchorPane getChatContainer() {
         return chatContainer;
     }
 
+    /**
+     * Triggered when the user clicks on the button containing the
+     * first player's nickname.
+     * It displays the first player's board (cards, inventory)
+     */
+    @FXML
     public void viewPlayer1() {
         viewPlayer(1);
     }
+
+    /**
+     * Triggered when the user clicks on the button containing the
+     * second player's nickname.
+     * It displays the first player's board (cards, inventory)
+     */
+    @FXML
     public void viewPlayer2() {
         viewPlayer(2);
     }
+
+    /**
+     * Triggered when the user clicks on the button containing the
+     * third player's nickname.
+     * It displays the first player's board (cards, inventory)
+     */
+    @FXML
     public void viewPlayer3() {
         viewPlayer(3);
     }
+
+    /**
+     * Triggered when the user clicks on the button containing the
+     * forth player's nickname.
+     * It displays the first player's board (cards, inventory)
+     */
+    @FXML
     public void viewPlayer4() {
         viewPlayer(4);
     }
 
+    /**
+     * Displays the player's (whose index is provided) board (cards, inventory)
+     *
+     * @param playerID the index of the player whose board needs to be displayed
+     */
     private void viewPlayer(int playerID) {
         String nickname;
         try {
@@ -563,16 +684,24 @@ public class GameViewController extends GUIScene {
         }
     }
 
-    public void centerScrollPane(ActionEvent event) {
+    /**
+     * Triggered when the "center scrollpane" button is clicked.
+     * Centers the scroll pane (where the board is displayed)
+     */
+    public void centerScrollPane() {
         scrollPane.setHvalue(scrollPane.getHmax() / 2);
         scrollPane.setVvalue(scrollPane.getVmax() / 2);
     }
 
-    public void leaveGame(ActionEvent event) {
+    /**
+     * Triggered when the "leave game" button is clicked.
+     * It sends a message to the server that inform
+     * it that the player's leaving and return to the main screen,
+     * resetting the local view (model).
+     */
+    public void leaveGame() {
         Client.getInstance().getServerHandler().sendMessage(new LeaveGameMessage());
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.close();
-
-
+        Client.getInstance().getView().getUserInterface().setMainScene();
+        Client.getInstance().getView().reset();
     }
 }

@@ -47,6 +47,16 @@ public class PatternGoal extends Goal {
     }
 
     /**
+     * Retrieves the goal's pattern as a matrix of
+     * Resource (types of the cards)
+     *
+     * @return the goal's pattern
+     */
+    public Resource[][] getPattern() {
+        return this.pattern.clone();
+    }
+
+    /**
      * Evaluates the score obtained by the player based on how many times the pattern is found in the player's board.
      *
      * @param player Player whose board needs to be evaluated.

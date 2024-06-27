@@ -6,9 +6,13 @@ import it.polimi.ingsw.model.cards.CardSlot;
 import it.polimi.ingsw.model.cards.PlayCard;
 import it.polimi.ingsw.model.cards.StartCard;
 import it.polimi.ingsw.model.cards.corners.Corner;
+import it.polimi.ingsw.model.cards.corners.Resource;
 import it.polimi.ingsw.model.chat.Chat;
 import it.polimi.ingsw.model.chat.ChatMessage;
 import it.polimi.ingsw.model.decks.Deck;
+import it.polimi.ingsw.model.goals.Goal;
+import it.polimi.ingsw.model.goals.ItemGoal;
+import it.polimi.ingsw.model.goals.PatternGoal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.utils.CardLocation;
 
@@ -26,6 +30,9 @@ public final class Printer {
     private final static int DEFAULT_CARD_WIDTH = 27;
     // the height (in terms of characters) of the standard game card
     private final static int DEFAULT_CARD_HEIGHT = 11;
+
+    private final static int BOARD_WIDTH = 80;
+    private final static int BOARD_HEIGHT = 50;
 
     // map that allows to retrieve a "graphic" representation (using strings) of card's corners
     private final static HashMap<Corner, String[]> cornerToStringsMap;
@@ -182,6 +189,42 @@ public final class Printer {
                 null,
                 TextColor.WHITE
         );
+    }
+
+    /**
+     * Allows to generate a Canvas that contains aa card placeholder.
+     *
+     * @param cardLocation CardLocation that needs to be displayed in the placeholder
+     * @return Canvas that contains an empty card's frame
+     */
+    private static Canvas getCardPlaceholder(CardLocation cardLocation) {
+        Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH, DEFAULT_CARD_HEIGHT);
+
+        // setting the deck frame
+
+        canvas.putChar('╭', 0, 0);
+        canvas.putChar('╮', DEFAULT_CARD_WIDTH - 1, 0);
+        canvas.putChar('╰', 0, DEFAULT_CARD_HEIGHT - 1);
+        canvas.putChar('╯', DEFAULT_CARD_WIDTH - 1, DEFAULT_CARD_HEIGHT - 1);
+
+        for (int i = 1; i < DEFAULT_CARD_WIDTH - 1; i+=3) {
+            canvas.putChar('─', i, 0);
+            canvas.putChar('─', i, DEFAULT_CARD_HEIGHT - 1);
+        }
+
+        for (int i = 1; i < DEFAULT_CARD_HEIGHT - 1; i+=3) {
+            canvas.putChar('│', 0, i);
+            canvas.putChar('│', DEFAULT_CARD_WIDTH - 1, i);
+        }
+
+        String s = "(" + cardLocation.x() + ", " + cardLocation.y() + ")";
+
+        canvas.putString(s,
+                DEFAULT_CARD_WIDTH/2 - s.length()/2,
+                DEFAULT_CARD_HEIGHT/2
+                );
+
+        return canvas;
     }
 
     /**
@@ -380,47 +423,111 @@ public final class Printer {
     }
 
     /**
+     * Checks if a card can be placed in a specific location on the player's board.
+     *
+     * @param board the player's board
+     * @param cl the location that needs ot be checked
+     * @return {@code true} of cards can be place in the provided location, {@code false} otherwise
+     */
+    private static boolean placeable(Map<CardLocation, CardSlot> board, CardLocation cl ){
+        if(board.get(cl) != null) return false;
+
+        if(board.containsKey(cl.bottomLeftNeighbour())
+                && board.get(cl.bottomLeftNeighbour()).getTopRightCorner()==null)
+            return false;
+        if(board.containsKey(cl.topLeftNeighbour())
+                && board.get(cl.topLeftNeighbour()).getBottomRightCorner()==null)
+            return false;
+        if(board.containsKey(cl.bottomRightNeighbour())
+                && board.get(cl.bottomRightNeighbour()).getTopLeftCorner()==null )
+            return false;
+        return !board.containsKey(cl.topRightNeighbour())
+                || board.get(cl.topRightNeighbour()).getBottomLeftCorner() != null;
+    }
+
+    private static final int[] POSS = {-1, 1};
+
+    /**
+     * Allows to compute the CardLocation where the user could place a card
+     *
+     * @param board the player's Board
+     * @param cl the starting cardLocation (when calling 0,0)
+     * @param seen the set of location that were already checked (provide empty set)
+     * @param placeHolderLocations the set where the result of the computation will be put
+     */
+    private static void computePlaceHolders(Map<CardLocation, CardSlot> board , CardLocation cl, Set<CardLocation> seen, ArrayList<CardLocation> placeHolderLocations){
+        if(board.containsKey(cl)){
+            for(int i: POSS){
+                for(int j: POSS){
+                    CardLocation p = new CardLocation(cl.x() + i, cl.y() + j);
+                    if (!seen.contains(p)) {
+                        seen.add(p);
+                        if(placeable(board,p)) placeHolderLocations.add(p);
+                        computePlaceHolders(board, p, seen, placeHolderLocations);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Prints the player's board.
      *
      * @param board the Board that needs to be printed
+     * @param xOffset the x offset (in terms of cards) of the center of the board's position
+     * @param yOffset the y offset (in terms of cards) of the center of the board's position
      */
-    public static void printBoard(Map<CardLocation, CardSlot> board) {
+    public static void printBoard(Map<CardLocation, CardSlot> board, int xOffset, int yOffset) {
         HashMap<Integer, CardLocation> t = new HashMap<>();
 
-        int left = 0;
-        int right = 0;
-        int top = 0;
-        int bottom = 0;
+        Canvas canvas = new Canvas(BOARD_WIDTH, BOARD_HEIGHT);
+
+        int centerX = BOARD_WIDTH/2 - DEFAULT_CARD_WIDTH/2 - xOffset * (DEFAULT_CARD_WIDTH - 7);
+        int centerY = BOARD_HEIGHT/2 - DEFAULT_CARD_HEIGHT/2 + yOffset * (DEFAULT_CARD_HEIGHT - 5);
+
+        ArrayList<CardLocation> placeHolderLocations = new ArrayList<>();
+        computePlaceHolders(board, new CardLocation(0,0), new HashSet<>(), placeHolderLocations);
+
+        for(CardLocation cardLocation : placeHolderLocations) {
+            int x, y;
+            x = centerX + cardLocation.x() * (DEFAULT_CARD_WIDTH-7);
+            y = centerY - cardLocation.y() * (DEFAULT_CARD_HEIGHT-5);
+
+            canvas.putCanvas(
+                    getCardPlaceholder(cardLocation),
+                    x,y
+            );
+        }
 
         for (CardLocation cardLocation : board.keySet()) {
             t.put(board.get(cardLocation).placementTurn(), cardLocation);
-
-            if (cardLocation.x() < left) left = cardLocation.x();
-            if (cardLocation.x() > right) right = cardLocation.x();
-            if (cardLocation.y() < bottom) bottom = cardLocation.y();
-            if (cardLocation.y() > top) top = cardLocation.y();
         }
 
-        int dx = right - left;
-        int dy = top - bottom;
-
-        Canvas canvas = new Canvas(DEFAULT_CARD_WIDTH + dx * (DEFAULT_CARD_WIDTH - 7), DEFAULT_CARD_HEIGHT + dy * (DEFAULT_CARD_HEIGHT - 5));
-
         int i = 0;
-
         while (t.get(i) != null) {
             int x, y;
-            x = t.get(i).x() - left;
-            y = top - t.get(i).y();
+            x = centerX + t.get(i).x() * (DEFAULT_CARD_WIDTH-7);
+            y = centerY - t.get(i).y() * (DEFAULT_CARD_HEIGHT-5);
 
             canvas.putCanvas(
                     getCardCanvas(board.get(t.get(i)).card(), board.get(t.get(i)).onBackSide()),
-                    x * (DEFAULT_CARD_WIDTH - 7),
-                    y * (DEFAULT_CARD_HEIGHT - 5)
+                    x,y
             );
 
             i++;
         }
+
+
+
+        for(i = 1; i < BOARD_WIDTH-1; i++) {
+            canvas.putChar('─', i, 0);
+            canvas.putChar('─', i, BOARD_HEIGHT-1);
+        }
+        for(i = 1; i < BOARD_HEIGHT-1; i++) {
+            canvas.putChar('│', 0, i);
+            canvas.putChar('│', BOARD_WIDTH-1, i);
+        }
+
 
         System.out.println(canvas);
     }
@@ -514,6 +621,53 @@ public final class Printer {
         for (ChatMessage msg : messages) {
             System.out.println("\t" + msg.getSenderNick() + ": " + msg.getText());
         }
+    }
+
+    /**
+     * Allows to print a textual representation of a game's goal.
+     *
+     * @param goal Goal that needs to be printed
+     */
+    public static void printGoal(Goal goal) {
+        Canvas canvas = getCardFrame();
+
+        if(goal instanceof ItemGoal itemGoal) {
+            List<Corner> items = itemGoal.getItems().toList();
+
+            int i = 0;
+
+            int rows = (items.size() / 2 + items.size() % 2);
+            for (Corner corner : items) {
+                canvas.setTextColor(cornerToColorMap.get(corner));
+                canvas.putStringMatrix(cornerToStringsMap.get(corner), DEFAULT_CARD_WIDTH / 2 - 5 + 6 * (i % 2), DEFAULT_CARD_HEIGHT / 2 - (3 * rows + Math.max(0, rows - 1)) / 2 + 4 * (i / 2));
+                canvas.resetColor();
+                i++;
+            }
+        }
+        else if(goal instanceof PatternGoal patternGoal) {
+            Resource[][] pattern = patternGoal.getPattern();
+
+            Canvas c = new Canvas(pattern[0].length * 3, pattern.length * 3);
+
+            for(int i = 0; i < pattern.length; i++) {
+                for(int j = 0; j < pattern[0].length; j++) {
+                    if(pattern[i][j] != null) {
+                        c.putChar(
+                                pattern[i][j].toString().charAt(0),
+                                1 + 3*j,
+                                j + i*3
+                        );
+                    }
+                }
+            }
+
+            canvas.putCanvas(c,
+                    DEFAULT_CARD_WIDTH/2 - c.width/2,
+                    DEFAULT_CARD_HEIGHT/2 - c.height/2
+                    );
+        }
+
+        System.out.println(canvas);
     }
 
     /**

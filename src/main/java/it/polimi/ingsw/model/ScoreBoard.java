@@ -5,6 +5,7 @@ import it.polimi.ingsw.events.messages.server.ScoreUpdateMessage;
 import it.polimi.ingsw.model.player.Player;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  */
 public class ScoreBoard extends Observable implements Serializable {
     private HashMap<String, Integer> scores;
+    private ArrayList<Player> winners;
 
     /**
      * Construct a new ScoreBoard object for the given list of players.
@@ -85,6 +87,26 @@ public class ScoreBoard extends Observable implements Serializable {
         for (String nickname : scoreBoard.scores.keySet()) {
             this.scores.put(nickname, scoreBoard.scores.get(nickname));
         }
+    }
+
+    /**
+     * Allows to set the winning players list to the scoreboard
+     *
+     * @param winners list of player representing the game's winners
+     */
+    public void setWinners(List<Player> winners) {
+        this.winners = new ArrayList<>(winners);
+
+        notifyObservers(new ScoreUpdateMessage(this));
+    }
+
+    /**
+     * Retrieves the list of winning players.
+     *
+     * @return list of Players representing the game's winners
+     */
+    public List<Player> getWinners() {
+        return new ArrayList<>(winners);
     }
 
     @Override

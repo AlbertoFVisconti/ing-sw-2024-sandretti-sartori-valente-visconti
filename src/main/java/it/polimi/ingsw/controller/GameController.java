@@ -24,6 +24,7 @@ import javafx.scene.paint.Color;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -73,16 +74,29 @@ public class GameController extends Observable implements VirtualController, Run
         new Thread(this).start();
     }
 
+    /**
+     * Load a game back so that the current GameController starts handling the loaded game.
+     *
+     * @param gameBackup GameBackup that contains the game's data and game's status
+     */
     public synchronized void loadBackup(GameBackup gameBackup) {
         this.gameStatus = gameBackup.gameStatus();
         this.turnStatus = gameBackup.turnStatus();
         this.game.loadGame(gameBackup.gameData());
     }
 
+    /**
+     * Retrieves the game's backup.
+     *
+     * @return GameBackup object that describe the game's data and the game's state
+     */
     public synchronized GameBackup getBackup() {
         return new GameBackup(this.game.getSaving(), this.gameStatus, this.turnStatus);
     }
 
+    /**
+     * Allows to save this game content to file (if the GameBackupManager is enabled)
+     */
     private void saveGameBackup() {
         GameBackupManager.saveGame(backupKey, this.getBackup());
     }
@@ -175,12 +189,13 @@ public class GameController extends Observable implements VirtualController, Run
                 game.removePlayer(player);
             } else {
                 this.connectedPlayers--;
+                player.leftTheGame();
 
                 if (this.connectedPlayers < GameController.MINIMUM_PLAYER_TO_RUN_GAME) {
                     this.paused = true;
                 }
 
-                if (this.game.getTurn().hasDisconnected()) isCurrentPlayer = true;
+                if (this.game.getTurn().hasLeft()) isCurrentPlayer = true;
 
                 if(!paused && isCurrentPlayer) {
                     if(turnStatus == TurnStatus.DRAW) {
@@ -193,7 +208,8 @@ public class GameController extends Observable implements VirtualController, Run
             }
         }
 
-        if(connectedPlayers == 0) {
+        if((this.gameStatus != GameStatus.LOBBY && connectedPlayers == 0)
+            || (gameStatus==GameStatus.LOBBY && game.getPlayers().isEmpty())) {
             MainController.getInstance().removeGame(this.game.getIdGame());
             this.gameStatus = GameStatus.DELETED;
         }
@@ -240,7 +256,7 @@ public class GameController extends Observable implements VirtualController, Run
         if (connectingPlayer == null) {
             throw new RuntimeException("Reconnection failed: unknown player");
         }
-        if (!connectingPlayer.hasDisconnected()) {
+        if (!connectingPlayer.hasLeft()) {
             throw new RuntimeException("Reconnection failed: this player is already connected");
         }
 
@@ -248,6 +264,8 @@ public class GameController extends Observable implements VirtualController, Run
 
 
         System.err.println(nickname + " has rejoined the game");
+
+        connectingPlayer.rejoinTheGame();
 
         this.game.getChat().subscribe(clientHandler);
         connectingPlayer.setClientHandler(clientHandler);
@@ -267,7 +285,7 @@ public class GameController extends Observable implements VirtualController, Run
         if (this.paused && this.connectedPlayers >= GameController.MINIMUM_PLAYER_TO_RUN_GAME) {
             this.paused = false;
 
-            if (game.getTurn().hasDisconnected()) {
+            if (game.getTurn().hasLeft()) {
                 advanceTurn();
             } else {
                 this.updateStatus();
@@ -291,8 +309,6 @@ public class GameController extends Observable implements VirtualController, Run
      * Thus, the Game is put in END status.
      */
     private void updateStatus() {
-        boolean triggerEvaluation = false;
-
         if (gameStatus == GameStatus.LOBBY) {
             if (game.getExpectedPlayers() == game.getPlayers().size() && game.getAvailableColor().size() == (4 - game.getExpectedPlayers())) {
 
@@ -342,10 +358,11 @@ public class GameController extends Observable implements VirtualController, Run
             newRoundStartedFlag = false;
 
             if (gameStatus == GameStatus.LAST_TURN) {
+                GameBackupManager.deleteBackup(this.backupKey);
                 System.err.println("GAME FINISHED");
                 gameStatus = GameStatus.END;
 
-                triggerEvaluation = true;
+                this.computeWinner();
 
             } else if (gameStatus == GameStatus.NORMAL_TURN) {
                 boolean flag = true;
@@ -366,17 +383,65 @@ public class GameController extends Observable implements VirtualController, Run
 
                 if (gameStatus == GameStatus.LAST_TURN) game.setFinalRound();
             }
-
-
         }
-
-        if (triggerEvaluation) this.evaluateGoals();
 
         System.out.println("update status");
 
         notifyObservers(new GameStatusUpdateMessage(gameStatus, turnStatus, game.getTurn().nickname));
     }
 
+    /**
+     * Compute the game's winners.
+     * If there's a single player with the higher score (after goals are evaluated)
+     * that's the winner. If there's more than one player with the higher score,
+     * the one with the high pre-goal-evaluation score wins.
+     * If there's more than one player with the high score more than one of them
+     * has the higher pre-goal-evaluation score, they all wins.
+     */
+    private void computeWinner() {
+        ScoreBoard oldScore = new ScoreBoard();
+        oldScore.copyScore(game.getScoreBoard());
+
+        evaluateGoals();
+
+        int maxScore = -1;
+        for(Player p : game.getPlayers()) {
+            if(game.getScoreBoard().getScore(p.nickname) > maxScore) {
+                maxScore = game.getScoreBoard().getScore(p.nickname);
+            }
+        }
+
+        List<Player> winners = new ArrayList<>();
+        for(Player p : game.getPlayers()) {
+            if(maxScore == game.getScoreBoard().getScore(p.nickname)) {
+                winners.add(p);
+            }
+        }
+
+        if(winners.size() > 1) {
+            maxScore = -1;
+            for(Player p : winners) {
+                if(oldScore.getScore(p.nickname) > maxScore) {
+                    maxScore = oldScore.getScore(p.nickname);
+                }
+            }
+
+            List<Player> actualWinners = new ArrayList<>();
+            for(Player p : game.getPlayers()) {
+                if(maxScore == oldScore.getScore(p.nickname)) {
+                    actualWinners.add(p);
+                }
+            }
+
+            winners = actualWinners;
+        }
+
+        game.getScoreBoard().setWinners(winners);
+    }
+
+    /**
+     * Allows external users to (synchronously) update the game controller status
+     */
     public synchronized void forceUpdateStatus() {
         this.updateStatus();
     }
@@ -403,7 +468,7 @@ public class GameController extends Observable implements VirtualController, Run
         }
 
         // checking if the current turn should be skipped
-        needToSkipTurn = !this.paused && this.game.getTurn().hasDisconnected();
+        needToSkipTurn = !this.paused && this.game.getTurn().hasLeft();
 
         // checking if the current advance caused a new round to start
         newRoundStarted = !wasFirstPlayersTurn && this.game.isFirstPlayersTurn();
@@ -638,6 +703,12 @@ public class GameController extends Observable implements VirtualController, Run
         this.saveGameBackup();
     }
 
+    /**
+     * Helper method that actually perform the drawing procedure.
+     *
+     * @param player player that needs to receive the drawn card
+     * @param index the card that needs to be drawn
+     */
     private void drawCardHelper(Player player, int index) {
         if (index == 0) {
             // drawing from resource card deck

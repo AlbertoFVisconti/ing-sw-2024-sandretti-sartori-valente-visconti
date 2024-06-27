@@ -163,6 +163,12 @@ public abstract class Card implements Drawable, Serializable {
         return "frontCorners = " + Arrays.toString(corners) + "\n";
     }
 
+    /**
+     * Cards are equal if their cardIDs equal (because cards are immutable)
+     *
+     * @param obj the object that needs to be checked for equality with the current one
+     * @return {@code true} if this provided object equals the current one, {@code false} otherwise
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Card objCard) {
