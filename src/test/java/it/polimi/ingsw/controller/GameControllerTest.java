@@ -724,8 +724,8 @@ class GameControllerTest {
 
         assertEquals(gameController.getGameStatus(), GameStatus.END);
 
-        assertEquals(game.getScoreBoard().getWinners().get(0), p3);
-        assertEquals(game.getScoreBoard().getWinners().get(1), p4);
+        assertEquals(game.getScoreBoard().getWinners().get(0), "p3");
+        assertEquals(game.getScoreBoard().getWinners().get(1), "p4");
 
 
 
