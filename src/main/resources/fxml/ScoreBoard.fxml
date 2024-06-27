@@ -80,5 +80,5 @@
          <Font name="Bangla MN" size="14.0" />
       </font>
    </Label>
-   <Button fx:id="playAgainButton" layoutX="510.0" layoutY="757.0" mnemonicParsing="false" text="PLAY AGAIN" onAction="#playAgain"/>
+   <Button fx:id="playAgainButton" layoutX="510.0" layoutY="757.0" mnemonicParsing="false" text="Play again" onAction="#playAgain"/>
 </AnchorPane>

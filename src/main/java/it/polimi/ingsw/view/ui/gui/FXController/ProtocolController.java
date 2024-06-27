@@ -64,12 +64,12 @@ public class ProtocolController extends GUIScene {
         try {
             // trying to extract the port number
             port = Integer.parseInt(portField.getText());
+            port=1235;
         } catch (NumberFormatException e) {
             // failed to parse the portField
             this.reportError(new RuntimeException("Invalid port number"));
             return;
         }
-
         // creating the server handler
         Client.getInstance().setServerHandler(
                 new SocketServerHandler(
@@ -90,6 +90,7 @@ public class ProtocolController extends GUIScene {
         try {
             // trying to extract the port number
             port = Integer.parseInt(portField.getText());
+            port=1234;
         } catch (NumberFormatException e) {
             // failed to parse the portField
             this.reportError(new RuntimeException("Invalid port number"));
