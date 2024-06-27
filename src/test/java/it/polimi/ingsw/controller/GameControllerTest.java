@@ -44,6 +44,7 @@ import java.util.concurrent.BlockingQueue;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 class GameControllerTest {
     private String createId(){
         //create a new player identifier
@@ -401,7 +402,11 @@ class GameControllerTest {
         //choosing the startcard and the private goal
         Goal g1=p1.getAvailableGoals()[0];
         gc.placeStartCard(cl.getPlayerIdentifier(),true);
+        //index out of bound
+        assertThrows(RuntimeException.class,()->gc.selectPrivateGoal(cl.getPlayerIdentifier(),-1));
         gc.selectPrivateGoal(cl.getPlayerIdentifier(),0);
+        //can't select private goal twice
+        assertThrows(RuntimeException.class,()->gc.selectPrivateGoal(cl.getPlayerIdentifier(),0));
         Goal g2=p2.getAvailableGoals()[1];
         gc.placeStartCard(cl2.getPlayerIdentifier(),false);
         gc.selectPrivateGoal(cl2.getPlayerIdentifier(), 1);
@@ -626,11 +631,101 @@ class GameControllerTest {
             gameController.drawCard("p1", 2);
         });
 
+        // it this player turn, but location is invalid
+        assertThrows(RuntimeException.class, () -> {
+            gameController.placeCard("p1", 0, true, new CardLocation(2,2));
+        });
+
+        // it this player turn, but index is out of bound
+        assertThrows(RuntimeException.class, () -> {
+            gameController.placeCard("p1", -1, true, new CardLocation(-1,1));
+        });
+
         gameController.placeCard("p1", 0, true, new CardLocation(-1,1));
         assertEquals(c1, p1.getPlacedCardSlot(new CardLocation(-1,1)).card());
 
+        // it is this player turn, but they already placed
+        assertThrows(RuntimeException.class, () -> {
+            gameController.placeCard("p1", 0, true, new CardLocation(1,1));
+        });
+
         gameController.drawCard("p1", 2);
         assertEquals(c1, p1.getPlayerCard(0));
+
+        // it is this player turn, but card constratins are not met
+        assertThrows(RuntimeException.class, () -> {
+            gameController.placeCard("p2", 1, false, new CardLocation(1,1));
+        });
+
+        gameController.placeCard("p2", 0, false, new CardLocation(1,1));
+        assertEquals(c4, p2.getPlacedCardSlot(new CardLocation(1,1)).card());
+
+        //index is out of bound
+        assertThrows(RuntimeException.class, () -> {
+            gameController.drawCard("p2", -1);
+        });
+
+        Resource r= game.getResourceCardsDeck().getTopOfTheStack();
+        gameController.drawCard("p2", 0);
+        assertEquals(r, p2.getPlayerCard(0).getResourceType());
+
+        gameController.placeCard("p3", 0, true, new CardLocation(1,1));
+        assertEquals(c7, p3.getPlacedCardSlot(new CardLocation(1,1)).card());
+
+        r= game.getGoldCardsDeck().getTopOfTheStack();
+        gameController.drawCard("p3", 1);
+        assertEquals(r, p3.getPlayerCard(0).getResourceType());
+
+        //top right corner of the start card is null
+        assertThrows(RuntimeException.class, () -> {
+            gameController.placeCard("p4", 0, false, new CardLocation(1,1));
+        });
+
+        gameController.placeCard("p4", 0, false, new CardLocation(1,-1));
+        assertEquals(c2, p4.getPlacedCardSlot(new CardLocation(1,-1)).card());
+
+        gameController.drawCard("p4", 4);
+        assertEquals(c5, p4.getPlayerCard(0));
+
+        gameController.placeCard("p1", 0, true, new CardLocation(1,1));
+        assertEquals(c1, p1.getPlacedCardSlot(new CardLocation(1,1)).card());
+
+        gameController.drawCard("p1", 3);
+        assertEquals(c2, p1.getPlayerCard(0));
+
+        gameController.placeCard("p2", 0, false, new CardLocation(-1,-1));
+        assertEquals(c4, p2.getPlacedCardSlot(new CardLocation(1,1)).card());
+
+        gameController.drawCard("p2", 5);
+        assertEquals(c6, p2.getPlayerCard(0));
+
+        gameController.placeCard("p3", 0, true, new CardLocation(-1,1));
+
+        r= game.getResourceCardsDeck().getTopOfTheStack();
+        gameController.drawCard("p3", 0);
+        assertEquals(r, p3.getPlayerCard(0).getResourceType());
+
+        gameController.placeCard("p4", 1, false, new CardLocation(-1,-1));
+        assertEquals(c4, p4.getPlacedCardSlot(new CardLocation(-1,-1)).card());
+
+        //game's not finished
+        assertThrows(RuntimeException.class, () -> {
+            gameController.evaluateGoals();
+        });
+
+        //TODO end game simulation (last turn, evaluate goals ecc)
+
+
+
+
+
+
+
+
+
+
+
+
 
         // TODO more simulation (drawing from both decks
 
