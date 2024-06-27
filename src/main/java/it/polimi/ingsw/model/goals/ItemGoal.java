@@ -8,7 +8,6 @@ import it.polimi.ingsw.utils.ItemCollection;
  * This goal computes the score based on the number of sets of items collected by the player.
  */
 public class ItemGoal extends Goal {
-    private final int scorePerSet;
     private final ItemCollection items;
 
     /**
@@ -19,7 +18,7 @@ public class ItemGoal extends Goal {
      */
     public ItemGoal(ItemCollection items, int scorePerSet, String path) {
         this.items = new ItemCollection(items);
-        this.scorePerSet = scorePerSet;
+        this.goalValue = scorePerSet;
         this.path=path;
     }
 
@@ -31,7 +30,7 @@ public class ItemGoal extends Goal {
      */
     @Override
     public int evaluate(Player player) {
-        return scorePerSet * player.getInventory().divide(this.items);
+        return goalValue * player.getInventory().divide(this.items);
     }
 
     /**
@@ -46,7 +45,7 @@ public class ItemGoal extends Goal {
     @Override
     public String toString() {
         return "ItemGoal{" +
-                "scorePerSet=" + scorePerSet +
+                "scorePerSet=" + goalValue +
                 ", items=" + items +
                 '}';
     }

@@ -708,10 +708,6 @@ class GameControllerTest {
         gameController.placeCard("p4", 1, false, new CardLocation(-1,-1));
         assertEquals(c4, p4.getPlacedCardSlot(new CardLocation(-1,-1)).card());
 
-        //game's not finished
-        assertThrows(RuntimeException.class, () -> {
-            gameController.evaluateGoals();
-        });
 
         //TODO end game simulation (last turn, evaluate goals ecc)
 

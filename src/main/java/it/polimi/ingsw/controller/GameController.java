@@ -399,10 +399,26 @@ public class GameController extends Observable implements VirtualController, Run
      * has the higher pre-goal-evaluation score, they all wins.
      */
     private void computeWinner() {
-        ScoreBoard oldScore = new ScoreBoard();
-        oldScore.copyScore(game.getScoreBoard());
+        if (gameStatus != GameStatus.END) {
+            throw new RuntimeException("The game's still running");
+        }
 
-        evaluateGoals();
+        ScoreBoard nOfCompletedGoals = new ScoreBoard(game.getPlayers());
+        ScoreBoard scoreBoard = game.getScoreBoard();
+
+        int score;
+        for (Player p : game.getPlayers()) {
+            for (Goal g : game.getCommonGoals()) {
+                // evaluating the common goal
+                score = g.evaluate(p);
+                nOfCompletedGoals.addScore(p.nickname, score/g.getGoalValue());
+                scoreBoard.addScore(p.nickname, score);
+            }
+            // evaluating the private goal
+            score = p.getPrivateGoal().evaluate(p);
+            nOfCompletedGoals.addScore(p.nickname, score/p.getPrivateGoal().getGoalValue());
+            scoreBoard.addScore(p.nickname, score);
+        }
 
         int maxScore = -1;
         for(Player p : game.getPlayers()) {
@@ -421,14 +437,14 @@ public class GameController extends Observable implements VirtualController, Run
         if(winners.size() > 1) {
             maxScore = -1;
             for(Player p : winners) {
-                if(oldScore.getScore(p.nickname) > maxScore) {
-                    maxScore = oldScore.getScore(p.nickname);
+                if(nOfCompletedGoals.getScore(p.nickname) > maxScore) {
+                    maxScore = nOfCompletedGoals.getScore(p.nickname);
                 }
             }
 
             List<Player> actualWinners = new ArrayList<>();
-            for(Player p : game.getPlayers()) {
-                if(maxScore == oldScore.getScore(p.nickname)) {
+            for(Player p : winners) {
+                if(maxScore == nOfCompletedGoals.getScore(p.nickname)) {
                     actualWinners.add(p);
                 }
             }
@@ -530,26 +546,6 @@ public class GameController extends Observable implements VirtualController, Run
                 || player.getPlacedCardSlot(location.bottomLeftNeighbour()) != null;
     }
 
-    /**
-     * Runs evaluations for all goals (both public and private goals).
-     * Updates each player's scoring with the result of the evaluations.
-     */
-    public synchronized void evaluateGoals() {
-        if (gameStatus != GameStatus.END) {
-            throw new RuntimeException("The game's still running");
-        }
-
-        ScoreBoard scoreBoard = game.getScoreBoard();
-
-        for (Player p : game.getPlayers()) {
-            for (Goal g : game.getCommonGoals()) {
-                // evaluating the common goal
-                scoreBoard.addScore(p.nickname, g.evaluate(p));
-            }
-            // evaluating the private goal
-            scoreBoard.addScore(p.nickname, p.getPrivateGoal().evaluate(p));
-        }
-    }
 
     /**
      * Allows to select the private goal, among the available ones, for the
@@ -904,6 +900,13 @@ public class GameController extends Observable implements VirtualController, Run
     }
 
 
+    /**
+     * Helper internal method. Not synchronized.
+     * Allows to retrieve a reference to the object of the player whose identifier is provided.
+     *
+     * @param playerIdentifier the identifier of the player whose object is required
+     * @return Player object of the requested player, {@code null} if the player isn't recognized within this game
+     */
     private Player helperGetPlayerByPlayerIdentifier(String playerIdentifier) {
         for (Player p : this.game.getPlayers()) {
             if (p.getClientHandler().getPlayerIdentifier().equals(playerIdentifier)) {
@@ -913,6 +916,13 @@ public class GameController extends Observable implements VirtualController, Run
         return null;
     }
 
+    /**
+     * Helper internal method. Not synchronized.
+     * Allows to retrieve a reference to the object of the player whose nickname is provided.
+     *
+     * @param nickname the nickname of the player whose object is required
+     * @return Player object of the requested player, {@code null} if the player isn't recognized within this game
+     */
     private Player helperGetPlayerByNickname(String nickname) {
         for (Player p : this.game.getPlayers()) {
             if (p.nickname.equals(nickname)) {

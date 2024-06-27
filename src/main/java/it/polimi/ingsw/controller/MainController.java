@@ -314,6 +314,7 @@ public class MainController extends Thread implements VirtualMainController {
         if(gameController != null) {
             ClientHandler clientHandler = this.getPlayersClientHandler(playerIdentifier);
             gameController.handleDisconnection(clientHandler);
+            this.playerIdentifierToGameController.remove(playerIdentifier);
         }
     }
 

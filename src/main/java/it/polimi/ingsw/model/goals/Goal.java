@@ -13,7 +13,9 @@ import java.io.Serializable;
  * certain conditions.
  */
 public abstract class Goal implements Drawable, Serializable {
-    String path;
+    protected String path;
+    protected int goalValue;
+
     /**
      * Evaluates the score the player achieved based on certain conditions on their board or inventory.
      *
@@ -37,5 +39,15 @@ public abstract class Goal implements Drawable, Serializable {
      */
     public String getPath(){
         return path;
+    }
+
+    /**
+     * Retrieves the goal's value: the score the
+     * player receive when completing a single time the goal
+     *
+     * @return goal's value
+     */
+    public int getGoalValue() {
+        return goalValue;
     }
 }

@@ -18,7 +18,6 @@ import java.util.*;
  * This goal computes the score based on how many times the pattern is found in the player's board
  */
 public class PatternGoal extends Goal {
-    private final int scorePerMatch;
     private final Resource[][] pattern;
 
     private Point pivot;
@@ -30,7 +29,7 @@ public class PatternGoal extends Goal {
      * @param scorePerMatch score awarded per matching pattern.
      */
     public PatternGoal(Resource[][] pattern, int scorePerMatch, String path) {
-        this.scorePerMatch = scorePerMatch;
+        this.goalValue = scorePerMatch;
         this.pattern = pattern.clone();
         this.path=path;
 
@@ -112,7 +111,7 @@ public class PatternGoal extends Goal {
             validMatches += (group.size() - bound);
         }
 
-        return validMatches * scorePerMatch;
+        return validMatches * goalValue;
     }
 
     /**
@@ -290,7 +289,7 @@ public class PatternGoal extends Goal {
     @Override
     public String toString() {
         return "PatternGoal{" +
-                "scorePerMatch=" + scorePerMatch +
+                "scorePerMatch=" + goalValue +
                 ", pattern=" + Arrays.deepToString(pattern) +
                 '}';
     }
