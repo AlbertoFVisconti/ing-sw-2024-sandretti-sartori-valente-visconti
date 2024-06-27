@@ -466,7 +466,14 @@ class MainControllerTest {
     }
 
     @Test
-    void createGame()  {
+    void createGame() throws RemoteException {
+        ClientHandler cl = createCl();
+        MainController mc= MainController.getInstance();
+        mc.connectClient(cl);
+        Player p1= new Player("Mavio",cl);
+        p1.setColor(PlayerColor.BLUE);
+        //nickname is null
+        assertThrows(RuntimeException.class,()->mc.createGame(cl.getPlayerIdentifier(),2, null));
         //todo:impossible to create without setting up the network since it uses join game.
     }
 

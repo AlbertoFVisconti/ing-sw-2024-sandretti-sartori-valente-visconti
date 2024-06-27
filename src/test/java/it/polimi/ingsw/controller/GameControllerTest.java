@@ -137,15 +137,6 @@ class GameControllerTest {
         p2.placeStartingCard(true);
         gc.forceUpdateStatus();
         assertEquals(GameStatus.NORMAL_TURN,gc.getGameStatus());
-
-        //final turn once a player has hit 20 points
-        g.getScoreBoard().setScore("massimo",21);
-        gc.forceUpdateStatus();
-        assertEquals(GameStatus.LAST_TURN,gc.getGameStatus());
-
-        //since it never changed it's still the first player turn
-        gc.forceUpdateStatus();
-        assertEquals(GameStatus.END,gc.getGameStatus());
     }
 
     @Test
@@ -560,8 +551,10 @@ class GameControllerTest {
 
         p1.setPrivateGoal(new ItemGoal(new ItemCollection().add(Corner.PLANT), 2, ""));
         p2.setPrivateGoal(new ItemGoal(new ItemCollection().add(Corner.FEATHER), 2, ""));
-        p3.setPrivateGoal(new ItemGoal(new ItemCollection().add(Corner.FUNGUS), 2, ""));
-        p4.setPrivateGoal(new ItemGoal(new ItemCollection().add(Corner.INK), 2, ""));
+        p3.setPrivateGoal(new ItemGoal(new ItemCollection().add(Corner.SCROLL, 10), 2, ""));
+        p4.setPrivateGoal(new ItemGoal(new ItemCollection().add(Corner.INK, 10), 2, ""));
+
+
 
         p1.setColor(PlayerColor.RED);
         p2.setColor(PlayerColor.BLUE);
@@ -588,12 +581,16 @@ class GameControllerTest {
             throw new RuntimeException(e);
         }
 
+
         GameController gameController = new GameController(game);
 
         game.addPlayer(p1);
         game.addPlayer(p2);
         game.addPlayer(p3);
         game.addPlayer(p4);
+
+        game.setCommonGoals(new Goal[]{new ItemGoal(new ItemCollection().add(Corner.ANIMAL, 10), 2, "")});
+        game.setupScoreBoard();
 
         ArrayList<PlayerData> playerData = new ArrayList<>();
         playerData.add(p1.getSaving());
@@ -681,7 +678,7 @@ class GameControllerTest {
             gameController.placeCard("p4", 0, false, new CardLocation(1,1));
         });
 
-        gameController.placeCard("p4", 0, false, new CardLocation(1,-1));
+        gameController.placeCard("p4", 0, true, new CardLocation(1,-1));
         assertEquals(c2, p4.getPlacedCardSlot(new CardLocation(1,-1)).card());
 
         gameController.drawCard("p4", 4);
@@ -705,16 +702,34 @@ class GameControllerTest {
         gameController.drawCard("p3", 0);
         assertEquals(r, p3.getPlayerCard(0).getResourceType());
 
-        gameController.placeCard("p4", 1, false, new CardLocation(-1,-1));
+        gameController.placeCard("p4", 1, true, new CardLocation(-1,-1));
         assertEquals(c4, p4.getPlacedCardSlot(new CardLocation(-1,-1)).card());
+
+        game.getScoreBoard().setScore("p4", 20);
+        assertEquals(20, game.getScoreBoard().getScore("p4"));
+
+        gameController.drawCard("p4" , 0);
+
+        gameController.placeCard("p1", 0, true, new CardLocation(-1,-1));
+
+        assertEquals(gameController.getGameStatus(), GameStatus.LAST_TURN);
+
+        gameController.placeCard("p2", 0, true, new CardLocation(2,2));
+
+
+        gameController.placeCard("p3", 0, true, new CardLocation(-1,-1));
+        game.getScoreBoard().setScore("p3", 20);
+
+        gameController.placeCard("p4", 0, true, new CardLocation(-1,1));
+
+        assertEquals(gameController.getGameStatus(), GameStatus.END);
+
+        assertEquals(game.getScoreBoard().getWinners().get(0), p3);
+        assertEquals(game.getScoreBoard().getWinners().get(1), p4);
+
 
 
         //TODO end game simulation (last turn, evaluate goals ecc)
-
-
-
-
-
 
 
 
@@ -841,8 +856,9 @@ class GameControllerTest {
         //since it never changed it's still the first player turn
         gc.forceUpdateStatus();
 
-        gc.handleDisconnection(cl);
         gc.handleDisconnection(cl2);
+        gc.handleDisconnection(cl);
+
 
         gc.run();//run should finish because all the player have left
         assertTrue(true);
@@ -946,6 +962,180 @@ class GameControllerTest {
         assertFalse(gc.isNicknameAvailable("MARIO"));
         assertFalse(gc.isNicknameAvailable("mario"));
         assertTrue(gc.isNicknameAvailable("cristiano"));
+
+    }
+
+    @Test
+    void emptyDecks() throws IOException {
+        Card c1, c2, c3, c4, c5, c6, c7, c8, c9, c10;
+        Card[] cards;
+
+        c1 = PlayCard.generateResourceCard("c1", "front_1", "back_1",
+                Corner.EMPTY, Corner.ANIMAL,
+                Corner.INSECT, null,
+                Resource.FUNGUS, 1);
+
+        c2 = PlayCard.generateResourceCard("c2", "front_2", "back_2",
+                Corner.EMPTY, Corner.EMPTY,
+                Corner.EMPTY, Corner.EMPTY,
+                Resource.PLANT, 2);
+
+        c3 = PlayCard.generateResourceCard("c3", "front_3", "back_3",
+                Corner.INSECT, null,
+                Corner.INSECT, null,
+                Resource.ANIMAL, 3);
+
+        c4 = PlayCard.generateResourceCard("c4", "front_4", "back_4",
+                Corner.EMPTY, Corner.ANIMAL,
+                Corner.EMPTY, Corner.EMPTY,
+                Resource.INSECT, 4);
+
+        c5 = PlayCard.generateGoldCard("c5", "front_5", "back_5",
+                null, Corner.ANIMAL,
+                null, null,
+                Resource.FUNGUS,
+                new ItemCollection().add(Corner.INSECT, 3),
+                new CoveredCornersScoringStrategy(2));
+
+        c6 = PlayCard.generateGoldCard("c6", "front_6", "back_6",
+                Corner.PLANT, Corner.EMPTY,
+                Corner.PLANT, null,
+                Resource.PLANT,
+                new ItemCollection().add(Corner.INSECT, 3).add(Corner.ANIMAL, 2),
+                new FreeScoreScoringStrategy(1000));
+
+        c7 = PlayCard.generateGoldCard("c7", "front_7", "back_7",
+                Corner.EMPTY, null,
+                Corner.INSECT, Corner.EMPTY,
+                Resource.ANIMAL,
+                new ItemCollection().add(Corner.ANIMAL, 3).add(Corner.PLANT, 2),
+                new ItemCountScoringStrategy(Corner.FEATHER, 10));
+
+        c8 = PlayCard.generateGoldCard("c8", "front_8", "back_8",
+                Corner.FUNGUS, null,
+                Corner.FUNGUS, Corner.FUNGUS,
+                Resource.INSECT,
+                new ItemCollection().add(Corner.FUNGUS, 3).add(Corner.PLANT, 2).add(Corner.ANIMAL),
+                new CoveredCornersScoringStrategy(3));
+
+        c9 = new StartCard("c9", "front_9", "back_9",
+                Corner.ANIMAL, Corner.EMPTY,
+                Corner.EMPTY, Corner.PLANT,
+
+                Corner.ANIMAL, Corner.PLANT,
+                Corner.FUNGUS, Corner.INSECT,
+                new ItemCollection().add(Corner.PLANT).add(Corner.FUNGUS, 2));
+
+        cards = new Card[]{c1,c2,c3,c4,c5,c6,c7,c8,c9};
+
+        Player p1, p2;
+        p1 = new Player("p1", new HelperClientHandler("p1"));
+        p2 = new Player("p2", new HelperClientHandler("p2"));
+
+        p1.setStartCard((StartCard) c9);
+        p2.setStartCard((StartCard) c9);
+
+
+        p1.placeStartingCard(true);
+        p2.placeStartingCard(true);
+
+
+        p1.setPlayerCard((PlayCard) c1, 0);
+        p1.setPlayerCard((PlayCard) c2, 1);
+        p1.setPlayerCard((PlayCard) c3, 2);
+
+        p2.setPlayerCard((PlayCard) c4, 0);
+        p2.setPlayerCard((PlayCard) c5, 1);
+        p2.setPlayerCard((PlayCard) c6, 2);
+
+
+        p1.setPrivateGoal(new ItemGoal(new ItemCollection().add(Corner.PLANT), 2, ""));
+        p2.setPrivateGoal(new ItemGoal(new ItemCollection().add(Corner.FEATHER), 2, ""));
+
+
+
+
+        p1.setColor(PlayerColor.RED);
+        p2.setColor(PlayerColor.BLUE);
+
+        GoalDeckLoader goalDeckLoader = new GoalDeckLoader("/json/goals.json");
+        PlayCardDeckLoader resourceCardDeckLoader = new PlayCardDeckLoader("/json/cards/resourcecards.json");
+        PlayCardDeckLoader goldCardDeckLoader = new PlayCardDeckLoader("/json/cards/goldcards.json");
+        StartCardDeckLoader startCardDeckLoader = new StartCardDeckLoader("/json/cards/startcards.json");
+
+        Game game;
+        try {
+            game = new Game(
+                    goldCardDeckLoader,
+                    resourceCardDeckLoader,
+                    startCardDeckLoader,
+                    goalDeckLoader,
+                    "game",
+                    2
+
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        GameController gameController = new GameController(game);
+
+        game.addPlayer(p1);
+        game.addPlayer(p2);
+
+        game.setCommonGoals(new Goal[]{new ItemGoal(new ItemCollection().add(Corner.ANIMAL, 10), 2, "")});
+        game.setupScoreBoard();
+
+        ArrayList<PlayerData> playerData = new ArrayList<>();
+        playerData.add(p1.getSaving());
+        playerData.add(p2.getSaving());
+
+        game.getVisibleCards()[0] = (PlayCard) c1;
+        game.getVisibleCards()[1] = (PlayCard)c2;
+        game.getVisibleCards()[2] = (PlayCard)c5;
+        game.getVisibleCards()[3] = (PlayCard)c6;
+
+        GameData gameData = game.getSaving();
+        GameBackup gameBackup = new GameBackup(gameData, GameStatus.NORMAL_TURN, TurnStatus.PLACE);
+
+        gameController.loadBackup(gameBackup);
+
+        int i;
+        for (i = 1; i < 40 ;i++){
+            gameController.placeCard("p1", 0, true, new CardLocation(i, i));
+            gameController.drawCard("p1", 0);
+            gameController.placeCard("p2", 0, true, new CardLocation(i, i));
+            gameController.drawCard("p2", 1);
+        }
+        gameController.placeCard("p1", 0, true, new CardLocation(40, 40));
+
+        //decks are empty
+        assertThrows(RuntimeException.class, () -> {
+            gameController.drawCard("p1", 0);
+        });
+        assertThrows(RuntimeException.class, () -> {
+            gameController.drawCard("p1", 0);
+        });
+
+        assertThrows(RuntimeException.class, () -> {
+            gameController.drawCard("p1", 1);
+        });
+        assertThrows(RuntimeException.class, () -> {
+            gameController.drawCard("p1", 1);
+        });
+
+        gameController.drawCard("p1", 3);
+        gameController.placeCard("p2", 0, true, new CardLocation(40, 40));
+
+        //no card in the provided location
+        assertThrows(RuntimeException.class, () -> {
+            gameController.drawCard("p2", 3);
+        });
+
+
+
+
 
     }
 
