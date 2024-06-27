@@ -1,15 +1,19 @@
 package it.polimi.ingsw.view.ui.gui.FXController;
 
 import it.polimi.ingsw.controller.GameStatus;
+import it.polimi.ingsw.model.ScoreBoard;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerColor;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.view.ui.gui.MediaManager;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
 
 import java.awt.*;
 import java.util.*;
@@ -46,6 +50,8 @@ public class ScoreBoardController extends GUIScene{
     public Label announcement;
     public Label winner;
 
+    public Button playAgainButton;
+
     private Label[] scoreLabels;
     private Label[] playerNicknameLabels;
     private final Map<Integer, Point> scoreMap = new HashMap<>();
@@ -65,6 +71,7 @@ public class ScoreBoardController extends GUIScene{
 
         winner.setVisible(false);
         announcement.setVisible(false);
+        playAgainButton.setVisible(false);
         scoreLabels = new Label[]{scorePlayer1, scorePlayer2, scorePlayer3, scorePlayer4};
         playerNicknameLabels = new Label[]{playerNickname1, playerNickname2, playerNickname3, playerNickname4};
         playerColors = new ImageView[]{playerColor1, playerColor2, playerColor3, playerColor4};
@@ -165,6 +172,7 @@ public class ScoreBoardController extends GUIScene{
                 winner.setText(winnerLabelText.toString());
             }
             winner.setVisible(true);
+            playAgainButton.setVisible(true);
         }
     }
 
@@ -188,5 +196,12 @@ public class ScoreBoardController extends GUIScene{
     @Override
     protected AnchorPane getChatContainer() {
         return null;
+    }
+
+    public void playAgain(){
+        Stage stage = (Stage) scorePane.getScene().getWindow();
+        stage.close();
+        Client.getInstance().getView().getUserInterface().setMainScene();
+        Client.getInstance().getView().reset();
     }
 }
