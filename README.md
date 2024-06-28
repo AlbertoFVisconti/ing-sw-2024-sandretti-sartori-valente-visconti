@@ -41,7 +41,7 @@ Final Grade: -/30L
 ## Project specification
 The project consists of a Java version of the board game *Codex* *Naturalis*, made by Cranio Creations. You can find the real game [here](https://www.craniocreations.it/prodotto/codex-naturalis).
 
-Project requirements: [todo]().
+Project requirements: [here](https://github.com/AlbertoFVisconti/ing-sw-2024-sandretti-sartori-valente-visconti/blob/master/src/main/resources/requirements.pdf).
 
 ## Implemented functionalities
 
