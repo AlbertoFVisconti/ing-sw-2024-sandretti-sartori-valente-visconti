@@ -108,7 +108,7 @@ On Windows it is needed to:
    ```
 2. Move to the repository folder.
 
-3. Move to the directory "deliverables\final\jar" and execute the server and a client:
+3. Move to the directory "deliverables\jar" and execute the server and a client:
      ```shell
     java -jar Server.jar
     java -jar TUIClient.jar
