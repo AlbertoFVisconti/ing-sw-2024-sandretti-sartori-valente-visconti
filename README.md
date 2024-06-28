@@ -98,7 +98,7 @@ On Windows it is needed to:
     or:
     ```shell
     java -jar Server.jar
-    java -jar GUIClient.jar
+    java -jar GUIClientMacOS.jar
     ```
     
 ### Run Instructions
@@ -116,5 +116,5 @@ On Windows it is needed to:
     or:
     ```shell
     java -jar Server.jar
-    java -jar GUIClient.jar
+    java -jar GUIClientMacOS.jar
     ```
