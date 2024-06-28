@@ -77,6 +77,11 @@ On Windows it is needed to:
     java -jar Server.jar
     java -jar GUIClientMacOS.jar
     ```
+   or:
+    ```shell
+    java -jar Server.jar
+    java -jar GUIClientWindows.jar
+    ```
     
 ### Run Instructions
 1. Clone this repository:
@@ -94,4 +99,9 @@ On Windows it is needed to:
     ```shell
     java -jar Server.jar
     java -jar GUIClientMacOS.jar
+    ```
+   or:
+    ```shell
+    java -jar Server.jar
+    java -jar GUIClientWindows.jar
     ```
