@@ -51,12 +51,12 @@
             <Font name="Bangla MN" size="16.0" />
          </font>
       </Label>
-      <Label fx:id="scorePlayer3" layoutX="150.0" layoutY="348.0" text="0" textFill="#b6b28d">
+      <Label fx:id="scorePlayer4" layoutX="150.0" layoutY="348.0" text="0" textFill="#b6b28d">
          <font>
             <Font name="Bangla MN" size="16.0" />
          </font>
       </Label>
-      <Label fx:id="scorePlayer4" layoutX="150.0" layoutY="308.0" text="0" textFill="#b6b28d">
+      <Label fx:id="scorePlayer3" layoutX="150.0" layoutY="308.0" text="0" textFill="#b6b28d">
          <font>
             <Font name="Bangla MN" size="16.0" />
          </font>

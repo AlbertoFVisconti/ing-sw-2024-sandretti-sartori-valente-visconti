@@ -50,22 +50,22 @@
    <ImageView fx:id="playerColor2" fitHeight="27.0" fitWidth="25.0" layoutX="574.0" layoutY="120.0" pickOnBounds="true" preserveRatio="true" />
    <ImageView fx:id="playerColor3" fitHeight="27.0" fitWidth="25.0" layoutX="574.0" layoutY="159.0" pickOnBounds="true" preserveRatio="true" />
    <ImageView fx:id="playerColor4" fitHeight="27.0" fitWidth="25.0" layoutX="574.0" layoutY="198.0" pickOnBounds="true" preserveRatio="true" />
-   <Label fx:id="scorePlayer1" layoutX="543.0" layoutY="78.0" text="0" textFill="#b6b28d">
+   <Label fx:id="scorePlayer1" layoutX="557.0" layoutY="78.0" text="0" textFill="#b6b28d">
       <font>
          <Font name="Bangla MN" size="16.0" />
       </font>
    </Label>
-   <Label fx:id="scorePlayer2" layoutX="543.0" layoutY="118.0" text="0" textFill="#b6b28d">
+   <Label fx:id="scorePlayer2" layoutX="557.0" layoutY="118.0" text="0" textFill="#b6b28d">
       <font>
          <Font name="Bangla MN" size="16.0" />
       </font>
    </Label>
-   <Label fx:id="scorePlayer3" layoutX="543.0" layoutY="198.0" text="0" textFill="#b6b28d">
+   <Label fx:id="scorePlayer4" layoutX="557.0" layoutY="198.0" text="0" textFill="#b6b28d">
       <font>
          <Font name="Bangla MN" size="16.0" />
       </font>
    </Label>
-   <Label fx:id="scorePlayer4" layoutX="543.0" layoutY="158.0" text="0" textFill="#b6b28d">
+   <Label fx:id="scorePlayer3" layoutX="557.0" layoutY="158.0" text="0" textFill="#b6b28d">
       <font>
          <Font name="Bangla MN" size="16.0" />
       </font>
@@ -80,5 +80,5 @@
          <Font name="Bangla MN" size="14.0" />
       </font>
    </Label>
-   <Button fx:id="playAgainButton" layoutX="510.0" layoutY="757.0" mnemonicParsing="false" onAction="#playAgain" text="Play again" stylesheets="Style.css" />
+   <Button fx:id="playAgainButton" layoutX="510.0" layoutY="757.0" mnemonicParsing="false" onAction="#playAgain" stylesheets="@Style.css" text="Play again" />
 </AnchorPane>
