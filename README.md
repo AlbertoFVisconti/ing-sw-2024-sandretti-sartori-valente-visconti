@@ -5,7 +5,7 @@
 
 Codex Naturalis Board Game is the final test of **"Software Engineering"** course of **"Engineering of Computing Systems"** held at Politecnico di Milano (2023/2024).
 
-Final Grade: -/30L
+Final Grade: 30L/30
 
 **Teacher**: CUGOLA GIANPAOLO SAVERIO
 
